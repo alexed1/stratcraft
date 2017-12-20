@@ -1,4 +1,8 @@
-public with sharing class ParseXMLStrategy {
+public with sharing class ParseStrategyXML {
+    public ParseStrategyXML() {
+
+    }
+
 
     // Represents an NBA Recommendation Strategy
     public class StrategyNode {
@@ -33,10 +37,10 @@ public with sharing class ParseXMLStrategy {
                 curStrat.nodes.add(parseStrategyNode(child));
             }
         }
-        return Strategy;
+        return curStrat;
     }
 
-    public StrategyNode parseStrategyNode(string curNodeElement) {
+    public static StrategyNode parseStrategyNode(Dom.XMLNode curNodeElement) {
         StrategyNode node = new StrategyNode();
         node.name = curNodeElement.getChildElement('name', null).getText();
         node.description = curNodeElement.getChildElement('description', null).getText();
@@ -45,5 +49,6 @@ public with sharing class ParseXMLStrategy {
         node.parentNode = curNodeElement.getChildElement('parentNode', null).getText();
         return node;
     }
+
 
 }

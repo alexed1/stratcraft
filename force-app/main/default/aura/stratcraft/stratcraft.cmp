@@ -4,7 +4,7 @@
 
 	<div class="slds-card" >
 		Header
-		<p>
+		<p></p>
 	 
 		<div aura:id="fileInput" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" >Drop Here!</div> 
 	 
