@@ -1,15 +1,23 @@
 <aura:component implements="flexipage:availableForAllPageTypes">
-hello there!
-	<aura:attribute name='foo' type='string' default='bar'/>
 
-<div class="slds-grid slds-card">
-  <div class="slds-col">
-  	Node Tree
+<aura:attribute name='strategyXML' type='string' />
 
-  </div>
-  <div class="slds-col">
-  	
-  	Node Properties
-  </div>
-</div>
+	<div class="slds-card" >
+		Header
+		<p>
+	 
+		<div aura:id="fileInput" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" >Drop Here!</div> 
+	 
+		<div class="slds-grid ">
+
+		  <div class="slds-col">
+		  	Node Tree	  	
+		  </div>
+
+		  <div class="slds-col">	  	
+		  	Node Properties
+		  </div>
+
+		</div>
+	</div>
 </aura:component>	
