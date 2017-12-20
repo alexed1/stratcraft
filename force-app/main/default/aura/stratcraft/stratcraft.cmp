@@ -1,4 +1,15 @@
-<aura:component>
+<aura:component implements="flexipage:availableForAllPageTypes">
 hello there!
 	<aura:attribute name='foo' type='string' default='bar'/>
+
+<div class="slds-grid">
+  <div class="slds-col">
+  	Node Tree
+
+  </div>
+  <div class="slds-col">
+  	
+  	Node Properties
+  </div>
+</div>
 </aura:component>	
