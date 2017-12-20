@@ -1,0 +1,4 @@
+<aura:component>
+hello there!
+	<aura:attribute name='foo' type='string' default='bar'/>
+</aura:component>	
