@@ -2,7 +2,7 @@
 hello there!
 	<aura:attribute name='foo' type='string' default='bar'/>
 
-<div class="slds-grid">
+<div class="slds-grid slds-card">
   <div class="slds-col">
   	Node Tree
 
