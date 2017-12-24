@@ -30,6 +30,8 @@ public with sharing class ParseStrategyXMLTests {
 		string testNodeString = '<strategyNode><name>RootNode</name><description>the root</description>' +
 		'<parentNode></parentNode><type>2<!--Union--></type><definition>{ removeDuplicates: true }</definition>' +
 		'</strategyNode>';
+		//namespace
+        string ns = null;
 
 		Dom.Document doc = new Dom.Document();
 		System.debug('doc is:' + doc);
@@ -37,11 +39,12 @@ public with sharing class ParseStrategyXMLTests {
 		System.debug('doc is now:' + doc);
 
 		Test.startTest();
-		ParseStrategyXML.StrategyNode curNode = ParseStrategyXML.parseStrategyNode(doc.getRootElement());
+		ParseStrategyXML.StrategyNode curNode = ParseStrategyXML.parseStrategyNode(doc.getRootElement(), ns);
 		Test.stopTest();
 
 		System.assert(curNode.name == 'RootNode');
 		System.assert(curNode.parentNode == '');
+		System.debug('definition is:' + curNode.definition);
 		System.assert(curNode.definition == '{ removeDuplicates: true }');
 
 	}

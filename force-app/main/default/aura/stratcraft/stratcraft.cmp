@@ -1,6 +1,7 @@
 <aura:component implements="flexipage:availableForAllPageTypes">
 
 <aura:attribute name='strategyXML' type='string' />
+<aura:attribute name='foo' type='string' />
 
 	<div class="slds-card" >
 		Header

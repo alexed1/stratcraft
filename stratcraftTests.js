@@ -34,6 +34,7 @@ describe("Lightning Component Testing Examples", function(){
             $T.createComponent("c:stratCraft", null)
             .then(function(component) {
                 //component.sampleMethod();
+                component.set("v.foo", "bar");
                 expect(component.get("v.foo")).toBe("bar");
                 done();
             }).catch(function(e) {
