@@ -14,7 +14,7 @@ public with sharing class ParseStrategyXMLTests {
     	'<masterLabel>SomeMasterLabel</masterLabel>' + testNode1String + testNode2String + '</RecommendationStrategy>';
 
 		Test.startTest();
-		ParseStrategyXML.Strategy curStrategy = ParseStrategyXML.parseStrategyString(testXMLFile);
+		Stratcraft.Strategy curStrategy = ParseStrategyXML.parseStrategyString(testXMLFile);
 		Test.stopTest();
 
 		System.assert(curStrategy.name == 'testStrat1');
@@ -39,7 +39,7 @@ public with sharing class ParseStrategyXMLTests {
 		System.debug('doc is now:' + doc);
 
 		Test.startTest();
-		ParseStrategyXML.StrategyNode curNode = ParseStrategyXML.parseStrategyNode(doc.getRootElement(), ns);
+		Stratcraft.StrategyNode curNode = ParseStrategyXML.parseStrategyNode(doc.getRootElement(), ns);
 		Test.stopTest();
 
 		System.assert(curNode.name == 'RootNode');

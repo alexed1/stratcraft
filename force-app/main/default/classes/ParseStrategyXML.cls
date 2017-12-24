@@ -1,35 +1,20 @@
+
+//This Apex class takes an XML recommendationStrategy and parses it into an Apex Strategy class. we use apex to take 
+//advantage of the xml support in apex and because the ability to use external xml javascript libraries is clumsy.
+
+
 public with sharing class ParseStrategyXML {
     public ParseStrategyXML() {
 
     }
 
 
-    // Represents an NBA Recommendation Strategy
-    public with sharing class StrategyNode {
-        @TestVisible String name;
-        @TestVisible String description;
-        @TestVisible String definition;
-        @TestVisible String type;
-        @TestVisible String parentNode;
-    }
-
-    // Represents an NBA Recommendation Strategy
-    public with sharing class Strategy {
-        @TestVisible String name;
-        @TestVisible List<StrategyNode> nodes;
-
-        public Strategy() {
-        	nodes = new List<StrategyNode> ();
-        }
-    }
-
-
     @auraEnabled
-    public static Strategy parseStrategyString(string xml) {
+    public static Stratcraft.Strategy parseStrategyString(string xml) {
         Dom.Document doc = new Dom.Document();
         doc.load(xml);
 
-        Strategy curStrat = new Strategy();
+        Stratcraft.Strategy curStrat = new Stratcraft.Strategy();
         //curStrat.nodes=[];
         //namespace
         string ns = 'http://soap.sforce.com/2006/04/metadata';
@@ -47,8 +32,8 @@ public with sharing class ParseStrategyXML {
         return curStrat;
     }
 
-    public static StrategyNode parseStrategyNode(Dom.XMLNode curNodeXML, string ns) {
-        StrategyNode node = new StrategyNode();
+    public static Stratcraft.StrategyNode parseStrategyNode(Dom.XMLNode curNodeXML, string ns) {
+        Stratcraft.StrategyNode node = new Stratcraft.StrategyNode();
         node.name = curNodeXML.getChildElement('name', ns).getText();
         node.description = curNodeXML.getChildElement('description',ns).getText();
         node.definition = curNodeXML.getChildElement('definition',ns).getText();
