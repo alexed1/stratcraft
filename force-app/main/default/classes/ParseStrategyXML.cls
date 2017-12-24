@@ -5,18 +5,18 @@ public with sharing class ParseStrategyXML {
 
 
     // Represents an NBA Recommendation Strategy
-    public class StrategyNode {
-        String name;
-        String description;
-        String definition;
-        String type;
-        String parentNode;
+    public with sharing class StrategyNode {
+        @TestVisible String name;
+        @TestVisible String description;
+        @TestVisible String definition;
+        @TestVisible String type;
+        @TestVisible String parentNode;
     }
 
     // Represents an NBA Recommendation Strategy
-    public class Strategy {
-        String name;
-        StrategyNode[] nodes;
+    public with sharing class Strategy {
+        @TestVisible String name;
+        @TestVisible StrategyNode[] nodes;
     }
 
 
@@ -28,6 +28,7 @@ public with sharing class ParseStrategyXML {
         Strategy curStrat = new Strategy();
 
         Dom.XMLNode recommendationStrategy = doc.getRootElement();
+        System.debug('root element is: ' + recommendationStrategy);
         
         curStrat.name = recommendationStrategy.getChildElement('recommendationStrategyName', null).getText();
 
@@ -40,13 +41,13 @@ public with sharing class ParseStrategyXML {
         return curStrat;
     }
 
-    public static StrategyNode parseStrategyNode(Dom.XMLNode curNodeElement) {
+    public static StrategyNode parseStrategyNode(Dom.XMLNode curNodeXML) {
         StrategyNode node = new StrategyNode();
-        node.name = curNodeElement.getChildElement('name', null).getText();
-        node.description = curNodeElement.getChildElement('description', null).getText();
-        node.definition = curNodeElement.getChildElement('definition', null).getText();
-        node.type = curNodeElement.getChildElement('type', null).getText();
-        node.parentNode = curNodeElement.getChildElement('parentNode', null).getText();
+        node.name = curNodeXML.getChildElement('name', null).getText();
+        node.description = curNodeXML.getChildElement('description', null).getText();
+        node.definition = curNodeXML.getChildElement('definition', null).getText();
+        node.type = curNodeXML.getChildElement('type', null).getText();
+        node.parentNode = curNodeXML.getChildElement('parentNode', null).getText();
         return node;
     }
 
