@@ -23,18 +23,18 @@ public with sharing class ParseStrategyXMLTests {
 		'</strategyNode>';
 		//namespace
         string ns = null;
+        Strategy mockStrat = new Strategy();
 
 		Dom.Document doc = new Dom.Document();
-		System.debug('doc is:' + doc);
 		doc.load(testNodeString);
-		System.debug('doc is now:' + doc);
+		
 
 		Test.startTest();
-		StrategyNode curNode = ParseStrategyXML.parseStrategyNode(doc.getRootElement(), ns);
+		StrategyNode curNode = ParseStrategyXML.parseStrategyNode(doc.getRootElement(), ns, mockStrat) ;
 		Test.stopTest();
 
 		System.assert(curNode.name == 'RootNode');
-		System.assert(curNode.parentNode == '');
+		System.assert(curNode.parentNodeName == '');
 		System.debug('definition is:' + curNode.definition);
 		System.assert(curNode.definition == '{ removeDuplicates: true }');
 

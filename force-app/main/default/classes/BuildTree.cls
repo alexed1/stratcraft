@@ -19,19 +19,27 @@ public with sharing class BuildTree {
     	return 'done';
     }
 
+    //a StrategyNode is our core datastructure for representing Strategy Nodes
+    //a TreeNode is a specialized structure designed to convert neatly to the json required by the Tree control
     public static TreeNode BuildTreeItem(Strategy curStrategy, string curNodeName) {
-    // find the curNode in the curStrategy
-    // Create a new curTreeItem
-    // Add set  “label” and “name”  equal to curStrategyNode.Name 
-    // Add set “href”,to  “#foo” where foo is curStrategyNode.Name
-    // Search the strategy for all strategyNodes that have as their parent curStrategyNodeName
+       //find the node matching the current nodename
+       StrategyNode curStratNode = curStrategy.FindNodeByName(curNodeName);
+    
+       TreeNode curTreeItem = new TreeNode();
+       curTreeItem.label = curStratNode.name;
+       curTreeItem.name = curTreeItem.label;
+       curTreeItem.href = '#' + curStratNode.name;
+    
+
+    	// Find the child nodes for this node by searching the strategy for all strategyNodes that have as their parent curStrategyNodeName
+    	
     // For each strategyNode that you find:
         // make a (recursive) call to BuildTreeItem.
         // The return value will be an items array. Call it childItem. 
         // Add childItem to the “items” List of curTreeItem, creating the “items”element if it doesn’t exist. 
     // Return curTreeItem
 
-    TreeNode curTreeItem = new TreeNode();
+    
     return curTreeItem;
     }
 

@@ -1,3 +1,5 @@
+
+
 public with sharing class StratCraft {
     public StratCraft() {
 
@@ -8,3 +10,5 @@ public with sharing class StratCraft {
 
 
 }
+
+

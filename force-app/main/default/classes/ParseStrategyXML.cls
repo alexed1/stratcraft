@@ -5,9 +5,7 @@
 
 public with sharing class ParseStrategyXML {
     public ParseStrategyXML() {
-
     }
-
 
     @auraEnabled
     public static Strategy parseStrategyString(string xml) {
@@ -26,19 +24,19 @@ public with sharing class ParseStrategyXML {
         //parse all of the strategyNodes
         for(Dom.XMLNode child : recommendationStrategy.getChildElements()) {
             if (child.getName() == 'strategyNode') {
-                curStrat.nodes.add(parseStrategyNode(child, ns));
+                curStrat.nodes.add(parseStrategyNode(child, ns, curStrat));
             }
         }
         return curStrat;
     }
 
-    public static StrategyNode parseStrategyNode(Dom.XMLNode curNodeXML, string ns) {
+    public static StrategyNode parseStrategyNode(Dom.XMLNode curNodeXML, string ns, Strategy curStrat) {
         StrategyNode node = new StrategyNode();
         node.name = curNodeXML.getChildElement('name', ns).getText();
         node.description = curNodeXML.getChildElement('description',ns).getText();
         node.definition = curNodeXML.getChildElement('definition',ns).getText();
-        node.parentNode = curNodeXML.getChildElement('parentNode', ns).getText();
-        
+        node.parentNodeName = curNodeXML.getChildElement('parentNode', ns).getText();
+        node.parentStrategy = curStrat;
         return node;
     }
 	
