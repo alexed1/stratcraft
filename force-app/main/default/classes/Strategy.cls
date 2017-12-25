@@ -1,7 +1,7 @@
  // Represents an NBA Recommendation Strategy
     public with sharing class Strategy {
-        public String name {get; set;}
-        public List<StrategyNode> nodes {get; set;}
+        public String name;
+        public List<StrategyNode> nodes;
 
         public Strategy() {
         	nodes = new List<StrategyNode> ();

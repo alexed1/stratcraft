@@ -3,12 +3,12 @@ public with sharing class StrategyNode {
 
     }
 
-    @AuraEnabled public String name {get; set;}
-    @AuraEnabled public String description {get; set;}
-    @AuraEnabled public String definition {get; set;}
-    @AuraEnabled public String type {get; set;}
-    @AuraEnabled public String parentNodeName {get; set;}
-    @AuraEnabled public Strategy parentStrategy {get; set;}
+    public String name;
+    public String description;
+    public String definition;
+    public String type;
+    public String parentNodeName;
+    public Strategy parentStrategy;
     
     // given a Strategy and a node name, find the matching curNode
     public List<StrategyNode> FindChildNodes (){
