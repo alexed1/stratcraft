@@ -18,8 +18,9 @@
 		  <div class="slds-col">	  	
 		  	Node Properties
 		  	{!v.body}
-		  	<lightning:button variant="brand" label="New12" onclick="{! c.handleCreateComponents }"/>
-		  	<lightning:button variant="brand" label="Submit15" onclick="{! c.handleClick }"/>	
+		  	<!-- additional buttons for testing functionality -->
+		  	<!--<lightning:button variant="brand" label="New1" onclick="{! c.handleCreateComponents }"/>
+		  	<lightning:button variant="brand" label="Submit15" onclick="{! c.handleClick }"/>	-->
 		  </div>
 
 		</div>
