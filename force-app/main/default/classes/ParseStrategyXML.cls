@@ -10,11 +10,11 @@ public with sharing class ParseStrategyXML {
 
 
     @auraEnabled
-    public static Stratcraft.Strategy parseStrategyString(string xml) {
+    public static Strategy parseStrategyString(string xml) {
         Dom.Document doc = new Dom.Document();
         doc.load(xml);
 
-        Stratcraft.Strategy curStrat = new Stratcraft.Strategy();
+        Strategy curStrat = new Strategy();
         //curStrat.nodes=[];
         //namespace
         string ns = 'http://soap.sforce.com/2006/04/metadata';
@@ -32,8 +32,8 @@ public with sharing class ParseStrategyXML {
         return curStrat;
     }
 
-    public static Stratcraft.StrategyNode parseStrategyNode(Dom.XMLNode curNodeXML, string ns) {
-        Stratcraft.StrategyNode node = new Stratcraft.StrategyNode();
+    public static StrategyNode parseStrategyNode(Dom.XMLNode curNodeXML, string ns) {
+        StrategyNode node = new StrategyNode();
         node.name = curNodeXML.getChildElement('name', ns).getText();
         node.description = curNodeXML.getChildElement('description',ns).getText();
         node.definition = curNodeXML.getChildElement('definition',ns).getText();
@@ -41,6 +41,6 @@ public with sharing class ParseStrategyXML {
         
         return node;
     }
-
+	
 
 }
