@@ -9,38 +9,48 @@ public with sharing class BuildTree {
     	public List<TreeNode> items;
     	public string label { get; set; }
 		public string href;
+
+		public TreeNode() {
+			items = new List<TreeNode>();
+			expanded = false;
+		}
     }
 
     public static string Assemble(Strategy curStrategy) {
 		//find the strategyNode with name RootNode and assign it to curStrategyNode..
-		//Create an empty array of TreeNodes called curItemArray  
-    	//add to the curItemArray the results of a call to BuildTreeItem
-    	//convert to json and return
-    	return 'done';
+
+    	StrategyNode curStratNode = curStrategy.FindNodeByName('RootNode');
+    	
+    	//Create an empty array of TreeNodes    
+    	//add the results of a call to BuildTreeItem
+    	List<TreeNode> treeRepresentation = new List<TreeNode>();
+    	treeRepresentation.add(BuildTreeItems(curStrategy, 'RootNode'));
+    	string jsonTreeItems = JSON.serialize(treeRepresentation);
+    	System.debug('treeItems: ' + jsonTreeItems);
+    	return jsonTreeItems;
     }
 
     //a StrategyNode is our core datastructure for representing Strategy Nodes
     //a TreeNode is a specialized structure designed to convert neatly to the json required by the Tree control
-    public static TreeNode BuildTreeItem(Strategy curStrategy, string curNodeName) {
+    //'items' is used by the TreeNode to represent a set of sibling nodes with a common parent. see https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/aura_compref_lightning_tree.htm
+    public static TreeNode BuildTreeItems(Strategy curStrategy, string curNodeName) {
        //find the node matching the current nodename
        StrategyNode curStratNode = curStrategy.FindNodeByName(curNodeName);
+       if (curStratNode == null) throw new BaseException('unable to find a node with name = ' + curNodeName + '. make sure you have a RootNode');
+       
+       TreeNode curTreeNode = new TreeNode();
+       curTreeNode.label = curStratNode.name;
+       curTreeNode.name = curTreeNode.label;
+       curTreeNode.href = '#' + curStratNode.name;
     
-       TreeNode curTreeItem = new TreeNode();
-       curTreeItem.label = curStratNode.name;
-       curTreeItem.name = curTreeItem.label;
-       curTreeItem.href = '#' + curStratNode.name;
-    
-
-    	// Find the child nodes for this node by searching the strategy for all strategyNodes that have as their parent curStrategyNodeName
+       // Find the child nodes for this node by searching the strategy for all strategyNodes that have as their parent the current node.
+       List<StrategyNode> childNodes = curStratNode.FindChildNodes();
     	
-    // For each strategyNode that you find:
-        // make a (recursive) call to BuildTreeItem.
-        // The return value will be an items array. Call it childItem. 
-        // Add childItem to the “items” List of curTreeItem, creating the “items”element if it doesn’t exist. 
-    // Return curTreeItem
-
+       for(StrategyNode childNode : childNodes){
+       		curTreeNode.items.add(BuildTreeItems(curStrategy, childNode.name));
+       }
     
-    return curTreeItem;
+       return curTreeNode;
     }
 
 
