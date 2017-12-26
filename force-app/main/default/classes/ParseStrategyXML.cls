@@ -18,8 +18,11 @@ public with sharing class ParseStrategyXML {
         string ns = 'http://soap.sforce.com/2006/04/metadata';
 
         Dom.XMLNode recommendationStrategy = doc.getRootElement();
-        Dom.XMLNode recstratname = recommendationStrategy.getChildElement('recommendationStrategyName', ns);
+        //System.debug (recommendationStrategy.getChildElement('recommendationStrategyName', ns).getText());
         curStrat.name = recommendationStrategy.getChildElement('recommendationStrategyName', ns).getText();
+        curStrat.description = recommendationStrategy.getChildElement('description', ns).getText();
+        curStrat.masterLabel = recommendationStrategy.getChildElement('masterLabel', ns).getText();
+                //Dom.XMLNode recstratname = recommendationStrategy.getChildElement('recommendationStrategyName', ns);
 
         //parse all of the strategyNodes
         for(Dom.XMLNode child : recommendationStrategy.getChildElements()) {
@@ -39,6 +42,7 @@ public with sharing class ParseStrategyXML {
         node.description = curNodeXML.getChildElement('description',ns).getText();
         node.definition = curNodeXML.getChildElement('definition',ns).getText();
         node.parentNodeName = curNodeXML.getChildElement('parentNode', ns).getText();
+        node.type = curNodeXML.getChildElement('type', ns).getText();
         node.parentStrategy = curStrat;
         return node;
     }

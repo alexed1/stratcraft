@@ -13,7 +13,7 @@
 		<div class="slds-grid ">
 
 		  <div class="slds-col">
-		  	<h2>Node Tree	</h2>
+		  	<div class="myHeading">Node Tree	</div>
 
 		  	<lightning:tree items="{! v.treeItems }" header="Nodes" onselect="{!c.handleTreeSelect}"/>
 

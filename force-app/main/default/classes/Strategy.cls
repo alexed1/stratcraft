@@ -2,6 +2,8 @@
     public with sharing class Strategy {
         public String name;
         public List<StrategyNode> nodes;
+        public String description;
+        public String masterLabel;
 
         public Strategy() {
         	nodes = new List<StrategyNode> ();

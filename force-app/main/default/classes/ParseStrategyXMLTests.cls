@@ -5,7 +5,7 @@ public with sharing class ParseStrategyXMLTests {
 	public static void ParseStrategyStringCanParseBasic() {
 		
 		Test.startTest();
-		Strategy curStrategy = ParseStrategyXML.parseStrategyString(fixtureTestStrategyXML1());
+		Strategy curStrategy = ParseStrategyXML.parseStrategyString(Fixtures.TestStrategyXML1());
 		Test.stopTest();
 
 		System.assert(curStrategy.name == 'testStrat1');
@@ -37,23 +37,11 @@ public with sharing class ParseStrategyXMLTests {
 		System.assert(curNode.parentNodeName == '');
 		System.debug('definition is:' + curNode.definition);
 		System.assert(curNode.definition == '{ removeDuplicates: true }');
-
+		System.assert(curNode.type == '2');
 	}
 	
 
 
-	public static string fixtureTestStrategyXML1() {
-		string testNode1String = '<strategyNode><name>RootNode</name><description>the root</description>' +
-		'<parentNode></parentNode><type>2<!--Union--></type><definition>{ removeDuplicates: true }</definition>' +
-		'</strategyNode>';
-		string testNode2String = '<strategyNode><name>ChildNode</name><description>the root</description>' +
-		'<parentNode>RootNode</parentNode><type>4<!--Union--></type><definition>{foo: true }</definition>' +
-		'</strategyNode>';
-		string testXMLFile = '<?xml version="1.0" encoding="UTF-8"?><RecommendationStrategy xmlns="http://soap.sforce.com/2006/04/metadata"> ' +
-    	'<description>Test Strategy</description><recommendationStrategyName>testStrat1</recommendationStrategyName> ' +
-    	'<masterLabel>SomeMasterLabel</masterLabel>' + testNode1String + testNode2String + '</RecommendationStrategy>';
-    	return testXMLFile;
-
-	}
+	
 
 }
