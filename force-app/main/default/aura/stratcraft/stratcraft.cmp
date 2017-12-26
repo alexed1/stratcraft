@@ -1,8 +1,8 @@
-<aura:component implements="flexipage:availableForAllPageTypes">
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" controller="ParseStrategyXML">
 
-<aura:attribute name='strategyXML' type='string' />
-<aura:attribute name='foo' type='string' />
-
+<aura:attribute name="strategyXML" type="String" />
+<aura:attribute name="foo" type="String" />
+<aura:handler name="init" value="{!this}" action="{!c.init}" />
 	<div class="slds-card" >
 		Header
 		<p></p>
@@ -17,6 +17,10 @@
 
 		  <div class="slds-col">	  	
 		  	Node Properties
+		  	{!v.body}
+		  	<!-- additional buttons for testing functionality -->
+		  	<!--<lightning:button variant="brand" label="New1" onclick="{! c.handleCreateComponents }"/>
+		  	<lightning:button variant="brand" label="Submit15" onclick="{! c.handleClick }"/>	-->
 		  </div>
 
 		</div>
