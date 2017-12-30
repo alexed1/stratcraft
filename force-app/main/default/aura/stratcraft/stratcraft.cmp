@@ -4,7 +4,7 @@
 <aura:attribute name="strategyJSON" type="String" />
 <aura:attribute name="foo" type="String" />
 <aura:attribute name="strat" type="Strategy" />
-
+<aura:attribute name="treeItems" type="String" />
 <aura:handler name="init" value="{!this}" action="{!c.init}" />
 <aura:handler name="setStrategy" event="c:compEvent" action="{!c.setStrategy}"/>
 
@@ -22,11 +22,16 @@
 		<div class="slds-grid ">
 
 		  <div class="slds-col">
-		  	Node Tree	  	
+		  	<div class="myHeading">Node Tree	</div>
+
+		  	<lightning:tree items="{! v.treeItems }" header="Nodes" onselect="{!c.handleTreeSelect}"/>
+
+
 		  </div>
 
 		  <div class="slds-col">	  	
-		  	Node Properties
+		  	<h2>Node Properties</h2>
+		  	
 		  	{!v.body}
 		  </div>
 

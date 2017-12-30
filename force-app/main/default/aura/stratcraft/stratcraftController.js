@@ -1,6 +1,6 @@
 ({
 	init : function(component, event, helper){
-
+		helper.initTree(component, event, helper);
 	},
 
     handleUploadFinished: function (cmp, event) {
@@ -61,7 +61,11 @@
 	onDragOver: function(component, event) { 
 		event.preventDefault(); 
 	}, 
-
-
+  
+  handleTreeSelect: function (component, event, helper) {
+        //return name of selected tree item
+        var myName = event.getParam('name');
+        alert("You selected: " + myName);
+  }
 
 })

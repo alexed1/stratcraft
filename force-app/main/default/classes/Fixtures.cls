@@ -35,6 +35,8 @@ public  with sharing class Fixtures {
 	public static Strategy TestStrategy1() {		
 		Strategy testStrat = new Strategy();
 		testStrat.name = 'my strat';
+		testStrat.description = 'Test Strategy description';
+		testStrat.masterLabel = 'Master Label';
 		testStrat.nodes.add(RootNode(testStrat));
 		return testStrat;
 	}
@@ -43,6 +45,20 @@ public  with sharing class Fixtures {
 		Strategy testStrat = TestStrategy1();
 		testStrat.nodes.add(IfPaymentPastDueElseChurnNode(testStrat));
 		return testStrat;
+	}
+
+	public static string TestStrategyXML1() {
+		string testNode1String = '<strategyNode><name>RootNode</name><description>the root</description>' +
+		'<parentNode></parentNode><type>2<!--Union--></type><definition>{ removeDuplicates: true }</definition>' +
+		'</strategyNode>';
+		string testNode2String = '<strategyNode><name>ChildNode</name><description>the root</description>' +
+		'<parentNode>RootNode</parentNode><type>4<!--Union--></type><definition>{foo: true }</definition>' +
+		'</strategyNode>';
+		string testXMLFile = '<?xml version="1.0" encoding="UTF-8"?><RecommendationStrategy xmlns="http://soap.sforce.com/2006/04/metadata"> ' +
+    	'<description>Test Strategy</description><recommendationStrategyName>testStrat1</recommendationStrategyName> ' +
+    	'<masterLabel>SomeMasterLabel</masterLabel>' + testNode1String + testNode2String + '</RecommendationStrategy>';
+    	return testXMLFile;
+
 	}
 
 	

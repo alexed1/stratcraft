@@ -1,7 +1,11 @@
  // Represents an NBA Recommendation Strategy
     public with sharing class Strategy {
-        @AuraEnabled public String name; 
+
+        @AuraEnabled public String name;
         @AuraEnabled public List<StrategyNode> nodes;
+        @AuraEnabled public String description;
+        @AuraEnabled public String masterLabel;
+
 
         public Strategy() {
         	nodes = new List<StrategyNode> ();
