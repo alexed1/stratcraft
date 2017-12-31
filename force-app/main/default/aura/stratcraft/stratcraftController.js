@@ -1,6 +1,6 @@
 ({
 	init : function(component, event, helper){
-		helper.initTree(component, event, helper);
+
 	},
 
     handleUploadFinished: function (cmp, event) {
@@ -22,21 +22,21 @@
 			reader.onloadend = function() { 
 				console.log("uploaded file data is: " + reader.result); 		
 				cmp.set("v.strategyXML", reader.result);	
-				var cmpEvent = cmp.getEvent("setStrategy");
+				var cmpEvent = cmp.getEvent("loadStrategy");
 		        cmpEvent.fire();
 			}; 
 			reader.readAsText(file); 
 		}
 	}, 
 
-    setStrategy : function (cmp) {
-		var action = cmp.get("c.getStrategy");
+    loadStrategy : function (cmp) {
+		var action = cmp.get("c.parseStrategyString");
 		action.setParams({ xml : cmp.get("v.strategyXML") });
 		action.setCallback(this, function(response) {
 			var state = response.getState();
 			if (cmp.isValid() && state === "SUCCESS") {
 				var result = response.getReturnValue();
-				cmp.set("v.strat", result);
+				cmp.set("v.curStrat", result);
 				console.log(result.name);
 				result.nodes.forEach(function(entry){
 					console.log(entry.name);
@@ -61,11 +61,7 @@
 	onDragOver: function(component, event) { 
 		event.preventDefault(); 
 	}, 
-  
-  handleTreeSelect: function (component, event, helper) {
-        //return name of selected tree item
-        var myName = event.getParam('name');
-        alert("You selected: " + myName);
-  }
+
+
 
 })

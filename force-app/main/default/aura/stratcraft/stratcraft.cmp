@@ -1,12 +1,10 @@
 <aura:component implements="flexipage:availableForAllPageTypes" controller="StrategyCrafterController">
 
 <aura:attribute name="strategyXML" type="String" />
-<aura:attribute name="strategyJSON" type="String" />
-<aura:attribute name="foo" type="String" />
-<aura:attribute name="strat" type="Strategy" />
-<aura:attribute name="treeItems" type="String" />
+<aura:attribute name="curStrat" type="Strategy" />
+
 <aura:handler name="init" value="{!this}" action="{!c.init}" />
-<aura:handler name="setStrategy" event="c:compEvent" action="{!c.setStrategy}"/>
+<aura:handler name="setStrategy" event="c:compEvent" action="{!c.LoadStrategy}"/>
 
 <aura:registerEvent name="setStrategy" type="c:compEvent"/>
 
@@ -22,16 +20,11 @@
 		<div class="slds-grid ">
 
 		  <div class="slds-col">
-		  	<div class="myHeading">Node Tree	</div>
-
-		  	<lightning:tree items="{! v.treeItems }" header="Nodes" onselect="{!c.handleTreeSelect}"/>
-
-
+		  	Node Tree	  	
 		  </div>
 
 		  <div class="slds-col">	  	
-		  	<h2>Node Properties</h2>
-		  	
+		  	Node Properties
 		  	{!v.body}
 		  </div>
 
