@@ -4,30 +4,30 @@
 <aura:attribute name="curStrat" type="Strategy" />
 
 <aura:handler name="init" value="{!this}" action="{!c.init}" />
-<aura:handler name="setStrategy" event="c:compEvent" action="{!c.LoadStrategy}"/>
+<aura:handler name="loadStrategy" event="c:compEvent" action="{!c.LoadStrategy}"/>
 
-<aura:registerEvent name="setStrategy" type="c:compEvent"/>
+<aura:registerEvent name="loadStrategy" type="c:compEvent"/>
 
 
 
-	<div class="slds-card" >
-		<lightning:spinner aura:id="mySpinner" class="slds-hide" size="large" />
-		Header
-		<p></p>
-	 
-		<div aura:id="fileInput" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" >Drop Here!</div> 
-	 
-		<div class="slds-grid ">
+    <div class="slds-card" >
+        <lightning:spinner aura:id="mySpinner" class="slds-hide" size="large" />
+        Header
+        <p></p>
+     
+        <div aura:id="fileInput" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" >Drop Here!</div> 
+     
+        <div class="slds-grid ">
 
-		  <div class="slds-col">
-		  	Node Tree	  	
-		  </div>
+            <div class="slds-col">
+                Node Tree
+            </div>
 
-		  <div class="slds-col">	  	
-		  	Node Properties
-		  	{!v.body}
-		  </div>
+            <div class="slds-col">
+                Node Properties
+                {!v.body}
+            </div>
 
-		</div>
-	</div>
+        </div>
+    </div>
 </aura:component>	
