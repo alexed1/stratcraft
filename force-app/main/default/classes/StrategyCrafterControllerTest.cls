@@ -23,7 +23,6 @@ public class StrategyCrafterControllerTest {
 			String treeString = StrategyCrafterController.parseInputFile(xml);
 		Test.stopTest();
 		
-		//System.assert(false, treeString);
 		System.assert(treeString.startsWith('[{"name":"RootNode","label":"RootNode",'));
 	}
 
@@ -50,22 +49,22 @@ public class StrategyCrafterControllerTest {
 		Test.stopTest();
 
 		System.assertEquals(curStrategy.name, 
-							'testStrat1', 
-							'Strategy name was parsed incorrect');
+					'testStrat1', 
+					'Strategy name was parsed incorrect');
 		System.assertEquals(curStrategy.nodes.size(), 2, 
-							'Wrong number of nodes');
+					'Wrong number of nodes');
 		System.assertEquals(curStrategy.nodes[0].name, 
-							'RootNode', 
-							'First node name was parsed incorrect');
+					'RootNode', 
+					'First node name was parsed incorrect');
 		System.assertEquals(curStrategy.nodes[0].definition, 
-							'{removeDuplicates: true}', 
-							'First node definition was parsed incorrect');
+					'{removeDuplicates: true}', 
+					'First node definition was parsed incorrect');
 		System.assertEquals(curStrategy.nodes[1].name, 
-							'IfPaymentPastDueElseChurnNode', 
-							'Second node name was parsed incorrect');
+					'IfPaymentPastDueElseChurnNode', 
+					'Second node name was parsed incorrect');
 		System.assertEquals(curStrategy.nodes[1].definition, 
-							'{testDefinition : true}', 
-							'Second node definition was parsed incorrect');
+					'{testDefinition : true}', 
+					'Second node definition was parsed incorrect');
 
 	}
 
@@ -79,8 +78,8 @@ public class StrategyCrafterControllerTest {
 		Test.stopTest();
 
 		System.assertEquals(true, 
-							curStrategy.name.startsWith('Failed to parse XML'), 
-							'Wrong error - ' + curStrategy.name);
+				curStrategy.name.startsWith('Failed to parse XML'), 
+				'Wrong error - ' + curStrategy.name);
 	}		
 
 }
