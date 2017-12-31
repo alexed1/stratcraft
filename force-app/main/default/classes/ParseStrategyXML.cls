@@ -30,9 +30,6 @@ public with sharing class ParseStrategyXML {
                 curStrat.nodes.add(parseStrategyNode(child, ns, curStrat));
             }
         }
-        for (StrategyNode node : curStrat.nodes) {
-            System.debug(node.name);
-        }
         return curStrat;
     }
 
