@@ -1,34 +1,33 @@
-<aura:component implements="flexipage:availableForAllPageTypes" access="global" controller="ParseStrategyXML">
+<aura:component implements="flexipage:availableForAllPageTypes" controller="StrategyCrafterController">
 
 <aura:attribute name="strategyXML" type="String" />
-<aura:attribute name="foo" type="String" />
-<aura:attribute name="treeItems" type="String" />
+<aura:attribute name="curStrat" type="Strategy" />
+
 <aura:handler name="init" value="{!this}" action="{!c.init}" />
-	<div class="slds-card" >
-		Header
-		<p></p>
-	 
-		<div aura:id="fileInput" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" >Drop Here!</div> 
-	 
-		<div class="slds-grid ">
+<aura:handler name="loadStrategy" event="c:compEvent" action="{!c.LoadStrategy}"/>
 
-		  <div class="slds-col">
-		  	<div class="myHeading">Node Tree	</div>
-
-		  	<lightning:tree items="{! v.treeItems }" header="Nodes" onselect="{!c.handleTreeSelect}"/>
+<aura:registerEvent name="loadStrategy" type="c:compEvent"/>
 
 
-		  </div>
 
-		  <div class="slds-col">	  	
-		  	<h2>Node Properties</h2>
-		  	
-		  	{!v.body}
-		  	<!-- additional buttons for testing functionality -->
-		  	<!--<lightning:button variant="brand" label="New1" onclick="{! c.handleCreateComponents }"/>
-		  	<lightning:button variant="brand" label="Submit15" onclick="{! c.handleClick }"/>	-->
-		  </div>
+    <div class="slds-card" >
+        <lightning:spinner aura:id="mySpinner" class="slds-hide" size="large" />
+        Header
+        <p></p>
+     
+        <div aura:id="fileInput" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" >Drop Here!</div> 
+     
+        <div class="slds-grid ">
 
-		</div>
-	</div>
+            <div class="slds-col">
+                Node Tree
+            </div>
+
+            <div class="slds-col">
+                Node Properties
+                {!v.body}
+            </div>
+
+        </div>
+    </div>
 </aura:component>	

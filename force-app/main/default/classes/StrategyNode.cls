@@ -2,12 +2,11 @@ public with sharing class StrategyNode {
     public StrategyNode() {
 
     }
-
-    public String name;
-    public String description;
-    public String definition;
-    public String type;
-    public String parentNodeName;
+    @AuraEnabled public String name;
+    @AuraEnabled public String description;
+    @AuraEnabled public String definition;
+    @AuraEnabled public String type;
+    @AuraEnabled public String parentNodeName;
     public Strategy parentStrategy;
     
     // given a Strategy and a node name, find the matching curNode
