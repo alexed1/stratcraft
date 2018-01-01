@@ -1,5 +1,5 @@
 ({
-    initTree: function (component, event, helper) {
+    initTree: function (component) {
     var items = [{
             "label": "Western Sales Director",
             "name": "1",

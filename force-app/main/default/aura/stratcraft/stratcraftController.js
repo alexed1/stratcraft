@@ -52,6 +52,23 @@
         $A.enqueueAction(action);
     },
 
+    loadTreeStrategy : function (cmp) {
+        var action = cmp.get("c.parseInputFile");
+        action.setParams({ xml : cmp.get("v.strategyXML") });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if (cmp.isValid() && state === "SUCCESS") {
+                var result = response.getReturnValue();
+                cmp.set("v.treeStart", result);
+                var JSONResult = JSON.parse(result);
+                cmp.set("v.treeItems", JSONResult);
+                console.log(result);
+                
+            }
+        });
+        $A.enqueueAction(action);
+    },
+
 
     createStrategyNode : function(component, event) { 
 
