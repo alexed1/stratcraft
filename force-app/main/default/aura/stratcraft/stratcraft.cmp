@@ -2,6 +2,7 @@
 
 <aura:attribute name="strategyXML" type="String" />
 <aura:attribute name="curStrat" type="Strategy" />
+<aura:attribute name="curStratNode" type="Object" />
 <aura:attribute name="treeStart" type="String" />
 <aura:attribute name="treeItems" type="Object" />
 
@@ -23,12 +24,13 @@
         <div class="slds-grid ">
 
             <div class="slds-col">
-                <lightning:tree items="{! v.treeItems }" header="NodeTree"/>
+                <lightning:tree items="{! v.treeItems }" header="NodeTree" onselect="{! c.handleTreeSelect }"/>
             </div>
 
             <div class="slds-col">
                 Node Properties
-                {!v.body}
+                {!v.body}                
+                <c:BasePropertyPage nodeItem="{! v.curStratNode }"/>
             </div>
 
         </div>

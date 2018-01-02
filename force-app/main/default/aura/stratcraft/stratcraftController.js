@@ -78,6 +78,17 @@
         event.preventDefault(); 
     }, 
 
+    handleTreeSelect: function (component, event) {
+        //return name of selected tree item
+        var myName = event.getParam('name');
+        console.log("You selected: " + myName);
+        var curStrat = component.get("v.curStrat");
+        curStrat.nodes.forEach(function(entry){
+            if (entry.name === myName) {
+                component.set("v.curStratNode", entry);
+            }
+        });
+    },
 
 
 })

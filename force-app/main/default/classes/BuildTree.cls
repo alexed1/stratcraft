@@ -41,7 +41,7 @@ public with sharing class BuildTree {
        TreeNode curTreeNode = new TreeNode();
        curTreeNode.label = curStratNode.name;
        curTreeNode.name = curTreeNode.label;
-       curTreeNode.href = '#' + curStratNode.name;
+       //curTreeNode.href = '#' + curStratNode.name;
     
        // Find the child nodes for this node by searching the strategy for all strategyNodes that have as their parent the current node.
        List<StrategyNode> childNodes = curStratNode.FindChildNodes();
