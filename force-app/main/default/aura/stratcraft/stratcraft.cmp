@@ -20,11 +20,12 @@
         <p></p>
      
         <div aura:id="fileInput" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" >Drop Here!</div> 
-     
+        
         <div class="slds-grid ">
 
             <div class="slds-col">
                 <lightning:tree items="{! v.treeItems }" header="NodeTree" onselect="{! c.handleTreeSelect }"/>
+
             </div>
 
             <div class="slds-col">

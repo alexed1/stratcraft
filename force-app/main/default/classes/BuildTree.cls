@@ -7,6 +7,7 @@ public with sharing class BuildTree {
     	public string name;
     	public boolean expanded;
     	public List<TreeNode> items;
+      public String parentNode;
     	public string label { get; set; }
 		public string href;
 
@@ -41,6 +42,7 @@ public with sharing class BuildTree {
        TreeNode curTreeNode = new TreeNode();
        curTreeNode.label = curStratNode.name;
        curTreeNode.name = curTreeNode.label;
+       curTreeNode.parentNode = curStratNode.parentNodeName;
        //curTreeNode.href = '#' + curStratNode.name;
     
        // Find the child nodes for this node by searching the strategy for all strategyNodes that have as their parent the current node.

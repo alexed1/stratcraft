@@ -2,7 +2,7 @@
     <aura:attribute name="nodeItem" type="Object" />
         <ui:inputText aura:id="name" label="name" class="field" value="{! v.nodeItem.name}" blur="{!c.handleBlur}"/>
         <ui:inputText aura:id="description" label="description" class="field" value="{! v.nodeItem.description }" blur="{!c.handleBlur}"/>
-        <ui:inputText aura:id="parentNode" label="parentNode" class="field" value="{! v.nodeItem.parentNode }" blur="{!c.handleBlur}"/>
+        <ui:inputText aura:id="parentNode" label="parentNode" class="field" value="{! v.nodeItem.parentNodeName }" blur="{!c.handleBlur}"/>
         <ui:inputText aura:id="type" label="type" class="field" value="{! v.nodeItem.type }" blur="{!c.handleBlur}"/>
         <c:GenericDefinitionsControlPanel localDefinitionString="{! v.nodeItem.definition }"/>
 </aura:component>	
