@@ -17,7 +17,7 @@
     		
             // for each node in nodes, if name matches, set to return and increment counter
             //if counter is > 1 throw exception
-            StrategyNode targetNode = new StrategyNode();
+            StrategyNode targetNode;
             Integer counter = 0;
             for(StrategyNode node : this.nodes) {
                 if (node.name == targetName) {
