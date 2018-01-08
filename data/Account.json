@@ -1,0 +1,31 @@
+{
+    "records": [
+        {
+            "attributes": {
+                "type": "Account",
+                "referenceId": "AccountRef1"
+            },
+            "Name": "Hyatt Import",
+            "Location__Latitude__s": 37.794157,
+            "Location__Longitude__s": -122.396311
+        },
+        {
+            "attributes": {
+                "type": "Account",
+                "referenceId": "AccountRef2"
+            },
+            "Name": "Marriott Marquis Import",
+            "Location__Latitude__s": 37.785143,
+            "Location__Longitude__s": -122.403405
+        },
+        {
+            "attributes": {
+                "type": "Account",
+                "referenceId": "AccountRef3"
+            },
+            "Name": "Hilton Union Square Import",
+            "Location__Latitude__s": 37.786164,
+            "Location__Longitude__s": -122.410137
+        }
+    ]
+}
