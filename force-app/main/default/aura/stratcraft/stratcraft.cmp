@@ -2,7 +2,8 @@
 
 <aura:attribute name="strategyXML" type="String" />
 <aura:attribute name="curStrat" type="Strategy" />
-
+<aura:attribute name="items" type="Object"/>
+<aura:attribute name="body" type="String"/>
 <aura:handler name="init" value="{!this}" action="{!c.init}" />
 <aura:handler name="loadStrategy" event="c:compEvent" action="{!c.LoadStrategy}"/>
 
@@ -10,22 +11,47 @@
 
 
 
-    <div class="slds-card" >
+    <div class="slds-card slds-p-around_medium"  >
         <lightning:spinner aura:id="mySpinner" class="slds-hide" size="large" />
-        Header
-        <p></p>
      
-        <div aura:id="fileInput" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" >Drop Here!</div> 
-     
-        <div class="slds-grid ">
+        <!--<div aura:id="fileInput" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" >Drop Here!</div>-->
+		<div class="slds-page-header slds-grid slds-m-bottom_large">
+			<div class="slds-col slds-has-flexi-truncate">
+				<div class="slds-media">
+					<div class="slds-media__figure">
+							<span class="slds-icon_container slds-icon-standard-opportunity" title="Description of icon when needed">
+							<lightning:icon iconName="standard:opportunity"/>
+						</span>
+					</div>
+					<div class="slds-media__body">
+						<h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Header">Header</h1>
+						<p class="slds-text-body_small slds-line-height_reset">Mark Jaeckal • Unlimited Customer • 11/13/15</p>
+					</div>
+				</div>
+			</div>
+			<div class="slds-col slds-no-flex slds-align-top slds-p-bottom_xx-small slds-m-right_x-large">
+				<lightning:buttonMenu iconName="utility:settings" alternativeText="Settings" onselect="{! c.handleMenuSelect }">
+					<lightning:menuItem label="Load XML" value="Load XML" />
+					<lightning:menuItem label="Save to File menu" value="Save to File menu"/>
+				</lightning:buttonMenu>
+			</div>
+		</div>
+		<hr/>
+        <div class="slds-grid slds-m-top_large">
 
             <div class="slds-col">
-                Node Tree
+                <lightning:tree items="{! v.items }" header="Roles" onselect="{!c.handleSelect}"/>
             </div>
 
             <div class="slds-col">
-                Node Properties
-                {!v.body}
+				<article class="slds-card">
+					<div class="slds-media__body">
+						<h2><span class="slds-text-heading_small">Node Properties</span></h2>
+					</div>
+					<div class="slds-card__body slds-card__body_inner">
+						{!v.body}
+					</div>
+				</article>
             </div>
 
         </div>
