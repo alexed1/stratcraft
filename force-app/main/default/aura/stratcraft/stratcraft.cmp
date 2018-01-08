@@ -2,18 +2,13 @@
 
 <aura:attribute name="strategyXML" type="String" />
 <aura:attribute name="curStrat" type="Strategy" />
-<aura:attribute name="curStratNode" type="Object" />
-<aura:attribute name="copyStrat" type="Strategy" />
-<aura:attribute name="treeStart" type="String" />
-<aura:attribute name="treeItems" type="Object" />
 
 <aura:handler name="init" value="{!this}" action="{!c.init}" />
-<aura:handler name="loadStrategy" event="c:compEvent" action="{!c.loadStrategy}"/>
-<aura:handler name="loadStrategy" event="c:compEvent" action="{!c.loadTreeStrategy}"/>
-<aura:handler name="saveEvt" event="c:saveEvent"
-    action="{!c.saveStrategy}"/>
+<aura:handler name="loadStrategy" event="c:compEvent" action="{!c.LoadStrategy}"/>
 
 <aura:registerEvent name="loadStrategy" type="c:compEvent"/>
+
+
 
     <div class="slds-card" >
         <lightning:spinner aura:id="mySpinner" class="slds-hide" size="large" />
@@ -21,17 +16,16 @@
         <p></p>
      
         <div aura:id="fileInput" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" >Drop Here!</div> 
+     
         <div class="slds-grid ">
 
             <div class="slds-col">
-                <lightning:tree items="{! v.treeItems }" header="NodeTree" onselect="{! c.handleTreeSelect }"/>
-
+                Node Tree
             </div>
 
             <div class="slds-col">
                 Node Properties
-                {!v.body}                
-                <c:BasePropertyPage nodeItem="{! v.curStratNode }"/>
+                {!v.body}
             </div>
 
         </div>

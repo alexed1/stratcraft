@@ -1,5 +1,4 @@
 public with sharing class BuildTree {
-    public static Integer treeCount = 0;
     public BuildTree() {
 
     }
@@ -8,7 +7,6 @@ public with sharing class BuildTree {
     	public string name;
     	public boolean expanded;
     	public List<TreeNode> items;
-      public String parentNode;
     	public string label { get; set; }
 		public string href;
 
@@ -20,7 +18,7 @@ public with sharing class BuildTree {
 
     public static string Assemble(Strategy curStrategy) {
 		//find the strategyNode with name RootNode and assign it to curStrategyNode..
-    
+
     	StrategyNode curStratNode = curStrategy.FindNodeByName('RootNode');
     	
     	//Create an empty array of TreeNodes    
@@ -29,7 +27,6 @@ public with sharing class BuildTree {
     	treeRepresentation.add(BuildTreeItems(curStrategy, 'RootNode'));
     	string jsonTreeItems = JSON.serialize(treeRepresentation);
     	System.debug('treeItems: ' + jsonTreeItems);
-      validateTree(curStrategy);
     	return jsonTreeItems;
     }
 
@@ -40,13 +37,11 @@ public with sharing class BuildTree {
        //find the node matching the current nodename
        StrategyNode curStratNode = curStrategy.FindNodeByName(curNodeName);
        if (curStratNode == null) throw new BaseException('unable to find a node with name = ' + curNodeName + '. make sure you have a RootNode');
-       treeCount++;
-
+       
        TreeNode curTreeNode = new TreeNode();
        curTreeNode.label = curStratNode.name;
        curTreeNode.name = curTreeNode.label;
-       curTreeNode.parentNode = curStratNode.parentNodeName;
-       //curTreeNode.href = '#' + curStratNode.name;
+       curTreeNode.href = '#' + curStratNode.name;
     
        // Find the child nodes for this node by searching the strategy for all strategyNodes that have as their parent the current node.
        List<StrategyNode> childNodes = curStratNode.FindChildNodes();
@@ -58,9 +53,5 @@ public with sharing class BuildTree {
        return curTreeNode;
     }
 
-    public static void validateTree(Strategy curStrategy) {
-      if (curStrategy.nodes.size() != treeCount){
-        throw new BaseException('Exception during saving a tree - not all nodes were used');
-      }
-    }
+
 }

@@ -1,3 +1,0 @@
-({
-    init: function (component) {}
-})

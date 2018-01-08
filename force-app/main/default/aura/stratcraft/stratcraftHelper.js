@@ -1,26 +1,47 @@
 ({
-    displayToast : function (title, message, type) {
-      var toast = $A.get("e.force:showToast");
- 
-      // For lightning1 show the toast
-      if (toast) {
-          //fire the toast event in Salesforce1
-          toast.setParams({
-              "title": title,
-              "message": message,
-              "type": type || "other",
-              "duration" : 8000
-          });
- 
-          toast.fire();
-      } else { // otherwise throw an alert
-          alert(title + ': ' + message);
-      }
-    },  
-
-    toggleSpinner : function(cmp) {
-      var spinner = cmp.find("mySpinner");
-      $A.util.toggleClass(spinner, "slds-hide");
-    },  
+    initTree: function (component, event, helper) {
+    var items = [{
+            "label": "Western Sales Director",
+            "name": "1",
+            "expanded": true,
+            "items": [{
+                "label": "Western Sales Manager",
+                "name": "2",
+                "expanded": true,
+                "items" :[{
+                    "label": "CA Sales Rep",
+                    "name": "3",
+                    "expanded": true,
+                    "items" : []
+                },{
+                    "label": "OR Sales Rep",
+                    "name": "4",
+                    "expanded": true,
+                    "items" : []
+                }]
+            }]
+        }, {
+            "label": "Eastern Sales Director",
+            "name": "5",
+            "expanded": false,
+            "items": [{
+                "label": "Easter Sales Manager",
+                "name": "6",
+                "expanded": true,
+                "items" :[{
+                    "label": "NY Sales Rep",
+                    "name": "7",
+                    "expanded": true,
+                    "items" : []
+                }, {
+                    "label": "MA Sales Rep",
+                    "name": "8",
+                    "expanded": true,
+                    "items" : []
+                }]
+            }]
+        }];
+        component.set('v.treeItems', items);
+    }     
 
 })
