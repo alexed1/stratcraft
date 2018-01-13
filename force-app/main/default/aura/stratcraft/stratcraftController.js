@@ -121,13 +121,4 @@
         });
         cmp.set("v.curStrat", curStrat);
     },
-
-    testStrategy : function(cmp, event, helper){
-      console.log(cmp.get("v.treeItems"));
-    },
-
-    testTree : function(cmp, event, helper){
-      console.log(cmp.get("v.curStrat"));
-    },
-
 })

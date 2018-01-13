@@ -17,8 +17,6 @@
 
 
 <aura:registerEvent name="loadStrategy" type="c:compEvent"/>
-    <lightning:button variant="brand" label="Strategy!!!" onclick="{! c.testStrategy }" />
-    <lightning:button variant="brand" label="Tree!!!" onclick="{! c.testTree }" />
     <div class="slds-card" >
         <lightning:spinner aura:id="mySpinner" class="slds-hide" size="large" />
         Header
@@ -28,7 +26,6 @@
 
             <div class="slds-col">
                 <c:treeNode treeItems="{! v.treeItems }" header="NodeTree"/>
-                <!--<lightning:tree items="{! v.treeItems }" header="NodeTree" onselect="{! c.handleTreeSelect }"/>-->
             </div>
 
             <div class="slds-col">

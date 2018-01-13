@@ -360,7 +360,7 @@
             "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft",
             "isDirectory": true,
             "size": 0,
-            "modifiedTime": 1515869100474,
+            "modifiedTime": 1515869181146,
             "changeTime": 1515531776246,
             "contentHash": "6100ab4f0dd46a9c7aa7cb7f28bf69e2a2a9267e",
             "isMetadataFile": false,
@@ -387,15 +387,15 @@
     [
         "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft\\stratcraft.cmp",
         {
+            "state": "u",
             "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft\\stratcraft.cmp",
             "isDirectory": false,
-            "size": 1903,
-            "modifiedTime": 1515868649786,
-            "changeTime": 1515868649786,
-            "contentHash": "da5a2414d2d78848aa34da0bb59ce91b30ed126e",
             "isMetadataFile": false,
-            "state": "u",
-            "isWorkspace": false
+            "size": 1610,
+            "modifiedTime": 1515869586479,
+            "changeTime": 1515869586479,
+            "isWorkspace": false,
+            "contentHash": "7b2228215cdb41027fe20022553f93de883b3e51"
         }
     ],
     [
@@ -465,11 +465,11 @@
             "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft\\stratcraftController.js",
             "isDirectory": false,
             "isMetadataFile": false,
-            "size": 5422,
-            "modifiedTime": 1515869100461,
-            "changeTime": 1515869100472,
+            "size": 5226,
+            "modifiedTime": 1515869592907,
+            "changeTime": 1515869592907,
             "isWorkspace": false,
-            "contentHash": "b07be28e1a35c0f43e8ab83a2167804a426cf29d"
+            "contentHash": "f4a354bc70f7b3f7708b476274ef977ec894ac50"
         }
     ],
     [
@@ -1454,10 +1454,10 @@
             "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\treeNode\\treeNodeController.js",
             "isDirectory": false,
             "isMetadataFile": false,
-            "size": 296,
-            "modifiedTime": 1515869106041,
-            "changeTime": 1515869106041,
-            "contentHash": "68d2c8236cb1a061f19807b8019764e4a791b8e5"
+            "size": 235,
+            "modifiedTime": 1515869156000,
+            "changeTime": 1515869156000,
+            "contentHash": "8ac921107ac943d83f2475b2fe2d4ce81216b373"
         }
     ],
     [
