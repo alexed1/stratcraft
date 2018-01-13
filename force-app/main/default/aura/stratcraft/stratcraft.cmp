@@ -1,37 +1,40 @@
 <aura:component implements="flexipage:availableForAllPageTypes" controller="StrategyCrafterController">
 
 <aura:attribute name="strategyXML" type="String" />
+<aura:attribute name="curStratCopy" type="Strategy" />
 <aura:attribute name="curStrat" type="Strategy" />
 <aura:attribute name="curStratNode" type="Object" />
-<aura:attribute name="copyStrat" type="Strategy" />
 <aura:attribute name="treeStart" type="String" />
 <aura:attribute name="treeItems" type="Object" />
+<aura:attribute name="originalNode" type="Object"/>
+<aura:attribute name="qwe" type="String" default="456"/>
 
 <aura:handler name="init" value="{!this}" action="{!c.init}" />
 <aura:handler name="loadStrategy" event="c:compEvent" action="{!c.loadStrategy}"/>
 <aura:handler name="loadStrategy" event="c:compEvent" action="{!c.loadTreeStrategy}"/>
-<aura:handler name="saveEvt" event="c:saveEvent"
-    action="{!c.saveStrategy}"/>
+<aura:handler event="c:strategyUpdatedEvent" action="{!c.testUpdateEvt}"/>
+<aura:handler event="c:saveEvent" action="{!c.handleTreeSelect }"/>
+
 
 <aura:registerEvent name="loadStrategy" type="c:compEvent"/>
-
+    <lightning:button variant="brand" label="Strategy!!!" onclick="{! c.testStrategy }" />
+    <lightning:button variant="brand" label="Tree!!!" onclick="{! c.testTree }" />
     <div class="slds-card" >
         <lightning:spinner aura:id="mySpinner" class="slds-hide" size="large" />
         Header
         <p></p>
-     
         <div aura:id="fileInput" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" >Drop Here!</div> 
         <div class="slds-grid ">
 
             <div class="slds-col">
-                <lightning:tree items="{! v.treeItems }" header="NodeTree" onselect="{! c.handleTreeSelect }"/>
-
+                <c:treeNode treeItems="{! v.treeItems }" header="NodeTree"/>
+                <!--<lightning:tree items="{! v.treeItems }" header="NodeTree" onselect="{! c.handleTreeSelect }"/>-->
             </div>
 
             <div class="slds-col">
                 Node Properties
                 {!v.body}                
-                <c:BasePropertyPage nodeItem="{! v.curStratNode }"/>
+                <c:BasePropertyPage aura:id="treeNodeItem"/>
             </div>
 
         </div>

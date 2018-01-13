@@ -1,0 +1,1489 @@
+[
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1515531364184,
+            "changeTime": 1515531776870,
+            "contentHash": "b28b7af69320201d1cf206ebf28373980add1451",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": true
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1515531364185,
+            "changeTime": 1515531776879,
+            "contentHash": "7505d64a54e061b7acd54ccd58b49dc43500b635",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1515531776834,
+            "changeTime": 1515531776834,
+            "contentHash": "747cf481a96be6b665b9d18100f4f53338021582",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1515847564441,
+            "changeTime": 1515847564441,
+            "contentHash": "250d0c19cd06cb7e8b8c14bf7ed861db6aabaa38",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\BasePropertyPage",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\BasePropertyPage",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1515866605973,
+            "changeTime": 1515531776039,
+            "contentHash": "3355ae19d7ff6802e5891b9ab50b76c67b7ac273",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\BasePropertyPage\\BasePropertyPage.cmp",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\BasePropertyPage\\BasePropertyPage.cmp",
+            "isDirectory": false,
+            "size": 928,
+            "modifiedTime": 1515866598946,
+            "changeTime": 1515866598946,
+            "contentHash": "70cac14bbf0a9e748c8c943de22957baa8056a4f",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\BasePropertyPage\\BasePropertyPage.cmp-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\BasePropertyPage\\BasePropertyPage.cmp-meta.xml",
+            "isDirectory": false,
+            "size": 253,
+            "modifiedTime": 1514882713542,
+            "changeTime": 1514882713542,
+            "contentHash": "42819ef86d6f629e193776bc477e3c7829e11922",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\BasePropertyPage\\BasePropertyPageController.js",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\BasePropertyPage\\BasePropertyPageController.js",
+            "isDirectory": false,
+            "size": 322,
+            "modifiedTime": 1515866668901,
+            "changeTime": 1515866668901,
+            "contentHash": "3d910f6481ae6f8357a8c68d1c22a36d5a9e7ed8",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\BasePropertyPage\\BasePropertyPageHelper.js",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\BasePropertyPage\\BasePropertyPageHelper.js",
+            "isDirectory": false,
+            "size": 6,
+            "modifiedTime": 1515863188348,
+            "changeTime": 1515863188348,
+            "contentHash": "8586d770a85c5b777ad03c32deb9013a9e819924",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\compEvent",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\compEvent",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1515531776061,
+            "changeTime": 1515531776061,
+            "contentHash": "6d67647650cb00f3cf246126ff46e2ed572e478e",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\compEvent\\compEvent.evt",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\compEvent\\compEvent.evt",
+            "isDirectory": false,
+            "size": 84,
+            "modifiedTime": 1514753268959,
+            "changeTime": 1514753268959,
+            "contentHash": "fcaceffbf28725298141111c7701c71159382a5b",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\compEvent\\compEvent.evt-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\compEvent\\compEvent.evt-meta.xml",
+            "isDirectory": false,
+            "size": 233,
+            "modifiedTime": 1514753268959,
+            "changeTime": 1514753268959,
+            "contentHash": "d58c016c49b2a64fee493e860523badd017ebd63",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\GenericDefinitionsControlPanel",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\GenericDefinitionsControlPanel",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1515531776101,
+            "changeTime": 1515531776101,
+            "contentHash": "0219fe86a3cc68463a19fb9238339f47b1293a61",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\GenericDefinitionsControlPanel\\GenericDefinitionsControlPanel.cmp",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\GenericDefinitionsControlPanel\\GenericDefinitionsControlPanel.cmp",
+            "isDirectory": false,
+            "size": 254,
+            "modifiedTime": 1515233746293,
+            "changeTime": 1515233746293,
+            "contentHash": "05172e7245af63a0c60e4197be113b10b395b186",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\GenericDefinitionsControlPanel\\GenericDefinitionsControlPanel.cmp-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\GenericDefinitionsControlPanel\\GenericDefinitionsControlPanel.cmp-meta.xml",
+            "isDirectory": false,
+            "size": 267,
+            "modifiedTime": 1514910923248,
+            "changeTime": 1514910923248,
+            "contentHash": "bee529331ebf3b0f0a3a1bdc6df3998614703d1a",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\GenericDefinitionsControlPanel\\GenericDefinitionsControlPanelController.js",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\GenericDefinitionsControlPanel\\GenericDefinitionsControlPanelController.js",
+            "isDirectory": false,
+            "size": 64,
+            "modifiedTime": 1515015285522,
+            "changeTime": 1515015285522,
+            "contentHash": "1e1d7553075c37ecf9316c455facae71283b450a",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\GenericDefinitionsControlPanel\\GenericDefinitionsControlPanelHelper.js",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\GenericDefinitionsControlPanel\\GenericDefinitionsControlPanelHelper.js",
+            "isDirectory": false,
+            "size": 54,
+            "modifiedTime": 1514912969644,
+            "changeTime": 1514912969644,
+            "contentHash": "04bb43eca95c386e12800d47728c4faffa6f6bcd",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\jasmineTests",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\jasmineTests",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1515531776128,
+            "changeTime": 1515531776128,
+            "contentHash": "10843986b515b4db1ab89a59ed92cfad8dc3c759",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\jasmineTests\\jasmineTests.app",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\jasmineTests\\jasmineTests.app",
+            "isDirectory": false,
+            "size": 185,
+            "modifiedTime": 1514753268960,
+            "changeTime": 1514753268960,
+            "contentHash": "fba329e4eab6c228f9e7d8b2dd6651731b21dd6b",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\jasmineTests\\jasmineTests.app-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\jasmineTests\\jasmineTests.app-meta.xml",
+            "isDirectory": false,
+            "size": 233,
+            "modifiedTime": 1514753268961,
+            "changeTime": 1514753268961,
+            "contentHash": "d58c016c49b2a64fee493e860523badd017ebd63",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\jasmineTests\\jasmineTests.auradoc",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\jasmineTests\\jasmineTests.auradoc",
+            "isDirectory": false,
+            "size": 165,
+            "modifiedTime": 1514753268961,
+            "changeTime": 1514753268961,
+            "contentHash": "fc14e244451f86a12e22a606f2e6f5af9e8ce47e",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\saveEvent",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\saveEvent",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1515869047856,
+            "changeTime": 1515531776143,
+            "contentHash": "07558ab0ddea55596f41aec4431bcdf65dee322d",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\saveEvent\\saveEvent.evt",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\saveEvent\\saveEvent.evt",
+            "isDirectory": false,
+            "size": 136,
+            "modifiedTime": 1515869047872,
+            "changeTime": 1515869047872,
+            "contentHash": "48d10700528ab60b7b034f2028cff8d98a2922af",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\saveEvent\\saveEvent.evt-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\saveEvent\\saveEvent.evt-meta.xml",
+            "isDirectory": false,
+            "size": 233,
+            "modifiedTime": 1514753268959,
+            "changeTime": 1515233162071,
+            "contentHash": "d58c016c49b2a64fee493e860523badd017ebd63",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1515869100474,
+            "changeTime": 1515531776246,
+            "contentHash": "6100ab4f0dd46a9c7aa7cb7f28bf69e2a2a9267e",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft\\stratcraft.auradoc",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft\\stratcraft.auradoc",
+            "isDirectory": false,
+            "size": 214,
+            "modifiedTime": 1514753268962,
+            "changeTime": 1514753268962,
+            "contentHash": "407a14e54b2a31f34bdc3d6864f898b846cd6f14",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft\\stratcraft.cmp",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft\\stratcraft.cmp",
+            "isDirectory": false,
+            "size": 1903,
+            "modifiedTime": 1515868649786,
+            "changeTime": 1515868649786,
+            "contentHash": "da5a2414d2d78848aa34da0bb59ce91b30ed126e",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft\\stratcraft.cmp-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft\\stratcraft.cmp-meta.xml",
+            "isDirectory": false,
+            "size": 247,
+            "modifiedTime": 1514753268964,
+            "changeTime": 1514753268964,
+            "contentHash": "9903cfb4baffc3145b3a34f372bfd48aee88e922",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft\\stratcraft.css",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft\\stratcraft.css",
+            "isDirectory": false,
+            "size": 12,
+            "modifiedTime": 1514753268964,
+            "changeTime": 1514753268964,
+            "contentHash": "62fce833b8cbf54a137353694e5e7fb5183a3aa5",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft\\stratcraft.design",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft\\stratcraft.design",
+            "isDirectory": false,
+            "size": 42,
+            "modifiedTime": 1514753268965,
+            "changeTime": 1514753268965,
+            "contentHash": "6ea7d49903f517fcd762a13181f931479bb35c24",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft\\stratcraft.svg",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft\\stratcraft.svg",
+            "isDirectory": false,
+            "size": 667,
+            "modifiedTime": 1514753268965,
+            "changeTime": 1514753268965,
+            "contentHash": "fe7fd10b3d5c910463a4cbaaa998b5e75bd6ca8a",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft\\stratcraftController.js",
+        {
+            "state": "u",
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft\\stratcraftController.js",
+            "isDirectory": false,
+            "isMetadataFile": false,
+            "size": 5422,
+            "modifiedTime": 1515869100461,
+            "changeTime": 1515869100472,
+            "isWorkspace": false,
+            "contentHash": "b07be28e1a35c0f43e8ab83a2167804a426cf29d"
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft\\stratcraftHelper.js",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft\\stratcraftHelper.js",
+            "isDirectory": false,
+            "size": 5181,
+            "modifiedTime": 1515867140401,
+            "changeTime": 1515867140410,
+            "contentHash": "edee47d2d5299f448c2f341ef3b5587a38303b96",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft\\stratcraftRenderer.js",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraft\\stratcraftRenderer.js",
+            "isDirectory": false,
+            "size": 55,
+            "modifiedTime": 1514753268967,
+            "changeTime": 1514753268967,
+            "contentHash": "3ef474273bcb41f3564687a65b0357460ae004ed",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraftApp",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraftApp",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1515531776272,
+            "changeTime": 1515531776272,
+            "contentHash": "a80739972626e2e33123a87bea836ba712e9d4bc",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraftApp\\stratcraftApp.app",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraftApp\\stratcraftApp.app",
+            "isDirectory": false,
+            "size": 82,
+            "modifiedTime": 1514753268968,
+            "changeTime": 1514753268968,
+            "contentHash": "bae4c13e29efdaac44f538584b76dc56cf120ae6",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraftApp\\stratcraftApp.app-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraftApp\\stratcraftApp.app-meta.xml",
+            "isDirectory": false,
+            "size": 233,
+            "modifiedTime": 1514753268969,
+            "changeTime": 1514753268969,
+            "contentHash": "d58c016c49b2a64fee493e860523badd017ebd63",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraftTokens",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraftTokens",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1515531776290,
+            "changeTime": 1515531776290,
+            "contentHash": "f7223afded98106b3d1f048d7d9d809c3323ef78",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraftTokens\\stratcraftTokens.tokens",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraftTokens\\stratcraftTokens.tokens",
+            "isDirectory": false,
+            "size": 53,
+            "modifiedTime": 1514753268970,
+            "changeTime": 1514753268970,
+            "contentHash": "cd3dc22f7335d4b49389b3ba96788327a93d2917",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraftTokens\\stratcraftTokens.tokens-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\stratcraftTokens\\stratcraftTokens.tokens-meta.xml",
+            "isDirectory": false,
+            "size": 233,
+            "modifiedTime": 1514753268970,
+            "changeTime": 1514753268970,
+            "contentHash": "d58c016c49b2a64fee493e860523badd017ebd63",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\strategyUpdatedEvent",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\strategyUpdatedEvent",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1515531776303,
+            "changeTime": 1515531776303,
+            "contentHash": "7c003012534fddb600d96c11bb470e31a1f9c2d4",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\strategyUpdatedEvent\\strategyUpdatedEvent.evt",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\strategyUpdatedEvent\\strategyUpdatedEvent.evt",
+            "isDirectory": false,
+            "size": 227,
+            "modifiedTime": 1515407643547,
+            "changeTime": 1515407643547,
+            "contentHash": "3cc9b3cc3042b94f3b7131ce88bee211f5a53979",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\strategyUpdatedEvent\\strategyUpdatedEvent.evt-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\strategyUpdatedEvent\\strategyUpdatedEvent.evt-meta.xml",
+            "isDirectory": false,
+            "size": 233,
+            "modifiedTime": 1514753268959,
+            "changeTime": 1515351904264,
+            "contentHash": "d58c016c49b2a64fee493e860523badd017ebd63",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1515531776721,
+            "changeTime": 1515531776721,
+            "contentHash": "83c1b8a21718dc8af19df3d656c93a8145c6d6f6",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\BaseException.cls",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\BaseException.cls",
+            "isDirectory": false,
+            "size": 64,
+            "modifiedTime": 1514753268971,
+            "changeTime": 1514753268971,
+            "contentHash": "90bf1a56e705cd3b81ff29d0bc0d4a29b5291bea",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\BaseException.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\BaseException.cls-meta.xml",
+            "isDirectory": false,
+            "size": 196,
+            "modifiedTime": 1514753268972,
+            "changeTime": 1514753268972,
+            "contentHash": "eeaa5aaed2d8e8581eb3e97a1c9be91161153bd2",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\BuildTree.cls",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\BuildTree.cls",
+            "isDirectory": false,
+            "size": 2763,
+            "modifiedTime": 1515233977454,
+            "changeTime": 1515233977454,
+            "contentHash": "641e0d9e06032a9d8e1b59135c9039e27db9947e",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\BuildTree.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\BuildTree.cls-meta.xml",
+            "isDirectory": false,
+            "size": 192,
+            "modifiedTime": 1514753268973,
+            "changeTime": 1514753268973,
+            "contentHash": "1ddaed4af4bc80c17b3f1f6f1e4d799820d00657",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\BuildTreeTests.cls",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\BuildTreeTests.cls",
+            "isDirectory": false,
+            "size": 894,
+            "modifiedTime": 1514753268974,
+            "changeTime": 1514753268974,
+            "contentHash": "438853f261d6635b410b649e9c46c77fd2683f2d",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\BuildTreeTests.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\BuildTreeTests.cls-meta.xml",
+            "isDirectory": false,
+            "size": 197,
+            "modifiedTime": 1514753268975,
+            "changeTime": 1514753268975,
+            "contentHash": "9c3fd970287842c0fada0dda3a71f0a997024dd9",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\Fixtures.cls",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\Fixtures.cls",
+            "isDirectory": false,
+            "size": 2430,
+            "modifiedTime": 1514753268975,
+            "changeTime": 1514753268975,
+            "contentHash": "97ff571a2767700a2992551bf8dc30369e7ed77d",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\Fixtures.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\Fixtures.cls-meta.xml",
+            "isDirectory": false,
+            "size": 191,
+            "modifiedTime": 1514753268976,
+            "changeTime": 1514753268976,
+            "contentHash": "ea9130c03b5f52986e3ad210c7e53332a4b42cf1",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\ParseStrategyXML.cls",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\ParseStrategyXML.cls",
+            "isDirectory": false,
+            "size": 2196,
+            "modifiedTime": 1515223458515,
+            "changeTime": 1515223458515,
+            "contentHash": "763db31c040869a692f0a280321cc7871bd97688",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\ParseStrategyXML.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\ParseStrategyXML.cls-meta.xml",
+            "isDirectory": false,
+            "size": 199,
+            "modifiedTime": 1514753268977,
+            "changeTime": 1514753268977,
+            "contentHash": "9231045f09f6afeec7d38bdcf0d14932c8ca0da7",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\ParseStrategyXMLTests.cls",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\ParseStrategyXMLTests.cls",
+            "isDirectory": false,
+            "size": 1406,
+            "modifiedTime": 1514753268978,
+            "changeTime": 1514753268978,
+            "contentHash": "a18697fe2bc11af90ff2a7e567bf132f43ce8639",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\ParseStrategyXMLTests.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\ParseStrategyXMLTests.cls-meta.xml",
+            "isDirectory": false,
+            "size": 204,
+            "modifiedTime": 1514753268978,
+            "changeTime": 1514753268978,
+            "contentHash": "95042c35ca30e21c82d198d51d786ae530ef4583",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StratcraftController.cls",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StratcraftController.cls",
+            "isDirectory": false,
+            "size": 302,
+            "modifiedTime": 1514753268979,
+            "changeTime": 1514753268979,
+            "contentHash": "71bf58f282f689f8883cc23d757f539bc971cf5b",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StratcraftController.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StratcraftController.cls-meta.xml",
+            "isDirectory": false,
+            "size": 203,
+            "modifiedTime": 1514753268980,
+            "changeTime": 1514753268980,
+            "contentHash": "1a46105785780002fbdf4c52a143b5640f85e38b",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\Strategy.cls",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\Strategy.cls",
+            "isDirectory": false,
+            "size": 1101,
+            "modifiedTime": 1515233979122,
+            "changeTime": 1515233979122,
+            "contentHash": "7c2d23f66b59ff055d87d26be0f35ca1485dc1c5",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\Strategy.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\Strategy.cls-meta.xml",
+            "isDirectory": false,
+            "size": 191,
+            "modifiedTime": 1514753268981,
+            "changeTime": 1514753268981,
+            "contentHash": "87e8244de8c754f5699049d05dec77bedd922ed4",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StrategyCrafterController.cls",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StrategyCrafterController.cls",
+            "isDirectory": false,
+            "size": 1716,
+            "modifiedTime": 1515223537328,
+            "changeTime": 1515223537328,
+            "contentHash": "d5941dc85b6eebfc61f75d26d1b83b24b22c673e",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StrategyCrafterController.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StrategyCrafterController.cls-meta.xml",
+            "isDirectory": false,
+            "size": 179,
+            "modifiedTime": 1514753268982,
+            "changeTime": 1514753268982,
+            "contentHash": "0a15b49880adb4316e2657cfbee30a236c1592e4",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StrategyCrafterControllerTest.cls",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StrategyCrafterControllerTest.cls",
+            "isDirectory": false,
+            "size": 3841,
+            "modifiedTime": 1514753268983,
+            "changeTime": 1514753268983,
+            "contentHash": "6a815f337196a7b7ddf3eeadb9c678d28a8ebdae",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StrategyCrafterControllerTest.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StrategyCrafterControllerTest.cls-meta.xml",
+            "isDirectory": false,
+            "size": 179,
+            "modifiedTime": 1514753268983,
+            "changeTime": 1514753268983,
+            "contentHash": "0a15b49880adb4316e2657cfbee30a236c1592e4",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StrategyNode.cls",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StrategyNode.cls",
+            "isDirectory": false,
+            "size": 897,
+            "modifiedTime": 1514753268984,
+            "changeTime": 1514753268984,
+            "contentHash": "fcb0b120b6c3ec4aedf53fd6f6e875345ccd0f04",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StrategyNode.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StrategyNode.cls-meta.xml",
+            "isDirectory": false,
+            "size": 195,
+            "modifiedTime": 1514753268985,
+            "changeTime": 1514753268985,
+            "contentHash": "2b9e6e8cfcf1824f6648cd57e75855fffcb2b6da",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StrategyNodeTests.cls",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StrategyNodeTests.cls",
+            "isDirectory": false,
+            "size": 499,
+            "modifiedTime": 1514753268985,
+            "changeTime": 1514753268985,
+            "contentHash": "5fdc66f54daa9dac465326f90943c6eb433ca790",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StrategyNodeTests.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StrategyNodeTests.cls-meta.xml",
+            "isDirectory": false,
+            "size": 200,
+            "modifiedTime": 1514753268986,
+            "changeTime": 1514753268986,
+            "contentHash": "d8b72b4ef1cbb711cc1a026acf751fa68989f82b",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StrategyTests.cls",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StrategyTests.cls",
+            "isDirectory": false,
+            "size": 1241,
+            "modifiedTime": 1514753268986,
+            "changeTime": 1514753268986,
+            "contentHash": "577c06d5e517224032c8691cae719c19c59d779b",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StrategyTests.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\StrategyTests.cls-meta.xml",
+            "isDirectory": false,
+            "size": 196,
+            "modifiedTime": 1514753268987,
+            "changeTime": 1514753268987,
+            "contentHash": "46d21d0e84449fbbe5252a8b32539f01756b038b",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\WriteXML.cls",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\WriteXML.cls",
+            "isDirectory": false,
+            "size": 2336,
+            "modifiedTime": 1514753268988,
+            "changeTime": 1514753268988,
+            "contentHash": "4fcd7e5ab271e49124402142139f1cc070677ffd",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\WriteXML.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\WriteXML.cls-meta.xml",
+            "isDirectory": false,
+            "size": 191,
+            "modifiedTime": 1514753268989,
+            "changeTime": 1514753268989,
+            "contentHash": "c877ccebb186d1514348900d4658f301a75dafdf",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\WriteXMLTests.cls",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\WriteXMLTests.cls",
+            "isDirectory": false,
+            "size": 1735,
+            "modifiedTime": 1514753268990,
+            "changeTime": 1514753268990,
+            "contentHash": "559e28ec7a3bf793ecf6e74a06fcad2a712dc9e9",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\WriteXMLTests.cls-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\classes\\WriteXMLTests.cls-meta.xml",
+            "isDirectory": false,
+            "size": 196,
+            "modifiedTime": 1514753268990,
+            "changeTime": 1514753268990,
+            "contentHash": "686e59cf631c59ee3bb84ee9813c33a17252887c",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\flexipages",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\flexipages",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1515531776736,
+            "changeTime": 1515531776736,
+            "contentHash": "69040f01093f9b66ed6563f5ecef10c84a612425",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\flexipages\\Strategy_Crafter.flexipage-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\flexipages\\Strategy_Crafter.flexipage-meta.xml",
+            "isDirectory": false,
+            "size": 499,
+            "modifiedTime": 1514753268991,
+            "changeTime": 1514753268991,
+            "contentHash": "d47391cec7251246a0bb8899b7c11569f64bfc54",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\profiles",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\profiles",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1515531776775,
+            "changeTime": 1515531776775,
+            "contentHash": "9c367b0e719eb8c48c5b0d9cbfb5f580a4bd6717",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\profiles\\Admin.profile-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\profiles\\Admin.profile-meta.xml",
+            "isDirectory": false,
+            "size": 17501,
+            "modifiedTime": 1514753268992,
+            "changeTime": 1514753268992,
+            "contentHash": "8a182010accf0860c05a799164479b597c39cd24",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\profiles\\Custom%3A Marketing Profile.profile-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\profiles\\Custom%3A Marketing Profile.profile-meta.xml",
+            "isDirectory": false,
+            "size": 4371,
+            "modifiedTime": 1514753268994,
+            "changeTime": 1514753268994,
+            "contentHash": "eccebd6d04292ad7943350bb37408ff871848e02",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\profiles\\Custom%3A Sales Profile.profile-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\profiles\\Custom%3A Sales Profile.profile-meta.xml",
+            "isDirectory": false,
+            "size": 4371,
+            "modifiedTime": 1514753268995,
+            "changeTime": 1514753268995,
+            "contentHash": "eccebd6d04292ad7943350bb37408ff871848e02",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\profiles\\Custom%3A Support Profile.profile-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\profiles\\Custom%3A Support Profile.profile-meta.xml",
+            "isDirectory": false,
+            "size": 4721,
+            "modifiedTime": 1514753268995,
+            "changeTime": 1514753268995,
+            "contentHash": "4b355b95753fad88f0c94f808ae8b252cfb31224",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\settings",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\settings",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1515531776788,
+            "changeTime": 1515531776788,
+            "contentHash": "e364e4d3c503804e0ca6d6bb92ab9cc0ceac2327",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\settings\\Security.settings-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\settings\\Security.settings-meta.xml",
+            "isDirectory": false,
+            "size": 2342,
+            "modifiedTime": 1514753268996,
+            "changeTime": 1514753268996,
+            "contentHash": "c796a3f3bef17e3320e8ff9850b990ff71195e4c",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\staticresources",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\staticresources",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1515531776817,
+            "changeTime": 1515531776817,
+            "contentHash": "56976976d60e3947e608018d901e4b9fc171c733",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\staticresources\\stratcraftTests.js",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\staticresources\\stratcraftTests.js",
+            "isDirectory": false,
+            "size": 1867,
+            "modifiedTime": 1514753268997,
+            "changeTime": 1514753268997,
+            "contentHash": "bc64dc112b3f081d5670212ed307cfbcaebeaf5e",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\staticresources\\stratcraftTests.resource-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\staticresources\\stratcraftTests.resource-meta.xml",
+            "isDirectory": false,
+            "size": 215,
+            "modifiedTime": 1514753268998,
+            "changeTime": 1514753268998,
+            "contentHash": "6dbc3e89ea330add709decf65a6a0a834b3e6ef4",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\tabs",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\tabs",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1515531776831,
+            "changeTime": 1515531776831,
+            "contentHash": "14fb484c722be8448e2310fc250069d8ce5a6e22",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\tabs\\Strategy_Crafter.tab-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\tabs\\Strategy_Crafter.tab-meta.xml",
+            "isDirectory": false,
+            "size": 343,
+            "modifiedTime": 1514753268999,
+            "changeTime": 1514753268999,
+            "contentHash": "45ba78617f6486ede4edb89afccd26a4bebcec66",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\testSuites",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\testSuites",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1515531776846,
+            "changeTime": 1515531776846,
+            "contentHash": "a95d85be37a3f61fc7da97caa6a1482b16a4f402",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\testSuites\\VladSuite.testSuite-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\testSuites\\VladSuite.testSuite-meta.xml",
+            "isDirectory": false,
+            "size": 181,
+            "modifiedTime": 1514753268999,
+            "changeTime": 1514753268999,
+            "contentHash": "b9116714357be50f7c56f7da283909bd47c8769a",
+            "isMetadataFile": true,
+            "state": "u",
+            "isWorkspace": false,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1515532072190,
+            "changeTime": 1515532072190,
+            "contentHash": "f16f8efb5a78c2e628baa6c4af563aaefcbc06d3",
+            "isMetadataFile": false,
+            "state": "u",
+            "isWorkspace": true,
+            "isArtifactRoot": false
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\treeNode",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\treeNode",
+            "isDirectory": true,
+            "size": 0,
+            "modifiedTime": 1515847564476,
+            "changeTime": 1515847564476,
+            "contentHash": "40a05780c0cd10687ed68d12bfdf4e29824597f7",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\treeNode\\treeNode.auradoc",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\treeNode\\treeNode.auradoc",
+            "isDirectory": false,
+            "size": 209,
+            "modifiedTime": 1515847564469,
+            "changeTime": 1515847564469,
+            "contentHash": "fd7f560d82324d6a8255c8c6ebf60698f5f93f1e",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\treeNode\\treeNode.cmp",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\treeNode\\treeNode.cmp",
+            "isDirectory": false,
+            "size": 246,
+            "modifiedTime": 1515868007116,
+            "changeTime": 1515868007116,
+            "contentHash": "574d4634fa647fa63bc803c0107f7c4a553748da",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\treeNode\\treeNode.cmp-meta.xml",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\treeNode\\treeNode.cmp-meta.xml",
+            "isDirectory": false,
+            "size": 240,
+            "modifiedTime": 1515847564453,
+            "changeTime": 1515847564453,
+            "contentHash": "7bc7b59ae910b21758aa55525898e6576c1869cd",
+            "isMetadataFile": true,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\treeNode\\treeNode.css",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\treeNode\\treeNode.css",
+            "isDirectory": false,
+            "size": 10,
+            "modifiedTime": 1515847564461,
+            "changeTime": 1515847564461,
+            "contentHash": "44063bf628f237edaa1f3f358714dd40ac321703",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\treeNode\\treeNode.design",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\treeNode\\treeNode.design",
+            "isDirectory": false,
+            "size": 40,
+            "modifiedTime": 1515847564480,
+            "changeTime": 1515847564480,
+            "contentHash": "c5618bc7228e29c74b07b78fd040e05ae8a541ec",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\treeNode\\treeNode.svg",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\treeNode\\treeNode.svg",
+            "isDirectory": false,
+            "size": 661,
+            "modifiedTime": 1515847564467,
+            "changeTime": 1515847564467,
+            "contentHash": "721eeffe17135535c3834b77f1e1968fe6360ed4",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\treeNode\\treeNodeController.js",
+        {
+            "state": "u",
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\treeNode\\treeNodeController.js",
+            "isDirectory": false,
+            "isMetadataFile": false,
+            "size": 296,
+            "modifiedTime": 1515869106041,
+            "changeTime": 1515869106041,
+            "contentHash": "68d2c8236cb1a061f19807b8019764e4a791b8e5"
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\treeNode\\treeNodeHelper.js",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\treeNode\\treeNodeHelper.js",
+            "isDirectory": false,
+            "size": 45,
+            "modifiedTime": 1515847564459,
+            "changeTime": 1515847564459,
+            "contentHash": "fa35ebecd73c127729bf311a95b613f711a6f10b",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ],
+    [
+        "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\treeNode\\treeNodeRenderer.js",
+        {
+            "sourcePath": "C:\\Users\\1\\Documents\\The Welkin Suite\\Projects\\STCraft1\\STCraft1\\force-app\\main\\default\\aura\\treeNode\\treeNodeRenderer.js",
+            "isDirectory": false,
+            "size": 50,
+            "modifiedTime": 1515847564465,
+            "changeTime": 1515847564465,
+            "contentHash": "8b79b016f08440c9b2f7d706a6d21229c854540b",
+            "isMetadataFile": false,
+            "state": "u"
+        }
+    ]
+]

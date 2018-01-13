@@ -1,1 +1,3 @@
-<aura:event type="APPLICATION" description="Event for saving changed tree" />
+<aura:event type="APPLICATION" description="Event for saving changed tree" >
+  <aura:attribute name="name" type="String"/>
+</aura:event>

@@ -36,15 +36,8 @@
             var state = response.getState();
             if (cmp.isValid() && state === "SUCCESS") {
                 var result = response.getReturnValue();
+                cmp.set("v.curStratCopy", result);
                 cmp.set("v.curStrat", result);
-                cmp.set("v.copyStrat", result);
-                console.log(result.name);
-                result.nodes.forEach(function(entry){
-                    console.log(entry.name);
-                    console.log(entry.description);
-                    console.log(entry.definition);
-                    console.log(entry.type);
-                });
             }
             var spinner = cmp.find("mySpinner");
             $A.util.toggleClass(spinner, "slds-hide");
@@ -60,53 +53,81 @@
             if (cmp.isValid() && state === "SUCCESS") {
                 var result = response.getReturnValue();
                 cmp.set("v.treeStart", result);
-                cmp.set("v.treeItems", JSON.parse(result));                
+                cmp.set("v.treeItems", JSON.parse(result));               
             }
         });
         $A.enqueueAction(action);
     },
-
-
-    createStrategyNode : function(component, event) { 
-
-    }, 
 
     onDragOver: function(component, event) { 
         event.preventDefault(); 
     }, 
 
-    handleTreeSelect: function (component, event) {
+    handleTreeSelect: function (component, event, helper) {
         //return name of selected tree item
-        var myName = event.getParam('name');
+        var myName = event.getParam("name");
         var curStrat = component.get("v.curStrat");
         curStrat.nodes.forEach(function(entry){
             if (entry.name === myName) {
-                component.set("v.curStratNode", entry);
+                component.find("treeNodeItem").set("v.nodeItem", helper.clone(entry, true));
+                component.find("treeNodeItem").set("v.originalNodeItemType", 
+                                                    helper.clone(entry, true));
             }
         });
     },
 
-    saveStrategy : function (cmp, event, helper) {
-        helper.toggleSpinner(cmp);
-        
-        var action = cmp.get("c.refreshStrategy");
-        action.setParams({ strStrat : JSON.stringify(cmp.get("v.curStrat"))});
-        
-        action.setCallback(this, function(response) {
-            if (response.getReturnValue().startsWith("Validation error")) {
-                helper.displayToast('', response.getReturnValue(), 'error');
-                helper.toggleSpinner(cmp);
-                var copyStrat = cmp.get("v.copyStrat");
-                cmp.set("v.curStrat", copyStrat);
-            }
-            else if (cmp.isValid() && response.getState() === "SUCCESS") {
-                var result = response.getReturnValue();
-                    cmp.set("v.treeStart", result);
-                    var JSONResult = JSON.parse(result);
-                    cmp.set("v.treeItems", JSONResult);
-                    helper.toggleSpinner(cmp);                               
+    testUpdateEvt : function(cmp, event, helper) {
+        var originalNodeName = event.getParam("originalNodeName");
+        var updatedNode = event.getParam("updatedTreeNode");
+        var curStrat = cmp.get("v.curStrat");
+
+        curStrat.nodes.forEach(function(entry){
+            if (entry.name === originalNodeName) {
+                //if parent node was changed - validate it
+                if (entry.parentNodeName !== updatedNode.parentNodeName) {
+                    if (helper.checkForNewValidParents(cmp, 
+                                                    entry, 
+                                                    entry.parentNodeName, 
+                                                    updatedNode.parentNodeName,
+                                                    entry.name,
+                                                    updatedNode.name
+                                                    )) {
+                        helper.reparentTreeNode(cmp, entry.name, updatedNode.parentNodeName, entry.parentNodeName);
+                    }
+                    else {
+                      var originalNode = helper.clone(cmp.find("treeNodeItem").get("v.originalNodeItemType"), true);
+                      cmp.find("treeNodeItem").set("v.nodeItem", originalNode);
+                      helper.displayToast('', 'Not Valid component', 'error');
+                    }                    
+                }
+
+                //if name was changed - check for all nodes that are children of current node
+                if (entry.name !== updatedNode.name) {
+                    helper.changeAllChildNodeNames(cmp, 
+                                                    entry, 
+                                                    entry.parentNodeName, 
+                                                    updatedNode.parentNodeName,
+                                                    entry.name,
+                                                    updatedNode.name
+                                                    );
+                    helper.changeNodeName(cmp, originalNodeName, updatedNode);
+                }
+
+                for (var i in entry) {
+                  entry[i] = updatedNode[i];
+                }
+                                
             }
         });
-        $A.enqueueAction(action);
+        cmp.set("v.curStrat", curStrat);
     },
+
+    testStrategy : function(cmp, event, helper){
+      console.log(cmp.get("v.treeItems"));
+    },
+
+    testTree : function(cmp, event, helper){
+      console.log(cmp.get("v.curStrat"));
+    },
+
 })
