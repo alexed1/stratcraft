@@ -1,0 +1,4 @@
+<aura:component implements="flexipage:availableForAllPageTypes">
+    <aura:attribute name="localDefinitionString" type="String" />
+    <ui:inputTextArea class="field" value="{!v.localDefinitionString}" label="Definition" rows="6"/>
+</aura:component>
