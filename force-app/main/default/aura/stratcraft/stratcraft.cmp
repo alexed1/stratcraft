@@ -4,20 +4,22 @@
 <aura:attribute name="curStratCopy" type="Strategy" />
 <aura:attribute name="curStrat" type="Strategy" />
 <aura:attribute name="curStratNode" type="Object" />
-<aura:attribute name="treeStart" type="String" />
+<!-- <aura:attribute name="treeStart" type="String" /> -->
 <aura:attribute name="treeItems" type="Object" />
 <aura:attribute name="originalNode" type="Object"/>
 <aura:attribute name="qwe" type="String" default="456"/>
 
 <aura:handler name="init" value="{!this}" action="{!c.init}" />
-<aura:handler name="loadStrategy" event="c:compEvent" action="{!c.loadStrategy}"/>
-<aura:handler name="loadStrategy" event="c:compEvent" action="{!c.loadTreeStrategy}"/>
+<aura:handler name="xmlFileUploaded" event="c:XMLFileUploaded" action="{!c.processLoadedXMLString}"/>
+
+
 <aura:handler event="c:strategyUpdatedEvent" action="{!c.testUpdateEvt}"/>
 <aura:handler event="c:saveEvent" action="{!c.handleTreeSelect }"/>
 
 
-<aura:registerEvent name="loadStrategy" type="c:compEvent"/>
-    <div class="slds-card" >
+<aura:registerEvent name="xmlFileUploaded" type="c:XMLFileUploaded"/>
+
+<div class="slds-card" >
         <lightning:spinner aura:id="mySpinner" class="slds-hide" size="large" />
         Header
         <p></p>
@@ -35,5 +37,6 @@
             </div>
 
         </div>
-    </div>
+</div>
+
 </aura:component>	

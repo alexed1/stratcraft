@@ -23,6 +23,39 @@
       $A.util.toggleClass(spinner, "slds-hide");
     }, 
 
+    //REFACTOR these two calls should be one call
+    convertXMLToStrategy : function (cmp, event, helper) {
+        console.log('converting xml to Strategy object');
+        var action = cmp.get("c.parseStrategyString");
+        action.setParams({ xml : cmp.get("v.strategyXML") });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if (cmp.isValid() && state === "SUCCESS") {
+                var result = response.getReturnValue();
+                cmp.set("v.curStratCopy", result);  //REFACTOR: this is probably a bad idea
+                cmp.set("v.curStrat", result);
+            }
+            var spinner = cmp.find("mySpinner");
+            $A.util.toggleClass(spinner, "slds-hide");
+        });
+        $A.enqueueAction(action);
+    },
+
+    generateTreeData : function (cmp, event, helper) {
+        console.log('generating tree data');
+        var action = cmp.get("c.generateTreeData");
+        action.setParams({ xml : cmp.get("v.strategyXML") });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if (cmp.isValid() && state === "SUCCESS") {
+                var result = response.getReturnValue();
+                //cmp.set("v.treeStart", result); not being used
+                cmp.set("v.treeItems", JSON.parse(result));               
+            }
+        });
+        $A.enqueueAction(action);
+    },
+
     clone : function(obj, deep) {
       var newObj = new Object();
        

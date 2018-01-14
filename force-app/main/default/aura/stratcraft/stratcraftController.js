@@ -22,42 +22,21 @@
             reader.onloadend = function() { 
                 console.log("uploaded file data is: " + reader.result);
                 cmp.set("v.strategyXML", reader.result);
-                var cmpEvent = cmp.getEvent("loadStrategy");
+                var cmpEvent = cmp.getEvent("xmlFileUploaded");
                 cmpEvent.fire();
             }; 
             reader.readAsText(file); 
         }
     }, 
+    processLoadedXMLString : function (cmp, event, helper) { 
+        console.log('starting processing loaded xml string');
+        helper.generateTreeData(cmp, event, helper);
+        helper.convertXMLToStrategy(cmp, event, helper);
 
-    loadStrategy : function (cmp) {
-        var action = cmp.get("c.parseStrategyString");
-        action.setParams({ xml : cmp.get("v.strategyXML") });
-        action.setCallback(this, function(response) {
-            var state = response.getState();
-            if (cmp.isValid() && state === "SUCCESS") {
-                var result = response.getReturnValue();
-                cmp.set("v.curStratCopy", result);
-                cmp.set("v.curStrat", result);
-            }
-            var spinner = cmp.find("mySpinner");
-            $A.util.toggleClass(spinner, "slds-hide");
-        });
-        $A.enqueueAction(action);
+        console.log('completed processing of loaded xml string');
     },
 
-    loadTreeStrategy : function (cmp) {
-        var action = cmp.get("c.parseInputFile");
-        action.setParams({ xml : cmp.get("v.strategyXML") });
-        action.setCallback(this, function(response) {
-            var state = response.getState();
-            if (cmp.isValid() && state === "SUCCESS") {
-                var result = response.getReturnValue();
-                cmp.set("v.treeStart", result);
-                cmp.set("v.treeItems", JSON.parse(result));               
-            }
-        });
-        $A.enqueueAction(action);
-    },
+   
 
     onDragOver: function(component, event) { 
         event.preventDefault(); 
