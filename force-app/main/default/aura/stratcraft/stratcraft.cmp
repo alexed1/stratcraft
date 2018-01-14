@@ -1,3 +1,5 @@
+
+
 <aura:component implements="flexipage:availableForAllPageTypes" controller="StrategyCrafterController">
 
 <aura:attribute name="strategyXML" type="String" />
@@ -14,7 +16,7 @@
 
 
 <aura:handler event="c:strategyUpdatedEvent" action="{!c.testUpdateEvt}"/>
-<aura:handler event="c:treeNodeSelectedEvent" action="{!c.handleTreeSelect }"/>
+<aura:handler event="c:treeNodeSelectedEvent" action="{!c.handleTreeNodeSelect }"/>
 
 
 <aura:registerEvent name="xmlFileUploaded" type="c:XMLFileUploaded"/>
@@ -38,7 +40,7 @@
             <div class="slds-col">
                 Node Properties
                 {!v.body}                
-                <c:BasePropertyPage aura:id="treeNodeItem"/>
+                <c:BasePropertyPage aura:id="propertyPage"/>
             </div>
 
         </div>

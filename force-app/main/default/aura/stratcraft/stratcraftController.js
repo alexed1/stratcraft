@@ -42,14 +42,16 @@
         event.preventDefault(); 
     }, 
 
-    handleTreeSelect: function (component, event, helper) {
+    handleTreeNodeSelect: function (component, event, helper) {
         //return name of selected tree item
         var myName = event.getParam("name");
         var curStrat = component.get("v.curStrat");
-        curStrat.nodes.forEach(function(entry){
+        curStrat.nodes.forEach(function(entry){ //refactor. no need to iterate through ever node when only 1 can have the name. need a Find function that searches Nodes
+            //find the StrategyNode that has been selected, and then find its associated treeNodeItem, which is an instance of the BasePropertyPage control
+            //set both the selected and original attributes equal to clones of this StrategyNode.
             if (entry.name === myName) {
-                component.find("treeNodeItem").set("v.nodeItem", helper.clone(entry, true));
-                component.find("treeNodeItem").set("v.originalNodeItemType", 
+                component.find("propertyPage").set("v.selectedTreeNode", helper.clone(entry, true));
+                component.find("propertyPage").set("v.originalTreeNode", 
                                                     helper.clone(entry, true));
             }
         });
@@ -74,8 +76,8 @@
                         helper.reparentTreeNode(cmp, entry.name, updatedNode.parentNodeName, entry.parentNodeName);
                     }
                     else {
-                      var originalNode = helper.clone(cmp.find("treeNodeItem").get("v.originalNodeItemType"), true);
-                      cmp.find("treeNodeItem").set("v.nodeItem", originalNode);
+                      var originalNode = helper.clone(cmp.find("propertyPage").get("v.originalTreeNode"), true);
+                      cmp.find("propertyPage").set("v.selectedTreeNode", originalNode);
                       helper.displayToast('', 'Not Valid component', 'error');
                     }                    
                 }

@@ -1,6 +1,6 @@
 <aura:component implements="flexipage:availableForAllPageTypes">
-    <aura:attribute name="nodeItem" type="Object" />
-    <aura:attribute name="originalNodeItemType" type="Object" />
+    <aura:attribute name="selectedTreeNode" type="Object" />
+    <aura:attribute name="originalTreeNode" type="Object" />
     <aura:registerEvent name="treeNodeSelectedEvent" type="c:treeNodeSelectedEvent"/>
     <aura:registerEvent name="updateNodeEvt" type="c:strategyUpdatedEvent"/>
 
