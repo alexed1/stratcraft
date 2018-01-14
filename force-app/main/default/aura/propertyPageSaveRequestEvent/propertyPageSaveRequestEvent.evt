@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="Event that is fired when tree node is changed">
+    <aura:attribute name="changedStrategyNode" type="Object"/>
+    <aura:attribute name="originalNodeName" type="String"/>
+</aura:event>

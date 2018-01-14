@@ -1,0 +1,5 @@
+<aura:component>
+    <aura:attribute name="treeItems" type="String" />
+    <aura:attribute name="header" type="String" />
+    <lightning:tree items="{! v.treeItems }" header="{! v.header }" onselect="{! c.handleTreeSelect }"/>
+</aura:component>	

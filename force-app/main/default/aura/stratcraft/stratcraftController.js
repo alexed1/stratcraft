@@ -22,45 +22,62 @@
             reader.onloadend = function() { 
                 console.log("uploaded file data is: " + reader.result);
                 cmp.set("v.strategyXML", reader.result);
-                var cmpEvent = cmp.getEvent("loadStrategy");
+                var cmpEvent = cmp.getEvent("xmlFileUploaded");
                 cmpEvent.fire();
             }; 
             reader.readAsText(file); 
         }
     }, 
+    processLoadedXMLString : function (cmp, event, helper) { 
+        console.log('starting processing loaded xml string');
+        helper.generateTreeData(cmp, event, helper);
+        helper.convertXMLToStrategy(cmp, event, helper);
 
-    loadStrategy : function (cmp) {
-        var action = cmp.get("c.parseStrategyString");
-        action.setParams({ xml : cmp.get("v.strategyXML") });
-        action.setCallback(this, function(response) {
-            var state = response.getState();
-            if (cmp.isValid() && state === "SUCCESS") {
-                var result = response.getReturnValue();
-                cmp.set("v.curStrat", result);
-                console.log(result.name);
-                result.nodes.forEach(function(entry){
-                    console.log(entry.name);
-                    console.log(entry.description);
-                    console.log(entry.definition);
-                    console.log(entry.type);
-                });
-                console.log(result);
-            }
-            var spinner = cmp.find("mySpinner");
-            $A.util.toggleClass(spinner, "slds-hide");
-        });
-        $A.enqueueAction(action);
+        console.log('completed processing of loaded xml string');
     },
 
-
-    createStrategyNode : function(component, event) { 
-
-    }, 
+   
 
     onDragOver: function(component, event) { 
         event.preventDefault(); 
     }, 
 
+    handleTreeNodeSelect: function (component, event, helper) {
+        //return name of selected tree item
+        var myName = event.getParam("name");
+        var curStrat = component.get("v.curStrat");
 
+        var curNode = helper.findStrategyNodeByName(curStrat, myName);
+         
+        //find the StrategyNode that has been selected, and then find its associated propertyPage, which is an instance of the BasePropertyPage control
+        //set its attributes
+        if (curNode.name === myName) {
+            component.find("propertyPage").set("v.curNode", helper.clone(curNode, true));
+            component.find("propertyPage").set("v.originalName", myName);
+        }
+        
+    },
 
+    saveStrategy : function(cmp, event, helper) {
+        var originalNodeName = event.getParam("originalNodeName");
+        var changedNode = event.getParam("changedStrategyNode");
+        var curStrat = cmp.get("v.curStrat");
+
+        var curNode = helper.findStrategyNodeByName(curStrat, originalNodeName);
+        //if parent node was changed this is a move
+        if (curNode.parentNodeName !== changedNode.parentNodeName) {
+            helper.moveNode(cmp, curNode, changedNode);
+                           
+        }
+
+        //if name was changed - also need to update nodes that are children of current node
+        if (curNode.name !== changedNode.name) {
+            helper.updateNodeName(cmp,curNode,changedNode);
+        }
+
+        for (var i in curNode) {
+              curNode[i] = changedNode[i];
+             }   
+        cmp.set("v.curStrat", curStrat);
+    },
 })

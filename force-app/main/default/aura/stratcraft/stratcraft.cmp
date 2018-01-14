@@ -1,33 +1,47 @@
+
+
 <aura:component implements="flexipage:availableForAllPageTypes" controller="StrategyCrafterController">
 
 <aura:attribute name="strategyXML" type="String" />
+<aura:attribute name="curStratCopy" type="Strategy" />
 <aura:attribute name="curStrat" type="Strategy" />
+<aura:attribute name="curStratNode" type="Object" />
+<!-- <aura:attribute name="treeStart" type="String" /> -->
+<aura:attribute name="treeItems" type="Object" />
+<aura:attribute name="originalNode" type="Object"/>
+<!-- <aura:attribute name="qwe" type="String" default="456"/> -->
 
 <aura:handler name="init" value="{!this}" action="{!c.init}" />
-<aura:handler name="loadStrategy" event="c:compEvent" action="{!c.LoadStrategy}"/>
 
-<aura:registerEvent name="loadStrategy" type="c:compEvent"/>
+<aura:handler name="xmlFileUploaded" event="c:XMLFileUploaded" action="{!c.processLoadedXMLString}"/>
+<aura:handler event="c:propertyPageSaveRequestEvent" action="{!c.saveStrategy}"/>
+<aura:handler event="c:treeNodeSelectedEvent" action="{!c.handleTreeNodeSelect }"/>
 
+<aura:registerEvent name="xmlFileUploaded" type="c:XMLFileUploaded"/>
 
-
-    <div class="slds-card" >
+<div class="slds-card" >
         <lightning:spinner aura:id="mySpinner" class="slds-hide" size="large" />
-        Header
-        <p></p>
-     
-        <div aura:id="fileInput" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" >Drop Here!</div> 
-     
+        
+        <div>
+             Header
+            <p></p>
+            <div aura:id="fileInput" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" >Drop Here!</div> 
+            <br>  </br>  
+        </div>
+
         <div class="slds-grid ">
 
             <div class="slds-col">
-                Node Tree
+                <c:treeNode treeItems="{! v.treeItems }" header="NodeTree"/>
             </div>
 
             <div class="slds-col">
                 Node Properties
-                {!v.body}
+                {!v.body}                
+                <c:BasePropertyPage aura:id="propertyPage"/>
             </div>
 
         </div>
-    </div>
+</div>
+
 </aura:component>	

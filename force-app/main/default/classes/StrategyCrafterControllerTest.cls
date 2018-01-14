@@ -2,7 +2,7 @@
 public class StrategyCrafterControllerTest {
 
 	@isTest
-	public static void parseInputFileTest() {
+	public static void generateTreeDataTest() {
 		String xml = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n' + 
 				'<RecommendationStrategy xmlns=\"http://soap.sforce.com/2006/04/metadata\">\r\n' + 
 				'<description>TestStrategy</description>\r\n' + 
@@ -20,7 +20,7 @@ public class StrategyCrafterControllerTest {
 				'\r\n\t</strategyNode>\r\n\r\n</RecommendationStrategy>\r\n';
 
 		Test.startTest();
-			String treeString = StrategyCrafterController.parseInputFile(xml);
+			String treeString = StrategyCrafterController.generateTreeData(xml);
 		Test.stopTest();
 		
 		System.assert(treeString.startsWith('[{"name":"RootNode","label":"RootNode",'));
