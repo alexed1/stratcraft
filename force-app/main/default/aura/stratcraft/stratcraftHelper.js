@@ -33,7 +33,9 @@
             if (cmp.isValid() && state === "SUCCESS") {
                 var result = response.getReturnValue();
                 cmp.set("v.curStratCopy", result);  //REFACTOR: this is probably a bad idea
-                cmp.set("v.curStrat", result);
+                cmp.set("v.curStrat", result); //SMELLY: probably should define an object and not just use the entire response
+                console.log('strategy is: ' + JSON.stringify(result));
+                console.log('strategy is: ' +  cmp.get("v.curStrat"));
             }
             var spinner = cmp.find("mySpinner");
             $A.util.toggleClass(spinner, "slds-hide");
@@ -54,6 +56,16 @@
             }
         });
         $A.enqueueAction(action);
+    },
+
+    findStrategyNodeByName : function(strategy, name){
+      for (let curNode of strategy.nodes){ 
+          if (curNode.name == name) {
+            return curNode;
+          }
+      };
+      throw new Error("Did not find a Node with the requested Name, which is a big problem.");
+   
     },
 
     clone : function(obj, deep) {

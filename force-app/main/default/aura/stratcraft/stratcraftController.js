@@ -46,60 +46,60 @@
         //return name of selected tree item
         var myName = event.getParam("name");
         var curStrat = component.get("v.curStrat");
-        curStrat.nodes.forEach(function(entry){ //refactor. no need to iterate through ever node when only 1 can have the name. need a Find function that searches Nodes
-            //find the StrategyNode that has been selected, and then find its associated treeNodeItem, which is an instance of the BasePropertyPage control
-            //set both the selected and original attributes equal to clones of this StrategyNode.
-            if (entry.name === myName) {
-                component.find("propertyPage").set("v.selectedTreeNode", helper.clone(entry, true));
-                component.find("propertyPage").set("v.originalTreeNode", 
-                                                    helper.clone(entry, true));
-            }
-        });
+
+        var curNode = helper.findStrategyNodeByName(curStrat, myName);
+         
+        //find the StrategyNode that has been selected, and then find its associated propertyPage, which is an instance of the BasePropertyPage control
+        //set both the selected and original attributes equal to clones of this StrategyNode.
+        if (curNode.name === myName) {
+            component.find("propertyPage").set("v.selectedTreeNode", helper.clone(curNode, true));
+            component.find("propertyPage").set("v.originalTreeNode", 
+                                                helper.clone(curNode, true));
+        }
+        
     },
 
-    testUpdateEvt : function(cmp, event, helper) {
+    saveStrategy : function(cmp, event, helper) {
         var originalNodeName = event.getParam("originalNodeName");
         var updatedNode = event.getParam("updatedTreeNode");
         var curStrat = cmp.get("v.curStrat");
 
-        curStrat.nodes.forEach(function(entry){
-            if (entry.name === originalNodeName) {
-                //if parent node was changed - validate it
-                if (entry.parentNodeName !== updatedNode.parentNodeName) {
-                    if (helper.checkForNewValidParents(cmp, 
-                                                    entry, 
-                                                    entry.parentNodeName, 
-                                                    updatedNode.parentNodeName,
-                                                    entry.name,
-                                                    updatedNode.name
-                                                    )) {
-                        helper.reparentTreeNode(cmp, entry.name, updatedNode.parentNodeName, entry.parentNodeName);
-                    }
-                    else {
-                      var originalNode = helper.clone(cmp.find("propertyPage").get("v.originalTreeNode"), true);
-                      cmp.find("propertyPage").set("v.selectedTreeNode", originalNode);
-                      helper.displayToast('', 'Not Valid component', 'error');
-                    }                    
-                }
-
-                //if name was changed - check for all nodes that are children of current node
-                if (entry.name !== updatedNode.name) {
-                    helper.changeAllChildNodeNames(cmp, 
-                                                    entry, 
-                                                    entry.parentNodeName, 
-                                                    updatedNode.parentNodeName,
-                                                    entry.name,
-                                                    updatedNode.name
-                                                    );
-                    helper.changeNodeName(cmp, originalNodeName, updatedNode);
-                }
-
-                for (var i in entry) {
-                  entry[i] = updatedNode[i];
-                }
-                                
+        var curNode = helper.findStrategyNodeByName(curStrat, originalNodeName);
+        //if parent node was changed - validate it
+        if (curNode.parentNodeName !== updatedNode.parentNodeName) {
+            if (helper.checkForNewValidParents(cmp, 
+                                            curNode, 
+                                            curNode.parentNodeName, 
+                                            updatedNode.parentNodeName,
+                                            curNode.name,
+                                            updatedNode.name
+                                            )) {
+                helper.reparentTreeNode(cmp, curNode.name, updatedNode.parentNodeName, curNode.parentNodeName);
             }
-        });
+            else {
+              var originalNode = helper.clone(cmp.find("propertyPage").get("v.originalTreeNode"), true);
+              cmp.find("propertyPage").set("v.selectedTreeNode", originalNode);
+              helper.displayToast('', 'Not Valid component', 'error');
+            }                    
+        }
+
+        //if name was changed - check for all nodes that are children of current node
+        if (curNode.name !== updatedNode.name) {
+            helper.changeAllChildNodeNames(cmp, 
+                                            curNode, 
+                                            curNode.parentNodeName, 
+                                            updatedNode.parentNodeName,
+                                            curNode.name,
+                                            updatedNode.name
+                                            );
+            helper.changeNodeName(cmp, originalNodeName, updatedNode);
+        }
+
+        for (var i in curNode) {
+          curNode[i] = updatedNode[i];
+        }
+                        
+         
         cmp.set("v.curStrat", curStrat);
     },
 })

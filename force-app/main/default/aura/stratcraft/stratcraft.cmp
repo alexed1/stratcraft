@@ -9,15 +9,13 @@
 <!-- <aura:attribute name="treeStart" type="String" /> -->
 <aura:attribute name="treeItems" type="Object" />
 <aura:attribute name="originalNode" type="Object"/>
-<aura:attribute name="qwe" type="String" default="456"/>
+<!-- <aura:attribute name="qwe" type="String" default="456"/> -->
 
 <aura:handler name="init" value="{!this}" action="{!c.init}" />
+
 <aura:handler name="xmlFileUploaded" event="c:XMLFileUploaded" action="{!c.processLoadedXMLString}"/>
-
-
-<aura:handler event="c:strategyUpdatedEvent" action="{!c.testUpdateEvt}"/>
+<aura:handler event="c:propertyPageSaveRequestEvent" action="{!c.saveStrategy}"/>
 <aura:handler event="c:treeNodeSelectedEvent" action="{!c.handleTreeNodeSelect }"/>
-
 
 <aura:registerEvent name="xmlFileUploaded" type="c:XMLFileUploaded"/>
 
