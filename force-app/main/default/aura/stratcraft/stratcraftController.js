@@ -50,53 +50,33 @@
         var curNode = helper.findStrategyNodeByName(curStrat, myName);
          
         //find the StrategyNode that has been selected, and then find its associated propertyPage, which is an instance of the BasePropertyPage control
-        //set both the selected and original attributes equal to clones of this StrategyNode.
+        //set its attributes
         if (curNode.name === myName) {
-            component.find("propertyPage").set("v.selectedTreeNode", helper.clone(curNode, true));
-            component.find("propertyPage").set("v.originalTreeNode", 
-                                                helper.clone(curNode, true));
+            component.find("propertyPage").set("v.curNode", helper.clone(curNode, true));
+            component.find("propertyPage").set("v.originalName", myName);
         }
         
     },
 
     saveStrategy : function(cmp, event, helper) {
         var originalNodeName = event.getParam("originalNodeName");
-        var updatedNode = event.getParam("updatedTreeNode");
+        var changedNode = event.getParam("changedStrategyNode");
         var curStrat = cmp.get("v.curStrat");
 
         var curNode = helper.findStrategyNodeByName(curStrat, originalNodeName);
         //if parent node was changed - validate it
-        if (curNode.parentNodeName !== updatedNode.parentNodeName) {
-            if (helper.checkForNewValidParents(cmp, 
-                                            curNode, 
-                                            curNode.parentNodeName, 
-                                            updatedNode.parentNodeName,
-                                            curNode.name,
-                                            updatedNode.name
-                                            )) {
-                helper.reparentTreeNode(cmp, curNode.name, updatedNode.parentNodeName, curNode.parentNodeName);
-            }
-            else {
-              var originalNode = helper.clone(cmp.find("propertyPage").get("v.originalTreeNode"), true);
-              cmp.find("propertyPage").set("v.selectedTreeNode", originalNode);
-              helper.displayToast('', 'Not Valid component', 'error');
-            }                    
+        if (curNode.parentNodeName !== changedNode.parentNodeName) {
+            helper.moveNode(cmp, curNode, changedNode);
+                           
         }
 
         //if name was changed - check for all nodes that are children of current node
-        if (curNode.name !== updatedNode.name) {
-            helper.changeAllChildNodeNames(cmp, 
-                                            curNode, 
-                                            curNode.parentNodeName, 
-                                            updatedNode.parentNodeName,
-                                            curNode.name,
-                                            updatedNode.name
-                                            );
-            helper.changeNodeName(cmp, originalNodeName, updatedNode);
+        if (curNode.name !== changedNode.name) {
+            helper.updateNodeName(cmp,curNode,changedNode);
         }
 
         for (var i in curNode) {
-          curNode[i] = updatedNode[i];
+          curNode[i] = changedNode[i];
         }
                         
          

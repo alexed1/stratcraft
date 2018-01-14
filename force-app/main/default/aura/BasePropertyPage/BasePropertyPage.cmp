@@ -1,16 +1,16 @@
 <aura:component implements="flexipage:availableForAllPageTypes">
-    <aura:attribute name="selectedTreeNode" type="Object" />
-    <aura:attribute name="originalTreeNode" type="Object" />
+    
+    <aura:attribute name="curNode" type="Object" />
+    <aura:attribute name="originalName" type="String" />
 
-    <!-- <aura:registerEvent name="treeNodeSelectedEvent" type="c:treeNodeSelectedEvent"/> -->
     <aura:registerEvent name="propertyPageSaveRequest" type="c:propertyPageSaveRequestEvent"/>
 
-    <ui:inputText aura:id="name" label="name" class="field" value="{!v.selectedTreeNode.name}" />
-    <ui:inputText aura:id="description" label="description" class="field" value="{!v.selectedTreeNode.description }" />
-    <ui:inputText aura:id="parentNode" label="parentNode" class="field" value="{!v.selectedTreeNode.parentNodeName }" />
-    <ui:inputText aura:id="type" label="type" class="field" value="{!v.selectedTreeNode.type }" />
+    <ui:inputText aura:id="name" label="name" class="field" value="{!v.curNode.name}" />
+    <ui:inputText aura:id="description" label="description" class="field" value="{!v.curNode.description }" />
+    <ui:inputText aura:id="parentNode" label="parentNode" class="field" value="{!v.curNode.parentNodeName }" />
+    <ui:inputText aura:id="type" label="type" class="field" value="{!v.curNode.type }" />
 
-    <c:GenericDefinitionsControlPanel localDefinitionString="{!v.selectedTreeNode.definition }"/>   
+    <c:GenericDefinitionsControlPanel localDefinitionString="{!v.curNode.definition }"/>   
 
     <lightning:button variant="brand" label="Save" onclick="{! c.handleClick }" />
 

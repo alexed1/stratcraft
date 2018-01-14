@@ -178,6 +178,36 @@
       }
     },
 
+    moveNode: function(cmp, curNode, changedNode) {
+       var self = this;
+       if (self.checkForNewValidParents(cmp, 
+                                        curNode, 
+                                        curNode.parentNodeName, 
+                                        changedNode.parentNodeName,
+                                        curNode.name,
+                                        changedNode.name
+                                        )) {
+            self.reparentTreeNode(cmp, curNode.name, changedNode.parentNodeName, curNode.parentNodeName);
+        }
+        else {
+          var originalNode = self.clone(cmp.find("propertyPage").get("v.originalTreeNode"), true);
+          cmp.find("propertyPage").set("v.selectedTreeNode", originalNode);
+          self.displayToast('', 'Not Valid component', 'error');
+        }    
+    },
+
+    updateNodeName: function(cmp, curNode, changedNode) {
+      var self=this;
+      self.changeAllChildNodeNames(cmp, 
+                                            curNode, 
+                                            curNode.parentNodeName, 
+                                            changedNode.parentNodeName,
+                                            curNode.name,
+                                            changedNode.name
+                                            );
+      self.changeNodeName(cmp, originalNodeName, changedNode);
+    },
+
     reparentTreeNode : function(cmp, nodeName, parentNodeName, oldParentNodeName) {
       var treeItems = cmp.get("v.treeItems");
 
