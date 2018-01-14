@@ -14,16 +14,21 @@
 
 
 <aura:handler event="c:strategyUpdatedEvent" action="{!c.testUpdateEvt}"/>
-<aura:handler event="c:saveEvent" action="{!c.handleTreeSelect }"/>
+<aura:handler event="c:treeNodeSelectedEvent" action="{!c.handleTreeSelect }"/>
 
 
 <aura:registerEvent name="xmlFileUploaded" type="c:XMLFileUploaded"/>
 
 <div class="slds-card" >
         <lightning:spinner aura:id="mySpinner" class="slds-hide" size="large" />
-        Header
-        <p></p>
-        <div aura:id="fileInput" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" >Drop Here!</div> 
+        
+        <div>
+             Header
+            <p></p>
+            <div aura:id="fileInput" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" >Drop Here!</div> 
+            <br>  </br>  
+        </div>
+
         <div class="slds-grid ">
 
             <div class="slds-col">
