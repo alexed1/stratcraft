@@ -7,7 +7,7 @@
 <aura:attribute name="curStrat" type="Strategy" />
 <aura:attribute name="curStratNode" type="Object" />
 <!-- <aura:attribute name="treeStart" type="String" /> -->
-<aura:attribute name="treeItems" type="Object" />
+<aura:attribute name="treeItems" type="Object" /> 
 <aura:attribute name="originalNode" type="Object"/>
 <!-- <aura:attribute name="qwe" type="String" default="456"/> -->
 
@@ -32,7 +32,7 @@
         <div class="slds-grid ">
 
             <div class="slds-col">
-                <c:treeNode treeItems="{! v.treeItems }" header="NodeTree"/>
+                <c:treeNode aura:id="tree" treeItems="{! v.treeItems }" header="NodeTree"/>
             </div>
 
             <div class="slds-col">

@@ -1,5 +1,27 @@
-<aura:component>
+<aura:component controller="TreeNodeController">
     <aura:attribute name="treeItems" type="String" />
     <aura:attribute name="header" type="String" />
+
     <lightning:tree items="{! v.treeItems }" header="{! v.header }" onselect="{! c.handleTreeSelect }"/>
+
+
+    <aura:method name="initialize" action="{!c.initializeTree}" > 
+	    <aura:attribute name="strategyXMLString" type="String" /> 
+	</aura:method>
+
+	<aura:method name="renameNode" action="{!c.renameNode}" > 
+	    <aura:attribute name="curNode" type="Object" /> 
+	    <aura:attribute name="changedNode" type="Object" /> 
+	</aura:method>
+
+	<aura:method name="moveNode" action="{!c.moveNode}" > 
+	    <aura:attribute name="oldParentName" type="String" /> 
+	    <aura:attribute name="newParentName" type="String" /> 
+	    <aura:attribute name="curNodeName" type="String" /> 
+	</aura:method>
+
+	<aura:method name="validateNodeUpdate" action="{!c.validateNodeUpdate}" > 
+	    <aura:attribute name="changedNode" type="Object" /> 
+	    <aura:attribute name="curNodeName" type="String" /> 
+	</aura:method>
 </aura:component>	

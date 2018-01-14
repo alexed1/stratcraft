@@ -30,7 +30,11 @@
     }, 
     processLoadedXMLString : function (cmp, event, helper) { 
         console.log('starting processing loaded xml string');
-        helper.generateTreeData(cmp, event, helper);
+        //initialize the tree component
+        var strategyXMLString = cmp.get("v.strategyXML");
+        var tree = cmp.find('tree');
+        tree.initialize(strategyXMLString);
+
         helper.convertXMLToStrategy(cmp, event, helper);
 
         console.log('completed processing of loaded xml string');
@@ -75,9 +79,10 @@
             helper.updateNodeName(cmp,curNode,changedNode);
         }
 
-        for (var i in curNode) {
-              curNode[i] = changedNode[i];
-             }   
+        //is this effectively the processing of the move? should it be up in the move loop?
+        //for (var i in curNode) {
+        //      curNode[i] = changedNode[i];
+        //     }   
         cmp.set("v.curStrat", curStrat);
     },
 })
