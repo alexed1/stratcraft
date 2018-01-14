@@ -64,22 +64,20 @@
         var curStrat = cmp.get("v.curStrat");
 
         var curNode = helper.findStrategyNodeByName(curStrat, originalNodeName);
-        //if parent node was changed - validate it
+        //if parent node was changed this is a move
         if (curNode.parentNodeName !== changedNode.parentNodeName) {
             helper.moveNode(cmp, curNode, changedNode);
                            
         }
 
-        //if name was changed - check for all nodes that are children of current node
+        //if name was changed - also need to update nodes that are children of current node
         if (curNode.name !== changedNode.name) {
             helper.updateNodeName(cmp,curNode,changedNode);
         }
 
         for (var i in curNode) {
-          curNode[i] = changedNode[i];
-        }
-                        
-         
+              curNode[i] = changedNode[i];
+             }   
         cmp.set("v.curStrat", curStrat);
     },
 })

@@ -68,6 +68,16 @@
    
     },
 
+    findChildStrategyNodes : function(strategy, name){
+      var childNodes = [];
+      for (let curNode of strategy.nodes){ 
+          if (curNode.parentNodeName == name) {
+            childNodes.push(curNode);
+          }
+      };
+      return childNodes;        
+    },
+
     clone : function(obj, deep) {
       var newObj = new Object();
        
@@ -89,71 +99,100 @@
       }
       return newObj;
     },
-    
-    checkForNewValidParents : function(cmp, originalTreeBranch, oldParent, newParent,
-      oldName, newName) {
-      var treeItems = cmp.get("v.treeItems");
-      var nestedTreeItems = this.iterate(this.searchTreeBranch(treeItems[0], oldName));      
-      var allTreeItems = this.iterate(treeItems[0]);
-      allTreeItems.push('RootNode');
 
-      var curStrat = cmp.get("v.curStrat");
-      nestedTreeItems.push(newName);
-      if (newParent == '') {
-        return false;
+    validateParentNodeNotBlank : function(changedNode, notificationList){
+      if (changedNode.parentNodeName == '') {
+        notificationList.push('Parent Node Name can not be blank');
       }
-
-      for (var item in nestedTreeItems) {
-        if (nestedTreeItems[item] === newParent) {
-          return false;
-        }
-      }
-      
-      for (var item in allTreeItems) {
-        if (allTreeItems[item] === newParent) {
-          return true;
-        }
-      }
-      
-      return false;
+      return notificationList;
     },
 
-    changeAllChildNodeNames : function(cmp, originalTreeBranch, oldParent, newParent,
-      oldName, newName) {
+    //trying to move a node to a new position under one of its children is problematic
+    validateNewParentNameIsNotADescendant : function(rootTreeItem, changedNode, notificationList, originalName){
+      var self = this;
+      var newParentName = changedNode.parentNodeName;
+
+      //descendantTreeItemNameList is a flat stack of all the tree items underneath the current one
+      var descendantTreeItemNameList = self.generateTreeItemDescendantNameList(self.searchTreeBranch(rootTreeItem, originalName));
+      descendantTreeItemNameList.push(changedNode.name); //why?
+
+      for (var name in descendantTreeItemNameList) {
+        if (descendantTreeItemNameList[name] === newParentName) {
+          notificationList.push("You can't set the Parent Node Name to be the same as an existing child node");
+        }
+      }
+      return notificationList;
+    },
+
+    validateNewParentNameIsAnExtantNode : function(rootName, changedNode, notificationList){
+      var self = this;
+      var newParentName = changedNode.parentNodeName;
+
+      //allTreeItemNameList is a flat stack of all of the tree nodes      
+      var allTreeItemNameList = this.generateTreeItemDescendantNameList(rootName);
+      allTreeItemNameList.push('RootNode');
+     
+      //search the existing nodes for the proposed parent name
+      var nodeExists = false;
+      for (var name in allTreeItemNameList) {
+        if (allTreeItemNameList[name] === newParentName) {
+          nodeExists = true;
+        }
+      }
+
+      if (nodeExists ==false) {
+         notificationList.push("You have to set the Parent Node Name to be the same as an existing node name");
+      }
+
+      return notificationList;
+    },
+    
+    validateNodeMove : function(cmp, curNode, changedNode) {
+      var self=this;
+ 
+      var notificationList = [];
+      notificationList = self.validateParentNodeNotBlank(changedNode,notificationList);
+      
+      var rootTreeItem = cmp.get("v.treeItems")[0];
+      notificationList = self.validateNewParentNameIsNotADescendant(rootTreeItem, changedNode,notificationList, curNode.name);
+      notificationList = self.validateNewParentNameIsAnExtantNode(rootTreeItem, changedNode,notificationList);
+      
+      return notificationList;
+    },
+
+    updateTreeNodeChildren : function(cmp, curNode, changedNode) {
       var treeItems = cmp.get("v.treeItems");
-        for (var i in treeItems[0].items) {
-          if (treeItems[0].items[i].name === oldName) {
+      for (var i in treeItems[0].items) {
+          if (treeItems[0].items[i].name === curNode.name) {
             for (var j in treeItems[0].items[i].items) {
-              treeItems[0].items[i].items[j].parentNode = newName;
-              treeItems[0].items[i].items[j].parentNodeName = newName;
+              treeItems[0].items[i].items[j].parentNode = changedNode.name;
+              treeItems[0].items[i].items[j].parentNodeName = changedNode.name;
             }
           }          
         }
+      cmp.set("v.treeItems", treeItems);
 
-        var curStrat = cmp.get("v.curStrat");
-        curStrat.nodes.forEach(function(entry){
-            if (entry.parentNodeName === oldName) {
-                entry.parentNodeName = newName;
-            }
-        });
-        cmp.set("v.treeItems", treeItems);
-        cmp.set("v.curStrat", curStrat);
+
+     
     },
 
-    changeNodeName : function(cmp, originalNodeName, updatedNode) {
+
+
+    updateTreeNode : function(cmp, originalNodeName, updatedNode) {
       var treeItems = cmp.get("v.treeItems");
-      var changedNode = this.searchTreeBranch(treeItems[0], originalNodeName);
-      changedNode.name = updatedNode.name;
-      changedNode.label = updatedNode.name;
+      var curTreeNode = this.searchTreeBranch(treeItems[0], originalNodeName);
+      curTreeNode.name = updatedNode.name;
+      curTreeNode.label = updatedNode.name;
       cmp.set("v.treeItems", treeItems);
     },
 
-    iterate : function(treeNode) {
+    //recursively walks the descendants of a tree node and returns a stack
+    generateTreeItemDescendantNameList : function(treeNode) {
       var treeStack = [];
       if ((treeNode.items !== undefined) && (treeNode.items.length !== 0)) {
         for (var i in treeNode.items) {
           treeStack.push(treeNode.items[i].name);
-          var arr = this.iterate(treeNode.items[i]);
+          var arr = this.generateTreeItemDescendantNameList(treeNode.items[i]);
           for (var elem in arr) {
             if (arr[elem] != "") {
               treeStack.push(arr[elem]);
@@ -180,32 +219,38 @@
 
     moveNode: function(cmp, curNode, changedNode) {
        var self = this;
-       if (self.checkForNewValidParents(cmp, 
-                                        curNode, 
-                                        curNode.parentNodeName, 
-                                        changedNode.parentNodeName,
-                                        curNode.name,
-                                        changedNode.name
-                                        )) {
-            self.reparentTreeNode(cmp, curNode.name, changedNode.parentNodeName, curNode.parentNodeName);
-        }
-        else {
+
+       var validationErrors = self.validateNodeMove(cmp, curNode, changedNode);
+       if (validationErrors.length>0) {
+          var errorText = JSON.stringify(validationErrors);
           var originalNode = self.clone(cmp.find("propertyPage").get("v.originalTreeNode"), true);
           cmp.find("propertyPage").set("v.selectedTreeNode", originalNode);
-          self.displayToast('', 'Not Valid component', 'error');
-        }    
+          self.displayToast('', errorText, 'error');
+        }
+        else {
+          self.reparentTreeNode(cmp, curNode.name, changedNode.parentNodeName, curNode.parentNodeName);
+        }  
     },
 
     updateNodeName: function(cmp, curNode, changedNode) {
       var self=this;
-      self.changeAllChildNodeNames(cmp, 
-                                            curNode, 
-                                            curNode.parentNodeName, 
-                                            changedNode.parentNodeName,
-                                            curNode.name,
-                                            changedNode.name
-                                            );
-      self.changeNodeName(cmp, originalNodeName, changedNode);
+
+      //first update the tree....
+      self.updateTreeNodeChildren(cmp, curNode, changedNode );
+      self.updateTreeNode(cmp, curNode.name, changedNode);
+
+      //then update the strategy model
+      //find any children of this node and update their parentNodeNames
+      var curStrat = cmp.get("v.curStrat");
+      var childNodes = self.findChildStrategyNodes(curStrat,curNode.name);     
+      childNodes.forEach(function(child) {
+              child.parentNodeName = changedNode.name;
+          }
+
+      );
+    
+      cmp.set("v.curStrat", curStrat);
+
     },
 
     reparentTreeNode : function(cmp, nodeName, parentNodeName, oldParentNodeName) {
