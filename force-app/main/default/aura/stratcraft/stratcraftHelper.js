@@ -103,7 +103,9 @@
       errorList = self.validateParentNodeNotBlank(changedNode,errorList);
     
       var tree = cmp.find('tree');
-      var treeErrors = tree.validateNodeUpdate(curNode.parentNodeName, changedNode, curNode.name)
+
+      //Maybe we should pass 2 parameters here
+      var treeErrors = tree.validateNodeUpdate(curNode.parentNodeName, changedNode, curNode.name);
           
       return errorList.concat(treeErrors);
     },
@@ -113,7 +115,6 @@
 
     moveNode: function(cmp, curNode, changedNode) {
        var self = this;
-
        var validationErrors = self.validateNodeMove(cmp, curNode, changedNode);
        if (validationErrors.length>0) {
           var errorText = JSON.stringify(validationErrors);

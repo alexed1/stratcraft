@@ -36,12 +36,20 @@
 	  var curNodeName = evt.getParam('arguments').curNodeName;
       helper.reparentTreeNode(cmp, curNodeName, newParentName, oldParentName );
     },
+
     validateNodeUpdate : function(cmp, evt, helper) {
+      
       var changedNode = evt.getParam('arguments').changedNode;
-	  var curNodeName = evt.getParam('arguments').curNodeName;
-        
+      var curNodeName = evt.getParam('arguments').curNodeName;
+      
       var errorList = [];
       var rootTreeItem = cmp.get("v.treeItems")[0];
+
+      console.log(changedNode);
+      console.log(curNodeName);
+      console.log(evt.getParams());
+      console.log(rootTreeItem);
+
       errorList = helper.validateNewParentNameIsNotADescendant(rootTreeItem, changedNode,errorList, curNodeName);
       errorList = helper.validateNewParentNameIsAnExtantNode(rootTreeItem, changedNode,errorList);
       return errorList;

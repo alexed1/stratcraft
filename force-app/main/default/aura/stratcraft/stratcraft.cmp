@@ -6,10 +6,8 @@
 <aura:attribute name="curStratCopy" type="Strategy" />
 <aura:attribute name="curStrat" type="Strategy" />
 <aura:attribute name="curStratNode" type="Object" />
-<!-- <aura:attribute name="treeStart" type="String" /> -->
 <aura:attribute name="treeItems" type="Object" /> 
 <aura:attribute name="originalNode" type="Object"/>
-<!-- <aura:attribute name="qwe" type="String" default="456"/> -->
 
 <aura:handler name="init" value="{!this}" action="{!c.init}" />
 

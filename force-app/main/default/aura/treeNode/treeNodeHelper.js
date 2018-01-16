@@ -34,6 +34,7 @@
         }
       }
     },
+
     reparentTreeNode : function(cmp, nodeName, parentNodeName, oldParentNodeName) {
       var treeItems = cmp.get("v.treeItems");
 
