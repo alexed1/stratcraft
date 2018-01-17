@@ -24,16 +24,16 @@
     },
 
     renameNode : function (cmp, evt, helper) {
- 	  var curNode = evt.getParam('arguments').curNode;
-	  var changedNode = evt.getParam('arguments').changedNode;
+      var curNode = evt.getParam('arguments').curNode;
+      var changedNode = evt.getParam('arguments').changedNode;
       helper.updateTreeNodeChildren(cmp, curNode, changedNode );
       helper.updateTreeNode(cmp, curNode.name, changedNode);
     },
 
     moveNode : function(cmp, evt, helper) {
       var oldParentName = evt.getParam('arguments').oldParentName;
-	  var newParentName = evt.getParam('arguments').newParentName;
-	  var curNodeName = evt.getParam('arguments').curNodeName;
+      var newParentName = evt.getParam('arguments').newParentName;
+      var curNodeName = evt.getParam('arguments').curNodeName;
       helper.reparentTreeNode(cmp, curNodeName, newParentName, oldParentName );
     },
 
@@ -41,14 +41,9 @@
       
       var changedNode = evt.getParam('arguments').changedNode;
       var curNodeName = evt.getParam('arguments').curNodeName;
-      
+
       var errorList = [];
       var rootTreeItem = cmp.get("v.treeItems")[0];
-
-      console.log(changedNode);
-      console.log(curNodeName);
-      console.log(evt.getParams());
-      console.log(rootTreeItem);
 
       errorList = helper.validateNewParentNameIsNotADescendant(rootTreeItem, changedNode,errorList, curNodeName);
       errorList = helper.validateNewParentNameIsAnExtantNode(rootTreeItem, changedNode,errorList);

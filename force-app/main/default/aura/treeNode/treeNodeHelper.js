@@ -44,7 +44,7 @@
       }
 
       var parentTreeBranch = this.searchTreeBranch(treeItems[0], parentNodeName);
-      if ((parentTreeBranch === undefined) && (parentTreeBranch === treeItems[0].name)) {
+      if ((parentTreeBranch === undefined) && (parentNodeName === treeItems[0].name)) {
         parentTreeBranch = treeItems[0];
       }
       var treeBranchToSplice = this.searchTreeBranch(treeItems[0], oldParentNodeName);
@@ -58,7 +58,6 @@
         }
       }
 
-      treeBranchToReparent.parentNode = parentNodeName;
       parentTreeBranch.items.push(treeBranchToReparent);
       cmp.set("v.treeItems", treeItems);
     },

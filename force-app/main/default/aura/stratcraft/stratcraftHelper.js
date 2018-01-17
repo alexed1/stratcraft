@@ -105,7 +105,7 @@
       var tree = cmp.find('tree');
 
       //Maybe we should pass 2 parameters here
-      var treeErrors = tree.validateNodeUpdate(curNode.parentNodeName, changedNode, curNode.name);
+      var treeErrors = tree.validateNodeUpdate(changedNode, curNode.name);
           
       return errorList.concat(treeErrors);
     },
@@ -124,7 +124,7 @@
         }
         else {
           var tree = cmp.find('tree');
-          tree.moveNode(curNode.parentNodeName, changedNode.parentNodeName, curNode.name)
+          tree.moveNode(curNode.parentNodeName, changedNode.parentNodeName, curNode.name);
           //seems like we should also be adjusting the strategy here, and not just the tree
         }  
     },
@@ -153,7 +153,10 @@
       curNode.definition = changedNode.definition;
       cmp.set("v.curStrat", curStrat);
 
-    }
+    },
 
+    updateNodeParent : function(curNode, changedNode) {
+      curNode.parentNodeName = changedNode.parentNodeName;    
+    },
     
 })

@@ -72,7 +72,7 @@
         //if parent node was changed this is a move
         if (curNode.parentNodeName !== changedNode.parentNodeName) {
             helper.moveNode(cmp, curNode, changedNode);
-                           
+            helper.updateNodeParent(curNode, changedNode);               
         }
 
         //if name was changed - also need to update nodes that are children of current node
@@ -80,12 +80,6 @@
             helper.updateNodeName(cmp,curNode,changedNode);
         }
 
-
-
-        //is this effectively the processing of the move? should it be up in the move loop?
-        //for (var i in curNode) {
-        //      curNode[i] = changedNode[i];
-        //     }   
         cmp.set("v.curStrat", curStrat);
     },
 })
