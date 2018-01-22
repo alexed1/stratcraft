@@ -19,7 +19,7 @@
 
 <div class="slds-card" >
         <lightning:spinner aura:id="mySpinner" class="slds-hide" size="large" />
-        
+        <c:modalDialog aura:id="unsavedChangesDialog" text="We noticed you have unsaved changes. Discard them?" headerText="Unsaved changes"/>
         <div>
              Header
             <p></p>
