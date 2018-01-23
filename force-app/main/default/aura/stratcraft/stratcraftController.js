@@ -58,7 +58,7 @@
         if (curNode.name === newSelectedNodeName) {
 
             console.log(curNode);
-            //prompt user if he wants to leave when the pane is dirty
+            //prompt user if he wants to save changes when the pane is dirty
             helper.handleUnsavedChanged(component, newSelectedNodeName, curStrat, helper);
             //set its attributes
             component.find("propertyPage").set("v.curNode", helper.clone(curNode, true));

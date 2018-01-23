@@ -1,8 +1,16 @@
 <aura:component>
     <aura:attribute name="isOpen" type="boolean" default="false" />
+    <aura:attribute name="callback" type="Object"/>
+    <aura:attribute name="callbackArguments" type="Object"/>
     <aura:attribute name="headerText" type="String" default="Foo title" />
     <aura:attribute name="text" type="String" default="Bar text" />
-    <aura:attribute name="result" type="boolean" default="false" />
+
+    <aura:method name="open" action="{!c.open}">
+        <aura:attribute name="headerText" type="String"/>
+        <aura:attribute name="text" type="String" />
+        <aura:attribute name="callback" type="Object" />
+        <aura:attribute name="callbackArguments" type="Object"/>
+    </aura:method>
 
     <aura:if isTrue="{!v.isOpen}">
 
@@ -26,7 +34,7 @@
                 <!--###### MODAL BOX FOOTER Part Start From Here ######-->
                 <div class="slds-modal__footer  slds-modal__footer_directional">
                     <button class="slds-button slds-button_neutral" onclick="{!c.setFalse}">Cancel</button>
-                    <button class="slds-button slds-button_brand" onclick="{!v.setTrue}">Save</button>
+                    <button class="slds-button slds-button_brand" onclick="{!c.setTrue}">Save</button>
                 </div>
             </div>
         </div>
