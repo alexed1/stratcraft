@@ -180,30 +180,35 @@
 
   //this method checks if there are unsaved changes when user selects another node
   //prompts user if he wants to save and saves, if so 
-  handleUnsavedChanged: function (component, newSelectedNodeName, curStrat, helper) {
-    console.log(component.find("propertyPage"));
+  handleUnsavedChanged: function (component, newSelectedNodeName, curStrat, helper, continueSelectionCallback) {
     var previousNodeName = component.find("propertyPage").get("v.originalName");
-    if (previousNodeName && newSelectedNodeName && (previousNodeName != newSelectedNodeName)) {
 
+    var needChecking = previousNodeName && newSelectedNodeName && (previousNodeName != newSelectedNodeName);
+    if (needChecking) {
       var dirtyNode = component.find("propertyPage").get("v.curNode");
       var originNode = helper.findStrategyNodeByName(curStrat, previousNodeName);
       var originNodeName = originNode.name;
       //possibly better to use underscore.js to compare 2 objects in a generic way
-      if (helper.areUndefinedOrEqual(dirtyNode.name, originNode.name) &&
+      var isDirty = !(helper.areUndefinedOrEqual(dirtyNode.name, originNode.name) &&
         helper.areUndefinedOrEqual(dirtyNode.description, originNode.description) &&
         helper.areUndefinedOrEqual(dirtyNode.parentNode, originNode.parentNode) &&
         helper.areUndefinedOrEqual(dirtyNode.type, originNode.type) &&
-        helper.areUndefinedOrEqual(dirtyNode.definition, originNode.definition))
-        return;
-      else {
+        helper.areUndefinedOrEqual(dirtyNode.definition, originNode.definition));
+
+      if (isDirty) {
         component.find("unsavedChangesDialog").open("Unsaved changes!",
-         "We noticed you have changed some of nodes parameters. Would you like to save your changes?",
-         function(boolResult){
-           if (boolResult)
-           helper.saveStrategyChanges(component, dirtyNode, originNodeName, helper);
-         });
+          "We noticed you have changed some of nodes parameters. Would you like to save your changes?",
+          function (boolResult) {
+            if (boolResult)
+              helper.saveStrategyChanges(component, dirtyNode, originNodeName, helper);
+            continueSelectionCallback();
+          });
       }
+      else
+        continueSelectionCallback();
     }
+    else
+      continueSelectionCallback();
   },
 
   areUndefinedOrEqual: function (x, y) {
@@ -211,9 +216,9 @@
       (x == null && y == null)  //either both are undefined
       || //or both has value and values are equal 
       ((x != null && y != null)
-       //something in aura changes control characters and strings that look equal are not equal,
-       //so we strip characters with regexp removing whitespaces, tabs and carriage returns and compare the rest
-        && x.replace(/[\s]/gi, '') == y.replace(/[\s]/gi, '')); 
+        //something in aura changes control characters and strings that look equal are not equal,
+        //so we strip characters with regexp removing whitespaces, tabs and carriage returns and compare the rest
+        && x.replace(/[\s]/gi, '') == y.replace(/[\s]/gi, ''));
     return result;
   }
 

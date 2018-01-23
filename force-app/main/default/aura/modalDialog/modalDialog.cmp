@@ -1,7 +1,6 @@
 <aura:component>
     <aura:attribute name="isOpen" type="boolean" default="false" />
     <aura:attribute name="callback" type="Object"/>
-    <aura:attribute name="callbackArguments" type="Object"/>
     <aura:attribute name="headerText" type="String" default="Foo title" />
     <aura:attribute name="text" type="String" default="Bar text" />
 
@@ -9,15 +8,14 @@
         <aura:attribute name="headerText" type="String"/>
         <aura:attribute name="text" type="String" />
         <aura:attribute name="callback" type="Object" />
-        <aura:attribute name="callbackArguments" type="Object"/>
     </aura:method>
 
     <aura:if isTrue="{!v.isOpen}">
 
-        <!--###### MODAL BOX Start From Here ######-->
+        <!--###### MODAL BOX ######-->
         <div role="dialog" tabindex="-1" aria-labelledby="header99" class="slds-modal slds-fade-in-open ">
             <div class="slds-modal__container">
-                <!-- ###### MODAL BOX HEADER Part Start From Here ######-->
+                <!-- ######  HEADER  ######-->
                 <div class="slds-modal__header">
                     <button class="slds-button slds-modal__close slds-button_icon-inverse" title="Close" onclick="{!c.setFalse}">
                         X
@@ -26,12 +24,12 @@
                     <lightning:formattedText class="slds-text-heading_medium" value="{!v.headerText}" />
 
                 </div>
-                <!--###### MODAL BOX BODY Part Start From Here ######-->
+                <!--###### BODY ######-->
                 <div class="slds-modal__content slds-p-around_medium">
                     <lightning:formattedText value="{!v.text}" />
 
                 </div>
-                <!--###### MODAL BOX FOOTER Part Start From Here ######-->
+                <!--###### FOOTER ######-->
                 <div class="slds-modal__footer  slds-modal__footer_directional">
                     <button class="slds-button slds-button_neutral" onclick="{!c.setFalse}">Cancel</button>
                     <button class="slds-button slds-button_brand" onclick="{!c.setTrue}">Save</button>
@@ -39,6 +37,5 @@
             </div>
         </div>
         <div class="slds-backdrop slds-backdrop_open"></div>
-        <!--###### MODAL BOX Part END Here ######-->
     </aura:if>
 </aura:component>
