@@ -53,18 +53,16 @@
 
         var curNode = helper.findStrategyNodeByName(curStrat, newSelectedNodeName);
 
-        //find the StrategyNode that has been selected, and then find its associated propertyPage, which is an instance of the BasePropertyPage control
-
-        
-        //prompt user if he wants to save changes when the pane is dirty
+        //prompt user if he wants to continue navigation when the pane is dirty
         helper.handleUnsavedChanged(component, newSelectedNodeName, curStrat, helper, function () {
-            //set its attributes
-            component.find("propertyPage").set("v.curNode", helper.clone(curNode, true));
-            component.find("propertyPage").set("v.originalName", newSelectedNodeName);
+            if (curNode.name === newSelectedNodeName) {
+                
+                //continue navigation callback
+                component.find("propertyPage").set("v.curNode", helper.clone(curNode, true));
+                component.find("propertyPage").set("v.originalName", newSelectedNodeName);
+            }
+
         });
-
-        
-
     },
 
     saveStrategy: function (component, event, helper) {
