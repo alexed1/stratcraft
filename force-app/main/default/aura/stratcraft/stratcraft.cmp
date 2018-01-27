@@ -6,10 +6,8 @@
 <aura:attribute name="curStratCopy" type="Strategy" />
 <aura:attribute name="curStrat" type="Strategy" />
 <aura:attribute name="curStratNode" type="Object" />
-<!-- <aura:attribute name="treeStart" type="String" /> -->
 <aura:attribute name="treeItems" type="Object" /> 
 <aura:attribute name="originalNode" type="Object"/>
-<!-- <aura:attribute name="qwe" type="String" default="456"/> -->
 
 <aura:handler name="init" value="{!this}" action="{!c.init}" />
 
@@ -21,7 +19,7 @@
 
 <div class="slds-card" >
         <lightning:spinner aura:id="mySpinner" class="slds-hide" size="large" />
-        
+        <c:modalDialog aura:id="unsavedChangesDialog" text="We noticed you have unsaved changes. Discard them?" headerText="Unsaved changes"/>
         <div>
              Header
             <p></p>

@@ -1,0 +1,41 @@
+<aura:component>
+    <aura:attribute name="isOpen" type="boolean" default="false" />
+    <aura:attribute name="callback" type="Object"/>
+    <aura:attribute name="headerText" type="String" default="Foo title" />
+    <aura:attribute name="text" type="String" default="Bar text" />
+
+    <aura:method name="open" action="{!c.open}">
+        <aura:attribute name="headerText" type="String"/>
+        <aura:attribute name="text" type="String" />
+        <aura:attribute name="callback" type="Object" />
+    </aura:method>
+
+    <aura:if isTrue="{!v.isOpen}">
+
+        <!--###### MODAL BOX ######-->
+        <div role="dialog" tabindex="-1" aria-labelledby="header99" class="slds-modal slds-fade-in-open ">
+            <div class="slds-modal__container">
+                <!-- ######  HEADER  ######-->
+                <div class="slds-modal__header">
+                    <button class="slds-button slds-modal__close slds-button_icon-inverse" title="Close" onclick="{!c.setFalse}">
+                        X
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <lightning:formattedText class="slds-text-heading_medium" value="{!v.headerText}" />
+
+                </div>
+                <!--###### BODY ######-->
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning:formattedText value="{!v.text}" />
+
+                </div>
+                <!--###### FOOTER ######-->
+                <div class="slds-modal__footer  slds-modal__footer_directional">
+                    <button class="slds-button slds-button_neutral" onclick="{!c.setFalse}">Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick="{!c.setTrue}">Save</button>
+                </div>
+            </div>
+        </div>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+</aura:component>
