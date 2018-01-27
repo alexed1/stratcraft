@@ -31,7 +31,7 @@
 		
 	<strategyNode>
 		<name>222</name>
-		<description>If payment is past due request payment else churn</description>
+		<description>This is node 222</description>
 		<parentNode>IfPaymentPastDueElseChurnNode</parentNode>
 		<type>4<!--If--></type>
 		<definition>
@@ -46,7 +46,7 @@
 		
 	<strategyNode>
 		<name>333</name>
-		<description>If payment is past due request payment else churn</description>
+		<description>This is node 333</description>
 		<parentNode>RootNode</parentNode>
 		<type>4<!--If--></type>
 		<definition>
@@ -61,7 +61,7 @@
 
 	<strategyNode>
 		<name>444</name>
-		<description>If payment is past due request payment else churn</description>
+		<description>This is node 444</description>
 		<parentNode>RootNode</parentNode>
 		<type>4<!--If--></type>
 		<definition>

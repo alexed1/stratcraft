@@ -55,21 +55,23 @@
 
         //find the StrategyNode that has been selected, and then find its associated propertyPage, which is an instance of the BasePropertyPage control
 
-        if (curNode.name === newSelectedNodeName) {
-            //prompt user if he wants to save changes when the pane is dirty
-            helper.handleUnsavedChanged(component, newSelectedNodeName, curStrat, helper, function () {
-                //set its attributes
-                component.find("propertyPage").set("v.curNode", helper.clone(curNode, true));
-                component.find("propertyPage").set("v.originalName", newSelectedNodeName);
-            });
+        
+        //prompt user if he wants to save changes when the pane is dirty
+        helper.handleUnsavedChanged(component, newSelectedNodeName, curStrat, helper, function () {
+            //set its attributes
+            component.find("propertyPage").set("v.curNode", helper.clone(curNode, true));
+            component.find("propertyPage").set("v.originalName", newSelectedNodeName);
+        });
 
-        }
+        
 
     },
 
     saveStrategy: function (component, event, helper) {
+         console.log("in save strategy in parent controller");
         var originalNodeName = event.getParam("originalNodeName");
         var changedNode = event.getParam("changedStrategyNode");
+
 
         helper.saveStrategyChanges(component, changedNode, originalNodeName, helper);
     },

@@ -2,13 +2,9 @@
     
     <aura:attribute name="curNode" type="Object" />
     <aura:attribute name="originalName" type="String" /> <!--the name of the tree node that was selected -->
-<!-- FIX: the first time a node is clicked on, the original name is set. then if the save button is clicked
-everything is updated. if a different node is clicked on, there's no problem. but if the user makes a new change 
-to the values on the right, the originalName has not been updated because among other things, the base 
-pane doesn't know if the save was successful.
-if save is successful, fire an event that causes the base pane to update the originalName with the current name
--->
+
     <aura:registerEvent name="propertyPageSaveRequest" type="c:propertyPageSaveRequestEvent"/>
+	<aura:method name="reset" action="{!c.resetPage}" > </aura:method>
 
     <ui:inputText aura:id="name" label="name" class="field" value="{!v.curNode.name}" />
     <ui:inputText aura:id="description" label="description" class="field" value="{!v.curNode.description }" />

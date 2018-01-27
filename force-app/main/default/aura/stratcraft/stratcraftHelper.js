@@ -148,11 +148,17 @@
     //finally, update the node itself
     //REFACTOR: rename this function to highlight expanded scope?
     curNode.name = changedNode.name;
+    
+    cmp.set("v.curStrat", curStrat);
+
+  },
+
+  updateNodeBody: function (cmp,curNode, changedNode) {
+    //var curStrat = cmp.get("v.curStrat");
     curNode.description = changedNode.description;
     curNode.type = changedNode.type;
     curNode.definition = changedNode.definition;
-    cmp.set("v.curStrat", curStrat);
-
+    //cmp.set("v.curStrat", curStrat);
   },
 
   updateNodeParent: function (curNode, changedNode) {
@@ -175,7 +181,13 @@
       helper.updateNodeName(cmp, curNode, changedNode);
     }
 
+    helper.updateNodeBody(cmp,curNode, changedNode);
     cmp.set("v.curStrat", curStrat);
+
+    //fire this event so the property page knows to reset itself
+    var propPage = cmp.find('propertyPage');
+    propPage.reset();
+  
   },
 
   //this method checks if there are unsaved changes when user selects another node
