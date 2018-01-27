@@ -110,9 +110,6 @@
     return errorList.concat(treeErrors);
   },
 
-
-
-
   moveNode: function (cmp, curNode, changedNode) {
     var self = this;
     var validationErrors = self.validateNodeMove(cmp, curNode, changedNode);
@@ -191,11 +188,11 @@
   },
 
   //this method checks if there are unsaved changes when user selects another node
-  //prompts user if he wants to save and saves, if so 
+  //prompts user if he wants to continue navigation and calls callback if he agrees to continue
   handleUnsavedChanged: function (component, newSelectedNodeName, curStrat, helper, continueSelectionCallback) {
     var previousNodeName = component.find("propertyPage").get("v.originalName");
 
-    var needChecking = previousNodeName && newSelectedNodeName && (previousNodeName != newSelectedNodeName);
+    var needChecking = previousNodeName && newSelectedNodeName;
     if (needChecking) {
       var dirtyNode = component.find("propertyPage").get("v.curNode");
       var originNode = helper.findStrategyNodeByName(curStrat, previousNodeName);
@@ -203,18 +200,12 @@
       //possibly better to use underscore.js to compare 2 objects in a generic way
       var isDirty = !(helper.areUndefinedOrEqual(dirtyNode.name, originNode.name) &&
         helper.areUndefinedOrEqual(dirtyNode.description, originNode.description) &&
-        helper.areUndefinedOrEqual(dirtyNode.parentNode, originNode.parentNode) &&
+        helper.areUndefinedOrEqual(dirtyNode.parentNodeName, originNode.parentNodeName) &&
         helper.areUndefinedOrEqual(dirtyNode.type, originNode.type) &&
         helper.areUndefinedOrEqual(dirtyNode.definition, originNode.definition));
 
       if (isDirty) {
-        component.find("unsavedChangesDialog").open("Unsaved changes!",
-          "We noticed you have changed some of nodes parameters. Would you like to save your changes?",
-          function (boolResult) {
-            if (boolResult)
-              helper.saveStrategyChanges(component, dirtyNode, originNodeName, helper);
-            continueSelectionCallback();
-          });
+        helper.showUnsavedChangesDialog(component, continueSelectionCallback);
       }
       else
         continueSelectionCallback();
@@ -222,6 +213,37 @@
     else
       continueSelectionCallback();
   },
+
+  showUnsavedChangesDialog: function (component, continueSelectionCallback) {
+    var modalBody;
+    var modalFooter;
+    $A.createComponents([
+      ["c:unsavedChangesBody", {}],
+      ["c:unsavedChangesFooter", {}]
+    ],
+      function (components, status) {
+        if (status === "SUCCESS") {
+          modalBody = components[0];
+          modalFooter = components[1];
+          var result = {};
+          modalFooter.addEventHandler("c:unsavedChangesEvent", function (auraEvent) {
+            result = auraEvent.getParam("result");
+          })
+
+          component.find('unsavedChangesDialog').showCustomModal({
+            header: "Unsaved changes",
+            body: modalBody,
+            footer: modalFooter,
+            showCloseButton: false,
+            closeCallback: function () {
+              if (result)
+                continueSelectionCallback();
+            }
+          });
+        }
+      });
+  },
+
 
   areUndefinedOrEqual: function (x, y) {
     var result =
