@@ -1,3 +1,4 @@
 .sfdx
 .DS_store
 .cache
+.vscode
