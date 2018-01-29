@@ -37,7 +37,7 @@ public with sharing class ParseStrategyXML {
         StrategyNode node = new StrategyNode();
         node.name = curNodeXML.getChildElement('name', ns).getText();
         node.description = curNodeXML.getChildElement('description',ns).getText();
-        node.definition = curNodeXML.getChildElement('definition',ns).getText();
+        node.definition = curNodeXML.getChildElement('definition',ns).getText().replaceAll('[\\s]', '');
         node.parentNodeName = curNodeXML.getChildElement('parentNode', ns).getText();
         node.type = curNodeXML.getChildElement('type', ns).getText();
         node.parentStrategy = curStrat;
