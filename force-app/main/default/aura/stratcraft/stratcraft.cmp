@@ -9,6 +9,9 @@
 <aura:attribute name="treeItems" type="Object" /> 
 <aura:attribute name="originalNode" type="Object"/>
 
+<aura:attribute name="strategyNames" type="List" />
+<aura:attribute name="selectedStrategyName" type="String" />
+
 <aura:handler name="init" value="{!this}" action="{!c.init}" />
 
 <aura:handler name="xmlFileUploaded" event="c:XMLFileUploaded" action="{!c.processLoadedXMLString}"/>
@@ -21,7 +24,22 @@
         <lightning:spinner aura:id="mySpinner" class="slds-hide" size="large" />
         <c:modalDialog aura:id="unsavedChangesDialog" text="We noticed you have unsaved changes. Discard them?" headerText="Unsaved changes"/>
         <div>
-             Header
+            <lightning:buttonMenu iconName="utility:settings" alternativeText="Settings" onselect="{! c.handleMenuSelect }">
+                <lightning:menuItem label="Load Strategy" value="load" />
+                <lightning:menuItem label="Save Strategy" value="save"/>
+               
+            </lightning:buttonMenu>
+ 
+            <lightning:select name="strategySelect" label="Select a strategy:" aura:id="mySelect" value="{!v.selectedStrategyName}" onchange="{!c.handleStrategySelection}">>
+                <aura:iteration items="{!v.strategyNames}" var="item">
+                    <option text="{!item}" value="{!item}" />
+                 </aura:iteration>
+            </lightning:select>
+     
+
+
+
+            <hr></hr>
             <p></p>
             <div aura:id="fileInput" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" >Drop Here!</div> 
             <br>  </br>  

@@ -23,7 +23,7 @@
     $A.util.toggleClass(spinner, "slds-hide");
   },
 
-  //REFACTOR these two calls should be one call
+  
   convertXMLToStrategy: function (cmp, event, helper) {
     console.log('converting xml to Strategy object');
     var action = cmp.get("c.parseStrategyString");
@@ -43,7 +43,63 @@
     $A.enqueueAction(action);
   },
 
+  convertStrategyToXML: function (cmp) {
+    console.log('converting Strategy to XML string');
+    var action = cmp.get("c.assembleStrategyString");
 
+    action.setParams({ curStrat: cmp.get("v.curStrat") });
+    action.setCallback(this, function (response) {
+      var state = response.getState();
+      if (cmp.isValid() && state === "SUCCESS") {
+        var xmlString = response.getReturnValue();
+        cmp.set("v.xmlString", result); 
+        console.log('xmlString is: ' + result);
+      }
+      var spinner = cmp.find("mySpinner");
+      $A.util.toggleClass(spinner, "slds-hide");
+    });
+    $A.enqueueAction(action);
+  },
+
+
+  loadStrategyNames: function(cmp) {
+    // Create the action
+    var action = cmp.get("c.getStrategyNames");
+
+    // Add callback behavior for when response is received
+    action.setCallback(this, function(response) {
+        var state = response.getState();
+        if (state === "SUCCESS") {
+            cmp.set("v.strategyNames", response.getReturnValue());
+        }
+        else {
+            console.log("Failed with state: " + state);
+        }
+    });
+    // Send action off to be executed
+    $A.enqueueAction(action);
+  },
+
+  getStrategy: function(cmp, strategyName) {
+    var action = cmp.get("c.getStrategyByName");
+
+    action.setParams({ strategyName: strategyName });
+    // Add callback behavior for when response is received
+    action.setCallback(this, function(response) {
+        var state = response.getState();
+        if (state === "SUCCESS") {
+            var strategy = response.getReturnValue();
+            console.log('returning strategy: ' + JSON.stringify(strategy));
+            cmp.set("v.strategyXML", strategy.StrategyXML);
+        }
+        else {
+            console.log("Failed with state: " + state);
+        }
+    });
+    // Send action off to be executed
+    $A.enqueueAction(action);
+  },
+  }
 
   findStrategyNodeByName: function (strategy, name) {
     for (let curNode of strategy.nodes) {
@@ -188,6 +244,17 @@
     var propPage = cmp.find('propertyPage');
     propPage.reset();
   
+  },
+
+  loadStrategy: function (cmp) {
+
+  },
+
+  saveStrategy: function (cmp) {
+    var self=this;
+    //convert the string to xml
+    var saveText = self.convertStrategyToXML(cmp);
+
   },
 
   //this method checks if there are unsaved changes when user selects another node

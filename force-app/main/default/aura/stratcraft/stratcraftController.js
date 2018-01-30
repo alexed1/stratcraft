@@ -1,5 +1,6 @@
 ({
-    init: function (component, event, helper) {
+    init: function (cmp, event, helper) {
+        helper.loadStrategyNames(cmp);
 
     },
 
@@ -7,6 +8,25 @@
         // Get the list of uploaded files
         var uploadedFiles = event.getParam("files");
         alert("Files uploaded : " + uploadedFiles.length);
+    },
+
+    handleStrategySelection: function (cmp, event, helper) {
+        var strategyName = event.getParam('value');
+        var curStrategyXML = helper.getStrategy(cmp, strategyName);
+
+    },
+
+    handleMenuSelect: function (cmp, event, helper) {
+        var selectedMenuItemValue = event.getParam("value");
+        switch(selectedMenuItemValue) {
+        case "load":
+            helper.loadStrategy(cmp);
+            break;
+        case "save":
+            helper.saveStrategy(cmp);
+            break;
+        
+        }
     },
 
     onDrop: function (cmp, event, helper) {
