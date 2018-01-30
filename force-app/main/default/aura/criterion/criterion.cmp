@@ -1,21 +1,37 @@
 <aura:component controller="CriterionController">
     <aura:attribute name="objects" type="List" />
-    <aura:attribute name="selectedObject" type="String" />
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="fields" type="List" />
+    <aura:attribute name="selectedObjectName" type="String" />
+    <aura:attribute name="selectedFieldName" type="String" />
 
-    <div class="slds-grid slds-gutters">
-        <div class="slds-col">
-            <lightning:select label="Object" value="{!v.selectedValue}">
-                <aura:iteration items="{!v.options}" var="item">
-                    <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler name="change" value="{!v.selectedObjectName}" action="{!c.handleObjectChange}" />
+    <aura:handler name="change" value="{!v.selectedFieldName}" action="{!c.handleFieldChange}" />
+
+    <div class="slds-grid slds-wrap slds-gutters">
+        <div class="slds-col slds-size_4-of-12">
+            <lightning:select aura:id="objectSelect" label="Object" value="{!v.selectedObjectName}">
+                <aura:iteration items="{!v.objects}" var="object">
+                    <option value="{!object.name}" selected="{!object==v.selectedObjectName}">{!object.label}</option>
                 </aura:iteration>
             </lightning:select>
         </div>
-        <div class="slds-col">
-            <span>2</span>
+
+        <div class="slds-col slds-grid slds-size_12-of-12">
+            <div class="slds-col  slds-size_4-of-12">
+                <lightning:select aura:id="fieldSelect" value="{!v.selectedFieldName}" disabled="{!v.fields.length == 0}" label="Field">
+                    <aura:iteration items="{!v.fields}" var="field">
+                        <option value="{!field.name}" selected="{!field==v.selectedFieldName}">{!field.label}</option>
+                    </aura:iteration>
+                </lightning:select>
+            </div>
+            <div class="slds-col  slds-size_4-of-12">
+                <lightning:select aura:id="opSelect" label="Operator" disabled="{!v.selectedFieldName == ''}" />
+            </div>
+            <div class="slds-col  slds-size_4-of-12">
+                <lightning:input aura:id="opSelect" label="Value" disabled='true' />
+            </div>
         </div>
-        <div class="slds-col">
-            <span>3</span>
-        </div>
+
     </div>
 </aura:component>
