@@ -20,31 +20,38 @@
 
 <aura:registerEvent name="xmlFileUploaded" type="c:XMLFileUploaded"/>
 
-<div class="slds-card" >
+<div class="slds-card slds-p-around_small" >
         <lightning:spinner aura:id="mySpinner" class="slds-hide" size="large" />
         <c:modalDialog aura:id="unsavedChangesDialog" text="We noticed you have unsaved changes. Discard them?" headerText="Unsaved changes"/>
-        <div>
-            <lightning:buttonMenu iconName="utility:settings" alternativeText="Settings" onselect="{! c.handleMenuSelect }">
-                <lightning:menuItem label="Load Strategy" value="load" />
-                <lightning:menuItem label="Save Strategy" value="save"/>
-               
-            </lightning:buttonMenu>
- 
-            <lightning:select name="strategySelect" label="Select a strategy:" aura:id="mySelect" value="{!v.selectedStrategyName}" onchange="{!c.handleStrategySelection}">>
 
-                <aura:iteration items="{!v.strategyNames}" var="item">
-                    <option text="{!item}" value="{!item}" />
-                 </aura:iteration>
-            </lightning:select>
+        <div class="heading">Einstein Next Strategy Builder </div>
+
+        <div class="slds-float_left">
+            
+                <lightning:buttonMenu iconName="utility:settings" alternativeText="Settings" onselect="{! c.handleMenuSelect }">
+
+                    <lightning:menuItem label="Save Strategy" value="save"/>
+                   
+                </lightning:buttonMenu>
      
+                <lightning:select name="strategySelect" label="Select a strategy:" aura:id="mySelect" value="{!v.selectedStrategyName}" class="select_box" onchange="{!c.handleStrategySelection}">>
+
+                    <aura:iteration items="{!v.strategyNames}" var="item">
+                        <option text="{!item}" value="{!item}" />
+                     </aura:iteration>
+                </lightning:select>
+         
 
 
 
-            <hr></hr>
-            <p></p>
-            <div aura:id="fileInput" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" >Drop Here!</div> 
-            <br>  </br>  
-        </div>
+               
+             
+         </div>
+        <p></p>  
+        <hr class="myhr"></hr>
+        
+        <!-- <div aura:id="fileInput" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" >Drop Here!</div> -->
+        <br>  </br>  
 
         <div class="slds-grid ">
 
