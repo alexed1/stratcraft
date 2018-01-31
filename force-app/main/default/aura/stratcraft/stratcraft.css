@@ -1,2 +1,17 @@
-.THIS {
+.THIS .select_box {
+	width: 250px;
+	margin: 0 0 10px;
 }
+
+.THIS.hr {
+	margin: 0px;
+}
+
+.THIS .myhr {
+	margin: 0 0 0 0;
+}
+
+.THIS .heading {
+	font-size: 200%;
+}
+

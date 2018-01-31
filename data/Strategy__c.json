@@ -1,0 +1,20 @@
+{
+    "records": [
+        {
+            "attributes": {
+                "type": "Strategy__c",
+                "referenceId": "Strategy__cRef1"
+            },
+            "Name": "second strategy",
+            "StrategyXML__c": "second xml"
+        },
+        {
+            "attributes": {
+                "type": "Strategy__c",
+                "referenceId": "Strategy__cRef2"
+            },
+            "Name": "first strategy",
+            "StrategyXML__c": "myxml"
+        }
+    ]
+}
