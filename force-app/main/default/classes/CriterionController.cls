@@ -3,7 +3,7 @@ public with sharing class CriterionController {
     @AuraEnabled
     public static ObjectDescription[] getAvailableObjects(){
         List<ObjectDescription> result = new List<ObjectDescription>();
-        List<AggregateResult> desirableObjectTypes = [SELECT SObjectType From ObjectPermissions Group By SObjectType];
+        List<AggregateResult> desirableObjectTypes = [SELECT SObjectType From ObjectPermissions Group By SObjectType order by SObjectType];
         Map<String, Schema.SObjectType> allObjectTypes = Schema.getGlobalDescribe();
         for (AggregateResult aggrResult : desirableObjectTypes)
         {
@@ -24,11 +24,11 @@ public with sharing class CriterionController {
             Map<String, Schema.SObjectField> fields = objDescription.fields.getMap();
                 for (String key : fields.keySet())
                 {
-                    string fieldLabel = fields.get(key).getDescribe().getLabel();
-                    string fieldName = key;
+                    DescribeFieldResult field = fields.get(key).getDescribe();
+                    string fieldLabel = field.getLabel();
+                    string fieldName = field.getName();
                     resultingObject.fields.add(new ObjectFieldDescription(fieldName, fieldLabel));
                 }
-			system.debug(resultingObject);
             result.Add(resultingObject);
         }
         
