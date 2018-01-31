@@ -1,6 +1,6 @@
 {
     "orgName": "Demo Company",
-    "edition": "Developer",
+    "edition": "developer",
     "orgPreferences" : {
         "enabled": ["S1DesktopEnabled"]
     }

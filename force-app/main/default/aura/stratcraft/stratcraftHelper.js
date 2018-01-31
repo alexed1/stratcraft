@@ -1,30 +1,49 @@
 ({
-  displayToast: function (title, message, type) {
-    var toast = $A.get("e.force:showToast");
+  
+  //populates the select strategy drop down
+  loadStrategyNames: function(cmp) {
+    // Create the action
+    var action = cmp.get("c.getStrategyNames");
 
-    // For lightning1 show the toast
-    if (toast) {
-      //fire the toast event in Salesforce1
-      toast.setParams({
-        "title": title,
-        "message": message,
-        "type": type || "other",
-        "duration": 8000
-      });
-
-      toast.fire();
-    } else { // otherwise throw an alert
-      alert(title + ': ' + message);
-    }
+    // Add callback behavior for when response is received
+    action.setCallback(this, function(response) {
+        var state = response.getState();
+        if (state === "SUCCESS") {
+            cmp.set("v.strategyNames", response.getReturnValue());
+        }
+        else {
+            console.log("Failed with state: " + state);
+        }
+    });
+    // Send action off to be executed
+    $A.enqueueAction(action);
   },
 
-  toggleSpinner: function (cmp) {
-    var spinner = cmp.find("mySpinner");
-    $A.util.toggleClass(spinner, "slds-hide");
-  },
+  //when a strategy is selected, load xml from its Salesforce record
+  loadStrategyXML: function(cmp, strategyName) {
+    self=this;
+    var action = cmp.get("c.loadStrategyXML");
 
-  //REFACTOR these two calls should be one call
-  convertXMLToStrategy: function (cmp, event, helper) {
+    action.setParams({ name: strategyName });
+    // Add callback behavior for when response is received
+    action.setCallback(this, function(response) {
+        var state = response.getState();
+        if (state === "SUCCESS") {
+            var strategyXML = response.getReturnValue();
+            console.log('returning strategy XML: ' + strategyXML );       
+            cmp.set('v.strategyXML', strategyXML);
+            console.log('starting processing loaded xml string');
+            self.convertXMLToStrategy(cmp, self);
+        }
+        else {
+            console.log("Failed with state: " + state);
+        }
+    });
+    // Send action off to be executed
+    $A.enqueueAction(action);
+  },
+  
+  convertXMLToStrategy: function (cmp, helper) {
     console.log('converting xml to Strategy object');
     var action = cmp.get("c.parseStrategyString");
     action.setParams({ xml: cmp.get("v.strategyXML") });
@@ -32,18 +51,56 @@
       var state = response.getState();
       if (cmp.isValid() && state === "SUCCESS") {
         var result = response.getReturnValue();
-        cmp.set("v.curStratCopy", result);  //REFACTOR: this is probably a bad idea
-        cmp.set("v.curStrat", result); //SMELLY: probably should define an object and not just use the entire response
-        console.log('strategy is: ' + JSON.stringify(result));
-        console.log('strategy is: ' + cmp.get("v.curStrat"));
+        if (result.notification.errors.length != 0){
+          //fix this to list all errors
+          alert('first error: ' + result.notification.errors[0]);
+        }
+        else {
+          cmp.set("v.curStratCopy", result);  //REFACTOR: this is probably a bad idea
+          cmp.set("v.curStrat", result); //SMELLY: probably should define an object and not just use the entire response
+          console.log('strategy is: ' + JSON.stringify(result));
+          console.log('strategy is: ' + cmp.get("v.curStrat"));
+
+          var tree = cmp.find('tree');
+          tree.initialize(cmp.get("v.strategyXML"));
+        }
+
+     
       }
-      var spinner = cmp.find("mySpinner");
-      $A.util.toggleClass(spinner, "slds-hide");
+      else {
+            console.log("Failed with state: " + state);
+      }
+      //for some reason this was hanging
+      //var spinner = cmp.find("mySpinner");
+      //$A.util.toggleClass(spinner, "slds-hide");
+      console.log('exiting convert xml to Strategy object');
+    });
+    $A.enqueueAction(action);
+  },
+
+  convertStrategyToXML: function (cmp) {
+    console.log('converting Strategy to XML string');
+    var action = cmp.get("c.assembleStrategyString");
+
+    action.setParams({ curStrat: cmp.get("v.curStrat") });
+    action.setCallback(this, function (response) {
+      var state = response.getState();
+      if (cmp.isValid() && state === "SUCCESS") {
+        var xmlString = response.getReturnValue();
+        cmp.set("v.xmlString", result); 
+        console.log('xmlString is: ' + result);
+      }
+      else {
+            console.log("Failed with state: " + state);
+      }
+      //var spinner = cmp.find("mySpinner");
+      //$A.util.toggleClass(spinner, "slds-hide");
     });
     $A.enqueueAction(action);
   },
 
 
+  
 
   findStrategyNodeByName: function (strategy, name) {
     for (let curNode of strategy.nodes) {
@@ -63,28 +120,6 @@
       }
     };
     return childNodes;
-  },
-
-  clone: function (obj, deep) {
-    var newObj = new Object();
-
-    if (obj instanceof Date) {
-      newObj = new Date(obj);
-    }
-    else if (!deep && obj instanceof Array) {
-      newObj = obj.slice(0);
-    }
-    else {
-      for (var i in obj) {
-        if (i == 'clone') continue;
-        if (deep && typeof obj[i] == "object") {
-          newObj[i] = obj[i].clone();
-        } else {
-          newObj[i] = obj[i];
-        }
-      }
-    }
-    return newObj;
   },
 
   validateParentNodeNotBlank: function (changedNode, errorList) {
@@ -187,6 +222,17 @@
   
   },
 
+  loadStrategy: function (cmp) {
+
+  },
+
+  saveStrategy: function (cmp) {
+    var self=this;
+    //convert the string to xml
+    var saveText = self.convertStrategyToXML(cmp);
+
+  },
+
   //this method checks if there are unsaved changes when user selects another node
   //prompts user if he wants to continue navigation and calls callback if he agrees to continue
   handleUnsavedChanged: function (component, newSelectedNodeName, curStrat, helper, continueSelectionCallback) {
@@ -254,6 +300,52 @@
         //so we strip characters with regexp removing whitespaces, tabs and carriage returns and compare the rest
         && x.replace(/[\s]/gi, '') == y.replace(/[\s]/gi, ''));
     return result;
+  },displayToast: function (title, message, type) {
+    var toast = $A.get("e.force:showToast");
+
+    // For lightning1 show the toast
+    if (toast) {
+      //fire the toast event in Salesforce1
+      toast.setParams({
+        "title": title,
+        "message": message,
+        "type": type || "other",
+        "duration": 8000
+      });
+
+      toast.fire();
+    } else { // otherwise throw an alert
+      alert(title + ': ' + message);
+    }
+  },
+
+  toggleSpinner: function (cmp) {
+    var spinner = cmp.find("mySpinner");
+    $A.util.toggleClass(spinner, "slds-hide");
+  },
+  
+
+  clone: function (obj, deep) {
+    var newObj = new Object();
+
+    if (obj instanceof Date) {
+      newObj = new Date(obj);
+    }
+    else if (!deep && obj instanceof Array) {
+      newObj = obj.slice(0);
+    }
+    else {
+      for (var i in obj) {
+        if (i == 'clone') continue;
+        if (deep && typeof obj[i] == "object") {
+          newObj[i] = obj[i].clone();
+        } else {
+          newObj[i] = obj[i];
+        }
+      }
+    }
+    return newObj;
   }
+
 
 })

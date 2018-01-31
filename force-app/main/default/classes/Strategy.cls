@@ -5,10 +5,12 @@
         @AuraEnabled public List<StrategyNode> nodes;
         @AuraEnabled public String description;
         @AuraEnabled public String masterLabel;
+        @AuraEnabled public Notification notification;
 
 
         public Strategy() {
         	nodes = new List<StrategyNode> ();
+            notification = new Notification ();
         }
 
 
