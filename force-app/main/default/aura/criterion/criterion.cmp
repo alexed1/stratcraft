@@ -1,0 +1,64 @@
+<aura:component controller="CriterionController">
+
+    <aura:attribute name="isLoading" type="Boolean" default="true" />
+
+    <aura:attribute name="objects" type="List" />
+    <aura:attribute name="fields" type="List" />
+    <aura:attribute name="selectedObjectName" type="String" />
+    <aura:attribute name="selectedFieldName" type="String" />
+    <aura:attribute name="selectedOp" type="String" />
+    <aura:attribute name="textValue" type="String" />
+
+    <aura:attribute name="criteria" type="String" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler name="change" value="{!v.selectedObjectName}" action="{!c.handleObjectChange}" />
+    <aura:handler name="change" value="{!v.selectedFieldName}" action="{!c.handleFieldChange}" />
+    <aura:handler name="change" value="{!v.selectedOp}" action="{!c.handleOpChange}" />
+
+    <div class="slds-grid slds-wrap slds-gutters">
+        <div class="slds-col slds-size_4-of-12">
+            <lightning:select aura:id="objectSelect" label="Object" value="{!v.selectedObjectName}" disabled="{!v.objects.length == 0}">
+                <aura:if isTrue="{!v.objects.length == 0}">
+                    <option value="">loading...</option>
+                    <aura:set attribute="else">
+                        <aura:iteration items="{!v.objects}" var="object">
+                            <option value="{!object.name}" selected="{!object.selected}">{!object.label}</option>
+                        </aura:iteration>
+                    </aura:set>
+                </aura:if>
+            </lightning:select>
+        </div>
+
+        <div class="slds-col slds-grid slds-size_12-of-12">
+            <div class="slds-col  slds-size_4-of-12">
+                <lightning:select aura:id="fieldSelect" value="{!v.selectedFieldName}" disabled="{!v.selectedObjectName == ''}" label="Field">
+                    <aura:iteration items="{!v.fields}" var="field">
+                        <option value="{!field.name}" selected="{!field.selected}">{!field.label}</option>
+                    </aura:iteration>
+                </lightning:select>
+            </div>
+            <div class="slds-col  slds-size_4-of-12">
+                <lightning:select aura:id="opSelect" value="{!v.selectedOp}" label="Operator" disabled="{!v.selectedFieldName == ''}">
+                    <aura:if isTrue="{!v.selectedFieldName != ''}">
+                        <option value="eq" selected="{!v.selectedOp=='eq'}">equals</option>
+                        <option value="ne" selected="{!v.selectedOp=='ne'}">not equal to</option>
+                        <option value="lt" selected="{!v.selectedOp=='lt'}">less than</option>
+                        <option value="gt" selected="{!v.selectedOp=='gt'}">greater than</option>
+                        <option value="lte" selected="{!v.selectedOp=='lte'}">less or equal</option>
+                        <option value="gte" selected="{!v.selectedOp=='gte'}">greater or equal</option>
+                    </aura:if>
+                </lightning:select>
+            </div>
+            <div class="slds-col  slds-size_4-of-12">
+                <lightning:input aura:id="valueInput" value="{!v.textValue}" label="Value" disabled="{!v.selectedFieldName == ''}" onblur="{!c.handleValueChange}"
+                />
+            </div>
+        </div>
+
+        <div class="slds-col">
+            Debug: {!v.criteria}
+        </div>
+
+    </div>
+</aura:component>
