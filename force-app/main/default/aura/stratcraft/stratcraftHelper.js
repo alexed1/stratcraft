@@ -24,7 +24,7 @@
   },
 
   
-  convertXMLToStrategy: function (cmp, event, helper) {
+  convertXMLToStrategy: function (cmp, helper) {
     console.log('converting xml to Strategy object');
     var action = cmp.get("c.parseStrategyString");
     action.setParams({ xml: cmp.get("v.strategyXML") });
@@ -32,13 +32,27 @@
       var state = response.getState();
       if (cmp.isValid() && state === "SUCCESS") {
         var result = response.getReturnValue();
-        cmp.set("v.curStratCopy", result);  //REFACTOR: this is probably a bad idea
-        cmp.set("v.curStrat", result); //SMELLY: probably should define an object and not just use the entire response
-        console.log('strategy is: ' + JSON.stringify(result));
-        console.log('strategy is: ' + cmp.get("v.curStrat"));
+        if (result.notification.errors.length != 0){
+          alert('first error: ' + result.notification.errors[0]);
+        }
+        else {
+          cmp.set("v.curStratCopy", result);  //REFACTOR: this is probably a bad idea
+          cmp.set("v.curStrat", result); //SMELLY: probably should define an object and not just use the entire response
+          console.log('strategy is: ' + JSON.stringify(result));
+          console.log('strategy is: ' + cmp.get("v.curStrat"));
+
+          var tree = cmp.find('tree');
+          tree.initialize(cmp.get("v.strategyXML"));
+        }
+
+     
       }
-      var spinner = cmp.find("mySpinner");
-      $A.util.toggleClass(spinner, "slds-hide");
+      else {
+            console.log("Failed with state: " + state);
+      }
+      //var spinner = cmp.find("mySpinner");
+      //$A.util.toggleClass(spinner, "slds-hide");
+      console.log('exiting convert xml to Strategy object');
     });
     $A.enqueueAction(action);
   },
@@ -55,8 +69,11 @@
         cmp.set("v.xmlString", result); 
         console.log('xmlString is: ' + result);
       }
-      var spinner = cmp.find("mySpinner");
-      $A.util.toggleClass(spinner, "slds-hide");
+      else {
+            console.log("Failed with state: " + state);
+      }
+      //var spinner = cmp.find("mySpinner");
+      //$A.util.toggleClass(spinner, "slds-hide");
     });
     $A.enqueueAction(action);
   },
@@ -80,17 +97,31 @@
     $A.enqueueAction(action);
   },
 
-  getStrategy: function(cmp, strategyName) {
-    var action = cmp.get("c.getStrategyByName");
+  loadStrategyXML: function(cmp, strategyName) {
+    self=this;
+    var action = cmp.get("c.loadStrategyXML");
 
-    action.setParams({ strategyName: strategyName });
+    action.setParams({ name: strategyName });
     // Add callback behavior for when response is received
     action.setCallback(this, function(response) {
         var state = response.getState();
         if (state === "SUCCESS") {
-            var strategy = response.getReturnValue();
-            console.log('returning strategy: ' + JSON.stringify(strategy));
-            cmp.set("v.strategyXML", strategy.StrategyXML);
+            var strategyXML = response.getReturnValue();
+            console.log('returning strategy XML: ' + strategyXML );
+           
+            cmp.set('v.strategyXML', strategyXML);
+            console.log('starting processing loaded xml string');
+            //initialize the tree component
+            
+            
+
+            self.convertXMLToStrategy(cmp, self);
+
+            console.log('completed processing of loaded xml string');
+
+
+
+
         }
         else {
             console.log("Failed with state: " + state);
@@ -99,7 +130,7 @@
     // Send action off to be executed
     $A.enqueueAction(action);
   },
-  }
+  
 
   findStrategyNodeByName: function (strategy, name) {
     for (let curNode of strategy.nodes) {

@@ -69,10 +69,6 @@
     <layoutAssignments>
         <layout>Strategy__c-Strategy Layout</layout>
     </layoutAssignments>
-    <tabVisibilities>
-        <tab>Strategy__c</tab>
-        <visibility>DefaultOn</visibility>
-    </tabVisibilities>
     <userLicense>Salesforce</userLicense>
     <userPermissions>
         <enabled>true</enabled>

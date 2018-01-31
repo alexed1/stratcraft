@@ -11,8 +11,12 @@
     },
 
     handleStrategySelection: function (cmp, event, helper) {
-        var strategyName = event.getParam('value');
-        var curStrategyXML = helper.getStrategy(cmp, strategyName);
+        var strategyName = cmp.find('mySelect').get('v.value');
+        console.log('value is: ' + strategyName);
+
+        var  curStratXML = helper.loadStrategyXML(cmp, strategyName);
+        console.log("exiting controller handle Strategy Selection");
+ 
 
     },
 
@@ -20,6 +24,7 @@
         var selectedMenuItemValue = event.getParam("value");
         switch(selectedMenuItemValue) {
         case "load":
+            //may be obsolete
             helper.loadStrategy(cmp);
             break;
         case "save":
@@ -42,12 +47,15 @@
             reader.onloadend = function () {
                 console.log("uploaded file data is: " + reader.result);
                 cmp.set("v.strategyXML", reader.result);
+
                 var cmpEvent = cmp.getEvent("xmlFileUploaded");
                 cmpEvent.fire();
             };
             reader.readAsText(file);
         }
     },
+
+    //obsolete
     processLoadedXMLString: function (cmp, event, helper) {
         console.log('starting processing loaded xml string');
         //initialize the tree component

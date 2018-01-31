@@ -10,7 +10,7 @@
 <aura:attribute name="originalNode" type="Object"/>
 
 <aura:attribute name="strategyNames" type="List" />
-<aura:attribute name="selectedStrategyName" type="String" />
+<aura:attribute name="selectedStrategyName" type="String" default="" />
 
 <aura:handler name="init" value="{!this}" action="{!c.init}" />
 
@@ -31,6 +31,7 @@
             </lightning:buttonMenu>
  
             <lightning:select name="strategySelect" label="Select a strategy:" aura:id="mySelect" value="{!v.selectedStrategyName}" onchange="{!c.handleStrategySelection}">>
+
                 <aura:iteration items="{!v.strategyNames}" var="item">
                     <option text="{!item}" value="{!item}" />
                  </aura:iteration>

@@ -16,12 +16,19 @@ public class StrategyCrafterController {
 		return strategyNames;
     }
 
+	@AuraEnabled
+    public static String loadStrategyXML(string name) {
 
-    @AuraEnabled
-    public static Strategy getStrategyByName() {
-       //createa a class for the xml version. or not
-    	//
+         System.debug('name is: ' + name);
+         List<Strategy__c> curStratList =
+        		 [SELECT  StrategyXML__c FROM Strategy__c WHERE (Name = :name)];
+         System.debug('curStratList[0] is: ' + curStratList[0]);
+       	 if (curStratList.Size() != 1)
+       	 	throw new QueryException('either 0 or more than 1 strategy was returned when that name was passed in. Either way, you are screwed');
+        
+		return curStratList[0].StrategyXML__c;
     }
+   
 
 	@AuraEnabled
 	public static Strategy parseStrategyString(String xml){	

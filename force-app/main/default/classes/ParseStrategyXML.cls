@@ -10,26 +10,38 @@ public with sharing class ParseStrategyXML {
     @auraEnabled
     public static Strategy parseStrategyString(string xml) {
         Dom.Document doc = new Dom.Document();
-        doc.load(xml);
-
         Strategy curStrat = new Strategy();
-        //curStrat.nodes=[];
-        //namespace
-        string ns = 'http://soap.sforce.com/2006/04/metadata';
+        try {
+            System.debug('entering try block');
+            System.debug('xml is:' + xml);
+            doc.load(xml);
+            System.debug('loaded xml string into doc');
+            //namespace
+            string ns = 'http://soap.sforce.com/2006/04/metadata';
 
-        Dom.XMLNode recommendationStrategy = doc.getRootElement();
-        //System.debug (recommendationStrategy.getChildElement('recommendationStrategyName', ns).getText());
-        curStrat.name = recommendationStrategy.getChildElement('recommendationStrategyName', ns).getText();
-        curStrat.description = recommendationStrategy.getChildElement('description', ns).getText();
-        curStrat.masterLabel = recommendationStrategy.getChildElement('masterLabel', ns).getText();
-                //Dom.XMLNode recstratname = recommendationStrategy.getChildElement('recommendationStrategyName', ns);
-
-        //parse all of the strategyNodes
-        for(Dom.XMLNode child : recommendationStrategy.getChildElements()) {
-            if (child.getName() == 'strategyNode') {
-                curStrat.nodes.add(parseStrategyNode(child, ns, curStrat));
+            Dom.XMLNode recommendationStrategy = doc.getRootElement();
+            curStrat.name = recommendationStrategy.getChildElement('recommendationStrategyName', ns).getText();
+            curStrat.description = recommendationStrategy.getChildElement('description', ns).getText();
+            curStrat.masterLabel = recommendationStrategy.getChildElement('masterLabel', ns).getText();
+            System.debug('finished initial extractions');
+            System.debug('curStrat name is: ' + curStrat.name);
+            System.debug('curStrat description is: ' + curStrat.description);
+            //parse all of the strategyNodes
+            for(Dom.XMLNode child : recommendationStrategy.getChildElements()) {
+                if (child.getName() == 'strategyNode') {
+                    curStrat.nodes.add(parseStrategyNode(child, ns, curStrat));
+                }
+            }
+            System.debug('size = ' +curStrat.nodes.Size() );
+            if (curStrat.nodes.Size() == 0) {
+                curStrat.notification.addError('Provided XML generated zero nodes. That is, frankly, lame.');
             }
         }
+        catch (Exception e) {
+            curStrat.notification.addError(e.getMessage());
+
+        }
+
         return curStrat;
     }
 
