@@ -1,6 +1,7 @@
 ({
     doInit: function (cmp, event, helper) {
         var action = cmp.get("c.getAvailableObjects");
+        action.setStorable();
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (cmp.isValid() && state === "SUCCESS") {
@@ -56,6 +57,7 @@
 
         var selectedObject = cmp.get("v.selectedObjectName");
 
+        //do the same for selected object
         var obj = objects.find(function (o) { return o.name == selectedObject });
         obj.fields.forEach(function (i) { i.selected = false });
 

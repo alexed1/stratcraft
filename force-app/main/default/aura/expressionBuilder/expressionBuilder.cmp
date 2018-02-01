@@ -1,0 +1,28 @@
+<aura:component>
+    <aura:attribute name="definition" type="String" />
+    <aura:attribute name="criterias" type="List" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <lightning:card>
+        <aura:set attribute="title">
+            Definitions
+        </aura:set>
+        <aura:set attribute="actions">
+            <lightning:button label="Add" />
+        </aura:set>
+        <p class="slds-p-horizontal_small">
+            <div>
+                <aura:iteration items="{!v.criterias}" var="criteria">
+                    <div>
+                        <c:criterion criteria="{criteria}" />
+                        <lightning:buttonIcon iconName="utility:delete" variant="bare" onclick="{! c.handleClick }" alternativeText="Delete criteria"
+                        />
+                    </div>
+                </aura:iteration>
+                <lightning:input type="checkbox" label="Allow only 1 Proposition to pass?" name="blue" />
+            </div>
+        </p>
+    </lightning:card>
+
+</aura:component>

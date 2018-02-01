@@ -12,9 +12,7 @@
     <ui:inputText aura:id="parentNode" label="parentNode" class="field" value="{!v.curNode.parentNodeName }" />
     <ui:inputText aura:id="type" label="type" class="field" value="{!v.curNode.type }" />
 
-    <c:GenericDefinitionsControlPanel localDefinitionString="{!v.curNode.definition }" />
-
-    <c:criterion/>
+    <c:expressionBuilder definition="{v.curNode.definition}" />
 
     <lightning:button variant="brand" label="Save" onclick="{! c.handleClick }" />
 
