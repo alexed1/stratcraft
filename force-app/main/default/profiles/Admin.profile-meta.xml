@@ -78,6 +78,10 @@
         <object>Strategy__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
+    <tabVisibilities>		
+        <tab>Strategy_Crafter</tab>		
+        <visibility>DefaultOn</visibility>		
+    </tabVisibilities>
     <userLicense>Salesforce</userLicense>
     <userPermissions>
         <enabled>true</enabled>
