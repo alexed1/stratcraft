@@ -206,4 +206,8 @@
         <enabled>true</enabled>
         <name>ViewSetup</name>
     </userPermissions>
+    <tabVisibilities>		
+        <tab>Strategy_Crafter</tab>		
+        <visibility>DefaultOn</visibility>		
+    </tabVisibilities>
 </Profile>
