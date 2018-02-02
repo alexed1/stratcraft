@@ -108,5 +108,23 @@
         if (selectedObject && fieldName && op && textVal)
             helper.assembleCriteria(cmp, event, helper, selectedObject, fieldName, op, textVal);
 
+    },
+
+
+    handleDelete: function (cmp, event, helper) {
+        var cmpEvent = cmp.getEvent("removeCriteria");
+        cmpEvent.setParams({
+            "index": cmp.get("v.index")
+        });
+        cmpEvent.fire();
+    },
+
+    handleAddSelect: function (cmp, event, helper) {
+        var cmpEvent = cmp.getEvent("addCriteria");
+        cmpEvent.setParams({
+            "index": cmp.get("v.index"),
+            "condition": event.getParam("value")
+        });
+        cmpEvent.fire();
     }
 })

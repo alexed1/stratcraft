@@ -16,7 +16,7 @@
 			var objectName = objectAndField.substring('$Record.'.length, objectAndField.indexOf('.', '$Record.'.length));
 			var fieldName = objectAndField.substring(objectAndField.lastIndexOf('.') + 1);
 			var operatorName = criteria.substring(criteria.indexOf('&') + 1, criteria.indexOf(';')).trim();
-			var textValue = criteria.substring(criteria.indexOf(';') + 1).trim();
+			var textValue = criteria.substring(criteria.indexOf('(') + 1, criteria.lastIndexOf(')'));
 
 			cmp.set("v.selectedObjectName", objectName);
 			cmp.set("v.selectedFieldName", fieldName);

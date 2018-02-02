@@ -3,26 +3,37 @@
     <aura:attribute name="criterias" type="List" />
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler name="removeCriteria" event="c:criterionDeleteRequestEvent" action="{!c.handleCriteriaDelete }" />
+    <aura:handler name="addCriteria" event="c:criterionAddRequestEvent" action="{!c.handleCriteriaAdd }" />
 
     <lightning:card>
         <aura:set attribute="title">
-            Definitions
+            Definition
         </aura:set>
         <aura:set attribute="actions">
-            <lightning:button label="Add" />
+        </aura:set>
+        <aura:set attribute="footer">
         </aura:set>
         <p class="slds-p-horizontal_small">
             <div>
-                <aura:iteration items="{!v.criterias}" var="criteria">
+                <aura:iteration items="{!v.criterias}" var="item" indexVar="index">
                     <div>
-                        <c:criterion criteria="{criteria}" />
-                        <lightning:buttonIcon iconName="utility:delete" variant="bare" onclick="{! c.handleClick }" alternativeText="Delete criteria"
-                        />
+                        <c:criterion index="{!index}" criteria="{!item.criteria}" canRemove="{!v.criterias.length != 1 }" />
+                        <aura:if isTrue="{!v.item.condition != ''}">
+                            <div class="slds-text-heading_medium slds-p-vertical_medium">
+                                {!item.condition}
+                            </div>
+                        </aura:if>
                     </div>
                 </aura:iteration>
-                <lightning:input type="checkbox" label="Allow only 1 Proposition to pass?" name="blue" />
+
             </div>
         </p>
+        <p>
+            <lightning:input type="checkbox" label="Allow only 1 Proposition to pass?" />
+        </p>
     </lightning:card>
+
+
 
 </aura:component>
