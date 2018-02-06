@@ -12,7 +12,8 @@
     <ui:inputText aura:id="parentNode" label="parentNode" class="field" value="{!v.curNode.parentNodeName }" />
     <ui:inputText aura:id="type" label="type" class="field" value="{!v.curNode.type }" />
 
-    <c:expressionBuilder definition="{v.curNode.definition}" />
+    <c:filterSet definition="{!v.curNode.definition}" />
+    <!-- <c:expressionBuilder definition="{v.curNode.definition}" /> -->
 
     <lightning:button variant="brand" label="Save" onclick="{! c.handleClick }" />
 
