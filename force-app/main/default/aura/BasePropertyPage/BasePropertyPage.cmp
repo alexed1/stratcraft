@@ -3,6 +3,7 @@
     <aura:attribute name="curNode" type="Object" />
     <aura:attribute name="originalName" type="String" />
     <!--the name of the tree node that was selected -->
+    <aura:attribute name="treeItems" type="Object" />
 
     <aura:registerEvent name="propertyPageSaveRequest" type="c:propertyPageSaveRequestEvent" />
     <aura:method name="reset" action="{!c.resetPage}"> </aura:method>
@@ -12,7 +13,7 @@
     <ui:inputText aura:id="parentNode" label="parentNode" class="field" value="{!v.curNode.parentNodeName }" />
     <ui:inputText aura:id="type" label="type" class="field" value="{!v.curNode.type }" />
 
-    <c:filterSet definition="{!v.curNode.definition}" />
+    <c:filterSet definition="{!v.curNode.definition}" treeItems="{!v.treeItems}" />
     <!-- <c:expressionBuilder definition="{v.curNode.definition}" /> -->
 
     <lightning:button variant="brand" label="Save" onclick="{! c.handleClick }" />

@@ -2,8 +2,10 @@
 
     <aura:attribute name="definition" type="String" />
     <aura:attribute name="filters" type="List" />
+    <aura:attribute name="selectableNodes" type="List" />
+    <aura:attribute name="treeItems" type="Object" />
 
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <ltng:require scripts="{!$Resource.json5}" afterScriptsLoaded="{!c.doInit}" />
 
     <lightning:card>
         <aura:set attribute="title">
@@ -28,7 +30,8 @@
         <div>
             <aura:iteration items="{!v.filters}" var="filter" indexVar="index">
                 <div>
-                    <c:filter index="{!index}" selectedNodeName="{!filter.selectedNodeName}" expression="{!filter.expression}" />
+                    <c:filter index="{!index}" selectedNodeName="{!filter.selectedNodeName}" expression="{!filter.expression}" selectableNodes="{!v.selectableNodes}"
+                    />
                 </div>
             </aura:iteration>
         </div>

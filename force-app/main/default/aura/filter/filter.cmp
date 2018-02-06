@@ -3,18 +3,46 @@
     <aura:attribute name="index" type="Integer" />
     <aura:attribute name="selectedNodeName" type="String" />
     <aura:attribute name="expression" type="String" />
+    <aura:attribute name="selectableNodes" type="List" />
+
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
-    <div>
+    <div class="slds-has-top-magnet slds-box">
 
-        <div class="slds-float_right">
-            <lightning:buttonIcon iconName="utility:delete" variant="border" onclick="{! c.handleDelete }" alternativeText="Delete filter"
-            />
-        </div>
+        <!-- <aura:set attribute="actions">
+           
+        </aura:set> -->
 
-        <div>
-            Debug: {!v.selectedNodeName} {!v.expression}
+        <div class="slds-grid slds-wrap">
+            <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-top">
+
+                <div class="slds-col  slds-size_10-of-12">
+                    <lightning:select label="Pass throught propositions from:">
+                        <aura:iteration items="{!v.selectableNodes}" var="nodeName">
+                            <option value="{!v.selectedNodeName}">{!nodeName}</option>
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+                <div class="slds-col  slds-size_2-of-12">
+                    <div class="slds-float_right">
+                        <lightning:buttonIcon iconName="utility:delete" variant="border" onclick="{! c.handleDelete }" alternativeText="Delete filter"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-center">
+                <div class="slds-col  slds-size_1-of-1">
+                    <div class="slds-p-vertical_xx-small">
+                        if this criterion is True
+                    </div>
+                </div>
+            </div>
+            <div class="slds-grid slds-col slds-size_1-of-1">
+                <div class="slds-col  slds-size_1-of-1">
+                    <lightning:button>{!v.expression}</lightning:button>
+                </div>
+            </div>
         </div>
     </div>
 </aura:component>

@@ -62,7 +62,7 @@
 
             <div class="slds-col">
                 Node Properties {!v.body}
-                <c:BasePropertyPage aura:id="propertyPage" />
+                <c:BasePropertyPage aura:id="propertyPage" treeItems="{!v.treeItems}" />
             </div>
 
         </div>

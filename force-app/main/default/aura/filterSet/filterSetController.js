@@ -7,20 +7,39 @@
         //cmp.set("v.definition", definition);
         /////////////////////
 
-
+        //parse definition
         var filters = [];
-        ////parse filters
         if (definition) {
-            var obj = JSON.parse(helper.fixJSON(definition));
-            if (obj.expressions && obj.expressions.length > 0) {
+            var obj = _parseJSON5(definition);
+            if (obj.expressions) {
                 //iterating properties
-                Object.keys(obj).forEach(function (key, index) {
-                    filters.push({ selectedNodeName: key, expression: obj[key] });
+                Object.keys(obj.expressions).forEach(function (key, index) {
+                    filters.push({ selectedNodeName: key, expression: obj.expressions[key] });
                 });
             }
         }
 
-        cmg.set("v.filters", filters);
+        cmp.set("v.filters", filters);
+
+
+
+
+        ////////////for debug//////////////
+        var treeItems = { "name": "RootNode", "label": "RootNode", "items": [{ "name": "IfPaymentPastDueElseChurnNode", "label": "IfPaymentPastDueElseChurnNode", "items": [{ "name": "222", "label": "222", "items": [], "href": null, "expanded": false }], "href": null, "expanded": true }, { "name": "333", "label": "333", "items": [], "href": null, "expanded": false }, { "name": "444", "label": "444", "items": [], "href": null, "expanded": false }], "href": null, "expanded": true };
+
+        function flatten(data) {
+            var result = [];
+            result.push(data.name);
+            for (var ob in data.items) {
+                flatten(data.items[ob]).forEach((item) => result.push(item));
+                result.push();
+            }
+            return result;
+        }
+
+        var selectableNodes = flatten(treeItems);
+        //populate selectable nodes
+        var treeItems = cmp.set("v.selectableNodes", selectableNodes);
     },
 
     handleAddFilter: function (cmp, event, helper) {
