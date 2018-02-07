@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Profile xmlns="http://soap.sforce.com/2006/04/metadata">
+    <tabVisibilities>
+        <tab>Strategy__c</tab>
+        <visibility>DefaultOn</visibility>       
+    </tabVisibilities>
+    <tabVisibilities>
+        <tab>Strategy_Crafter</tab>
+        <visibility>DefaultOn</visibility>
+    </tabVisibilities>
     <applicationVisibilities>
         <application>standard__LightningSales</application>
         <default>false</default>
@@ -83,9 +91,9 @@
     </classAccesses>
     <custom>false</custom>
     <fieldPermissions>
-        <editable>false</editable>
+        <editable>true</editable>
         <field>Strategy__c.StrategyXML__c</field>
-        <readable>false</readable>
+        <readable>true</readable>
     </fieldPermissions>
     <layoutAssignments>
         <layout>Strategy__c-Strategy Layout</layout>
@@ -99,10 +107,6 @@
         <object>Strategy__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
-    <tabVisibilities>
-        <tab>Strategy_Crafter</tab>
-        <visibility>DefaultOn</visibility>
-    </tabVisibilities>
     <userLicense>Salesforce</userLicense>
     <userPermissions>
         <enabled>true</enabled>
