@@ -1,4 +1,4 @@
-<aura:component implements="flexipage:availableForAllPageTypes" controller="StrategyCrafterController">
+<aura:component implements="flexipage:availableForAllPageTypes, force:appHostable" access="global" controller="StrategyCrafterController">
 
     <aura:attribute name="strategyXML" type="String" />
     <aura:attribute name="curStratCopy" type="Strategy" />
@@ -64,7 +64,7 @@
 
         <div class="slds-grid ">
 
-<<<<<<< HEAD
+
             <div class="slds-col slds-box slds-size_1-of-3">
                 <c:treeNode aura:id="tree" treeItems="{! v.treeItems }" header="NodeTree"/>
             </div>
@@ -73,15 +73,7 @@
                 <b>Node Properties</b>
                 {!v.body}                
                 <c:BasePropertyPage aura:id="propertyPage"/>
-=======
-            <div class="slds-col">
-                <c:treeNode aura:id="tree" treeItems="{! v.treeItems }" header="NodeTree" />
-            </div>
 
-            <div class="slds-col">
-                Node Properties {!v.body}
-                <c:BasePropertyPage aura:id="propertyPage" treeItems="{!v.treeItems}" />
->>>>>>> origin/ST-6
             </div>
 
         </div>
