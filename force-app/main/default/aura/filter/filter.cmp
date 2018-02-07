@@ -20,7 +20,7 @@
             <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-top">
 
                 <div class="slds-col  slds-size_10-of-12">
-                    <lightning:select label="Pass throught propositions from:" value="{!v.selectedNodeName}">
+                    <lightning:select label="Block Propositions from:" value="{!v.selectedNodeName}">
                         <aura:iteration items="{!v.selectableNodes}" var="nodeName">
                             <option label="{!nodeName}" selected="{!nodeName==v.selectedNodeName}">{!nodeName}</option>
                         </aura:iteration>
@@ -36,7 +36,7 @@
             <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-center">
                 <div class="slds-col  slds-size_1-of-1">
                     <div class="slds-p-vertical_xx-small">
-                        if this criterion is True
+                        unless this is True
                     </div>
                 </div>
             </div>

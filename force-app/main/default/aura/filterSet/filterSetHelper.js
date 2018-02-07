@@ -6,6 +6,10 @@
 
         var treeItems = cmp.get("v.treeItems");
 
+        if (treeItems.length == 0) {
+            throw "The FilterSet tried to load the tree, but got zero items."
+        }
+
         function flatten(data) {
             var result = [];
             result.push(data.name);
