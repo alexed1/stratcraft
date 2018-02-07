@@ -535,7 +535,7 @@ window._parseJSON5 = (function () {
 }());
 
 // JSON5 stringify will not quote keys where appropriate
-window._stringifyJSON5 = function (obj, replacer, space) {
+window._stringifyJSON5 = (function (obj, replacer, space) {
 
     if (replacer && (typeof (replacer) !== "function" && !isArray(replacer))) {
         throw new Error('Replacer must be a function or an array');
@@ -764,5 +764,5 @@ window._stringifyJSON5 = function (obj, replacer, space) {
         return getReplacedValueOrUndefined(topLevelHolder, '', true);
     }
     return internalStringify(topLevelHolder, '', true);
-}();
+}());
 

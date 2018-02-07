@@ -1,18 +1,19 @@
 <aura:component>
 
-    <aura:attribute name="definition" type="String" />
+    <aura:attribute name="definition" type="String" default="" />
     <aura:attribute name="filters" type="List" />
     <aura:attribute name="selectableNodes" type="List" />
     <aura:attribute name="treeItems" type="Object" />
-
+    <aura:attribute name="isLoading" type="Boolean" default="true" />
     <aura:attribute name="onlyFirstMatch" type="Boolean" default="false" />
 
     <ltng:require scripts="{!$Resource.json5}" afterScriptsLoaded="{!c.doInit}" />
 
     <aura:handler name="removeFilter" event="c:filterDeleteRequestEvent" action="{!c.handleDelete }" />
-    <aura:handler name="filterUpdated" event="c:filterUpdatedEvent" action="{!c.handleFilterUpdate }" />
+    <aura:handler event="c:filterValueUpdatedEvent" action="{!c.handleFilterUpdate }" />
 
     <aura:handler name="change" value="{!v.onlyFirstMatch}" action="{!c.handleOnlyFirstMatchUpdate}" />
+    <aura:handler name="change" value="{!v.definition}" action="{!c.handleDefinitionUpdate}" />
 
     <lightning:card>
         <aura:set attribute="title">
@@ -21,12 +22,6 @@
         <aura:set attribute="actions">
             <lightning:buttonIcon iconName="utility:add" variant="border" alternativeText="Add" iconClass="dark" onclick="{!c.handleAddFilter}"
             />
-        </aura:set>
-        <aura:set attribute="footer">
-            <div class="slds-col">
-                Debug: {!v.definition}
-                <lightning:input type="checkbox" label="Allow only 1 Proposition to pass?" checked="{!v.onlyFirstMatch}" />
-            </div>
         </aura:set>
 
         <aura:if isTrue="{!v.filters.length == 0}">
@@ -43,6 +38,14 @@
                 </div>
             </aura:iteration>
         </div>
+
+        <aura:if isTrue="{!v.filters.length != 0}">
+            <div class="slds-col">
+                <lightning:input type="checkbox" class="slds-p-vertical_xx-small" label="Allow only 1 Proposition to pass?" checked="{!v.onlyFirstMatch}"
+                />
+            </div>
+        </aura:if>
+
     </lightning:card>
 
 </aura:component>

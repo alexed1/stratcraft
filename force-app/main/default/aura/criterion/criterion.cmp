@@ -81,10 +81,5 @@
                 />
             </div>
         </div>
-
-        <div class="slds-col">
-            Debug: {!v.criteria}
-        </div>
-
     </div>
 </aura:component>

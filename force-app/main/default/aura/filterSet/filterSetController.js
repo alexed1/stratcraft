@@ -1,8 +1,8 @@
 ({
     doInit: function (cmp, event, helper) {
-
         helper.initSelectableNodes(cmp);
         helper.initFilters(cmp);
+        cmp.set("v.isLoading", false);
     },
 
     handleAddFilter: function (cmp, event, helper) {
@@ -25,5 +25,9 @@
 
     handleFilterUpdate: function (cmp, event, helper) {
         helper.updateDefinition(cmp);
+    },
+
+    handleDefinitionUpdate: function (cmp, event, helper) {
+        helper.initFilters(cmp);
     }
 })

@@ -30,7 +30,7 @@
             function (components, status) {
                 if (status === "SUCCESS") {
                     modalBody = components[0];
-                    modalBody.set("v.definition", cmp.get("v.expression"));
+                    modalBody.initExpressionBuilder(cmp.get("v.expression"));
                     modalFooter = components[1];
                     var userChoice = false;
                     var expression = {};

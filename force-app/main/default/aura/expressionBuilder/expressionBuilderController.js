@@ -1,14 +1,7 @@
 ({
     doInit: function (cmp, event, helper) {
-
-
-
-        //TODO: criteria parsing from string
-
-
-        cmp.set("v.criterias",
-            [{ criteria: "$Record.Contact.LastModifiedDate &gt; (TODAY()-30)", condition: "AND" },
-            { criteria: "$Record.Contact.LastModifiedDate &lt; (TODAY())" }]);
+        var expression = event.getParam('arguments').expression;
+        helper.assembleCriteriasFromExpression(cmp, expression);
     },
 
     handleCriteriaDelete: function (cmp, event, helper) {

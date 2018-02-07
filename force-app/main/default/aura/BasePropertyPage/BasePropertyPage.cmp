@@ -13,9 +13,9 @@
     <ui:inputText aura:id="parentNode" label="parentNode" class="field" value="{!v.curNode.parentNodeName }" />
     <ui:inputText aura:id="type" label="type" class="field" value="{!v.curNode.type }" />
 
-    <c:filterSet definition="{!v.curNode.definition}" treeItems="{!v.treeItems}" />
-    <!-- <c:expressionBuilder definition="{v.curNode.definition}" /> -->
-
+    <aura:if isTrue="{!v.curNode != null}">
+        <c:filterSet definition="{!v.curNode.definition}" treeItems="{!v.treeItems}" />
+    </aura:if>
     <lightning:button variant="brand" label="Save" onclick="{! c.handleClick }" />
 
 </aura:component>

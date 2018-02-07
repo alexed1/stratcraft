@@ -2,12 +2,16 @@
     <aura:attribute name="expression" type="String" />
     <aura:attribute name="criterias" type="List" />
 
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:handler name="removeCriteria" event="c:criterionDeleteRequestEvent" action="{!c.handleCriteriaDelete }" />
     <aura:handler name="addCriteria" event="c:criterionAddRequestEvent" action="{!c.handleCriteriaAdd }" />
     <aura:handler event="c:criterionUpdatedEvent" action="{!c.handleCriterionUpdatedEvent }" />
 
     <aura:registerEvent name="expressionUpdatedEvent" type="c:expressionUpdatedEvent" />
+
+    <aura:method name="initExpressionBuilder" action="{!c.doInit}">
+        <aura:attribute name="expression" type="String" />
+    </aura:method>
+
 
     <p class="slds-p-horizontal_small">
         <div>

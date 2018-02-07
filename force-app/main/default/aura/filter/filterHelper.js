@@ -1,6 +1,6 @@
 ({
     notifyFilterUpdated: function (cmp) {
-        var cmpEvent = $A.get("e.c:filterUpdatedEvent");
+        var cmpEvent = $A.get("e.c:filterValueUpdatedEvent");
         cmpEvent.fire();
     }
 })
