@@ -5,22 +5,22 @@
     <aura:attribute name="expression" type="String" />
     <aura:attribute name="selectableNodes" type="List" />
 
-
+    <aura:handler name="change" value="{!v.selectedNodeName}" action="{!c.handleSelectedNodeName}" />
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
-    <div class="slds-has-top-magnet slds-box">
 
-        <!-- <aura:set attribute="actions">
-           
-        </aura:set> -->
+    <aura:registerEvent name="removeFilter" type="c:filterDeleteRequestEvent" />
+
+    <div class="slds-has-top-magnet slds-box">
+        <lightning:overlayLibrary aura:id="expressionsDialog" />
 
         <div class="slds-grid slds-wrap">
             <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-top">
 
                 <div class="slds-col  slds-size_10-of-12">
-                    <lightning:select label="Pass throught propositions from:">
+                    <lightning:select label="Pass throught propositions from:" value="{!v.selectedNodeName}">
                         <aura:iteration items="{!v.selectableNodes}" var="nodeName">
-                            <option value="{!v.selectedNodeName}">{!nodeName}</option>
+                            <option label="{!nodeName}" selected="{!nodeName==v.selectedNodeName}">{!nodeName}</option>
                         </aura:iteration>
                     </lightning:select>
                 </div>
@@ -40,7 +40,14 @@
             </div>
             <div class="slds-grid slds-col slds-size_1-of-1">
                 <div class="slds-col  slds-size_1-of-1">
-                    <lightning:button>{!v.expression}</lightning:button>
+                    <lightning:button onclick="{! c.handleExpression }">
+                        <aura:if isTrue="{!v.expression}">
+                            {!v.expression}
+                            <aura:set attribute="else">
+                                Not configured
+                            </aura:set>
+                        </aura:if>
+                    </lightning:button>
                 </div>
             </div>
         </div>

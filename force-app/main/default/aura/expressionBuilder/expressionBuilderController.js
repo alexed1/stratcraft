@@ -1,5 +1,11 @@
 ({
     doInit: function (cmp, event, helper) {
+
+
+
+        //TODO: criteria parsing from string
+
+
         cmp.set("v.criterias",
             [{ criteria: "$Record.Contact.LastModifiedDate &gt; (TODAY()-30)", condition: "AND" },
             { criteria: "$Record.Contact.LastModifiedDate &lt; (TODAY())" }]);
@@ -16,6 +22,8 @@
 
         criterias.splice(index, 1);
         cmp.set("v.criterias", criterias);
+
+        helper.notifyExpressionUpdate(cmp, event, helper);
     },
 
     handleCriteriaAdd: function (cmp, event, helper) {
@@ -28,5 +36,10 @@
         //insert empty condition
         criterias.splice(index + 1, 0, { condition: oldCondition });
         cmp.set("v.criterias", criterias);
+
+        helper.notifyExpressionUpdate(cmp, event, helper);
     }
+
+
+
 })

@@ -7,6 +7,8 @@
 
     <ltng:require scripts="{!$Resource.json5}" afterScriptsLoaded="{!c.doInit}" />
 
+    <aura:handler name="removeFilter" event="c:filterDeleteRequestEvent" action="{!c.handleDelete }" />
+
     <lightning:card>
         <aura:set attribute="title">
             Filters

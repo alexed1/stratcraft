@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="Event template">
+    <aura:attribute name="expression" type="String" />
+    <aura:attribute name="result" type="Boolean" />
+</aura:event>
