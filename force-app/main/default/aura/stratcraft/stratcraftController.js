@@ -14,7 +14,7 @@
         var strategyName = cmp.find('mySelect').get('v.value');
         console.log('value is: ' + strategyName);
 
-        var  curStratXML = helper.loadStrategyXML(cmp, strategyName);
+        var  curStratXML = helper.loadStrategy(cmp, strategyName);
         console.log("exiting controller handle Strategy Selection");
  
 
@@ -25,10 +25,10 @@
         switch(selectedMenuItemValue) {
         case "load":
             //may be obsolete
-            helper.loadStrategy(cmp);
+           
             break;
         case "save":
-            helper.saveStrategy(cmp);
+            
             break;
         
         }
@@ -46,7 +46,7 @@
             reader = new FileReader();
             reader.onloadend = function () {
                 console.log("uploaded file data is: " + reader.result);
-                cmp.set("v.strategyXML", reader.result);
+                cmp.set("v.strategyRecord.StrategyXML__c", reader.result);
 
                 var cmpEvent = cmp.getEvent("xmlFileUploaded");
                 cmpEvent.fire();
@@ -59,7 +59,7 @@
     processLoadedXMLString: function (cmp, event, helper) {
         console.log('starting processing loaded xml string');
         //initialize the tree component
-        var strategyXMLString = cmp.get("v.strategyXML");
+        var strategyXMLString = cmp.get("v.strategyRecord.StrategyXML__c");
         var tree = cmp.find('tree');
         tree.initialize(strategyXMLString);
 
@@ -100,5 +100,23 @@
 
 
         helper.saveStrategyChanges(component, changedNode, originalNodeName, helper);
+        //helper.persistStrategy(component);
+        console.log("starting component find");
+        //problem is that once we download the xml string as part of the strategyRecord, we never update it. So if we're going
+        //to use recordData we need to update it. But that requires a trip to the server. So there's no frigging point in using record data
+        
+        component.find("strategyRecord").saveRecord($A.getCallback(function(saveResult) {
+            if (saveResult.state === "SUCCESS" || saveResult.state === "DRAFT") {
+                helper.displayToast("Strategy Crafter","Strategy changes saved");
+                console.log("Save completed successfully.");
+            } else if (saveResult.state === "INCOMPLETE") {
+                console.log("User is offline, device doesn't support drafts.");
+            } else if (saveResult.state === "ERROR") {
+                console.log('Problem saving record, error: ' + 
+                           JSON.stringify(saveResult.error));
+            } else {
+                console.log('Unknown problem, state: ' + saveResult.state + ', error: ' + JSON.stringify(saveResult.error));
+            }
+        }));
     },
 })

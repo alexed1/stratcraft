@@ -17,17 +17,18 @@ public class StrategyCrafterController {
     }
 
 	@AuraEnabled
-    public static String loadStrategyXML(string name) {
+    public static Strategy__c loadStrategy(string name) {
 
          System.debug('name is: ' + name);
          List<Strategy__c> curStratList =
-        		 [SELECT  StrategyXML__c FROM Strategy__c WHERE (Name = :name)];
+        		 [SELECT  StrategyXML__c, Id FROM Strategy__c WHERE (Name = :name)];
          System.debug('curStratList[0] is: ' + curStratList[0]);
        	 if (curStratList.Size() != 1)
        	 	throw new QueryException('either 0 or more than 1 strategy was returned when that name was passed in. Either way, you are screwed');
         
-		return curStratList[0].StrategyXML__c;
-    }
+		return curStratList[0];
+	}
+    
    
 
 	@AuraEnabled
@@ -44,7 +45,7 @@ public class StrategyCrafterController {
 	}
 
 	@AuraEnabled
-	public static String assembleStrategyString(Strategy curStrat){	
+	public static String persistStrategy(Strategy curStrat){	
 		String result = '';
 		try {
 			result = WriteXML.WriteStrategy(curStrat);	

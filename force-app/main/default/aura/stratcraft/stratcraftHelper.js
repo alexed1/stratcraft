@@ -19,20 +19,23 @@
     $A.enqueueAction(action);
   },
 
-  //when a strategy is selected, load xml from its Salesforce record
-  loadStrategyXML: function(cmp, strategyName) {
+  //when a strategy is selected, load data from its Salesforce record
+  loadStrategy: function(cmp, strategyName) {
     self=this;
-    var action = cmp.get("c.loadStrategyXML");
+    var action = cmp.get("c.loadStrategy");
 
     action.setParams({ name: strategyName });
     // Add callback behavior for when response is received
     action.setCallback(this, function(response) {
         var state = response.getState();
         if (state === "SUCCESS") {
-            var strategyXML = response.getReturnValue();
-            console.log('returning strategy XML: ' + strategyXML );       
-            cmp.set('v.strategyXML', strategyXML);
-            console.log('starting processing loaded xml string');
+            var strategyRecord = response.getReturnValue();
+            console.log('returning strategy XML: ' + strategyRecord.StrategyXML__c );       
+            cmp.set('v.strategyRecord', strategyRecord);
+            // var strategyId = response.getReturnValue().Id;
+            // cmp.set('v.strategyId', strategyId);
+            console.log('returning strategy Id: ' + strategyRecord.Id );  
+            
             self.convertXMLToStrategy(cmp, self);
         }
         else {
@@ -46,7 +49,7 @@
   convertXMLToStrategy: function (cmp, helper) {
     console.log('converting xml to Strategy object');
     var action = cmp.get("c.parseStrategyString");
-    action.setParams({ xml: cmp.get("v.strategyXML") });
+    action.setParams({ xml: cmp.get("v.strategyRecord.StrategyXML__c") });
     action.setCallback(this, function (response) {
       var state = response.getState();
       if (cmp.isValid() && state === "SUCCESS") {
@@ -62,7 +65,7 @@
           console.log('strategy is: ' + cmp.get("v.curStrat"));
 
           var tree = cmp.find('tree');
-          tree.initialize(cmp.get("v.strategyXML"));
+          tree.initialize(cmp.get("v.strategyRecord.StrategyXML__c"));
         }
 
      
@@ -78,17 +81,19 @@
     $A.enqueueAction(action);
   },
 
-  convertStrategyToXML: function (cmp) {
-    console.log('converting Strategy to XML string');
-    var action = cmp.get("c.assembleStrategyString");
+  //save the strategy as a Salesforce strategy object
+  persistStrategy: function (cmp) {
+    var self = this;
+    console.log('converting Strategy to XML string and persisting');
+    var action = cmp.get("c.persistStrategy");
 
     action.setParams({ curStrat: cmp.get("v.curStrat") });
     action.setCallback(this, function (response) {
       var state = response.getState();
       if (cmp.isValid() && state === "SUCCESS") {
         var xmlString = response.getReturnValue();
-        cmp.set("v.xmlString", result); 
-        console.log('xmlString is: ' + result);
+        self.displayToast("Strategy Crafter","Strategy changes saved");
+        console.log('successfully returned from persistStrategy: ' + result);
       }
       else {
             console.log("Failed with state: " + state);
@@ -197,6 +202,7 @@
     curNode.parentNodeName = changedNode.parentNodeName;
   },
 
+  //this updates the local model but does not persist the data to the server
   saveStrategyChanges: function (cmp, changedNode, originalNodeName, helper) {
 
     var curStrat = cmp.get("v.curStrat");
@@ -219,19 +225,10 @@
     //fire this event so the property page knows to reset itself
     var propPage = cmp.find('propertyPage');
     propPage.reset();
+    console.log("exiting saveStrategyChanges");
   
   },
 
-  loadStrategy: function (cmp) {
-
-  },
-
-  saveStrategy: function (cmp) {
-    var self=this;
-    //convert the string to xml
-    var saveText = self.convertStrategyToXML(cmp);
-
-  },
 
   //this method checks if there are unsaved changes when user selects another node
   //prompts user if he wants to continue navigation and calls callback if he agrees to continue
@@ -300,7 +297,10 @@
         //so we strip characters with regexp removing whitespaces, tabs and carriage returns and compare the rest
         && x.replace(/[\s]/gi, '') == y.replace(/[\s]/gi, ''));
     return result;
-  },displayToast: function (title, message, type) {
+  },
+
+
+  displayToast: function (title, message, type) {
     var toast = $A.get("e.force:showToast");
 
     // For lightning1 show the toast

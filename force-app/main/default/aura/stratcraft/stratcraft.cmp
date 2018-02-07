@@ -2,7 +2,14 @@
 
 <aura:component implements="flexipage:availableForAllPageTypes" controller="StrategyCrafterController">
 
+<!-- 
 <aura:attribute name="strategyXML" type="String" />
+<aura:attribute name="strategyId" type="String" />
+-->
+ <!--Salesforce recordId -->
+<aura:attribute name="strategyRecord" type="Object"/> <!--represents the Strategy as it's stored on the Salesforce side -->
+
+
 <aura:attribute name="curStratCopy" type="Strategy" />
 <aura:attribute name="curStrat" type="Strategy" />
 <aura:attribute name="curStratNode" type="Object" />
@@ -19,6 +26,15 @@
 <aura:handler event="c:treeNodeSelectedEvent" action="{!c.handleTreeNodeSelect }"/>
 
 <aura:registerEvent name="xmlFileUploaded" type="c:XMLFileUploaded"/>
+
+<force:recordData aura:id="strategyRecord"
+        recordId="{!v.strategyRecord.Id}"
+        layoutType="{!v.layout}"
+        fields="{!v.fieldsToQuery}"
+        mode="EDIT"
+        
+        targetFields="{!v.strategyRecord}"
+        targetError="{!v.error}" />
 
 <div class="slds-card slds-p-around_small" >
         <lightning:spinner aura:id="mySpinner" class="slds-hide" size="large" />
