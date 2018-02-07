@@ -1,0 +1,31 @@
+<aura:component>
+    <aura:attribute name="expression" type="String" />
+    <aura:attribute name="criterias" type="List" />
+
+    <aura:handler name="removeCriteria" event="c:criterionDeleteRequestEvent" action="{!c.handleCriteriaDelete }" />
+    <aura:handler name="addCriteria" event="c:criterionAddRequestEvent" action="{!c.handleCriteriaAdd }" />
+    <aura:handler event="c:criterionUpdatedEvent" action="{!c.handleCriterionUpdatedEvent }" />
+
+    <aura:registerEvent name="expressionUpdatedEvent" type="c:expressionUpdatedEvent" />
+
+    <aura:method name="initExpressionBuilder" action="{!c.doInit}">
+        <aura:attribute name="expression" type="String" />
+    </aura:method>
+
+
+    <p class="slds-p-horizontal_small">
+        <div>
+            <aura:iteration items="{!v.criterias}" var="item" indexVar="index">
+                <div>
+                    <c:criterion index="{!index}" criteria="{!item.criteria}" canRemove="{!v.criterias.length != 1 }" />
+                    <aura:if isTrue="{!v.item.condition != ''}">
+                        <div class="slds-text-heading_medium slds-p-vertical_medium">
+                            {!item.condition}
+                        </div>
+                    </aura:if>
+                </div>
+            </aura:iteration>
+
+        </div>
+    </p>
+</aura:component>

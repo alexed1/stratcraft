@@ -1,29 +1,28 @@
-
-
 <aura:component implements="flexipage:availableForAllPageTypes" controller="StrategyCrafterController">
 
-<aura:attribute name="strategyXML" type="String" />
-<aura:attribute name="curStratCopy" type="Strategy" />
-<aura:attribute name="curStrat" type="Strategy" />
-<aura:attribute name="curStratNode" type="Object" />
-<aura:attribute name="treeItems" type="Object" /> 
-<aura:attribute name="originalNode" type="Object"/>
+    <aura:attribute name="strategyXML" type="String" />
+    <aura:attribute name="curStratCopy" type="Strategy" />
+    <aura:attribute name="curStrat" type="Strategy" />
+    <aura:attribute name="curStratNode" type="Object" />
+    <aura:attribute name="treeItems" type="Object" />
+    <aura:attribute name="originalNode" type="Object" />
 
-<aura:attribute name="strategyNames" type="List" />
-<aura:attribute name="selectedStrategyName" type="String" default="" />
+    <aura:attribute name="strategyNames" type="List" />
+    <aura:attribute name="selectedStrategyName" type="String" default="" />
 
-<aura:handler name="init" value="{!this}" action="{!c.init}" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
 
-<aura:handler name="xmlFileUploaded" event="c:XMLFileUploaded" action="{!c.processLoadedXMLString}"/>
-<aura:handler event="c:propertyPageSaveRequestEvent" action="{!c.saveStrategy}"/>
-<aura:handler event="c:treeNodeSelectedEvent" action="{!c.handleTreeNodeSelect }"/>
+    <aura:handler name="xmlFileUploaded" event="c:XMLFileUploaded" action="{!c.processLoadedXMLString}" />
+    <aura:handler event="c:propertyPageSaveRequestEvent" action="{!c.saveStrategy}" />
+    <aura:handler event="c:treeNodeSelectedEvent" action="{!c.handleTreeNodeSelect }" />
 
-<aura:registerEvent name="xmlFileUploaded" type="c:XMLFileUploaded"/>
+    <aura:registerEvent name="xmlFileUploaded" type="c:XMLFileUploaded" />
 
-<div class="slds-card slds-p-around_small" >
+    <div class="slds-card slds-p-around_small">
         <lightning:spinner aura:id="mySpinner" class="slds-hide" size="large" />
 
         <lightning:overlayLibrary aura:id="unsavedChangesDialog" />
+
 
         <!-- <div> 
             <lightning:icon iconName="standard:hierarchy" size="medium" alternativeText="Strategy"/>
@@ -45,26 +44,27 @@
      
                 <lightning:select name="strategySelect" label="Select a strategy:" aura:id="mySelect" value="{!v.selectedStrategyName}" class="select_box" onchange="{!c.handleStrategySelection}">>
 
-                    <aura:iteration items="{!v.strategyNames}" var="item">
-                        <option text="{!item}" value="{!item}" />
-                     </aura:iteration>
-                </lightning:select>
-         
+                <aura:iteration items="{!v.strategyNames}" var="item">
+                    <option text="{!item}" value="{!item}" />
+                </aura:iteration>
+            </lightning:select>
 
 
 
-               
-             
-         </div>
-        <p></p>  
+
+
+
+        </div>
+        <p></p>
         <hr class="myhr"></hr>
-        
+
         <!-- <div aura:id="fileInput" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" >Drop Here!</div> -->
-        <br>  </br>  
+        <br> </br>
 
 
         <div class="slds-grid ">
 
+<<<<<<< HEAD
             <div class="slds-col slds-box slds-size_1-of-3">
                 <c:treeNode aura:id="tree" treeItems="{! v.treeItems }" header="NodeTree"/>
             </div>
@@ -73,9 +73,18 @@
                 <b>Node Properties</b>
                 {!v.body}                
                 <c:BasePropertyPage aura:id="propertyPage"/>
+=======
+            <div class="slds-col">
+                <c:treeNode aura:id="tree" treeItems="{! v.treeItems }" header="NodeTree" />
+            </div>
+
+            <div class="slds-col">
+                Node Properties {!v.body}
+                <c:BasePropertyPage aura:id="propertyPage" treeItems="{!v.treeItems}" />
+>>>>>>> origin/ST-6
             </div>
 
         </div>
-</div>
+    </div>
 
-</aura:component>	
+</aura:component>
