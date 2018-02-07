@@ -31,5 +31,13 @@
 
 	resetCriteria: function (cmp) {
 		cmp.set("v.criteria", '');
+	},
+
+	notifyCriteriaValueUpdate: function (cmp) {
+		var cmpEvent = $A.get("e.c:criterionUpdatedEvent");
+		cmpEvent.setParams({
+			"criteria": cmp.get("v.criteria")
+		});
+		cmpEvent.fire();
 	}
 })

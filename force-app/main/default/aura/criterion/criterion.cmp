@@ -22,6 +22,7 @@
 
     <aura:registerEvent name="removeCriteria" type="c:criterionDeleteRequestEvent" />
     <aura:registerEvent name="addCriteria" type="c:criterionAddRequestEvent" />
+    <aura:registerEvent name="criterionUpdatedEvent" type="c:criterionUpdatedEvent" />
 
     <div class="slds-grid slds-wrap slds-gutters">
         <div class="slds-col slds-size_4-of-12">

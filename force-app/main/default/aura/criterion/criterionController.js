@@ -30,6 +30,7 @@
                 if (criteriaExists) {
                     var obj = result.find(function (o) { return o.name == selectedObjectName });
                     cmp.set("v.fields", obj.fields);
+                    helper.notifyCriteriaValueUpdate(cmp);
                 }
 
                 cmp.set("v.isLoading", false);
@@ -108,6 +109,7 @@
         if (selectedObject && fieldName && op && textVal)
             helper.assembleCriteria(cmp, event, helper, selectedObject, fieldName, op, textVal);
 
+        helper.notifyCriteriaValueUpdate(cmp);
     },
 
 

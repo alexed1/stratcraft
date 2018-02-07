@@ -10,6 +10,8 @@
 
 
     <aura:registerEvent name="removeFilter" type="c:filterDeleteRequestEvent" />
+    <aura:registerEvent name="filterUpdated" type="c:filterUpdatedEvent" />
+
 
     <div class="slds-has-top-magnet slds-box">
         <lightning:overlayLibrary aura:id="expressionsDialog" />

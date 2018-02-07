@@ -5,6 +5,7 @@
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:handler name="removeCriteria" event="c:criterionDeleteRequestEvent" action="{!c.handleCriteriaDelete }" />
     <aura:handler name="addCriteria" event="c:criterionAddRequestEvent" action="{!c.handleCriteriaAdd }" />
+    <aura:handler event="c:criterionUpdatedEvent" action="{!c.handleCriterionUpdatedEvent }" />
 
     <aura:registerEvent name="expressionUpdatedEvent" type="c:expressionUpdatedEvent" />
 

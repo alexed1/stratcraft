@@ -16,7 +16,7 @@
     },
 
     handleSelectedNodeName: function (cmp, event, helper) {
-
+        helper.notifyFilterUpdated(cmp);
     },
 
     handleExpression: function (cmp, event, helper) {
@@ -32,9 +32,11 @@
                     modalBody = components[0];
                     modalBody.set("v.definition", cmp.get("v.expression"));
                     modalFooter = components[1];
-                    var result = {};
+                    var userChoice = false;
+                    var expression = {};
                     modalFooter.addEventHandler("c:expressionsEvent", function (auraEvent) {
-                        result = auraEvent.getParam("criteriaString");
+                        userChoice = auraEvent.getParam("result");
+                        expression = auraEvent.getParam("expression");
                     })
 
                     cmp.find('expressionsDialog').showCustomModal({
@@ -43,8 +45,9 @@
                         footer: modalFooter,
                         showCloseButton: false,
                         closeCallback: function () {
-                            if (result) {
-                                cmp.set("v.expression", result);
+                            if (userChoice) {
+                                cmp.set("v.expression", expression);
+                                helper.notifyFilterUpdated(cmp);
                             }
                         }
                     });

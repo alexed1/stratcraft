@@ -38,8 +38,9 @@
         cmp.set("v.criterias", criterias);
 
         helper.notifyExpressionUpdate(cmp, event, helper);
+    },
+
+    handleCriterionUpdatedEvent: function (cmp, event, helper) {
+        helper.notifyExpressionUpdate(cmp, event, helper);
     }
-
-
-
 })

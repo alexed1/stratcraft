@@ -1,24 +1,26 @@
 ({
 
-    handleCancel: function (component, event, helper) {
+    handleCancel: function (cmp, event, helper) {
         var cmpEvent = $A.get("e.c:expressionsEvent");
         cmpEvent.setParams({
             "result": false
         });
         cmpEvent.fire();
-        component.find("expressionsDialog").notifyClose();
+        cmp.find("expressionsDialog").notifyClose();
     },
 
-    handleOK: function (component, event, helper) {
+    handleOK: function (cmp, event, helper) {
         var cmpEvent = $A.get("e.c:expressionsEvent");
         cmpEvent.setParams({
-            "result": true
+            "result": true,
+            "expression": cmp.get("v.expression"),
         });
         cmpEvent.fire();
-        component.find("expressionsDialog").notifyClose();
+        cmp.find("expressionsDialog").notifyClose();
     },
 
-    handleExpressionUpdatedEvent: function (component, event, helper) {
-
+    handleExpressionUpdatedEvent: function (cmp, event, helper) {
+        var expression = event.getParam("expression");
+        cmp.set("v.expression", expression);
     }
 })
