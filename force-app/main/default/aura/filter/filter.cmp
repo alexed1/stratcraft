@@ -46,7 +46,7 @@
                         <aura:if isTrue="{!v.expression}">
                             {!v.expression}
                             <aura:set attribute="else">
-                                Not configured
+                                Configure
                             </aura:set>
                         </aura:if>
                     </lightning:button>

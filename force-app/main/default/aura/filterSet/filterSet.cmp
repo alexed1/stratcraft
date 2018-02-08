@@ -41,7 +41,7 @@
 
         <aura:if isTrue="{!v.filters.length != 0}">
             <div class="slds-col">
-                <lightning:input type="checkbox" class="slds-p-vertical_xx-small" label="Allow only 1 Proposition to pass?" checked="{!v.onlyFirstMatch}"
+                <lightning:input type="checkbox" class="slds-p-vertical_xx-small" label="Use only the first true filter" checked="{!v.onlyFirstMatch}"
                 />
             </div>
         </aura:if>
