@@ -1,0 +1,1 @@
+<aura:event type="APPLICATION" description="filter component notifies filter set component that its value changed" />

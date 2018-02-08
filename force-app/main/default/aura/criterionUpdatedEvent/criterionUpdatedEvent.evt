@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="notifies expression builder that one of criterions has changed values">
+    <aura:attribute name="criteria" type="String" />
+</aura:event>

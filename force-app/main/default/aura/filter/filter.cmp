@@ -1,0 +1,57 @@
+<aura:component>
+
+    <aura:attribute name="index" type="Integer" />
+    <aura:attribute name="selectedNodeName" type="String" />
+    <aura:attribute name="expression" type="String" />
+    <aura:attribute name="selectableNodes" type="List" />
+
+    <aura:handler name="change" value="{!v.selectedNodeName}" action="{!c.handleSelectedNodeName}" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+
+    <aura:registerEvent name="removeFilter" type="c:filterDeleteRequestEvent" />
+    <aura:registerEvent name="filterValueUpdatedEvent" type="c:filterValueUpdatedEvent" />
+
+
+    <div class="slds-has-top-magnet slds-box">
+        <lightning:overlayLibrary aura:id="expressionsDialog" />
+
+        <div class="slds-grid slds-wrap">
+            <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-top">
+
+                <div class="slds-col  slds-size_10-of-12">
+                    <lightning:select label="Block Propositions from:" value="{!v.selectedNodeName}">
+                        <aura:iteration items="{!v.selectableNodes}" var="nodeName">
+                            <option label="{!nodeName}" selected="{!nodeName==v.selectedNodeName}">{!nodeName}</option>
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+                <div class="slds-col  slds-size_2-of-12">
+                    <div class="slds-float_right">
+                        <lightning:buttonIcon iconName="utility:delete" variant="border" onclick="{! c.handleDelete }" alternativeText="Delete filter"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-center">
+                <div class="slds-col  slds-size_1-of-1">
+                    <div class="slds-p-vertical_xx-small">
+                        unless this is True
+                    </div>
+                </div>
+            </div>
+            <div class="slds-grid slds-col slds-size_1-of-1">
+                <div class="slds-col  slds-size_1-of-1">
+                    <lightning:button onclick="{! c.handleExpression }">
+                        <aura:if isTrue="{!v.expression}">
+                            {!v.expression}
+                            <aura:set attribute="else">
+                                Configure
+                            </aura:set>
+                        </aura:if>
+                    </lightning:button>
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>
