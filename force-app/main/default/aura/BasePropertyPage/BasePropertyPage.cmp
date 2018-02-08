@@ -3,7 +3,7 @@
     <aura:attribute name="curNode" type="Object" />
     <!--the name of the tree node that was selected -->
     <aura:attribute name="originalName" type="String" />
-    <aura:attribute name="treeItems" type="Object" />
+    <aura:attribute name="curStrat" type="Strategy" />
 
     <aura:registerEvent name="propertyPageSaveRequest" type="c:propertyPageSaveRequestEvent" />
     <aura:method name="reset" action="{!c.resetPage}"> </aura:method>
@@ -14,7 +14,7 @@
     <ui:inputText aura:id="type" label="type" class="field" value="{!v.curNode.type }" />
 
     <aura:if isTrue="{!v.curNode != null}">
-        <c:filterSet definition="{!v.curNode.definition}" treeItems="{!v.treeItems}" />
+        <c:filterSet curNode="{!v.curNode}" curStrat="{!v.curStrat}" selectedNodeName="{!v.curNode.name}" />
     </aura:if>
     <lightning:button variant="brand" label="Save" onclick="{! c.handleClick }" />
 

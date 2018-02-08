@@ -20,7 +20,7 @@
     <aura:handler name="change" value="{!v.selectedFieldName}" action="{!c.handleFieldChange}" />
     <aura:handler name="change" value="{!v.selectedOp}" action="{!c.handleOpChange}" />
 
-    <aura:registerEvent name="removeCriterion" type="c:criterionDeleteRequestEvent" />
+    <aura:registerEvent name="deleteCriterion" type="c:criterionDeleteRequestEvent" />
     <aura:registerEvent name="addCriterion" type="c:criterionAddRequestEvent" />
     <aura:registerEvent name="criterionUpdatedEvent" type="c:criterionUpdatedEvent" />
 

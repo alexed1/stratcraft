@@ -5,11 +5,10 @@
     <aura:attribute name="expression" type="String" />
     <aura:attribute name="selectableNodes" type="List" />
 
-    <aura:handler name="change" value="{!v.selectedNodeName}" action="{!c.handleSelectedNodeName}" />
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
 
-    <aura:registerEvent name="removeFilter" type="c:filterDeleteRequestEvent" />
+    <aura:registerEvent name="deleteFilter" type="c:filterDeleteRequestEvent" />
     <aura:registerEvent name="filterValueUpdatedEvent" type="c:filterValueUpdatedEvent" />
 
 
@@ -20,7 +19,7 @@
             <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-top">
 
                 <div class="slds-col  slds-size_10-of-12">
-                    <lightning:select label="Block Propositions from:" value="{!v.selectedNodeName}">
+                    <lightning:select label="Block Propositions from:" value="{!v.selectedNodeName}" onchange="{c.handleSelectedNodeNameChange}">
                         <aura:iteration items="{!v.selectableNodes}" var="nodeName">
                             <option label="{!nodeName}" selected="{!nodeName==v.selectedNodeName}">{!nodeName}</option>
                         </aura:iteration>
@@ -28,7 +27,7 @@
                 </div>
                 <div class="slds-col  slds-size_2-of-12">
                     <div class="slds-float_right">
-                        <lightning:buttonIcon iconName="utility:delete" variant="border" onclick="{! c.handleDelete }" alternativeText="Delete filter"
+                        <lightning:buttonIcon iconName="utility:delete" variant="border" onclick="{! c.handleDeleteRequest }" alternativeText="Delete filter"
                         />
                     </div>
                 </div>

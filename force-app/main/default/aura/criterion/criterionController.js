@@ -117,7 +117,7 @@
 
 
     handleDelete: function (cmp, event, helper) {
-        var cmpEvent = cmp.getEvent("removeCriterion");
+        var cmpEvent = cmp.getEvent("deleteCriterion");
         cmpEvent.setParams({
             "index": cmp.get("v.index")
         });
