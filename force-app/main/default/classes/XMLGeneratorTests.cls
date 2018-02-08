@@ -1,6 +1,6 @@
 @isTest
-public with sharing class WriteXMLTests {
-    public WriteXMLTests() {
+public with sharing class XMLGeneratorTests {
+    public XMLGeneratorTests() {
 
     }
 
@@ -9,7 +9,7 @@ public with sharing class WriteXMLTests {
 			Strategy curStrat = Fixtures.TestStrategy2();
 
 			//Test
-			string finishedXMLString = WriteXML.WriteStrategy(curStrat);
+			string finishedXMLString = XMLGenerator.StrategyToXML(curStrat);
 
 			//Validate
 			//validate by sending the response through the parser and then comparing the final strategy object with the original fixture

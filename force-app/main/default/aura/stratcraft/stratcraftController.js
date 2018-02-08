@@ -102,21 +102,13 @@
         helper.saveStrategyChanges(component, changedNode, originalNodeName, helper);
         //helper.persistStrategy(component);
         console.log("starting component find");
-        //problem is that once we download the xml string as part of the strategyRecord, we never update it. So if we're going
-        //to use recordData we need to update it. But that requires a trip to the server. So there's no frigging point in using record data
         
-        component.find("strategyRecord").saveRecord($A.getCallback(function(saveResult) {
-            if (saveResult.state === "SUCCESS" || saveResult.state === "DRAFT") {
-                helper.displayToast("Strategy Crafter","Strategy changes saved");
-                console.log("Save completed successfully.");
-            } else if (saveResult.state === "INCOMPLETE") {
-                console.log("User is offline, device doesn't support drafts.");
-            } else if (saveResult.state === "ERROR") {
-                console.log('Problem saving record, error: ' + 
-                           JSON.stringify(saveResult.error));
-            } else {
-                console.log('Unknown problem, state: ' + saveResult.state + ', error: ' + JSON.stringify(saveResult.error));
-            }
-        }));
+
+        //post the curStrat to the server
+        //save it by name overwriting as necessary
+        //return a status message
+        helper.persistStrategy(component);
+
+        
     },
 })

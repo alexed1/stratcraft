@@ -48,7 +48,8 @@ public class StrategyCrafterController {
 	public static String persistStrategy(Strategy curStrat){	
 		String result = '';
 		try {
-			result = WriteXML.WriteStrategy(curStrat);	
+			result = curStrat.Persist()
+		
 		}
 		catch (Exception ex) {
 			result = ex.getMessage();

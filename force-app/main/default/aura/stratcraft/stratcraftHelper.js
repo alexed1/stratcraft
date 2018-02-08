@@ -84,16 +84,17 @@
   //save the strategy as a Salesforce strategy object
   persistStrategy: function (cmp) {
     var self = this;
-    console.log('converting Strategy to XML string and persisting');
+    console.log('sending Strategy to Salesforce and persisting');
     var action = cmp.get("c.persistStrategy");
 
     action.setParams({ curStrat: cmp.get("v.curStrat") });
     action.setCallback(this, function (response) {
       var state = response.getState();
       if (cmp.isValid() && state === "SUCCESS") {
-        var xmlString = response.getReturnValue();
+        var result = response.getReturnValue();
+        //only show this if response indicates true success
         self.displayToast("Strategy Crafter","Strategy changes saved");
-        console.log('successfully returned from persistStrategy: ' + result);
+        console.log(' returned from persistStrategy: ' + result);
       }
       else {
             console.log("Failed with state: " + state);
@@ -228,6 +229,8 @@
     console.log("exiting saveStrategyChanges");
   
   },
+
+
 
 
   //this method checks if there are unsaved changes when user selects another node

@@ -1,9 +1,9 @@
-public with sharing class WriteXML {
-    public WriteXML() {
+public with sharing class XMLGenerator {
+    public XMLGenerator() {
 
     }
     //returns an XML string suitable for saving to an external text file, and which can then be read back in if desired
-    public static string WriteStrategy(Strategy curStrategy){
+    public static string StrategyToXML(Strategy curStrategy){
 
       		//add the headerlines
 			DOM.Document doc = new DOM.Document();
@@ -18,7 +18,7 @@ public with sharing class WriteXML {
 
     		for(StrategyNode curNode : curStrategy.nodes) {
     			//this appends the returning node to the list being built here
-    			stratXMLRootNode.insertBefore(WriteXML.WriteStrategyNode(curNode), null);
+    			stratXMLRootNode.insertBefore(WriteXML.StrategyNodeToXML(curNode), null);
     		}
         
         	return doc.toXmlString();
@@ -27,7 +27,7 @@ public with sharing class WriteXML {
     }
 
     //given a StrategyNode, return a dom.XmlNode version suitable for outputing to  XML string
-    public static dom.XmlNode WriteStrategyNode(StrategyNode curStrategyNode) {
+    public static dom.XmlNode StrategyNodeToXML(StrategyNode curStrategyNode) {
 
 			DOM.Document doc = new DOM.Document();
 
