@@ -1,42 +1,42 @@
 ({
-	assembleCriteria: function (cmp, event, helper, objectName, fieldName, op, textValue) {
+	assembleCriterion: function (cmp, event, helper, objectName, fieldName, op, textValue) {
 		var str = '$Record.' + objectName + '.' + fieldName + ' &' + op + '; (' + textValue + ')';
-		cmp.set("v.criteria", str);
+		cmp.set("v.criterionValue", str);
 	},
 
-	initExistingCriteria: function (cmp) {
+	initExistingCriterion: function (cmp) {
 
-		var criteria = cmp.get("v.criteria");
-		if (!criteria)
+		var criterion = cmp.get("v.criterionValue");
+		if (!criterion)
 			return false;
 
 		//example: $Record.Strategy__c.LastModifiedById &amp;gt; (435)
 		try {
-			var objectAndField = criteria.substring(0, criteria.indexOf(' '));
-			var objectName = objectAndField.substring('$Record.'.length, objectAndField.indexOf('.', '$Record.'.length));
+			var objectAndField = criterion.substring(0, criterion.indexOf(' '));
+			var objectName = objectAndField.substring('$Record.'.length, objectAndField.indexOf('.', '	$Record.'.length));
 			var fieldName = objectAndField.substring(objectAndField.lastIndexOf('.') + 1);
-			var operatorName = criteria.substring(criteria.indexOf('&') + 1, criteria.indexOf(';')).trim();
-			var textValue = criteria.substring(criteria.indexOf('(') + 1, criteria.lastIndexOf(')'));
+			var operatorName = criterion.substring(criterion.indexOf('&') + 1, criterion.indexOf(';')).trim();
+			var textValue = criterion.substring(criterion.indexOf('(') + 1, criterion.lastIndexOf(')'));
 
 			cmp.set("v.selectedObjectName", objectName);
 			cmp.set("v.selectedFieldName", fieldName);
 			cmp.set("v.selectedOp", operatorName);
-			cmp.set("v.textValue", textValue);
+			cmp.set("v.rightSideValue", textValue);
 		}
 		catch (e) {
-			throw new Error("Couldn't parse existing criteria", e);
+			throw new Error("Couldn't parse existing criterion", e);
 		}
 		return true;
 	},
 
-	resetCriteria: function (cmp) {
-		cmp.set("v.criteria", '');
+	resetCriterion: function (cmp) {
+		cmp.set("v.criterionValue", '');
 	},
 
-	notifyCriteriaValueUpdate: function (cmp) {
+	notifyCriterionValueUpdate: function (cmp) {
 		var cmpEvent = $A.get("e.c:criterionUpdatedEvent");
 		cmpEvent.setParams({
-			"criteria": cmp.get("v.criteria")
+			"criterion": cmp.get("v.criterionValue")
 		});
 		cmpEvent.fire();
 	}

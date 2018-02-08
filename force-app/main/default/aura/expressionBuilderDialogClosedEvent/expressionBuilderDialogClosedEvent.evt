@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="Event is fired by expressionBuilder and handled by a callback function,
+                                                which is defined in the place dialog window is called">
+    <aura:attribute name="expression" type="String" />
+    <aura:attribute name="result" type="Boolean" />
+</aura:event>

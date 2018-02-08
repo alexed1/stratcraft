@@ -1,3 +1,0 @@
-<aura:event type="APPLICATION" description="Notifies expression dialog window footer that whole expression value has changed">
-    <aura:attribute name="expression" type="String" />
-</aura:event>

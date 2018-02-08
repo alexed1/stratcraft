@@ -1,23 +1,26 @@
 ({
     doInit: function (cmp, event, helper) {
         var action = cmp.get("c.getAvailableObjects");
+
+        //should be some kind of a singleton instead of a cached request
         action.setStorable();
+
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (cmp.isValid() && state === "SUCCESS") {
                 var result = response.getReturnValue();
 
-                var criteriaExists = helper.initExistingCriteria(cmp);
+                var criterionExists = helper.initExistingCriterion(cmp);
 
                 var selectedObjectName = cmp.get("v.selectedObjectName");
                 var selectedFieldName = cmp.get("v.selectedFieldName");
 
-                var emptySelectionObject = { name: '', label: '--None--', selected: criteriaExists ? false : true };
+                var emptySelectionObject = { name: '', label: '--None--', selected: criterionExists ? false : true };
 
                 result.map((obj) => {
-                    obj.selected = criteriaExists ? obj.name == selectedObjectName : false;
+                    obj.selected = criterionExists ? obj.name == selectedObjectName : false;
                     obj.fields.map((f) => {
-                        f.selected = criteriaExists ? f.name == selectedFieldName : false;
+                        f.selected = criterionExists ? f.name == selectedFieldName : false;
                         return f;
                     });
                     obj.fields.splice(0, 0, emptySelectionObject)
@@ -25,12 +28,12 @@
                 });
 
                 result.splice(0, 0, emptySelectionObject);
-                cmp.set("v.objects", result);
+                cmp.set("v.availableObjects", result);
 
-                if (criteriaExists) {
+                if (criterionExists) {
                     var obj = result.find(function (o) { return o.name == selectedObjectName });
-                    cmp.set("v.fields", obj.fields);
-                    helper.notifyCriteriaValueUpdate(cmp);
+                    cmp.set("v.availableFields", obj.fields);
+                    helper.notifyCriterionValueUpdate(cmp);
                 }
 
                 cmp.set("v.isLoading", false);
@@ -45,12 +48,12 @@
         if (cmp.get("v.isLoading"))
             return;
 
-        var objects = cmp.get("v.objects");
+        var availableObjects = cmp.get("v.availableObjects");
 
         //mark fields as not selected in previous object
         var previousObjectName = event.getParam("oldValue");
         if (previousObjectName) {
-            var prevObj = objects.find(function (o) { return o.name == previousObjectName });
+            var prevObj = availableObjects.find(function (o) { return o.name == previousObjectName });
             if (prevObj) {
                 prevObj.fields.forEach(function (i) { i.selected = false });
             }
@@ -59,19 +62,19 @@
         var selectedObject = cmp.get("v.selectedObjectName");
 
         //do the same for selected object
-        var obj = objects.find(function (o) { return o.name == selectedObject });
+        var obj = availableObjects.find(function (o) { return o.name == selectedObject });
         obj.fields.forEach(function (i) { i.selected = false });
 
         if (selectedObject != "" && obj) {
-            cmp.set("v.fields", obj.fields);
+            cmp.set("v.availableFields", obj.fields);
             cmp.find("fieldSelect").focus();
         }
         else {
-            cmp.set("v.fields", []);
+            cmp.set("v.availableFields", []);
         }
         cmp.set("v.selectedFieldName", '');
 
-        helper.resetCriteria(cmp);
+        helper.resetCriterion(cmp);
     },
 
     handleFieldChange: function (cmp, event, helper) {
@@ -81,40 +84,40 @@
         var fieldName = cmp.get("v.selectedFieldName");
         var opSelect = cmp.find("opSelect");
         if (fieldName == '')
-            opSelect.set("v.value", '');
+            opSelect.set("v.rightSideValue", '');
         else {
             cmp.set("v.selectedOp", "eq");
             opSelect.focus();
         }
 
-        helper.resetCriteria(cmp);
+        helper.resetCriterion(cmp);
     },
 
     handleOpChange: function (cmp, event, helper) {
         if (cmp.get("v.isLoading"))
             return;
         var valueInput = cmp.find("valueInput");
-        valueInput.set("v.value", '');
+        valueInput.set("v.rightSideValue", '');
         valueInput.focus();
-        helper.resetCriteria(cmp);
+        helper.resetCriterion(cmp);
     },
 
-    handleValueChange: function (cmp, event, helper) {
+    handleRightSideValueChange: function (cmp, event, helper) {
         if (cmp.get("v.isLoading"))
             return;
         var selectedObject = cmp.get("v.selectedObjectName");
         var fieldName = cmp.get("v.selectedFieldName");
         var op = cmp.get("v.selectedOp");
-        var textVal = cmp.get("v.textValue");
-        if (selectedObject && fieldName && op && textVal)
-            helper.assembleCriteria(cmp, event, helper, selectedObject, fieldName, op, textVal);
+        var rightSideValue = cmp.get("v.rightSideValue");
+        if (selectedObject && fieldName && op && rightSideValue)
+            helper.assembleCriterion(cmp, event, helper, selectedObject, fieldName, op, rightSideValue);
 
-        helper.notifyCriteriaValueUpdate(cmp);
+        helper.notifyCriterionValueUpdate(cmp);
     },
 
 
     handleDelete: function (cmp, event, helper) {
-        var cmpEvent = cmp.getEvent("removeCriteria");
+        var cmpEvent = cmp.getEvent("removeCriterion");
         cmpEvent.setParams({
             "index": cmp.get("v.index")
         });
@@ -122,10 +125,9 @@
     },
 
     handleAddSelect: function (cmp, event, helper) {
-        var cmpEvent = cmp.getEvent("addCriteria");
+        var cmpEvent = cmp.getEvent("addCriterion");
         cmpEvent.setParams({
-            "index": cmp.get("v.index"),
-            "condition": event.getParam("value")
+            "index": cmp.get("v.index")
         });
         cmpEvent.fire();
     }

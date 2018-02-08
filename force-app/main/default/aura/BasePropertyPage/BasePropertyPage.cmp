@@ -1,8 +1,8 @@
 <aura:component implements="flexipage:availableForAllPageTypes">
 
     <aura:attribute name="curNode" type="Object" />
-    <aura:attribute name="originalName" type="String" />
     <!--the name of the tree node that was selected -->
+    <aura:attribute name="originalName" type="String" />
     <aura:attribute name="treeItems" type="Object" />
 
     <aura:registerEvent name="propertyPageSaveRequest" type="c:propertyPageSaveRequestEvent" />

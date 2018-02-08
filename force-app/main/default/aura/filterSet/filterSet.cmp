@@ -9,7 +9,7 @@
 
     <ltng:require scripts="{!$Resource.json5}" afterScriptsLoaded="{!c.doInit}" />
 
-    <aura:handler name="removeFilter" event="c:filterDeleteRequestEvent" action="{!c.handleDelete }" />
+    <aura:handler name="deleteFilter" event="c:filterDeleteRequestEvent" action="{!c.handleDelete }" />
     <aura:handler event="c:filterValueUpdatedEvent" action="{!c.handleFilterUpdate }" />
 
     <aura:handler name="change" value="{!v.onlyFirstMatch}" action="{!c.handleOnlyFirstMatchUpdate}" />
