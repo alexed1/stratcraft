@@ -10,20 +10,7 @@
     <aura:attribute name="strategyNames" type="List" />
     <aura:attribute name="selectedStrategyName" type="String" default="" />
 
-<<<<<<< HEAD
-<!-- 
-<aura:attribute name="strategyXML" type="String" />
-<aura:attribute name="strategyId" type="String" />
--->
- <!--Salesforce recordId -->
-<aura:attribute name="strategyRecord" type="Object"/> <!--represents the Strategy as it's stored on the Salesforce side -->
 
-
-<aura:attribute name="curStratCopy" type="Strategy" />
-<aura:attribute name="curStrat" type="Strategy" />
-<aura:attribute name="curStratNode" type="Object" />
-<aura:attribute name="treeItems" type="Object" /> 
-<aura:attribute name="originalNode" type="Object"/>
 
 
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
