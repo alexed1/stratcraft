@@ -33,20 +33,21 @@
         </div>
     -->
 
-        <div class="heading">Einstein Next Strategy Builder 
+        <div class="heading">Einstein Next Strategy Builder
         </div>
 
         <div class="slds-float_left slds-m-top_large">
-            
-                <lightning:buttonMenu iconName="utility:settings" alternativeText="Settings" onselect="{! c.handleMenuSelect }">
 
-                    <lightning:menuItem label="Save Strategy" value="save"/>
-                   
-                </lightning:buttonMenu>
-         </div>
-         <div class="slds-float_left slds-m-top_xxx-small slds-m-left_small">       
-     
-                <lightning:select name="strategySelect" label="Select a strategy:" aura:id="mySelect" value="{!v.selectedStrategyName}" class="select_box" onchange="{!c.handleStrategySelection}">>
+            <lightning:buttonMenu iconName="utility:settings" alternativeText="Settings" onselect="{! c.handleMenuSelect }">
+
+                <lightning:menuItem label="Save Strategy" value="save" />
+
+            </lightning:buttonMenu>
+        </div>
+        <div class="slds-float_left slds-m-top_xxx-small slds-m-left_small">
+
+            <lightning:select name="strategySelect" label="Select a strategy:" aura:id="mySelect" value="{!v.selectedStrategyName}" class="select_box"
+                onchange="{!c.handleStrategySelection}">
 
                 <aura:iteration items="{!v.strategyNames}" var="item">
                     <option text="{!item}" value="{!item}" />
@@ -70,13 +71,13 @@
 
 
             <div class="slds-col slds-box slds-size_1-of-3">
-                <c:treeNode aura:id="tree" treeItems="{! v.treeItems }" header="NodeTree"/>
+                <c:treeNode aura:id="tree" treeItems="{! v.treeItems }" header="NodeTree" />
             </div>
 
             <div class="slds-col slds-box">
                 <b>Node Properties</b>
-                {!v.body}                
-                <c:BasePropertyPage aura:id="propertyPage"/>
+                {!v.body}
+                <c:BasePropertyPage aura:id="propertyPage" curStrat="{!v.curStrat}" />
 
             </div>
 

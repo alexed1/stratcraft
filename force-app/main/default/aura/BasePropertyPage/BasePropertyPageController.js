@@ -9,9 +9,14 @@
         cmpEvent.fire();
     },
 
+    handleTypeChange: function (cmp, event, helper) {
+        var curNode = cmp.get("v.curNode");
+        if (curNode)
+            cmp.set("v.isIfNode", curNode.type == 4);
+    },
+
     //reset the page
     resetPage: function (cmp, event, helper) {
         cmp.set("v.originalName", cmp.get("v.curNode.name"));
     }
-
 })

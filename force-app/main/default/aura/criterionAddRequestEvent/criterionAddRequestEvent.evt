@@ -1,4 +1,3 @@
-<aura:event type="COMPONENT" description="Event template">
+<aura:event type="COMPONENT" description="Fired by the criterion component and handled by expressionBuilder">
     <aura:attribute name="index" type="Integer" />
-    <aura:attribute name="condition" type="String" />
 </aura:event>

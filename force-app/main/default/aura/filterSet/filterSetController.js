@@ -1,13 +1,20 @@
 ({
-    doInit: function (cmp, event, helper) {
-        helper.initSelectableNodes(cmp);
-        helper.initFilters(cmp);
-        cmp.set("v.isLoading", false);
+    handleNodeSelection: function (cmp, event, helper) {
+
+        var params = event.getParams();
+        if (params.oldValue != params.value) {
+            helper.initSelectableNodes(cmp);
+            helper.initFilters(cmp);
+        }
     },
 
     handleAddFilter: function (cmp, event, helper) {
         var filters = cmp.get("v.filters");
-        filters.push({});
+        filters.push(
+            {
+                selectedNode: cmp.get("v.selectedNodeName")
+            });
+
         cmp.set("v.filters", filters);
     },
 
@@ -25,9 +32,5 @@
 
     handleFilterUpdate: function (cmp, event, helper) {
         helper.updateDefinition(cmp);
-    },
-
-    handleDefinitionUpdate: function (cmp, event, helper) {
-        helper.initFilters(cmp);
     }
 })
