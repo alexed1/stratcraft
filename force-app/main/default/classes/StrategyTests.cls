@@ -20,6 +20,21 @@ public with sharing class StrategyTests {
 		System.assert(foundNode.description == 'node descrip', 'description not correct');
 	}
 
+	@isTest
+	public static void CanPersist() {
+		Strategy testStrategy = Fixtures.TestStrategy1();
+	
+		
+		Test.startTest();
+		String result = testStrategy.Persist();
+		Strategy__c verificationStrategy = [SELECT name, Id FROM Strategy__c WHERE name = 'my strat'];
+		Test.stopTest();
+
+		System.assert(result == 'successfully persisted', 'failed to successfully persist');
+		System.assert(verificationStrategy.name == 'my strat', 'failed to retrieve theoretically persisted strategy');
+		
+	}
+
 	//@isTest
 	//this test is broken. it fails to catch the exception. should figure out why
 	public static void ThrowsIfDuplicateNodeNames() {

@@ -43,10 +43,16 @@
 
             try {
                 upsert curStrategy;
-            } catch (DmlException e) {
-                System.debug(e.getDmlMessage());
+                return 'successfully persisted';
+            } 
+            catch (DmlException e) {
 
-                return ("error: " + e.getDmlMessage());
+                for (Integer i = 0; i < e.getNumDml(); i++) {
+                    // Process exception here
+                    System.debug(e.getDmlMessage(i)); 
+                }
+
+                return ('error: ' + e.getDmlMessage(0));
             }
 
 

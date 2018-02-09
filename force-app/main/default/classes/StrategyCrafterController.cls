@@ -48,7 +48,7 @@ public class StrategyCrafterController {
 	public static String persistStrategy(Strategy curStrat){	
 		String result = '';
 		try {
-			result = curStrat.Persist()
+			result = curStrat.Persist();
 		
 		}
 		catch (Exception ex) {

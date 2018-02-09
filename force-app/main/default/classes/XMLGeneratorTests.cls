@@ -34,7 +34,7 @@ public with sharing class XMLGeneratorTests {
 			StrategyNode curNode = Fixtures.IfPaymentPastDueElseChurnNode(curStrat);
 
 			//Test
-			dom.XmlNode nodeXML = WriteXML.WriteStrategyNode(curNode);
+			dom.XmlNode nodeXML = XMLGenerator.StrategyNodeToXML(curNode);
 	        
 
 	        //Validate

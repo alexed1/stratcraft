@@ -18,7 +18,7 @@ public with sharing class XMLGenerator {
 
     		for(StrategyNode curNode : curStrategy.nodes) {
     			//this appends the returning node to the list being built here
-    			stratXMLRootNode.insertBefore(WriteXML.StrategyNodeToXML(curNode), null);
+    			stratXMLRootNode.insertBefore(XMLGenerator.StrategyNodeToXML(curNode), null);
     		}
         
         	return doc.toXmlString();

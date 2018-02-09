@@ -101,7 +101,7 @@
 
         helper.saveStrategyChanges(component, changedNode, originalNodeName, helper);
         //helper.persistStrategy(component);
-        console.log("starting component find");
+        
         
 
         //post the curStrat to the server

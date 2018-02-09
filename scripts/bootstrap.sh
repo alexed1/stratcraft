@@ -3,7 +3,7 @@ echo "Starting Dev Environment"
 echo "authenticating to devhubtrial2"
 sfdx force:auth:jwt:grant -i 3MVG9mclR62wycM2eQwLGugMMMWe5zQvP33hzD_0yCIWytEEI73gZsu8wtNti51PfxuTT_p0F6BrRyAeCVQjN -u alexdevhubtrial2@edelstein.org -f ~/dev/certificates/server.key --setdefaultdevhubusername
 echo "creating a new scratch org"
-sfdx force:org:create -a $1 -s -f config/project-scratch-def.json 
+sfdx force:org:create -a $1 -s -f config/project-scratch-def.json -d 2
 echo "install testing environment"
 sfdx force:lightning:test:install -u $1
 echo "pushing project to scratch org"

@@ -82,11 +82,11 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>WriteXML</apexClass>
+        <apexClass>XMLGenerator</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>WriteXMLTests</apexClass>
+        <apexClass>XMLGeneratorTests</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <custom>false</custom>
