@@ -1,5 +1,8 @@
 <aura:component implements="flexipage:availableForAllPageTypes, force:appHostable" access="global" controller="StrategyCrafterController">
 
+    <ltng:require scripts="{!$Resource.utils}" />
+    <ltng:require scripts="{!$Resource.force}" />
+
     <aura:attribute name="strategyXML" type="String" />
     <aura:attribute name="curStratCopy" type="Strategy" />
     <aura:attribute name="curStrat" type="Strategy" />
