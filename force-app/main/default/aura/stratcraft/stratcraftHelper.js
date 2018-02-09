@@ -56,7 +56,7 @@
         var result = response.getReturnValue();
         if (result.notification.errors.length != 0){
           //fix this to list all errors
-          alert('first error: ' + result.notification.errors[0]);
+          alert('error attempting to parse strategy XML into a strategy object: ' + result.notification.errors[0]);
         }
         else {
           cmp.set("v.curStratCopy", result);  //REFACTOR: this is probably a bad idea
@@ -68,14 +68,13 @@
           tree.initialize(cmp.get("v.strategyRecord.StrategyXML__c"));
         }
 
-     
+
       }
       else {
-            console.log("Failed with state: " + state);
+        console.log("Failed with state: " + state);
       }
       //for some reason this was hanging
-      //var spinner = cmp.find("mySpinner");
-      //$A.util.toggleClass(spinner, "slds-hide");
+      //_cmpUi.toggleSpinner();
       console.log('exiting convert xml to Strategy object');
     });
     $A.enqueueAction(action);
@@ -156,9 +155,9 @@
     var validationErrors = self.validateNodeMove(cmp, curNode, changedNode);
     if (validationErrors.length > 0) {
       var errorText = JSON.stringify(validationErrors);
-      var originalNode = self.clone(cmp.find("propertyPage").get("v.originalTreeNode"), true);
+      var originalNode = _utils.clone(cmp.find("propertyPage").get("v.originalTreeNode"), true);
       cmp.find("propertyPage").set("v.selectedTreeNode", originalNode);
-      self.displayToast('', errorText, 'error');
+      _force.displayToast('', errorText, 'error');
     }
     else {
       var tree = cmp.find('tree');
@@ -300,55 +299,6 @@
         //so we strip characters with regexp removing whitespaces, tabs and carriage returns and compare the rest
         && x.replace(/[\s]/gi, '') == y.replace(/[\s]/gi, ''));
     return result;
-  },
 
-
-  displayToast: function (title, message, type) {
-    var toast = $A.get("e.force:showToast");
-
-    // For lightning1 show the toast
-    if (toast) {
-      //fire the toast event in Salesforce1
-      toast.setParams({
-        "title": title,
-        "message": message,
-        "type": type || "other",
-        "duration": 8000
-      });
-
-      toast.fire();
-    } else { // otherwise throw an alert
-      alert(title + ': ' + message);
-    }
-  },
-
-  toggleSpinner: function (cmp) {
-    var spinner = cmp.find("mySpinner");
-    $A.util.toggleClass(spinner, "slds-hide");
-  },
-  
-
-  clone: function (obj, deep) {
-    var newObj = new Object();
-
-    if (obj instanceof Date) {
-      newObj = new Date(obj);
-    }
-    else if (!deep && obj instanceof Array) {
-      newObj = obj.slice(0);
-    }
-    else {
-      for (var i in obj) {
-        if (i == 'clone') continue;
-        if (deep && typeof obj[i] == "object") {
-          newObj[i] = obj[i].clone();
-        } else {
-          newObj[i] = obj[i];
-        }
-      }
-    }
-    return newObj;
   }
-
-
 })

@@ -34,12 +34,15 @@
     	}
 
         public String Persist () {
+            System.debug('entering Strategy.Persist');
             string xmlString = XMLGenerator.StrategyToXML(this);
+            System.debug('xml string after generation is: ' + xmlString);
 
             //don't get the salesforce Strategy__c confused with this, our in-memory strategy representation
             Strategy__c curStrategy = new Strategy__c();
             curStrategy.StrategyXML__c= xmlString;
-            curStrategy.Name = this.Name;
+            curStrategy.Name = this.name;
+            System.debug('name string after generation is: ' + name);
 
             try {
                 upsert curStrategy;

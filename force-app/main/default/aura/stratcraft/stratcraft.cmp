@@ -1,6 +1,9 @@
 <aura:component implements="flexipage:availableForAllPageTypes, force:appHostable" access="global" controller="StrategyCrafterController">
 
-    <aura:attribute name="strategyXML" type="String" />
+    <ltng:require scripts="{!$Resource.utils}" />
+    <ltng:require scripts="{!$Resource.force}" />
+
+    
     <aura:attribute name="curStratCopy" type="Strategy" />
     <aura:attribute name="curStrat" type="Strategy" />
     <aura:attribute name="curStratNode" type="Object" />
@@ -10,7 +13,11 @@
     <aura:attribute name="strategyNames" type="List" />
     <aura:attribute name="selectedStrategyName" type="String" default="" />
 
-
+    <!--this holds record data loaded from the salesforce Strategy record. We convert it to our curStrat representation
+    -->
+    <aura:attribute name="strategyRecord" type="Object" />
+    <!--deprecated. replace with strategyRecord.strategyXML -->
+    <aura:attribute name="strategyXML" type="String" />
 
 
     <aura:handler name="init" value="{!this}" action="{!c.init}" />

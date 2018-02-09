@@ -86,7 +86,7 @@
             if (curNode.name === newSelectedNodeName) {
                 
                 //continue navigation callback
-                component.find("propertyPage").set("v.curNode", helper.clone(curNode, true));
+                component.find("propertyPage").set("v.curNode", _utils.clone(curNode, true));
                 component.find("propertyPage").set("v.originalName", newSelectedNodeName);
             }
 
