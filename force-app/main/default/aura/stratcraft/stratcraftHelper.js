@@ -1,48 +1,48 @@
 ({
-  
+
   //populates the select strategy drop down
-  loadStrategyNames: function(cmp) {
+  loadStrategyNames: function (cmp) {
     // Create the action
     var action = cmp.get("c.getStrategyNames");
 
     // Add callback behavior for when response is received
-    action.setCallback(this, function(response) {
-        var state = response.getState();
-        if (state === "SUCCESS") {
-            cmp.set("v.strategyNames", response.getReturnValue());
-        }
-        else {
-            console.log("Failed with state: " + state);
-        }
+    action.setCallback(this, function (response) {
+      var state = response.getState();
+      if (state === "SUCCESS") {
+        cmp.set("v.strategyNames", response.getReturnValue());
+      }
+      else {
+        console.log("Failed with state: " + state);
+      }
     });
     // Send action off to be executed
     $A.enqueueAction(action);
   },
 
   //when a strategy is selected, load xml from its Salesforce record
-  loadStrategyXML: function(cmp, strategyName) {
-    self=this;
+  loadStrategyXML: function (cmp, strategyName) {
+    self = this;
     var action = cmp.get("c.loadStrategyXML");
 
     action.setParams({ name: strategyName });
     // Add callback behavior for when response is received
-    action.setCallback(this, function(response) {
-        var state = response.getState();
-        if (state === "SUCCESS") {
-            var strategyXML = response.getReturnValue();
-            console.log('returning strategy XML: ' + strategyXML );       
-            cmp.set('v.strategyXML', strategyXML);
-            console.log('starting processing loaded xml string');
-            self.convertXMLToStrategy(cmp, self);
-        }
-        else {
-            console.log("Failed with state: " + state);
-        }
+    action.setCallback(this, function (response) {
+      var state = response.getState();
+      if (state === "SUCCESS") {
+        var strategyXML = response.getReturnValue();
+        console.log('returning strategy XML: ' + strategyXML);
+        cmp.set('v.strategyXML', strategyXML);
+        console.log('starting processing loaded xml string');
+        self.convertXMLToStrategy(cmp, self);
+      }
+      else {
+        console.log("Failed with state: " + state);
+      }
     });
     // Send action off to be executed
     $A.enqueueAction(action);
   },
-  
+
   convertXMLToStrategy: function (cmp, helper) {
     console.log('converting xml to Strategy object');
     var action = cmp.get("c.parseStrategyString");
@@ -51,7 +51,7 @@
       var state = response.getState();
       if (cmp.isValid() && state === "SUCCESS") {
         var result = response.getReturnValue();
-        if (result.notification.errors.length != 0){
+        if (result.notification.errors.length != 0) {
           //fix this to list all errors
           alert('first error: ' + result.notification.errors[0]);
         }
@@ -86,11 +86,11 @@
       var state = response.getState();
       if (cmp.isValid() && state === "SUCCESS") {
         var xmlString = response.getReturnValue();
-        cmp.set("v.xmlString", result); 
+        cmp.set("v.xmlString", result);
         console.log('xmlString is: ' + result);
       }
       else {
-            console.log("Failed with state: " + state);
+        console.log("Failed with state: " + state);
       }
       //var spinner = cmp.find("mySpinner");
       //$A.util.toggleClass(spinner, "slds-hide");
@@ -99,7 +99,7 @@
   },
 
 
-  
+
 
   findStrategyNodeByName: function (strategy, name) {
     for (let curNode of strategy.nodes) {
@@ -179,12 +179,12 @@
     //finally, update the node itself
     //REFACTOR: rename this function to highlight expanded scope?
     curNode.name = changedNode.name;
-    
+
     cmp.set("v.curStrat", curStrat);
 
   },
 
-  updateNodeBody: function (cmp,curNode, changedNode) {
+  updateNodeBody: function (cmp, curNode, changedNode) {
     //var curStrat = cmp.get("v.curStrat");
     curNode.description = changedNode.description;
     curNode.type = changedNode.type;
@@ -212,13 +212,13 @@
       helper.updateNodeName(cmp, curNode, changedNode);
     }
 
-    helper.updateNodeBody(cmp,curNode, changedNode);
+    helper.updateNodeBody(cmp, curNode, changedNode);
     cmp.set("v.curStrat", curStrat);
 
     //fire this event so the property page knows to reset itself
     var propPage = cmp.find('propertyPage');
     propPage.reset();
-  
+
   },
 
   loadStrategy: function (cmp) {
@@ -226,7 +226,7 @@
   },
 
   saveStrategy: function (cmp) {
-    var self=this;
+    var self = this;
     //convert the string to xml
     var saveText = self.convertStrategyToXML(cmp);
 
@@ -297,7 +297,8 @@
       ((x != null && y != null)
         //something in aura changes control characters and strings that look equal are not equal,
         //so we strip characters with regexp removing whitespaces, tabs and carriage returns and compare the rest
-        && x.replace(/[\s]/gi, '') == y.replace(/[\s]/gi, ''));
+        //we also remove quotation marks, since we use unstrict json and the only difference there might be a presense of quotation marks
+        && x.replace(/[\s\"]/gi, '') == y.replace(/[\s\""]/gi, ''));
     return result;
   }
 })

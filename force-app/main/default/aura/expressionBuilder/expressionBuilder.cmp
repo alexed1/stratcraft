@@ -2,7 +2,7 @@
     <aura:attribute name="expression" type="String" />
     <aura:attribute name="criteria" type="List" />
 
-    <aura:handler name="removeCriterion" event="c:criterionDeleteRequestEvent" action="{!c.handleCriterionDelete }" />
+    <aura:handler name="deleteCriterion" event="c:criterionDeleteRequestEvent" action="{!c.handleCriterionDelete }" />
     <aura:handler name="addCriterion" event="c:criterionAddRequestEvent" action="{!c.handleCriterionAdd }" />
     <aura:handler event="c:criterionUpdatedEvent" action="{!c.handleCriterionUpdatedEvent }" />
 

@@ -2,11 +2,11 @@
     initSelectableNodes: function (cmp) {
         var curStrat = cmp.get("v.curStrat");
         var selectableNodes = curStrat.nodes.map((item) => item.name);
-        var treeItems = cmp.set("v.selectableNodes", selectableNodes);
+        cmp.set("v.selectableNodes", selectableNodes);
     },
 
     initFilters: function (cmp) {
-        var definition = cmp.get("v.curNode").definition;
+        var definition = cmp.get("v.definition");
 
         //parse definition
         var filters = [];
@@ -47,8 +47,6 @@
 
         var json = JSON.stringify(result);
 
-        var curNode = cmp.get("v.curNode");
-        curNode.defintion = json;
-        cmp.set("v.curNode", curNode);
+        cmp.set("v.definition", json);
     }
 })

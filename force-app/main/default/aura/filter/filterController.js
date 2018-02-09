@@ -1,5 +1,9 @@
 ({
+
     doInit: function (cmp, event, helper) {
+        //trying to fix a bug
+        //cmp.find("nodeSelect").set("v.value", '');
+
     },
 
     handleDeleteRequest: function (cmp, event, helper) {
@@ -11,7 +15,9 @@
     },
 
     handleSelectedNodeNameChange: function (cmp, event, helper) {
-        helper.notifyFilterUpdated(cmp);
+        var params = event.getParams();
+        if ((params.oldValue != params.value) && params.value && params.value.length != 0)
+            helper.notifyFilterUpdated(cmp);
     },
 
     openExpressionBuilder: function (cmp, event, helper) {
@@ -43,6 +49,10 @@
                     });
                 }
             });
+    },
+
+    log: function (cmp, event, helper) {
+        console.log('v.expression ' + cmp.get("v.expression"));
     }
 
 })

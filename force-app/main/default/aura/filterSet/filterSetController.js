@@ -1,11 +1,14 @@
 ({
     doInit: function (cmp, event, helper) {
         helper.initSelectableNodes(cmp);
+        helper.initFilters(cmp);
         cmp.set("v.isLoading", false);
     },
 
     handleNodeSelection: function (cmp, event, helper) {
-        helper.initFilters(cmp);
+        var params = event.getParams();
+        if (params.oldValue != params.value && !cmp.get("v.isLoading"))
+            helper.initFilters(cmp);
     },
 
     handleAddFilter: function (cmp, event, helper) {
@@ -32,6 +35,5 @@
 
     handleFilterUpdate: function (cmp, event, helper) {
         helper.updateDefinition(cmp);
-        helper.rerenderFilters(cmp);
     }
 })

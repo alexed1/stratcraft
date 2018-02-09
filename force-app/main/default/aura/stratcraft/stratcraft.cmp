@@ -47,7 +47,7 @@
         <div class="slds-float_left slds-m-top_xxx-small slds-m-left_small">
 
             <lightning:select name="strategySelect" label="Select a strategy:" aura:id="mySelect" value="{!v.selectedStrategyName}" class="select_box"
-                onchange="{!c.handleStrategySelection}">>
+                onchange="{!c.handleStrategySelection}">
 
                 <aura:iteration items="{!v.strategyNames}" var="item">
                     <option text="{!item}" value="{!item}" />

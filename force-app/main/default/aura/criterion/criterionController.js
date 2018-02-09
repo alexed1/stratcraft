@@ -10,17 +10,30 @@
             if (cmp.isValid() && state === "SUCCESS") {
                 var result = response.getReturnValue();
 
-                var criterionExists = helper.initExistingCriterion(cmp);
+                var criterionExists = helper.initExistingCriterion(cmp, helper);
 
                 var selectedObjectName = cmp.get("v.selectedObjectName");
                 var selectedFieldName = cmp.get("v.selectedFieldName");
 
                 var emptySelectionObject = { name: '', label: '--None--', selected: criterionExists ? false : true };
 
+                var fieldFound = false;
+                var objectFound = false;
+
                 result.map((obj) => {
-                    obj.selected = criterionExists ? obj.name == selectedObjectName : false;
+
+                    if (criterionExists) {
+                        obj.selected = obj.name == selectedObjectName;
+                        if (obj.selected)
+                            objectFound = true;
+                    }
+
                     obj.fields.map((f) => {
-                        f.selected = criterionExists ? f.name == selectedFieldName : false;
+                        if (criterionExists) {
+                            f.selected = f.name == selectedFieldName;
+                            if (f.selected)
+                                fieldFound = true;
+                        }
                         return f;
                     });
                     obj.fields.splice(0, 0, emptySelectionObject)
@@ -37,6 +50,14 @@
                 }
 
                 cmp.set("v.isLoading", false);
+
+                if (criterionExists) {
+                    if (!fieldFound)
+                        throw new Error("Couldn't find a field named: " + selectedFieldName);
+                    if (!objectFound)
+                        throw new Error("Couldn't find an object named: " + selectedObjectName);
+                }
+
             }
         });
 
@@ -72,7 +93,9 @@
         else {
             cmp.set("v.availableFields", []);
         }
+
         cmp.set("v.selectedFieldName", '');
+        cmp.find("valueInput").set("v.value", '');
 
         helper.resetCriterion(cmp);
     },
@@ -84,7 +107,7 @@
         var fieldName = cmp.get("v.selectedFieldName");
         var opSelect = cmp.find("opSelect");
         if (fieldName == '')
-            opSelect.set("v.rightSideValue", '');
+            opSelect.set("v.rightSideValue", "");
         else {
             cmp.set("v.selectedOp", "eq");
             opSelect.focus();
@@ -97,7 +120,7 @@
         if (cmp.get("v.isLoading"))
             return;
         var valueInput = cmp.find("valueInput");
-        valueInput.set("v.rightSideValue", '');
+        valueInput.set("v.value", "");
         valueInput.focus();
         helper.resetCriterion(cmp);
     },
@@ -113,6 +136,10 @@
             helper.assembleCriterion(cmp, event, helper, selectedObject, fieldName, op, rightSideValue);
 
         helper.notifyCriterionValueUpdate(cmp);
+    },
+
+    log: function (cmp, event, helper) {
+        console.log(cmp.get("v.rightSideValue"));
     },
 
 

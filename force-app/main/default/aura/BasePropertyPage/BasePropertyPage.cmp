@@ -5,6 +5,9 @@
     <aura:attribute name="originalName" type="String" />
     <aura:attribute name="curStrat" type="Strategy" />
 
+    <aura:attribute name="isIfNode" type="Boolean" default="false" />
+    <aura:handler name="change" value="{!v.curNode.type}" action="{!c.handleTypeChange}" />
+
     <aura:registerEvent name="propertyPageSaveRequest" type="c:propertyPageSaveRequestEvent" />
     <aura:method name="reset" action="{!c.resetPage}"> </aura:method>
 
@@ -13,9 +16,13 @@
     <ui:inputText aura:id="parentNode" label="parentNode" class="field" value="{!v.curNode.parentNodeName }" />
     <ui:inputText aura:id="type" label="type" class="field" value="{!v.curNode.type }" />
 
-    <aura:if isTrue="{!v.curNode != null}">
-        <c:filterSet curNode="{!v.curNode}" curStrat="{!v.curStrat}" selectedNodeName="{!v.curNode.name}" />
+    <aura:if isTrue="{!v.isIfNode}">
+        <c:filterSet definition="{!v.curNode.definition}" curStrat="{!v.curStrat}" />
+        <aura:set attribute="else">
+            <c:GenericDefinitionsControlPanel localDefinitionString="{!v.curNode.definition }" />
+        </aura:set>
     </aura:if>
+
     <lightning:button variant="brand" label="Save" onclick="{! c.handleClick }" />
 
 </aura:component>
