@@ -17,9 +17,9 @@
             <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-top">
 
                 <div class="slds-col  slds-size_10-of-12">
-                    <lightning:select aura:id="nodeSelect" label="Block Propositions from:" value="{!v.selectedNodeName}" onblur="{!c.handleSelectedNodeNameChange}">
+                    <lightning:select name="nodeSelect" label="Block Propositions from:" value="{!v.selectedNodeName}" onchange="{!c.handleSelectedNodeNameChange}">
                         <aura:iteration items="{!v.selectableNodes}" var="nodeName">
-                            <option label="{!nodeName}" selected="{!nodeName==v.selectedNodeName}">{!nodeName}</option>
+                            <option label="{!nodeName}" selected="{!nodeName==v.selectedNodeName}" value="{!nodeName}">{!nodeName}</option>
                         </aura:iteration>
                     </lightning:select>
                 </div>

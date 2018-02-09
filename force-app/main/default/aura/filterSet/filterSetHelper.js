@@ -1,12 +1,21 @@
 ({
     initSelectableNodes: function (cmp) {
+        if (cmp.get("v.selectableNodes").length != 0)
+            return;
+
         var curStrat = cmp.get("v.curStrat");
-        var selectableNodes = curStrat.nodes.map((item) => item.name);
-        cmp.set("v.selectableNodes", selectableNodes);
+        if (curStrat) {
+            var selectableNodes = curStrat.nodes.map((item) => item.name);
+            cmp.set("v.selectableNodes", selectableNodes);
+        }
     },
 
     initFilters: function (cmp) {
-        var definition = cmp.get("v.definition");
+        if (cmp.get("v.nodeType") != '4') {
+            return;
+        }
+
+        var definition = cmp.get("v.curNode").definition;
 
         //parse definition
         var filters = [];
@@ -30,8 +39,10 @@
     //here we assemble all filters we have back to definition string in the node description
     updateDefinition: function (cmp) {
 
-        if (cmp.get("v.isLoading"))
+        if (cmp.get("v.nodeType") != '4')
             return;
+
+        var curNode = cmp.get("v.curNode");
 
         var result = {};
         var expressions = {};
@@ -42,11 +53,11 @@
             expressions[item.selectedNodeName] = item.expression;
         })
 
-        //add only first match
         result.onlyFirstMatch = cmp.get("v.onlyFirstMatch");
 
         var json = JSON.stringify(result);
 
-        cmp.set("v.definition", json);
+        curNode.definition = json;
+        cmp.set("v.curNode", curNode);
     }
 })

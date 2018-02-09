@@ -27,7 +27,7 @@
     <div class="slds-grid slds-wrap slds-gutters">
         <div class="slds-col slds-size_4-of-12">
             <lightning:select aura:id="objectSelect" label="Object" value="{!v.selectedObjectName}" disabled="{!v.availableObjects.length == 0}"
-                onblur="{!c.handleObjectChange}">
+                onchange="{!c.handleObjectChange}">
                 <aura:if isTrue="{!v.availableObjects.length == 0}">
                     <option value="">loading...</option>
                     <aura:set attribute="else">
