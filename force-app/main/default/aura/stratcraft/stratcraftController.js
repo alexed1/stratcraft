@@ -28,7 +28,7 @@
         }
         propertyPageCmp.set('v.curNode', null);
         propertyPageCmp.clear();
-        helper.loadStrategyXML(cmp, strategyName);
+        helper.loadStrategy(cmp, strategyName);
     },
 
     handleMenuSelect: function (cmp, event, helper) {

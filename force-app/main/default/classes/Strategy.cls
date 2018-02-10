@@ -43,8 +43,9 @@
             Strategy__c curStrategy = new Strategy__c();
             curStrategy.StrategyXML__c= xmlString;
             curStrategy.Name = this.name;
+            curStrategy.Id = this.Id;
             System.debug('name string after generation is: ' + name);
-
+            System.debug('ID is: ' + this.Id);
             try {
                 upsert curStrategy;
                 return 'successfully persisted';
