@@ -18,5 +18,13 @@
     //reset the page
     resetPage: function (cmp, event, helper) {
         cmp.set("v.originalName", cmp.get("v.curNode.name"));
+    },
+
+    //Clears everything related to current node and strategy
+    clear: function (cmp, event, helper) {
+        cmp.set('v.curNode', null);
+        cmp.set('v.originalName', null);
+        cmp.set('v.curStrat', null);
+        cmp.set('v.isIfNode', false);
     }
 })
