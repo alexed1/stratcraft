@@ -6,35 +6,41 @@
 
     handleUploadFinished: function (cmp, event) {
         // Get the list of uploaded files
-        var uploadedFiles = event.getParam("files");
-        alert("Files uploaded : " + uploadedFiles.length);
+        var uploadedFiles = event.getParam('files');
+        alert('Files uploaded : ' + uploadedFiles.length);
     },
 
     handleStrategySelection: function (cmp, event, helper) {
-        var strategyName = cmp.find('mySelect').get('v.value');
-        console.log('value is: ' + strategyName);
 
-
-        var  curStratXML = helper.loadStrategy(cmp, strategyName);
-
-        console.log("exiting controller handle Strategy Selection");
-
-
+        var strategyName = cmp.get('v.selectedStrategyName');
+        var strategyNames = cmp.get('v.strategyNames');
+        //If we had at least one existing strategy at an empty option is still in the beginning of the list, we remove it
+        //so it can no longer be selected
+        if (strategyNames && strategyNames.length > 0 && strategyNames[0] === '') {
+            strategyNames = strategyNames.slice(1);
+            cmp.set('v.strategyNames', strategyNames);
+        }
+        //TODO: handle unsaved changes
+        //Since we are selecting a different strategy, we need to clear the property page
+        var propertyPageCmp = cmp.find('propertyPage');
+        if (!propertyPageCmp) {
+            throw new Error('Property page component was not found');
+        }
+        propertyPageCmp.set('v.curNode', null);
+        propertyPageCmp.clear();
+        helper.loadStrategyXML(cmp, strategyName);
     },
 
     handleMenuSelect: function (cmp, event, helper) {
-        var selectedMenuItemValue = event.getParam("value");
-
-        switch(selectedMenuItemValue) {
-        case "load":
-            //may be obsolete
-           
-            break;
-        case "save":
-            
-            break;
-        
-
+        var selectedMenuItemValue = event.getParam('value');
+        switch (selectedMenuItemValue) {
+            case 'load':
+                //may be obsolete
+                helper.loadStrategy(cmp);
+                break;
+            case 'save':
+                helper.saveStrategy(cmp);
+                break;
         }
     },
 
@@ -43,8 +49,8 @@
         event.preventDefault();
         var reader = new FileReader();
         var files = event.dataTransfer.files;
-        var spinner = cmp.find("mySpinner");
-        $A.util.toggleClass(spinner, "slds-hide");
+        var spinner = cmp.find('mySpinner');
+        $A.util.toggleClass(spinner, 'slds-hide');
         for (var i = 0; i < files.length; i++) {
             var file = files[i];
             reader = new FileReader();
@@ -52,7 +58,7 @@
                 console.log("uploaded file data is: " + reader.result);
                 cmp.set("v.strategyRecord.StrategyXML__c", reader.result);
 
-                var cmpEvent = cmp.getEvent("xmlFileUploaded");
+                var cmpEvent = cmp.getEvent('xmlFileUploaded');
                 cmpEvent.fire();
             };
             reader.readAsText(file);
@@ -64,6 +70,7 @@
         console.log('starting processing loaded xml string');
         //initialize the tree component
         var strategyXMLString = cmp.get("v.strategyRecord.StrategyXML__c");
+
         var tree = cmp.find('tree');
         tree.initialize(strategyXMLString);
 
@@ -72,16 +79,14 @@
         console.log('completed processing of loaded xml string');
     },
 
-
-
     onDragOver: function (component, event) {
         event.preventDefault();
     },
 
     handleTreeNodeSelect: function (component, event, helper) {
         //return name of selected tree item
-        var newSelectedNodeName = event.getParam("name");
-        var curStrat = component.get("v.curStrat");
+        var newSelectedNodeName = event.getParam('name');
+        var curStrat = component.get('v.curStrat');
 
         var curNode = helper.findStrategyNodeByName(curStrat, newSelectedNodeName);
 
@@ -90,17 +95,17 @@
             if (curNode.name === newSelectedNodeName) {
 
                 //continue navigation callback
-                component.find("propertyPage").set("v.curNode", _utils.clone(curNode, true));
-                component.find("propertyPage").set("v.originalName", newSelectedNodeName);
+                component.find('propertyPage').set('v.curNode', _utils.clone(curNode, true));
+                component.find('propertyPage').set('v.originalName', newSelectedNodeName);
             }
 
         });
     },
 
     saveStrategy: function (component, event, helper) {
-        console.log("in save strategy in parent controller");
-        var originalNodeName = event.getParam("originalNodeName");
-        var changedNode = event.getParam("changedStrategyNode");
+        console.log('in save strategy in parent controller');
+        var originalNodeName = event.getParam('originalNodeName');
+        var changedNode = event.getParam('changedStrategyNode');
 
 
         helper.saveStrategyChanges(component, changedNode, originalNodeName, helper);

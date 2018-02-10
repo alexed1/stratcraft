@@ -12,7 +12,7 @@ public with sharing class BuildTree {
 
 		public TreeNode() {
 			items = new List<TreeNode>();
-			expanded = false;
+			expanded = true;
 		}
     }
 

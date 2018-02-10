@@ -1,21 +1,24 @@
 ({
 
-  //populates the select strategy drop down
+  //Populates the select strategy drop down
   loadStrategyNames: function (cmp) {
-    // Create the action
-    var action = cmp.get("c.getStrategyNames");
-
-    // Add callback behavior for when response is received
+    var action = cmp.get('c.getStrategyNames');
     action.setCallback(this, function (response) {
       var state = response.getState();
       if (state === "SUCCESS") {
-        cmp.set("v.strategyNames", response.getReturnValue());
+        //If we got at least one strategy, we add an empty name in the beginning of the list, so no strategy is selected by default
+        var strategies = response.getReturnValue();
+        if (!strategies || strategies.length === 0) {
+          cmp.set('v.strategyNames', []);
+        }
+        else {
+          cmp.set('v.strategyNames', [''].concat(strategies));
+        }
       }
       else {
-        console.log("Failed with state: " + state);
+        console.log('Failed with state: ' + state);
       }
     });
-    // Send action off to be executed
     $A.enqueueAction(action);
   },
 
