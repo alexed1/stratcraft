@@ -1,4 +1,0 @@
-<aura:event type="APPLICATION" description="Passes configured expression from dialog window to filter component">
-    <aura:attribute name="expression" type="String" />
-    <aura:attribute name="result" type="Boolean" />
-</aura:event>

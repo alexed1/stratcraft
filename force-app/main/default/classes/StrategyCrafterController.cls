@@ -52,7 +52,8 @@ public class StrategyCrafterController {
 	}
 
 	@AuraEnabled
-	public static String persistStrategy(Strategy curStrat){	
+	public static String persistStrategy(String curStratString){	
+		Strategy curStrat = (Strategy)System.JSON.deserializeStrict(curStratString, Strategy.Class);
 		System.debug('starting persistStrategy');
 		String result = '';
 		try {

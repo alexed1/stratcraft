@@ -1,23 +1,24 @@
 ({
-  
+
   //populates the select strategy drop down
-  loadStrategyNames: function(cmp) {
+  loadStrategyNames: function (cmp) {
     // Create the action
     var action = cmp.get("c.getStrategyNames");
 
     // Add callback behavior for when response is received
-    action.setCallback(this, function(response) {
-        var state = response.getState();
-        if (state === "SUCCESS") {
-            cmp.set("v.strategyNames", response.getReturnValue());
-        }
-        else {
-            console.log("Failed with state: " + state);
-        }
+    action.setCallback(this, function (response) {
+      var state = response.getState();
+      if (state === "SUCCESS") {
+        cmp.set("v.strategyNames", response.getReturnValue());
+      }
+      else {
+        console.log("Failed with state: " + state);
+      }
     });
     // Send action off to be executed
     $A.enqueueAction(action);
   },
+
 
   //when a strategy is selected, load data from its Salesforce record
   loadStrategy: function(cmp, strategyName) {
@@ -41,11 +42,12 @@
         else {
             console.log("Failed with state: " + state);
         }
+
     });
     // Send action off to be executed
     $A.enqueueAction(action);
   },
-  
+
   convertXMLToStrategy: function (cmp, helper) {
     console.log('converting xml to Strategy object');
     var action = cmp.get("c.parseStrategyString");
@@ -54,12 +56,13 @@
       var state = response.getState();
       if (cmp.isValid() && state === "SUCCESS") {
         var result = response.getReturnValue();
-        if (result.notification.errors.length != 0){
+        if (result.notification.errors.length != 0) {
           //fix this to list all errors
           alert('error attempting to parse strategy XML into a strategy object: ' + result.notification.errors[0]);
         }
         else {
           cmp.set("v.curStratCopy", result);  //REFACTOR: this is probably a bad idea
+          result.Id = cmp.get("v.strategyRecord.Id");
           cmp.set("v.curStrat", result); //SMELLY: probably should define an object and not just use the entire response
           console.log('strategy is: ' + JSON.stringify(result));
           console.log('strategy is: ' + cmp.get("v.curStrat"));
@@ -86,17 +89,19 @@
     console.log('sending Strategy to Salesforce and persisting');
     var action = cmp.get("c.persistStrategy");
 
-    action.setParams({ curStrat: cmp.get("v.curStrat") });
+    action.setParams({ curStratString: JSON.stringify(cmp.get("v.curStrat")) });
     action.setCallback(this, function (response) {
       var state = response.getState();
       if (cmp.isValid() && state === "SUCCESS") {
+
         var result = response.getReturnValue();
         //only show this if response indicates true success
-        self.displayToast("Strategy Crafter","Strategy changes saved");
+        _force.displayToast("Strategy Crafter","Strategy changes saved");
         console.log(' returned from persistStrategy: ' + result);
+
       }
       else {
-            console.log("Failed with state: " + state);
+        console.log("Failed with state: " + state);
       }
       //var spinner = cmp.find("mySpinner");
       //$A.util.toggleClass(spinner, "slds-hide");
@@ -105,7 +110,7 @@
   },
 
 
-  
+
 
   findStrategyNodeByName: function (strategy, name) {
     for (let curNode of strategy.nodes) {
@@ -185,12 +190,12 @@
     //finally, update the node itself
     //REFACTOR: rename this function to highlight expanded scope?
     curNode.name = changedNode.name;
-    
+
     cmp.set("v.curStrat", curStrat);
 
   },
 
-  updateNodeBody: function (cmp,curNode, changedNode) {
+  updateNodeBody: function (cmp, curNode, changedNode) {
     //var curStrat = cmp.get("v.curStrat");
     curNode.description = changedNode.description;
     curNode.type = changedNode.type;
@@ -219,16 +224,17 @@
       helper.updateNodeName(cmp, curNode, changedNode);
     }
 
-    helper.updateNodeBody(cmp,curNode, changedNode);
+    helper.updateNodeBody(cmp, curNode, changedNode);
     cmp.set("v.curStrat", curStrat);
 
     //fire this event so the property page knows to reset itself
     var propPage = cmp.find('propertyPage');
     propPage.reset();
+
     console.log("exiting saveStrategyChanges");
   
-  },
 
+  },
 
 
 
@@ -297,7 +303,8 @@
       ((x != null && y != null)
         //something in aura changes control characters and strings that look equal are not equal,
         //so we strip characters with regexp removing whitespaces, tabs and carriage returns and compare the rest
-        && x.replace(/[\s]/gi, '') == y.replace(/[\s]/gi, ''));
+        //we also remove quotation marks, since we use unstrict json and the only difference there might be a presense of quotation marks
+        && x.replace(/[\s\"]/gi, '') == y.replace(/[\s\""]/gi, ''));
     return result;
 
   }

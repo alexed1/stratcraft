@@ -1,19 +1,20 @@
 <aura:component>
 
-    <aura:attribute name="definition" type="String" default="" />
     <aura:attribute name="filters" type="List" />
     <aura:attribute name="selectableNodes" type="List" />
-    <aura:attribute name="treeItems" type="Object" />
-    <aura:attribute name="isLoading" type="Boolean" default="true" />
+    <aura:attribute name="curStrat" type="Strategy" />
     <aura:attribute name="onlyFirstMatch" type="Boolean" default="false" />
+    <aura:attribute name="definition" type="String" />
+    <aura:attribute name="nodeType" type="Integer" />
+    <aura:attribute name="curNode" type="SObject" />
+    <aura:attribute name="isLoading" type="Boolean" default="false" />
+    <ltng:require scripts="{!$Resource.json5}" />
 
-    <ltng:require scripts="{!$Resource.json5}" afterScriptsLoaded="{!c.doInit}" />
-
-    <aura:handler name="removeFilter" event="c:filterDeleteRequestEvent" action="{!c.handleDelete }" />
+    <aura:handler name="deleteFilter" event="c:filterDeleteRequestEvent" action="{!c.handleDelete }" />
     <aura:handler event="c:filterValueUpdatedEvent" action="{!c.handleFilterUpdate }" />
+    <aura:handler name="change" value="{!v.curNode}" action="{!c.handleNodeSelection}" />
 
-    <aura:handler name="change" value="{!v.onlyFirstMatch}" action="{!c.handleOnlyFirstMatchUpdate}" />
-    <aura:handler name="change" value="{!v.definition}" action="{!c.handleDefinitionUpdate}" />
+
 
     <lightning:card>
         <aura:set attribute="title">
@@ -33,8 +34,8 @@
         <div>
             <aura:iteration items="{!v.filters}" var="filter" indexVar="index">
                 <div>
-                    <c:filter index="{!index}" selectedNodeName="{!filter.selectedNodeName}" expression="{!filter.expression}" selectableNodes="{!v.selectableNodes}"
-                    />
+                    <c:filter aura:id="filter" index="{!index}" selectedNodeName="{!filter.selectedNodeName}" expression="{!filter.expression}"
+                        selectableNodes="{!v.selectableNodes}" />
                 </div>
             </aura:iteration>
         </div>
@@ -42,7 +43,7 @@
         <aura:if isTrue="{!v.filters.length != 0}">
             <div class="slds-col">
                 <lightning:input type="checkbox" class="slds-p-vertical_xx-small" label="Use only the first true filter" checked="{!v.onlyFirstMatch}"
-                />
+                    onchange="{c.handleOnlyFirstMatchUpdate}" />
             </div>
         </aura:if>
 

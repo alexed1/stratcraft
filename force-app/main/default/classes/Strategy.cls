@@ -6,10 +6,11 @@
         @AuraEnabled public String description;
         @AuraEnabled public String masterLabel;
         @AuraEnabled public Notification notification;
-        @AuraEnabled public String recordId;
+        @AuraEnabled public String Id;
 
 
         public Strategy() {
+            System.debug('in Strategy constructor');
         	nodes = new List<StrategyNode> ();
             notification = new Notification ();
         }

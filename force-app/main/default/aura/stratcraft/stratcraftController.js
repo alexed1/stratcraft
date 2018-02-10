@@ -14,14 +14,17 @@
         var strategyName = cmp.find('mySelect').get('v.value');
         console.log('value is: ' + strategyName);
 
+
         var  curStratXML = helper.loadStrategy(cmp, strategyName);
+
         console.log("exiting controller handle Strategy Selection");
- 
+
 
     },
 
     handleMenuSelect: function (cmp, event, helper) {
         var selectedMenuItemValue = event.getParam("value");
+
         switch(selectedMenuItemValue) {
         case "load":
             //may be obsolete
@@ -31,6 +34,7 @@
             
             break;
         
+
         }
     },
 
@@ -84,7 +88,7 @@
         //prompt user if he wants to continue navigation when the pane is dirty
         helper.handleUnsavedChanged(component, newSelectedNodeName, curStrat, helper, function () {
             if (curNode.name === newSelectedNodeName) {
-                
+
                 //continue navigation callback
                 component.find("propertyPage").set("v.curNode", _utils.clone(curNode, true));
                 component.find("propertyPage").set("v.originalName", newSelectedNodeName);
@@ -94,7 +98,7 @@
     },
 
     saveStrategy: function (component, event, helper) {
-         console.log("in save strategy in parent controller");
+        console.log("in save strategy in parent controller");
         var originalNodeName = event.getParam("originalNodeName");
         var changedNode = event.getParam("changedStrategyNode");
 
