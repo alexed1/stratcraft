@@ -1,0 +1,9 @@
+<aura:component>
+    <aura:registerEvent name="newNodeCreationRequested" type="c:newNodeCreationRequestedEvent" />
+
+    <aura:attribute name="newNodeComponent" type="Object" />
+
+    <lightning:overlayLibrary aura:id="newNodeDialog" />
+    <lightning:button label="Cancel" onclick="{!c.handleCancel}" />
+    <lightning:button label="Continue" variant="brand" onclick="{!c.handleOK}" />
+</aura:component>

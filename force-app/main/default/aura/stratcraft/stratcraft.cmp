@@ -38,9 +38,12 @@
         <div class="slds-float_left slds-m-top_large">
 
             <lightning:buttonMenu iconName="utility:settings" alternativeText="Settings" onselect="{! c.handleMenuSelect }">
-
-                <lightning:menuItem label="Save Strategy" value="save" />
-
+                <lightning:menuItem label="New Strategy" value="newStrategy" />                
+                <aura:if isTrue="{!v.selectedStrategyName != ''}">
+                    <hr class="hr" />
+                    <lightning:menuItem label="New Node" value="newNode" />                          
+                    <lightning:menuItem label="Save Strategy" value="saveStrategy" />
+                </aura:if>  
             </lightning:buttonMenu>
         </div>
         <div class="slds-float_left slds-m-top_xxx-small slds-m-left_small">

@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="Raised when a new node creation was requested (node is not yet created at this moment)">
+    <aura:attribute name="name" type="String" />
+    <aura:attribute name="parentNodeName" type="String" />
+</aura:event>

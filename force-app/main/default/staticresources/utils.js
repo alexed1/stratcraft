@@ -22,6 +22,16 @@ window._utils = (function () {
         }
       }
       return newObj;
+    },
+
+    NodeRequestType: {
+      ALL: 0,
+      ALL_EXCEPT_CURRENT: 1,
+      IMMEDIATE_ANTECENDENT: 2,
+      ALL_ANTECENDENTS: 3,
+      SIBLINGS: 4,
+      IMMEDIATE_DESCENDANTS: 5,
+      ALL_DESCENDANTS: 6
     }
   }
 })()

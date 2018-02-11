@@ -5,7 +5,7 @@
     },
 
     hopscotchLoaded: function (cmp, event, helper) {
-        helper.initHopscotch(cmp,event,helper);
+        helper.initHopscotch(cmp, event, helper);
 
     },
 
@@ -39,16 +39,17 @@
     handleMenuSelect: function (cmp, event, helper) {
         var selectedMenuItemValue = event.getParam('value');
         switch (selectedMenuItemValue) {
-            case 'load':
-                //may be obsolete
-                helper.loadStrategy(cmp);
+            case 'newStrategy':
+                alert('This functionality is not implemented yet');
                 break;
-            case 'save':
+            case 'saveStrategy':
                 helper.saveStrategy(cmp);
+                break;
+            case 'newNode':
+                alert('This functionality is not implemented yet');
                 break;
         }
     },
-
 
     handleTreeNodeSelect: function (component, event, helper) {
         //return name of selected tree item
@@ -82,8 +83,8 @@
         //return a status message
         helper.persistStrategy(component);
 
-        
+
     }
 
-   
+
 })

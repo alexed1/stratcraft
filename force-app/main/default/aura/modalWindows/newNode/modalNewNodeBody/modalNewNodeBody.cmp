@@ -1,0 +1,21 @@
+<aura:component>
+    <ltng:require scripts="{!$Resource.utils}" />
+
+    <aura:attribute name="name" type="String" />
+    <aura:attribute name="selectedParentNodeName" type="String" />
+    <aura:attribute name="parentNodeNames" type="List" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.handleInit}" />
+
+    <aura:method name="validate" action="{!c.validate}" />
+
+    <lightning:input aura:id="nodeName" label="Node name" required="true" placeholder="Enter new node name" 
+                     messageWhenValueMissing="Node name can't be empty or contain only whitespaces"
+                     messageWhenBadInput="A node with the same name already exists" />
+    <lightning:select aura:id="parentNode" label="Parent node" value="{!v.selectedParentNodeName}" class="select_box" required="true"
+        messageWhenValueMissing="Please select parent node">
+        <aura:iteration items="{!v.parentNodeNames}" var="item">
+            <option text="{!item}" />
+        </aura:iteration>
+    </lightning:select>
+</aura:component>
