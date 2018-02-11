@@ -1,4 +1,5 @@
 ({
+   
 
   //Populates the select strategy drop down
   loadStrategyNames: function (cmp) {
@@ -64,7 +65,6 @@
           alert('error attempting to parse strategy XML into a strategy object: ' + result.notification.errors[0]);
         }
         else {
-          cmp.set("v.curStratCopy", result);  //REFACTOR: this is probably a bad idea
           result.Id = cmp.get("v.strategyRecord.Id");
           cmp.set("v.curStrat", result); //SMELLY: probably should define an object and not just use the entire response
           console.log('strategy is: ' + JSON.stringify(result));
@@ -310,5 +310,32 @@
         && x.replace(/[\s\"]/gi, '') == y.replace(/[\s\""]/gi, ''));
     return result;
 
-  }
+  },
+   initHopscotch: function(cmp, event, helper) {
+
+    var selectId = cmp.find("mySelect").getGlobalId();
+    var treeId = cmp.find("tree").getGlobalId();
+
+    var tour = {
+      id: "hello-hopscotch",
+      steps: [
+        {
+          title: "My Header",
+          content: "This is the header of my page.",
+          target: selectId,
+          placement: "right"
+        },
+        {
+          title: "My content",
+          content: "Here is where I put my content.",
+          target: treeId,
+          placement: "bottom"
+        }
+      ]
+    };
+
+    // Start the tour!
+    hopscotch.startTour(tour);
+    }
+
 })

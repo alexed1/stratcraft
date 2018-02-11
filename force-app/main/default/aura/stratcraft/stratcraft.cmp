@@ -2,12 +2,13 @@
 
     <ltng:require scripts="{!$Resource.utils}" />
     <ltng:require scripts="{!$Resource.force}" />
+    <ltng:require scripts="{!$Resource.hopscotch}" afterScriptsLoaded="{!c.hopscotchLoaded}" />
+    <ltng:require scripts="{!$Resource.hopscotchcss}" />
+    <ltng:require scripts="{!$Resource.hopscotchspritegreen}" />
+    <ltng:require scripts="{!$Resource.hopscotchspriteorange}" />
 
-    
-    <aura:attribute name="curStratCopy" type="Strategy" />
     <aura:attribute name="curStrat" type="Strategy" />
     <aura:attribute name="curStratNode" type="Object" />
-    <aura:attribute name="treeItems" type="Object" /> 
     <aura:attribute name="originalNode" type="Object" />
 
     <aura:attribute name="strategyNames" type="List" />
@@ -16,35 +17,20 @@
     <!--this holds record data loaded from the salesforce Strategy record. We convert it to our curStrat representation
     -->
     <aura:attribute name="strategyRecord" type="Object" />
-    <!--deprecated. replace with strategyRecord.strategyXML -->
-    <aura:attribute name="strategyXML" type="String" />
-
 
     <aura:handler name="change" value="{!v.selectedStrategyName}" action="{!c.handleStrategySelection}" />
-
-
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
 
-
-    <aura:handler name="xmlFileUploaded" event="c:XMLFileUploaded" action="{!c.processLoadedXMLString}" />
+   
     <aura:handler event="c:propertyPageSaveRequestEvent" action="{!c.saveStrategy}" />
     <aura:handler event="c:treeNodeSelectedEvent" action="{!c.handleTreeNodeSelect }" />
 
-    <aura:registerEvent name="xmlFileUploaded" type="c:XMLFileUploaded" />
-    
     <div class="slds-card slds-p-around_small">
 
 
         <lightning:spinner aura:id="mySpinner" class="slds-hide" size="large" />
 
         <lightning:overlayLibrary aura:id="unsavedChangesDialog" />
-
-
-        <!-- <div> 
-            <lightning:icon iconName="standard:hierarchy" size="medium" alternativeText="Strategy"/>
-            
-        </div>
-    -->
 
         <!-- <div class="heading">Einstein Next Strategy Builder
         </div> -->
@@ -77,7 +63,7 @@
 
 
             <div class="slds-col slds-box slds-size_1-of-3">
-                <c:treeNode aura:id="tree" treeItems="{! v.treeItems }" header="NodeTree" />
+                <c:treeNode aura:id="tree"  header="NodeTree" />
             </div>
 
             <div class="slds-col slds-box">

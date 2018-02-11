@@ -4,6 +4,11 @@
 
     },
 
+    hopscotchLoaded: function (cmp, event, helper) {
+        helper.initHopscotch(cmp,event,helper);
+
+    },
+
     handleUploadFinished: function (cmp, event) {
         // Get the list of uploaded files
         var uploadedFiles = event.getParam('files');
@@ -44,44 +49,6 @@
         }
     },
 
-    onDrop: function (cmp, event, helper) {
-        event.stopPropagation();
-        event.preventDefault();
-        var reader = new FileReader();
-        var files = event.dataTransfer.files;
-        var spinner = cmp.find('mySpinner');
-        $A.util.toggleClass(spinner, 'slds-hide');
-        for (var i = 0; i < files.length; i++) {
-            var file = files[i];
-            reader = new FileReader();
-            reader.onloadend = function () {
-                console.log("uploaded file data is: " + reader.result);
-                cmp.set("v.strategyRecord.StrategyXML__c", reader.result);
-
-                var cmpEvent = cmp.getEvent('xmlFileUploaded');
-                cmpEvent.fire();
-            };
-            reader.readAsText(file);
-        }
-    },
-
-    //obsolete
-    processLoadedXMLString: function (cmp, event, helper) {
-        console.log('starting processing loaded xml string');
-        //initialize the tree component
-        var strategyXMLString = cmp.get("v.strategyRecord.StrategyXML__c");
-
-        var tree = cmp.find('tree');
-        tree.initialize(strategyXMLString);
-
-        helper.convertXMLToStrategy(cmp, event, helper);
-
-        console.log('completed processing of loaded xml string');
-    },
-
-    onDragOver: function (component, event) {
-        event.preventDefault();
-    },
 
     handleTreeNodeSelect: function (component, event, helper) {
         //return name of selected tree item
@@ -109,9 +76,6 @@
 
 
         helper.saveStrategyChanges(component, changedNode, originalNodeName, helper);
-        //helper.persistStrategy(component);
-        
-        
 
         //post the curStrat to the server
         //save it by name overwriting as necessary
@@ -119,5 +83,7 @@
         helper.persistStrategy(component);
 
         
-    },
+    }
+
+   
 })

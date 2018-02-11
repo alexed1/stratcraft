@@ -26,15 +26,15 @@ describe("c:stratCraft", function () {
                 component.set("v.strategyRecord.StrategyXML__c", testStrategyXML);
 
                 //########ACT#########
-                var cmpEvent = component.getEvent("xmlFileUploaded");
-                cmpEvent.fire();
+                //var cmpEvent = component.getEvent("xmlFileUploaded"); this event has been removed
+                //cmpEvent.fire();
 
                 //#######ASSERT#######
                 setTimeout(function () {
                     //setting timeout since there is a $A.enqueAction call in treeNode
                     //and otherwise test runs asserts before proccessing is ended
                     expect(component.get("v.curStrat")).toEqual(testStrategyResult);
-                    expect(component.get("v.curStrat")).toEqual(component.get("v.curStratCopy"));
+         
 
                     done();
                 }, 2000);
