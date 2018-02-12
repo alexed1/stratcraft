@@ -41,7 +41,7 @@
                 <lightning:menuItem label="New Strategy" value="newStrategy" />                
                 <aura:if isTrue="{!v.selectedStrategyName != ''}">
                     <hr class="hr" />
-                    <lightning:menuItem label="New Node" value="newNode" />                          
+                    <lightning:menuItem label="New Node" value="addElement" />                          
                     <lightning:menuItem label="Save Strategy" value="saveStrategy" />
                 </aura:if>  
             </lightning:buttonMenu>

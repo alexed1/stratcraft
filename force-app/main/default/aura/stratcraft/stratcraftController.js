@@ -45,7 +45,7 @@
             case 'saveStrategy':
                 helper.persistStrategy(cmp);
                 break;
-            case 'newNode':
+            case 'addElement':
                 helper.showNewNodeDialog(cmp);
                 break;
         }
