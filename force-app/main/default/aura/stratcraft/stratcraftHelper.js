@@ -1,5 +1,5 @@
 ({
-   
+
 
   //Populates the select strategy drop down
   loadStrategyNames: function (cmp) {
@@ -25,27 +25,27 @@
 
 
   //when a strategy is selected, load data from its Salesforce record
-  loadStrategy: function(cmp, strategyName) {
-    self=this;
+  loadStrategy: function (cmp, strategyName) {
+    self = this;
     var action = cmp.get("c.loadStrategy");
 
     action.setParams({ name: strategyName });
     // Add callback behavior for when response is received
-    action.setCallback(this, function(response) {
-        var state = response.getState();
-        if (state === "SUCCESS") {
-            var strategyRecord = response.getReturnValue();
-            console.log('returning strategy XML: ' + strategyRecord.StrategyXML__c );       
-            cmp.set('v.strategyRecord', strategyRecord);
-            // var strategyId = response.getReturnValue().Id;
-            // cmp.set('v.strategyId', strategyId);
-            console.log('returning strategy Id: ' + strategyRecord.Id );  
-            
-            self.convertXMLToStrategy(cmp, self);
-        }
-        else {
-            console.log("Failed with state: " + state);
-        }
+    action.setCallback(this, function (response) {
+      var state = response.getState();
+      if (state === "SUCCESS") {
+        var strategyRecord = response.getReturnValue();
+        console.log('returning strategy XML: ' + strategyRecord.StrategyXML__c);
+        cmp.set('v.strategyRecord', strategyRecord);
+        // var strategyId = response.getReturnValue().Id;
+        // cmp.set('v.strategyId', strategyId);
+        console.log('returning strategy Id: ' + strategyRecord.Id);
+
+        self.convertXMLToStrategy(cmp, self);
+      }
+      else {
+        console.log("Failed with state: " + state);
+      }
 
     });
     // Send action off to be executed
@@ -99,7 +99,7 @@
 
         var result = response.getReturnValue();
         //only show this if response indicates true success
-        _force.displayToast("Strategy Crafter","Strategy changes saved");
+        _force.displayToast("Strategy Crafter", "Strategy changes saved");
         console.log(' returned from persistStrategy: ' + result);
 
       }
@@ -235,7 +235,7 @@
     propPage.reset();
 
     console.log("exiting saveStrategyChanges");
-  
+
 
   },
 
@@ -284,7 +284,7 @@
             result = auraEvent.getParam("result");
           })
 
-          component.find('unsavedChangesDialog').showCustomModal({
+          component.find('modalDialog').showCustomModal({
             header: "Unsaved changes",
             body: modalBody,
             footer: modalFooter,
@@ -298,6 +298,27 @@
       });
   },
 
+  showNewNodeDialog: function (component) {
+    var modalBody;
+    var modalFooter;
+    $A.createComponents([
+      ["c:modalNewNodeBody", {}],
+      ["c:modalNewNodeFooter", {}]
+    ],
+      function (components, status, errorMessage) {
+        if (status === "SUCCESS") {
+          modalBody = components[0];
+          modalFooter = components[1];
+          modalFooter.newNodeComponent = modalBody;
+          component.find('modalDialog').showCustomModal({
+            header: 'New Node',
+            body: modalBody,
+            footer: modalFooter,
+            showCloseButton: true
+          });
+        }
+      });
+  },
 
   areUndefinedOrEqual: function (x, y) {
     var result =
@@ -311,7 +332,7 @@
     return result;
 
   },
-   initHopscotch: function(cmp, event, helper) {
+  initHopscotch: function (cmp, event, helper) {
 
     var selectId = cmp.find("mySelect").getGlobalId();
     var treeId = cmp.find("tree").getGlobalId();
@@ -336,6 +357,6 @@
 
     // Start the tour!
     hopscotch.startTour(tour);
-    }
+  }
 
 })

@@ -43,11 +43,45 @@
                 alert('This functionality is not implemented yet');
                 break;
             case 'saveStrategy':
-                helper.saveStrategy(cmp);
+                helper.persistStrategy(cmp);
                 break;
             case 'newNode':
-                alert('This functionality is not implemented yet');
+                helper.showNewNodeDialog(cmp);
                 break;
+        }
+    },
+
+    handleNewNodeCreation: function (cmp, event, helper) {
+        var nodeName = event.getParam('name');
+        var parentNodeName = event.getParam('parentNodeName');
+        var strategy = cmp.get('v.curStrat');
+        strategy.nodes.push({
+            name: nodeName,
+            parentNodeName: parentNodeName,
+            definition: '{ }',
+            description: ''
+        });
+        cmp.find('tree').addNode(nodeName, parentNodeName);
+    },
+
+    handleNodeDataRequest: function (cmp, event, helper) {
+        var nodeRelationship = event.getParam('nodeRelationship');
+        var nodeName = event.getParam('nodeName');
+        var callback = event.getParam('callback');
+        var strategy = cmp.get('v.curStrat');
+        var nodes = [];
+        switch (nodeRelationship) {
+            case _utils.NodeRequestType.ALL:
+                nodes = strategy.nodes;
+                break;
+            default:
+                throw new Error('Node relationship type ' + nodeRelationship + ' is not yet supported');
+        }
+        if (!callback) {
+            console.log('WARN: Node relationship was requested but the callback was not provided');
+        }
+        else {
+            callback(nodes);
         }
     },
 
