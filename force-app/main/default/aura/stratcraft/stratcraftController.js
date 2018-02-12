@@ -62,6 +62,11 @@
             description: ''
         });
         cmp.find('tree').addNode(nodeName, parentNodeName);
+        var cmpEvent = $A.get("e.c:treeNodeSelectedEvent");
+        cmpEvent.setParams({
+            "name": nodeName
+        });
+        cmpEvent.fire();
     },
 
     handleNodeDataRequest: function (cmp, event, helper) {
