@@ -5,7 +5,7 @@
     },
 
     /*hopscotchLoaded: function (cmp, event, helper) {
-        helper.initHopscotch(cmp,event,helper);
+        helper.initHopscotch(cmp, event, helper);
 
     },*/
 
@@ -39,16 +39,65 @@
     handleMenuSelect: function (cmp, event, helper) {
         var selectedMenuItemValue = event.getParam('value');
         switch (selectedMenuItemValue) {
-            case 'load':
-                //may be obsolete
-                helper.loadStrategy(cmp);
+            case 'newStrategy':
+                alert('This functionality is not implemented yet');
                 break;
-            case 'save':
-                helper.saveStrategy(cmp);
+            case 'saveStrategy':
+                helper.persistStrategy(cmp);
+                break;
+            case 'addElement':
+                helper.showNewNodeDialog(cmp);
                 break;
         }
     },
+    //When user confirms creation of the new node the below flow occurs:
+    //1. newNodeCreationRequestedEvent is raised by the modal dialog
+    //2. stratcraft handles it and adds new node to the current strategy
+    //3. stratcraft then raise strategyChangedEvent
+    //4. tree component handles it and adds a new node to itself
+    //5. tree control raises a node selection event
+    handleNewNodeCreationRequested: function (cmp, event, helper) {
+        var nodeName = event.getParam('name');
+        var parentNodeName = event.getParam('parentNodeName');
+        var strategy = cmp.get('v.curStrat');
+        strategy.nodes.push({
+            name: nodeName,
+            parentNodeName: parentNodeName,
+            definition: '{ }',
+            description: ''
+        });
+        cmp.set('v.curStrat', strategy);
+        var newNodeEvent = $A.get('e.c:strategyChangedEvent');
+        newNodeEvent.setParams({
+            'type': _utils.StrategyChangeType.ADD_NODE,
+            'nodeName': nodeName,
+            'parentNodeName': parentNodeName
+        });
+        newNodeEvent.fire();
+    },
 
+    //Reacts to the request for related nodes, calculates the related nodes and pass it to the callback
+    handleNodeDataRequest: function (cmp, event, helper) {
+        var nodeRelationship = event.getParam('nodeRelationship');
+        var nodeName = event.getParam('nodeName');
+        //Callback should be a function that accepts a single array argument which will contain the list of the requested nodes
+        var callback = event.getParam('callback');
+        var strategy = cmp.get('v.curStrat');
+        var nodes = [];
+        switch (nodeRelationship) {
+            case _utils.NodeRequestType.ALL:
+                nodes = strategy.nodes;
+                break;
+            default:
+                throw new Error('Node relationship type ' + nodeRelationship + ' is not yet supported');
+        }
+        if (!callback) {
+            console.log('WARN: Node relationship was requested but the callback was not provided');
+        }
+        else {
+            callback(nodes);
+        }
+    },
 
     handleTreeNodeSelect: function (component, event, helper) {
         //return name of selected tree item
@@ -82,8 +131,8 @@
         //return a status message
         helper.persistStrategy(component);
 
-        
+
     }
 
-   
+
 })

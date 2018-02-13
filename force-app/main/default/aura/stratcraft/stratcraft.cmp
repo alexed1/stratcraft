@@ -22,17 +22,17 @@
 
     <aura:handler name="change" value="{!v.selectedStrategyName}" action="{!c.handleStrategySelection}" />
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
-
-   
     <aura:handler event="c:propertyPageSaveRequestEvent" action="{!c.saveStrategy}" />
     <aura:handler event="c:treeNodeSelectedEvent" action="{!c.handleTreeNodeSelect }" />
+    <aura:handler event="c:nodeDataRequestEvent" action="{!c.handleNodeDataRequest}" />
+    <aura:handler event="c:newNodeCreationRequestedEvent" action="{!c.handleNewNodeCreationRequested}" />
 
     <div class="slds-card slds-p-around_small">
 
 
         <lightning:spinner aura:id="mySpinner" class="slds-hide" size="large" />
 
-        <lightning:overlayLibrary aura:id="unsavedChangesDialog" />
+        <lightning:overlayLibrary aura:id="modalDialog" />
 
         <!-- <div class="heading">Einstein Next Strategy Builder
         </div> -->
@@ -40,9 +40,12 @@
         <div class="slds-float_left slds-m-top_large">
 
             <lightning:buttonMenu iconName="utility:settings" alternativeText="Settings" onselect="{! c.handleMenuSelect }">
-
-                <lightning:menuItem label="Save Strategy" value="save" />
-
+                <lightning:menuItem label="New Strategy" value="newStrategy" />                
+                <aura:if isTrue="{!v.selectedStrategyName != ''}">
+                    <hr class="hr" />
+                    <lightning:menuItem label="New Node" value="addElement" />                          
+                    <lightning:menuItem label="Save Strategy" value="saveStrategy" />
+                </aura:if>  
             </lightning:buttonMenu>
         </div>
         <div class="slds-float_left slds-m-top_xxx-small slds-m-left_small">

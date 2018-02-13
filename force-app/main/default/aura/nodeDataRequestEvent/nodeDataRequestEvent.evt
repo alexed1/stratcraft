@@ -1,0 +1,6 @@
+<aura:event type="APPLICATION" description="Raised when component requests strategy nodes that are in specific relationship to the target node">
+    <aura:attribute name="nodeName" type="String" description="Specifies the name of the target node" />
+    <aura:attribute name="nodeRelationship" type="Integer"
+                    description="Specifies the relationship between target node and requested nodes. See utils.NodeRequestType for the list of the possible values" />
+    <aura:attribute name="callback" type="Object" description="Specified the callback function which will be given the collection of related nodes" />
+</aura:event>

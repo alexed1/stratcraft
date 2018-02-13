@@ -1,5 +1,5 @@
 ({
-   
+
 
   //Populates the select strategy drop down
   loadStrategyNames: function (cmp) {
@@ -25,27 +25,27 @@
 
 
   //when a strategy is selected, load data from its Salesforce record
-  loadStrategy: function(cmp, strategyName) {
-    self=this;
+  loadStrategy: function (cmp, strategyName) {
+    self = this;
     var action = cmp.get("c.loadStrategy");
 
     action.setParams({ name: strategyName });
     // Add callback behavior for when response is received
-    action.setCallback(this, function(response) {
-        var state = response.getState();
-        if (state === "SUCCESS") {
-            var strategyRecord = response.getReturnValue();
-            console.log('returning strategy XML: ' + strategyRecord.StrategyXML__c );       
-            cmp.set('v.strategyRecord', strategyRecord);
-            // var strategyId = response.getReturnValue().Id;
-            // cmp.set('v.strategyId', strategyId);
-            console.log('returning strategy Id: ' + strategyRecord.Id );  
-            
-            self.convertXMLToStrategy(cmp, self);
-        }
-        else {
-            console.log("Failed with state: " + state);
-        }
+    action.setCallback(this, function (response) {
+      var state = response.getState();
+      if (state === "SUCCESS") {
+        var strategyRecord = response.getReturnValue();
+        console.log('returning strategy XML: ' + strategyRecord.StrategyXML__c);
+        cmp.set('v.strategyRecord', strategyRecord);
+        // var strategyId = response.getReturnValue().Id;
+        // cmp.set('v.strategyId', strategyId);
+        console.log('returning strategy Id: ' + strategyRecord.Id);
+
+        self.convertXMLToStrategy(cmp, self);
+      }
+      else {
+        console.log("Failed with state: " + state);
+      }
 
     });
     // Send action off to be executed
@@ -99,7 +99,7 @@
 
         var result = response.getReturnValue();
         //only show this if response indicates true success
-        _force.displayToast("Strategy Crafter","Strategy changes saved");
+        _force.displayToast("Strategy Crafter", "Strategy changes saved");
         console.log(' returned from persistStrategy: ' + result);
 
       }
@@ -235,12 +235,9 @@
     propPage.reset();
 
     console.log("exiting saveStrategyChanges");
-  
+
 
   },
-
-
-
   //this method checks if there are unsaved changes when user selects another node
   //prompts user if he wants to continue navigation and calls callback if he agrees to continue
   handleUnsavedChanged: function (component, newSelectedNodeName, curStrat, helper, continueSelectionCallback) {
@@ -284,7 +281,7 @@
             result = auraEvent.getParam("result");
           })
 
-          component.find('unsavedChangesDialog').showCustomModal({
+          component.find('modalDialog').showCustomModal({
             header: "Unsaved changes",
             body: modalBody,
             footer: modalFooter,
@@ -297,7 +294,66 @@
         }
       });
   },
+  /**@param {object} component - A reference to stratcraft component
+   * @param {string} header - Header of the modal window. Can be a component in the form 'c:componentName' or jsut a plain string
+   * @param {string} body - Body of the modal window. Should be a component in the form 'c:componentName'
+   * @param {function} validateCallback - Function that accepts modal body component and returns true if it is in a valid state to proceed
+   * @param {function} okCallback - Function that accepts modal body component and is invoked when modal body component passed validation and modal window is closed
+   */
+  showDialog: function (component, header, body, validateCallback, okCallback) {
+    //TODO: probably worth check the actual namespace
+    var headerIsComponent = header && header.startsWith('c:');
+    var componentsToCreate = [
+      [body, {}],
+      ['c:modalWindowFooter', {}]
+    ];
+    if (headerIsComponent) {
+      componentsToCreate.unshift([header, {}]);
+    }
+    var modalDialog = component.find('modalDialog');
+    $A.createComponents(componentsToCreate,
+      function (components, status, errorMessage) {
+        if (status === "SUCCESS") {
+          var header = headerIsComponent ? components[0] : header;
+          var body = headerIsComponent ? components[1] : components[0];
+          var footer = headerIsComponent ? components[2] : components[1];
+          footer.addEventHandler("buttonClickEvent", function (clickEvent) {
+            var buttonClicked = clickEvent.getParam('Button');
+            switch (buttonClicked) {
+              case _utils.ModalDialogButtonType.OK:
+                var isValid = validateCallback(body);
+                if (isValid) {
+                  okCallback(body);
+                  modalDialog.notifyClose();
+                }
+                break;
+              case _utils.ModalDialogButtonType.CANCEL:
+                modalDialog.notifyClose();
+                break;
+            }
+          });
+          modalDialog.showCustomModal({
+            header: header,
+            body: body,
+            footer: footer,
+            showCloseButton: true
+          });
+        }
+      });
+  },
 
+  showNewNodeDialog: function (component) {
+    this.showDialog(component, 'New Node', 'c:modalNewNodeBody',
+      function (bodyComponent) { return bodyComponent.validate(); },
+      function (bodyComponent) {
+        var newNodeEvent = $A.get('e.c:newNodeCreationRequestedEvent');
+        newNodeEvent.setParams({
+          'name': bodyComponent.get('v.name').trim(),
+          'parentNodeName': bodyComponent.get('v.selectedParentNodeName')
+        });
+        newNodeEvent.fire();
+      });
+  },
 
   areUndefinedOrEqual: function (x, y) {
     var result =
@@ -311,7 +367,8 @@
     return result;
 
   }/*,
-   initHopscotch: function(cmp, event, helper) {
+
+  initHopscotch: function (cmp, event, helper) {
 
     var selectId = cmp.find("mySelect").getGlobalId();
     var treeId = cmp.find("tree").getGlobalId();
@@ -337,5 +394,4 @@
     // Start the tour!
     hopscotch.startTour(tour);
     }*/
-
 })
