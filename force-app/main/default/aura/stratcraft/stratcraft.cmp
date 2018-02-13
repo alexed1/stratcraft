@@ -23,7 +23,7 @@
     <aura:handler event="c:propertyPageSaveRequestEvent" action="{!c.saveStrategy}" />
     <aura:handler event="c:treeNodeSelectedEvent" action="{!c.handleTreeNodeSelect }" />
     <aura:handler event="c:nodeDataRequestEvent" action="{!c.handleNodeDataRequest}" />
-    <aura:handler event="c:newNodeCreationRequestedEvent" action="{!c.handleNewNodeCreation}" />
+    <aura:handler event="c:newNodeCreationRequestedEvent" action="{!c.handleNewNodeCreationRequested}" />
 
     <div class="slds-card slds-p-around_small">
 

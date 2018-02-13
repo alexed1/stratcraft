@@ -50,8 +50,13 @@
                 break;
         }
     },
-
-    handleNewNodeCreation: function (cmp, event, helper) {
+    //When user confirms creation of the new node the below flow occurs:
+    //1. newNodeCreationRequestedEvent is raised by the modal dialog
+    //2. stratcraft handles it and adds new node to the current strategy
+    //3. stratcraft then raise strategyChangedEvent
+    //4. tree component handles it and adds a new node to itself
+    //5. tree control raises a node selection event
+    handleNewNodeCreationRequested: function (cmp, event, helper) {
         var nodeName = event.getParam('name');
         var parentNodeName = event.getParam('parentNodeName');
         var strategy = cmp.get('v.curStrat');
@@ -61,17 +66,21 @@
             definition: '{ }',
             description: ''
         });
-        cmp.find('tree').addNode(nodeName, parentNodeName);
-        var cmpEvent = $A.get("e.c:treeNodeSelectedEvent");
-        cmpEvent.setParams({
-            "name": nodeName
+        cmp.set('v.curStrat', strategy);
+        var newNodeEvent = $A.get('e.c:strategyChangedEvent');
+        newNodeEvent.setParams({
+            'type': _utils.StrategyChangeType.ADD_NODE,
+            'nodeName': nodeName,
+            'parentNodeName': parentNodeName
         });
-        cmpEvent.fire();
+        newNodeEvent.fire();
     },
 
+    //Reacts to the request for related nodes, calculates the related nodes and pass it to the callback
     handleNodeDataRequest: function (cmp, event, helper) {
         var nodeRelationship = event.getParam('nodeRelationship');
         var nodeName = event.getParam('nodeName');
+        //Callback should be a function that accepts a single array argument which will contain the list of the requested nodes
         var callback = event.getParam('callback');
         var strategy = cmp.get('v.curStrat');
         var nodes = [];

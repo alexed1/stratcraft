@@ -1,6 +1,6 @@
 ({
   updateTreeNodeChildren: function (cmp, curNode, changedNode) {
-    var treeItems = cmp.get("v.treeItems");
+    var treeItems = cmp.get('v.treeItems');
     for (var i in treeItems[0].items) {
       if (treeItems[0].items[i].name === curNode.name) {
         for (var j in treeItems[0].items[i].items) {
@@ -9,7 +9,7 @@
         }
       }
     }
-    cmp.set("v.treeItems", treeItems);
+    cmp.set('v.treeItems', treeItems);
   },
 
   addNode: function (cmp, parentNodeName, childNodeName) {
@@ -29,15 +29,20 @@
       items: []
     });
     cmp.set('v.treeItems', treeItems);
+    var nodeSelectedEvent = $A.get('e.c:treeNodeSelectedEvent');
+    nodeSelectedEvent.setParams({
+      'name': childNodeName
+    });
+    nodeSelectedEvent.fire();
   },
 
 
   updateTreeNode: function (cmp, originalNodeName, updatedNode) {
-    var treeItems = cmp.get("v.treeItems");
+    var treeItems = cmp.get('v.treeItems');
     var curTreeNode = this.searchTreeBranch(treeItems[0], originalNodeName);
     curTreeNode.name = updatedNode.name;
     curTreeNode.label = updatedNode.name;
-    cmp.set("v.treeItems", treeItems);
+    cmp.set('v.treeItems', treeItems);
   },
 
   searchTreeBranch: function (treeNode, nodeName) {
@@ -58,7 +63,7 @@
   },
 
   reparentTreeNode: function (cmp, nodeName, parentNodeName, oldParentNodeName) {
-    var treeItems = cmp.get("v.treeItems");
+    var treeItems = cmp.get('v.treeItems');
 
     var treeBranchToReparent = this.searchTreeBranch(treeItems[0], nodeName);
     if ((treeBranchToReparent === undefined) && (nodeName === treeItems[0].name)) {
@@ -81,7 +86,7 @@
     }
 
     parentTreeBranch.items.push(treeBranchToReparent);
-    cmp.set("v.treeItems", treeItems);
+    cmp.set('v.treeItems', treeItems);
   },
 
 
@@ -93,7 +98,7 @@
         treeStack.push(treeNode.items[i].name);
         var arr = this.generateTreeItemDescendantNameList(treeNode.items[i]);
         for (var elem in arr) {
-          if (arr[elem] != "") {
+          if (arr[elem] != '') {
             treeStack.push(arr[elem]);
           }
         }
@@ -113,7 +118,7 @@
 
     for (var name in descendantTreeItemNameList) {
       if (descendantTreeItemNameList[name] === newParentName) {
-        errorList.push("You can't set the Parent Node Name to be the same as an existing child node (or to be the current node name)");
+        errorList.push('You can\'t set the Parent Node Name to be the same as an existing child node(or to be the current node name)');
       }
     }
     return errorList;
@@ -136,7 +141,7 @@
     }
 
     if (nodeExists == false) {
-      errorList.push("You have to set the Parent Node Name to be the same as an existing node name");
+      errorList.push('You have to set the Parent Node Name to be the same as an existing node name');
     }
 
     return errorList;

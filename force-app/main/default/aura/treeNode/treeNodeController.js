@@ -23,10 +23,17 @@
         $A.enqueueAction(action);
     },
 
-    addNode: function (cmp, evt, helper) {
-        var parentNodeName = evt.getParam('arguments').parentNodeName;
-        var childNodeName = evt.getParam('arguments').childNodeName;
-        helper.addNode(cmp, parentNodeName, childNodeName);
+    handleStrategyChanged: function (cmp, evt, helper) {
+        var type = evt.getParam('type');
+        var nodeName = evt.getParam('nodeName');
+        var parentNodeName = evt.getParam('parentNodeName');
+        switch (type) {
+            case _utils.StrategyChangeType.ADD_NODE:
+                helper.addNode(cmp, parentNodeName, nodeName);
+                break;
+            default:
+                console.log('WARN: ' + type + ' strategy changed type is not supported yet');
+        }
     },
 
     renameNode: function (cmp, evt, helper) {

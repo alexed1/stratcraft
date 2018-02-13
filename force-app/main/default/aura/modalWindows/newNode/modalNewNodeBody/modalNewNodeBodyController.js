@@ -6,7 +6,7 @@
             'callback': function (strategyNodes) {
                 var result = [];
                 strategyNodes.forEach(function (item) { result.push(item.name); });
-                component.set('v.parentNodeNames', result);
+                component.set('v.availableParentNodeNames', result);
             }
         });
         nodeDataRequestEvent.fire();
@@ -16,33 +16,15 @@
         var nodeNameCmp = component.find('nodeName');
         var parentNameCmp = component.find('parentNode');
         var newNodeName = component.get('v.name');
-        var nameIsInvalid = helper.isNodeNameEmptyOrWhitespace(newNodeName);
-        if (nameIsInvalid) {
-            nodeNameCmp.set("v.validity", {
-                valid: false,
-                badInput: false,
-                valueMissing: true
-            });
-            parentNameCmp.focus();
-            nodeNameCmp.focus();
-            return false;
+        var parentNodes = component.get('v.availableParentNodeNames');
+
+        var validity = helper.validateNewNodeName(newNodeName, parentNodes);
+        nodeNameCmp.set("v.validity", validity);
+        if (validity.valid) {
+            return true;
         }
-        nameIsInvalid = helper.isNodeNameExists(newNodeName, component.get('v.parentNodeNames'));
-        if (nameIsInvalid) {
-            nodeNameCmp.set("v.validity", {
-                valid: false,
-                badInput: true,
-                valueMissing: false
-            });
-            parentNameCmp.focus();
-            nodeNameCmp.focus();
-            return false;
-        }
-        nodeNameCmp.set("v.validity", {
-            valid: true,
-            badInput: false,
-            valueMissing: false
-        });
-        return true;
+        parentNameCmp.focus();
+        nodeNameCmp.focus();
+        return false;
     }
 })

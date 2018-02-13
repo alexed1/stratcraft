@@ -3,7 +3,7 @@
 
     <aura:attribute name="name" type="String" />
     <aura:attribute name="selectedParentNodeName" type="String" />
-    <aura:attribute name="parentNodeNames" type="List" />
+    <aura:attribute name="availableParentNodeNames" type="List" />
 
     <aura:registerEvent name="nodeDataRequested" type="c:nodeDataRequestEvent" />
 
@@ -16,7 +16,7 @@
                      messageWhenBadInput="A node with the same name already exists" />
     <lightning:select aura:id="parentNode" label="Parent node" value="{!v.selectedParentNodeName}" class="select_box" required="true"
         messageWhenValueMissing="Please select parent node">
-        <aura:iteration items="{!v.parentNodeNames}" var="item">
+        <aura:iteration items="{!v.availableParentNodeNames}" var="item">
             <option text="{!item}" />
         </aura:iteration>
     </lightning:select>

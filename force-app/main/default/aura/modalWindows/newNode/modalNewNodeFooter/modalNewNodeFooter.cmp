@@ -1,5 +1,6 @@
 <aura:component>
-    <aura:registerEvent name="newNodeCreationRequested" type="c:newNodeCreationRequestedEvent" />
+    <ltng:require scripts="{!$Resource.utils}" />
+    <aura:registerEvent name="newNodeCreationRequestedEvent" type="c:newNodeCreationRequestedEvent" />
 
     <aura:attribute name="newNodeComponent" type="Object" />
 
