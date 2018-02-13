@@ -2,3 +2,4 @@
 .DS_store
 .cache
 .vscode
+mdapi_output_dir

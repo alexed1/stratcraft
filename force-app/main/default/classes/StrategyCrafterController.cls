@@ -13,14 +13,27 @@ public class StrategyCrafterController {
 
 	@AuraEnabled
     public static List<String> getStrategyNames() {
-        List<Strategy__c> curStrategies =
-        		 [SELECT  Name 
-                FROM Strategy__c];
-        List<String> strategyNames = new List<String>();
-        for (Strategy__c curStrat : curStrategies) {
-   				strategyNames.add(curStrat.name);
+		MetadataService.MetadataPort service = new MetadataService.MetadataPort();
+		service.SessionHeader = new MetadataService.SessionHeader_element();
+		service.SessionHeader.sessionId = UserInfo.getSessionId();
+		List<MetadataService.ListMetadataQuery> queries = new List<MetadataService.ListMetadataQuery>();		
+		MetadataService.ListMetadataQuery queryWorkflow = new MetadataService.ListMetadataQuery();
+		queryWorkflow.type_x = 'Workflow';
+		queries.add(queryWorkflow);		
+		MetadataService.ListMetadataQuery queryValidationRule = new MetadataService.ListMetadataQuery();
+		queryValidationRule.type_x = 'ValidationRule';
+		queries.add(queryValidationRule);		
+		MetadataService.FileProperties[] fileProperties = service.listMetadata(queries, 25);
+		List<String> strings = new List<String>();
+
+		System.debug('hi!');
+		for(MetadataService.FileProperties fileProperty : fileProperties)
+			{
+			strings.add(fileProperty.fullName);
+			System.debug(fileProperty.fullName);
 			}
-		return strategyNames;
+
+		return strings;
     }
 
 	@AuraEnabled
