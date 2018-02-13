@@ -238,9 +238,6 @@
 
 
   },
-
-
-
   //this method checks if there are unsaved changes when user selects another node
   //prompts user if he wants to continue navigation and calls callback if he agrees to continue
   handleUnsavedChanged: function (component, newSelectedNodeName, curStrat, helper, continueSelectionCallback) {
@@ -297,26 +294,64 @@
         }
       });
   },
-
-  showNewNodeDialog: function (component) {
-    var modalBody;
-    var modalFooter;
-    $A.createComponents([
-      ["c:modalNewNodeBody", {}],
-      ["c:modalNewNodeFooter", {}]
-    ],
+  /**@param {object} component - A reference to stratcraft component
+   * @param {string} header - Header of the modal window. Can be a component in the form 'c:componentName' or jsut a plain string
+   * @param {string} body - Body of the modal window. Should be a component in the form 'c:componentName'
+   * @param {function} validateCallback - Function that accepts modal body component and returns true if it is in a valid state to proceed
+   * @param {function} okCallback - Function that accepts modal body component and is invoked when modal body component passed validation and modal window is closed
+   */
+  showDialog: function (component, header, body, validateCallback, okCallback) {
+    //TODO: probably worth check the actual namespace
+    var headerIsComponent = header && header.startsWith('c:');
+    var componentsToCreate = [
+      [body, {}],
+      ['c:modalWindowFooter', {}]
+    ];
+    if (headerIsComponent) {
+      componentsToCreate.unshift([header, {}]);
+    }
+    var modalDialog = component.find('modalDialog');
+    $A.createComponents(componentsToCreate,
       function (components, status, errorMessage) {
         if (status === "SUCCESS") {
-          modalBody = components[0];
-          modalFooter = components[1];
-          modalFooter.newNodeComponent = modalBody;
-          component.find('modalDialog').showCustomModal({
-            header: 'New Node',
-            body: modalBody,
-            footer: modalFooter,
+          var header = headerIsComponent ? components[0] : header;
+          var body = headerIsComponent ? components[1] : components[0];
+          var footer = headerIsComponent ? components[2] : components[1];
+          footer.addEventHandler("buttonClickEvent", function (clickEvent) {
+            var buttonClicked = clickEvent.getParam('Button');
+            switch (buttonClicked) {
+              case _utils.ModalDialogButtonType.OK:
+                var isValid = validateCallback(body);
+                if (isValid) {
+                  okCallback(body);
+                  modalDialog.notifyClose();
+                }
+                break;
+              case _utils.ModalDialogButtonType.CANCEL:
+                modalDialog.notifyClose();
+                break;
+            }
+          });
+          modalDialog.showCustomModal({
+            header: header,
+            body: body,
+            footer: footer,
             showCloseButton: true
           });
         }
+      });
+  },
+
+  showNewNodeDialog: function (component) {
+    this.showDialog(component, 'New Node', 'c:modalNewNodeBody',
+      function (bodyComponent) { return bodyComponent.validate(); },
+      function (bodyComponent) {
+        var newNodeEvent = $A.get('e.c:newNodeCreationRequestedEvent');
+        newNodeEvent.setParams({
+          'name': bodyComponent.get('v.name').trim(),
+          'parentNodeName': bodyComponent.get('v.selectedParentNodeName')
+        });
+        newNodeEvent.fire();
       });
   },
 
@@ -332,6 +367,7 @@
     return result;
 
   },
+
   initHopscotch: function (cmp, event, helper) {
 
     var selectId = cmp.find("mySelect").getGlobalId();
@@ -358,5 +394,4 @@
     // Start the tour!
     hopscotch.startTour(tour);
   }
-
 })

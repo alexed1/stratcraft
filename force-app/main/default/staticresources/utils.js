@@ -57,6 +57,11 @@ window._utils = (function () {
 
     StrategyChangeType: {
       ADD_NODE: 'ADD_NODE'
+    },
+
+    ModalDialogButtonType: {
+      OK: 'OK',
+      CANCEL: 'CANCEL'
     }
   }
 })()
