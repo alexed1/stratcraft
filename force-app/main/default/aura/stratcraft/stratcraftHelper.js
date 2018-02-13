@@ -310,7 +310,7 @@
         && x.replace(/[\s\"]/gi, '') == y.replace(/[\s\""]/gi, ''));
     return result;
 
-  },
+  }/*,
    initHopscotch: function(cmp, event, helper) {
 
     var selectId = cmp.find("mySelect").getGlobalId();
@@ -336,6 +336,6 @@
 
     // Start the tour!
     hopscotch.startTour(tour);
-    }
+    }*/
 
 })
