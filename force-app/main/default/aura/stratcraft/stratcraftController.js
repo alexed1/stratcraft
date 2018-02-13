@@ -4,10 +4,10 @@
 
     },
 
-    hopscotchLoaded: function (cmp, event, helper) {
+    /*hopscotchLoaded: function (cmp, event, helper) {
         helper.initHopscotch(cmp, event, helper);
 
-    },
+    },*/
 
     handleUploadFinished: function (cmp, event) {
         // Get the list of uploaded files

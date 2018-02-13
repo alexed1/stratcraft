@@ -2,10 +2,12 @@
 
     <ltng:require scripts="{!$Resource.utils}" />
     <ltng:require scripts="{!$Resource.force}" />
+    <!-- 
     <ltng:require scripts="{!$Resource.hopscotch}" afterScriptsLoaded="{!c.hopscotchLoaded}" />
     <ltng:require scripts="{!$Resource.hopscotchcss}" />
     <ltng:require scripts="{!$Resource.hopscotchspritegreen}" />
     <ltng:require scripts="{!$Resource.hopscotchspriteorange}" />
+    -->
 
     <aura:attribute name="curStrat" type="Strategy" />
     <aura:attribute name="curStratNode" type="Object" />
