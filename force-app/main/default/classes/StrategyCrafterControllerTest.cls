@@ -2,7 +2,7 @@
 public class StrategyCrafterControllerTest {
 
 	@isTest
-	public static void generateTreeDataTest() {
+	public static void generateTreeData_WhenStringIsValidXML_GeneratedEqualTreeStructure() {
 		String xml = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n' + 
 				'<RecommendationStrategy xmlns=\"http://soap.sforce.com/2006/04/metadata\">\r\n' + 
 				'<description>TestStrategy</description>\r\n' + 
@@ -27,7 +27,7 @@ public class StrategyCrafterControllerTest {
 	}
 
 	@isTest
-	public static void parseStrategyStringPositiveTest() {
+	public static void parseStrategyString_WhenStringIsValidXML_SuccessfullyParsesIt() {
 		String xml = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n' + 
 				'<RecommendationStrategy xmlns=\"http://soap.sforce.com/2006/04/metadata\">\r\n' + 
 				'<description>TestStrategy</description>\r\n' + 
@@ -69,7 +69,7 @@ public class StrategyCrafterControllerTest {
 	}
 
 	@isTest
-	public static void parseStrategyStringNegativeTest() {
+	public static void parseStrategyString_WhenStringIsNotAnXML_Fails() {
 		String xml = 'test fail xml';
 		
 		Test.startTest();
@@ -79,6 +79,38 @@ public class StrategyCrafterControllerTest {
         System.assert(curStrategy.name == null,	'Failed strategy must have an empty name');   
         System.assert(curStrategy.description == null, 'Failed strategy must have an empty description');
         System.assert(curStrategy.notification.errors[0].startsWith('Failed to parse XML'), 'Failed strategy notification must contain an error message');
-	}		
-
+	}	
+    
+    @isTest
+    public static void getStrategyNames_Always_ReturnsListOfNames() {
+        Strategy__c newStrategy = new Strategy__c();
+        newStrategy.name = 'Test';
+        insert newStrategy;
+        Test.startTest();
+        	List<string> strategyNames = StrategyCrafterController.getStrategyNames();
+        Test.stopTest();
+        System.assertEquals(1, strategyNames.size(), 'The number of strategy name is incoorect');
+        System.assertEquals('Test', strategyNames[0], 'Strategy name is incorrect');        
+    }
+    
+    @isTest
+    public static void loadStrategy_WhenStrategyExists_ReturnsIt() {
+        Strategy__c newStrategy = new Strategy__c();
+        newStrategy.name = 'Test';
+        insert newStrategy;
+        Test.startTest();
+        	Strategy__c actual = StrategyCrafterController.loadStrategy('Test');
+        Test.stopTest();
+        System.assert(actual != null, 'No strategy was retrieved');
+        System.assertEquals('Test', actual.Name, 'The name of the retrieved strategy doesn\'t match');
+    }
+    
+    @isTest
+    public static void loadStrategy_WhenStrategyDoesntExist_Fails() {
+        try {
+            Strategy__c actual = StrategyCrafterController.loadStrategy('Test');
+            System.assert(false, 'Method should throw exception for non-existing strategy');
+        }        
+        catch (QueryException e) { }            
+    }
 }
