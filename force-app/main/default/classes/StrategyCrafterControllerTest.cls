@@ -71,15 +71,14 @@ public class StrategyCrafterControllerTest {
 	@isTest
 	public static void parseStrategyStringNegativeTest() {
 		String xml = 'test fail xml';
-		String expectedFailMessage = '';
 		
 		Test.startTest();
-			Strategy curStrategy = StrategyCrafterController.parseStrategyString(xml);
-		Test.stopTest();
-
-		System.assertEquals(true, 
-				curStrategy.name.startsWith('Failed to parse XML'), 
-				'Wrong error - ' + curStrategy.name);
+        	Strategy curStrategy = StrategyCrafterController.parseStrategyString(xml);
+        Test.stopTest();
+        System.debug(curStrategy);        
+        System.assert(curStrategy.name == null,	'Failed strategy must have an empty name');   
+        System.assert(curStrategy.description == null, 'Failed strategy must have an empty description');
+        System.assert(curStrategy.notification.errors[0].startsWith('Failed to parse XML'), 'Failed strategy notification must contain an error message');
 	}		
 
 }

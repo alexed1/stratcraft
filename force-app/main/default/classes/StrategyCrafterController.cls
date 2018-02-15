@@ -1,4 +1,3 @@
-
 //xml data is stored in a Strategy__c custom object. 
 //after it's retrieved by name, it's passed to the client as Strategy__c, where it's converted to an Object called strategyRecord
 //the client then evolves a Strategy object of nodes called curStrat
@@ -41,14 +40,8 @@ public class StrategyCrafterController {
 	@AuraEnabled
 	public static Strategy parseStrategyString(String xml){	
 		Strategy result = new Strategy();
-		try {
-			result = ParseStrategyXML.parseStrategyString(xml);	
-		}
-		catch (Exception ex) {
-			result.name = ex.getMessage();
-		}
-		return result;
-		
+		result = ParseStrategyXML.parseStrategyString(xml);	
+		return result;		
 	}
 
 	@AuraEnabled
