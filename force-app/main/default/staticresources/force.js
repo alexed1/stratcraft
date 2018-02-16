@@ -18,5 +18,11 @@ window._force = (function () {
         alert(title + ': ' + message);
       }
     },
+
+    Icons: {
+      Action: {
+        Question: 'action:question_post_action'
+      }
+    }
   }
 })()

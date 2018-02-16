@@ -238,96 +238,87 @@
 
 
   },
-  //this method checks if there are unsaved changes when user selects another node
-  //prompts user if he wants to continue navigation and calls callback if he agrees to continue
-  handleUnsavedChanged: function (component, newSelectedNodeName, curStrat, helper, continueSelectionCallback) {
-    var previousNodeName = component.find("propertyPage").get("v.originalName");
-
-    var needChecking = previousNodeName && newSelectedNodeName;
-    if (needChecking) {
-      var dirtyNode = component.find("propertyPage").get("v.curNode");
-      var originNode = helper.findStrategyNodeByName(curStrat, previousNodeName);
-      var originNodeName = originNode.name;
-      //possibly better to use underscore.js to compare 2 objects in a generic way
-      var isDirty = !(helper.areUndefinedOrEqual(dirtyNode.name, originNode.name) &&
-        helper.areUndefinedOrEqual(dirtyNode.description, originNode.description) &&
-        helper.areUndefinedOrEqual(dirtyNode.parentNodeName, originNode.parentNodeName) &&
-        helper.areUndefinedOrEqual(dirtyNode.type, originNode.type) &&
-        helper.areUndefinedOrEqual(dirtyNode.definition, originNode.definition));
-
-      if (isDirty) {
-        helper.showUnsavedChangesDialog(component, continueSelectionCallback);
-      }
-      else
-        continueSelectionCallback();
+  /** Converts the incoming parameter to the format used by showDialog method */
+  _parseComponentConfiguration: function (configuration) {
+    if (!configuration) {
+      return configuration;
     }
-    else
-      continueSelectionCallback();
+    var result = { name: '', initializer: null };
+    if (Array.isArray(configuration)) {
+      result.name = configuration[0];
+      result.isComponent = true;
+      result.initializer = configuration[1];
+    }
+    else {
+      result.name = configuration;
+      result.isComponent = configuration.startsWith('c:');
+    }
+    return result;
   },
 
-  showUnsavedChangesDialog: function (component, continueSelectionCallback) {
-    var modalBody;
-    var modalFooter;
-    $A.createComponents([
-      ["c:unsavedChangesBody", {}],
-      ["c:unsavedChangesFooter", {}]
-    ],
-      function (components, status) {
-        if (status === "SUCCESS") {
-          modalBody = components[0];
-          modalFooter = components[1];
-          var result = {};
-          modalFooter.addEventHandler("c:unsavedChangesEvent", function (auraEvent) {
-            result = auraEvent.getParam("result");
-          })
-
-          component.find('modalDialog').showCustomModal({
-            header: "Unsaved changes",
-            body: modalBody,
-            footer: modalFooter,
-            showCloseButton: false,
-            closeCallback: function () {
-              if (result)
-                continueSelectionCallback();
-            }
-          });
-        }
-      });
-  },
   /**@param {object} component - A reference to stratcraft component
-   * @param {string} header - Header of the modal window. Can be a component in the form 'c:componentName' or jsut a plain string
-   * @param {string} body - Body of the modal window. Should be a component in the form 'c:componentName'
-   * @param {function} validateCallback - Function that accepts modal body component and returns true if it is in a valid state to proceed
+   * @param {object} header - Header of the modal window. Can be one of the following:
+   * - plain string: will be displayed as is
+   * - component name (starts with namespace:): specified component will be created and used
+   * - array: first element of array is treated as component name, second is treated as an initializer function that accepts newly created component
+   * @param {object} body - Body of the modal window. Can be one of the following:
+   * - plain string: will be displayed as is
+   * - component name (starts with namespace:): specified component will be created and used
+   * - array: first element of array is treated as component name, second is treated as an initializer function that accepts newly created component
    * @param {function} okCallback - Function that accepts modal body component and is invoked when modal body component passed validation and modal window is closed
+   * @param {function} validateCallback - (Optional)Function that accepts modal body component and returns true if it is in a valid state to proceed
+   * @param {function} cancelCallback - (Optional)Function that is invoked when modal window is closed without validation
+   * @example: Examples for header and body:
+   * 'This text will be shown as is'
+   * 'c:myComponentName'
+   * ['c:myComponentName', function (component) { component.set('v.name', 'Initial value for the name property')}]
    */
-  showDialog: function (component, header, body, validateCallback, okCallback) {
+  showDialog: function (component, header, body, okCallback, validateCallback, cancelCallback) {
+    if (!okCallback) {
+      throw new Error('OK callback is not provided. Use force:showToast for notification that don\'t block UI');
+    }
     //TODO: probably worth check the actual namespace
-    var headerIsComponent = header && header.startsWith('c:');
+    var headerConfiguration = this._parseComponentConfiguration(header);
+    var bodyConfiguration = this._parseComponentConfiguration(body);
     var componentsToCreate = [
-      [body, {}],
       ['c:modalWindowFooter', {}]
     ];
-    if (headerIsComponent) {
-      componentsToCreate.unshift([header, {}]);
+    if (bodyConfiguration.isComponent) {
+      componentsToCreate.unshift([bodyConfiguration.name, {}]);
+    }
+    if (headerConfiguration.isComponent) {
+      componentsToCreate.unshift([headerConfiguration.name, {}]);
     }
     var modalDialog = component.find('modalDialog');
     $A.createComponents(componentsToCreate,
       function (components, status, errorMessage) {
         if (status === "SUCCESS") {
-          var header = headerIsComponent ? components[0] : header;
-          var body = headerIsComponent ? components[1] : components[0];
-          var footer = headerIsComponent ? components[2] : components[1];
+          //Footer is always the last, body is always next to the last, header is always the first
+          var footer = components[components.length - 1];
+          header = headerConfiguration.isComponent ? components[0] : headerConfiguration.name;
+          body = bodyConfiguration.isComponent ? components[components.length - 2] : bodyConfiguration.name;
+
+          if (headerConfiguration.isComponent && headerConfiguration.initializer) {
+            headerConfiguration.initializer(header);
+          }
+          if (bodyConfiguration.isComponent && bodyConfiguration.initializer) {
+            bodyConfiguration.initializer(body);
+          }
+
           footer.addEventHandler("buttonClickEvent", function (clickEvent) {
             var buttonClicked = clickEvent.getParam('Button');
             switch (buttonClicked) {
               case _utils.ModalDialogButtonType.OK:
-                var isValid = validateCallback(body);
+                var isValid = !validateCallback || validateCallback(body);
                 if (isValid) {
                   okCallback(body);
                   modalDialog.notifyClose();
                 }
                 break;
               case _utils.ModalDialogButtonType.CANCEL:
+                if (cancelCallback) {
+                  cancelCallback();
+                }
                 modalDialog.notifyClose();
                 break;
             }
@@ -336,15 +327,18 @@
             header: header,
             body: body,
             footer: footer,
-            showCloseButton: true
+            //In this case if we provide cancellation callback, we don't allow user to just close the window, as we are interested in the councious choice 
+            showCloseButton: cancelCallback === null || cancelCallback === undefined
           });
         }
       });
   },
 
   showNewNodeDialog: function (component) {
-    this.showDialog(component, 'New Node', 'c:modalNewNodeBody',
-      function (bodyComponent) { return bodyComponent.validate(); },
+    this.showDialog(
+      component,
+      'New Node',
+      'c:modalNewNodeBody',
       function (bodyComponent) {
         var newNodeEvent = $A.get('e.c:newNodeCreationRequestedEvent');
         newNodeEvent.setParams({
@@ -352,21 +346,34 @@
           'parentNodeName': bodyComponent.get('v.selectedParentNodeName')
         });
         newNodeEvent.fire();
-      });
+      },
+      function (bodyComponent) { return bodyComponent.validate(); });
   },
 
-  areUndefinedOrEqual: function (x, y) {
-    var result =
-      (x == null && y == null)  //either both are undefined
-      || //or both has value and values are equal 
-      ((x != null && y != null)
-        //something in aura changes control characters and strings that look equal are not equal,
-        //so we strip characters with regexp removing whitespaces, tabs and carriage returns and compare the rest
-        //we also remove quotation marks, since we use unstrict json and the only difference there might be a presense of quotation marks
-        && x.replace(/[\s\"]/gi, '') == y.replace(/[\s\""]/gi, ''));
-    return result;
+  showUnsavedChangesDialog: function (component, okCallback, cancelCallback) {
+    this.showDialog(
+      component,
+      'Unsaved changes',
+      ['c:modalWindowGenericBody', function (body) {
+        body.set('v.text', 'The selected node has unsaved changes. Do you want to discard those changes and proceeed?');
+        body.set('v.iconName', _force.Icons.Action.Question);
+      }],
+      okCallback,
+      null,
+      cancelCallback);
+  },
 
-  }/*,
+  /**Makes sure that an empty option in the strategy selection list is removed
+   * @param {object} component - a reference to a stratcraft component
+   */
+  ensureEmptyStrategyIsRemoved: function (component) {
+    var strategyNames = component.get('v.strategyNames');
+    if (strategyNames && strategyNames.length > 0 && strategyNames[0] === '') {
+      strategyNames = strategyNames.slice(1);
+      component.set('v.strategyNames', strategyNames);
+    }
+  }
+  /*,
 
   initHopscotch: function (cmp, event, helper) {
 

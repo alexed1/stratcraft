@@ -1,0 +1,9 @@
+<aura:component>
+    <aura:attribute name="iconName" type="String" />
+    <aura:attribute name="text" type="String" />
+
+    <div class="slds-text-align_center">
+        <lightning:icon class="slds-m-right_x-small" iconName="{!v.iconName}" alternativeText="{!v.iconName}" /> 
+        {!v.text}
+    </div>
+</aura:component>
