@@ -1,4 +1,3 @@
-
 //xml data is stored in a Strategy__c custom object. 
 //after it's retrieved by name, it's passed to the client as Strategy__c, where it's converted to an Object called strategyRecord
 //the client then evolves a Strategy object of nodes called curStrat
@@ -19,36 +18,23 @@ public class StrategyCrafterController {
         List<String> strategyNames = new List<String>();
         for (Strategy__c curStrat : curStrategies) {
    				strategyNames.add(curStrat.name);
-			}
+        }
 		return strategyNames;
     }
 
 	@AuraEnabled
     public static Strategy__c loadStrategy(string name) {
-
-         System.debug('name is: ' + name);
-         List<Strategy__c> curStratList =
-        		 [SELECT  StrategyXML__c, Id FROM Strategy__c WHERE (Name = :name)];
-         System.debug('curStratList[0] is: ' + curStratList[0]);
-       	 if (curStratList.Size() != 1)
-       	 	throw new QueryException('either 0 or more than 1 strategy was returned when that name was passed in. Either way, you are screwed');
-        
+		List<Strategy__c> curStratList = [SELECT Name, StrategyXML__c, Id FROM Strategy__c WHERE (Name = :name)];         
+       	if (curStratList.Size() != 1)
+            throw new QueryException('Either 0 or more than 1 strategy was returned when that name was passed in');        
 		return curStratList[0];
-	}
-    
-   
+	} 
 
 	@AuraEnabled
 	public static Strategy parseStrategyString(String xml){	
 		Strategy result = new Strategy();
-		try {
-			result = ParseStrategyXML.parseStrategyString(xml);	
-		}
-		catch (Exception ex) {
-			result.name = ex.getMessage();
-		}
-		return result;
-		
+		result = ParseStrategyXML.parseStrategyString(xml);	
+		return result;		
 	}
 
 	@AuraEnabled
@@ -57,8 +43,7 @@ public class StrategyCrafterController {
 		System.debug('starting persistStrategy');
 		String result = '';
 		try {
-			result = curStrat.Persist();
-		
+			result = curStrat.Persist();		
 		}
 		catch (Exception ex) {
 			result = ex.getMessage();

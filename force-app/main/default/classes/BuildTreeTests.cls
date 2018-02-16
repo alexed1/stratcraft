@@ -8,9 +8,9 @@ public with sharing class BuildTreeTests {
 		Test.startTest();
 		string treeString = BuildTree.Assemble(testStrategy);
 		Test.stopTest();
-
-		System.assert(treeString == 'done');
-	
+		List<BuildTree.TreeNode> treeBuilt = (List<BuildTree.TreeNode>)JSON.deserialize(treeString, List<BuildTree.TreeNode>.class);
+        System.assertEquals(1, treeBuilt.size(), 'Tree must contain a single root node');
+        System.assertEquals(1, treeBuilt[0].items.size(), 'Root node must contain a single child');
 	}
 
 	@isTest
