@@ -239,7 +239,7 @@
 
   },
   /** Converts the incoming parameter to the format used by showDialog method */
-  _parseComponentConfiguration: function (configuration) {
+  parseComponentConfiguration: function (configuration) {
     if (!configuration) {
       return configuration;
     }
@@ -278,8 +278,8 @@
       throw new Error('OK callback is not provided. Use force:showToast for notification that don\'t block UI');
     }
     //TODO: probably worth check the actual namespace
-    var headerConfiguration = this._parseComponentConfiguration(header);
-    var bodyConfiguration = this._parseComponentConfiguration(body);
+    var headerConfiguration = this.parseComponentConfiguration(header);
+    var bodyConfiguration = this.parseComponentConfiguration(body);
     var componentsToCreate = [
       ['c:modalWindowFooter', {}]
     ];

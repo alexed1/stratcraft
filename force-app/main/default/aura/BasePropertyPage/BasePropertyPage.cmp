@@ -3,10 +3,10 @@
     <!--This attribute is set from the outside by component consumers and represents the original state of the node-->
     <aura:attribute name="currentNode" type="Object" />
     <!--This attribute is set privately and stores the current state of all the node fields in order not to spoil the state of actual node-->
-    <aura:attribute name="_currentNodeEditable" type="Object" access="private" />
+    <aura:attribute name="_currentNodeDirty" type="Object" access="private" />
     
     <aura:attribute name="isIfNode" type="Boolean" default="false" />
-    <aura:handler name="change" value="{!v._currentNodeEditable.type}" action="{!c.handleTypeChange}" />
+    <aura:handler name="change" value="{!v._currentNodeDirty.type}" action="{!c.handleTypeChange}" />
     <aura:handler name="change" value="{!v.currentNode}" action="{!c.handleCurrentNodeChange}" />
 
     <aura:registerEvent name="propertyPageSaveRequest" type="c:propertyPageSaveRequestEvent" />
@@ -14,15 +14,15 @@
     <aura:method name="clear" action="{!c.clear}" />
     <aura:method name="hasChanges" action="{!c.hasChanges}" />
 
-    <ui:inputText aura:id="name" label="name" class="field" value="{!v._currentNodeEditable.name}" />
-    <ui:inputText aura:id="description" label="description" class="field" value="{!v._currentNodeEditable.description }" />
-    <ui:inputText aura:id="parentNode" label="parentNode" class="field" value="{!v._currentNodeEditable.parentNodeName }" />
-    <ui:inputText aura:id="type" label="type" class="field" value="{!v._currentNodeEditable.type }" />
+    <ui:inputText aura:id="name" label="name" class="field" value="{!v._currentNodeDirty.name}" />
+    <ui:inputText aura:id="description" label="description" class="field" value="{!v._currentNodeDirty.description }" />
+    <ui:inputText aura:id="parentNode" label="parentNode" class="field" value="{!v._currentNodeDirty.parentNodeName }" />
+    <ui:inputText aura:id="type" label="type" class="field" value="{!v._currentNodeDirty.type }" />
 
     <aura:renderIf isTrue="{!v.isIfNode}">
-        <c:filterSet curNode="{!v._currentNodeEditable}" curStrat="{!v.curStrat}" nodeType="{!v._currentNodeEditable.type}" />
+        <c:filterSet curNode="{!v._currentNodeDirty}" curStrat="{!v.curStrat}" nodeType="{!v._currentNodeDirty.type}" />
         <aura:set attribute="else">
-            <c:GenericDefinitionsControlPanel localDefinitionString="{!v._currentNodeEditable.definition }" />
+            <c:GenericDefinitionsControlPanel localDefinitionString="{!v._currentNodeDirty.definition }" />
         </aura:set>
     </aura:renderIf>
 

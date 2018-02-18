@@ -34,7 +34,7 @@
         var reverseSelection = function () {
             component.set('v.selectedStrategyName', currentStrategy.name);
         };
-        if (propertyPage.hasChanges()) {
+        if (propertyPage.isDirty()) {
             helper.showUnsavedChangesDialog(component, proceedToSelect, reverseSelection);
         }
         else {
@@ -113,7 +113,7 @@
         var proceeedToSelect = function () {
             propertyPage.set('v.currentNode', newSelectedNode);
         }
-        if (propertyPage.hasChanges()) {
+        if (propertyPage.isDirty()) {
             //TODO: provide cancel callback that will switch the selected node back to the original (i.e. visually highlight it)
             helper.showUnsavedChangesDialog(component, proceeedToSelect);
         }
