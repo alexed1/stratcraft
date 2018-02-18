@@ -32,7 +32,7 @@
         cmp.set('v.isIfNode', false);
     },
 
-    hasChanges: function (component, event, helper) {
+    isDirty: function (component, event, helper) {
         var originalState = component.get('v.currentNode');
         var actualState = component.get('v._currentNodeDirty');
         //It means that no node has been selected yet

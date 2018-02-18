@@ -12,7 +12,7 @@
     <aura:registerEvent name="propertyPageSaveRequest" type="c:propertyPageSaveRequestEvent" />
     <aura:method name="reset" action="{!c.resetPage}" />
     <aura:method name="clear" action="{!c.clear}" />
-    <aura:method name="hasChanges" action="{!c.hasChanges}" />
+    <aura:method name="isDirty" action="{!c.isDirty}" />
 
     <ui:inputText aura:id="name" label="name" class="field" value="{!v._currentNodeDirty.name}" />
     <ui:inputText aura:id="description" label="description" class="field" value="{!v._currentNodeDirty.description }" />
