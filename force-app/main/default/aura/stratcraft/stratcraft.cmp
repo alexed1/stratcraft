@@ -42,7 +42,7 @@
             <lightning:buttonMenu iconName="utility:settings" alternativeText="Settings" onselect="{! c.handleMenuSelect }">
                 <lightning:menuItem label="New Strategy" value="newStrategy" />                
                 <aura:if isTrue="{!v.selectedStrategyName != ''}">
-                    <hr class="hr" />
+                    <hr class="myhr" />
                     <lightning:menuItem label="New Node" value="addElement" />                          
                     <lightning:menuItem label="Save Strategy" value="saveStrategy" />
                 </aura:if>  
