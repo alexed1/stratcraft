@@ -1,0 +1,7 @@
+public enum NodeType {
+	IF_NODE,
+    SOQL_LOAD_NODE,
+    UNION_NODE,
+    FILTER_NODE,
+    RECOMMENDATION_LIMIT_NODE    
+}

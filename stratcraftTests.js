@@ -9,8 +9,8 @@
  * Note that Jasmine uses "spec" as its name for a test. We use their terminology here
  * for consistency with their documentation.
  */
-describe("Lightning Component Testing Examples", function(){
-    afterEach(function() {
+describe("Lightning Component Testing Examples", function () {
+    afterEach(function () {
         // Each spec (test) renders its components into the same div,
         // so we need to clear that div out at the end of each spec.
         $T.clearRenderedTestComponents();
@@ -19,7 +19,7 @@ describe("Lightning Component Testing Examples", function(){
     /**
      * Component under test: 'c:egRenderElement':
      * This spec creates a component, adds it to the body, waits for the rendering to complete,
-     * and then ensures that the expected content has been added to the DOM.
+     * and then ensures that the expected content has been added to the Dom.
      * NOTE: The spec and the component under test are in same locker (same namespace),
      *       so the spec is able to see the DOM owned by the component.
      */
@@ -29,17 +29,17 @@ describe("Lightning Component Testing Examples", function(){
      * This spec validates that calling a method on the component's public interface
      * causes the expected state change.
      */
-    describe('c:stratCraft', function() {
-        it("tests for the presence of a value", function(done) {
+    describe('c:stratCraft', function () {
+        it("tests for the presence of a value", function (done) {
             $T.createComponent("c:stratCraft", null)
-            .then(function(component) {
-                //component.sampleMethod();
-                component.set("v.foo", "bar");
-                expect(component.get("v.foo")).toBe("bar");
-                done();
-            }).catch(function(e) {
-                done.fail(e);
-            });
+                .then(function (component) {
+                    //component.sampleMethod();
+                    component.set("v.foo", "bar");
+                    expect(component.get("v.foo")).toBe("bar");
+                    done();
+                }).catch(function (e) {
+                    done.fail(e);
+                });
         });
     });
 

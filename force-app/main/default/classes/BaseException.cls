@@ -1,2 +1,2 @@
-public with sharing class BaseException extends Exception {
+public virtual with sharing class BaseException extends Exception {
 }
