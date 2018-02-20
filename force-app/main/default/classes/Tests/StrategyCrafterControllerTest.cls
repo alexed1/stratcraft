@@ -1,85 +1,60 @@
 @isTest
 public class StrategyCrafterControllerTest {
-
-	@isTest
-	public static void generateTreeData_WhenStringIsValidXML_GeneratedEqualTreeStructure() {
-		String xml = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n' + 
-				'<RecommendationStrategy xmlns=\"http://soap.sforce.com/2006/04/metadata\">\r\n' + 
-				'<description>TestStrategy</description>\r\n' + 
-				'<recommendationStrategyName>testStrat1</recommendationStrategyName>\r\n    ' + 
-				'<masterLabel>SomeMasterLabel</masterLabel>\r\n\r\n\t' + 
-				'<!-- Root -->\r\n\t<strategyNode>\r\n\t\t<name>RootNode</name>\r\n\t\t' + 
-				'<description>the root</description>\r\n\t\t' +
-				'<parentNode></parentNode>\r\n\t\t<type>2<!--Union--></type>\r\n\t\t' + 
-				'<definition>{ removeDuplicates: true }</definition>\r\n\t</strategyNode>\r\n\r\n\t' +
-				'<!-- Payment Past Due -->\r\n\t<strategyNode>' +
-				'\r\n\t\t<name>IfPaymentPastDueElseChurnNode</name>\r\n\t\t' + 
-				'<description>If payment is past due request payment else churn</description>' +
-				'\r\n\t\t<parentNode>RootNode</parentNode>\r\n\t\t' + 
-				'<type>4<!--If--></type>\r\n\t\t<definition>{testDefinition : true}</definition>' +
-				'\r\n\t</strategyNode>\r\n\r\n</RecommendationStrategy>\r\n';
-
-		Test.startTest();
-			String treeString = StrategyCrafterController.generateTreeData(xml);
-		Test.stopTest();
-		
-		System.assert(treeString.startsWith('[{"name":"RootNode","label":"RootNode",'));
-	}
-
-	@isTest
-	public static void parseStrategyString_WhenStringIsValidXML_SuccessfullyParsesIt() {
-		String xml = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n' + 
-				'<RecommendationStrategy xmlns=\"http://soap.sforce.com/2006/04/metadata\">\r\n' + 
-				'<description>TestStrategy</description>\r\n' + 
-				'<recommendationStrategyName>testStrat1</recommendationStrategyName>\r\n    ' + 
-				'<masterLabel>SomeMasterLabel</masterLabel>\r\n\r\n\t' + 
-				'<!-- Root -->\r\n\t<strategyNode>\r\n\t\t<name>RootNode</name>\r\n\t\t' + 
-				'<description>the root</description>\r\n\t\t' +
-				'<parentNode></parentNode>\r\n\t\t<type>2<!--Union--></type>\r\n\t\t' + 
-				'<definition>{removeDuplicates: true}</definition>\r\n\t</strategyNode>\r\n\r\n\t' +
-				'<!-- Payment Past Due -->\r\n\t<strategyNode>' +
-				'\r\n\t\t<name>IfPaymentPastDueElseChurnNode</name>\r\n\t\t' + 
-				'<description>If payment is past due request payment else churn</description>' +
-				'\r\n\t\t<parentNode>RootNode</parentNode>\r\n\t\t' + 
-				'<type>4<!--If--></type>\r\n\t\t<definition>{testDefinition : true}</definition>' +
-				'\r\n\t</strategyNode>\r\n\r\n</RecommendationStrategy>\r\n';
+	//TODO: replace with fixture data
+	// @isTest
+	// public static void parseStrategyString_WhenStringIsValidXML_SuccessfullyParsesIt() {
+	// 	String xml = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n' + 
+	// 			'<RecommendationStrategy xmlns=\"http://soap.sforce.com/2006/04/metadata\">\r\n' + 
+	// 			'<description>TestStrategy</description>\r\n' + 
+	// 			'<recommendationStrategyName>testStrat1</recommendationStrategyName>\r\n    ' + 
+	// 			'<masterLabel>SomeMasterLabel</masterLabel>\r\n\r\n\t' + 
+	// 			'<!-- Root -->\r\n\t<strategyNode>\r\n\t\t<name>RootNode</name>\r\n\t\t' + 
+	// 			'<description>the root</description>\r\n\t\t' +
+	// 			'<parentNode></parentNode>\r\n\t\t<type>2<!--Union--></type>\r\n\t\t' + 
+	// 			'<definition>{removeDuplicates: true}</definition>\r\n\t</strategyNode>\r\n\r\n\t' +
+	// 			'<!-- Payment Past Due -->\r\n\t<strategyNode>' +
+	// 			'\r\n\t\t<name>IfPaymentPastDueElseChurnNode</name>\r\n\t\t' + 
+	// 			'<description>If payment is past due request payment else churn</description>' +
+	// 			'\r\n\t\t<parentNode>RootNode</parentNode>\r\n\t\t' + 
+	// 			'<type>4<!--If--></type>\r\n\t\t<definition>{testDefinition : true}</definition>' +
+	// 			'\r\n\t</strategyNode>\r\n\r\n</RecommendationStrategy>\r\n';
 				
-		Test.startTest();
-			Strategy curStrategy = StrategyCrafterController.parseStrategyString(xml);
-		Test.stopTest();
+	// 	Test.startTest();
+	// 		Strategy curStrategy = StrategyCrafterController.parseStrategyString(xml);
+	// 	Test.stopTest();
 
-		System.assertEquals(curStrategy.name, 
-					'testStrat1', 
-					'Strategy name was parsed incorrect');
-		System.assertEquals(curStrategy.nodes.size(), 2, 
-					'Wrong number of nodes');
-		System.assertEquals(curStrategy.nodes[0].name, 
-					'RootNode', 
-					'First node name was parsed incorrect');
-		System.assertEquals(curStrategy.nodes[0].definition, 
-					'{removeDuplicates: true}', 
-					'First node definition was parsed incorrect');
-		System.assertEquals(curStrategy.nodes[1].name, 
-					'IfPaymentPastDueElseChurnNode', 
-					'Second node name was parsed incorrect');
-		System.assertEquals(curStrategy.nodes[1].definition, 
-					'{testDefinition : true}', 
-					'Second node definition was parsed incorrect');
+	// 	System.assertEquals(curStrategy.name, 
+	// 				'testStrat1', 
+	// 				'Strategy name was parsed incorrect');
+	// 	System.assertEquals(curStrategy.nodes.size(), 2, 
+	// 				'Wrong number of nodes');
+	// 	System.assertEquals(curStrategy.nodes[0].name, 
+	// 				'RootNode', 
+	// 				'First node name was parsed incorrect');
+	// 	System.assertEquals(curStrategy.nodes[0].definition, 
+	// 				'{removeDuplicates: true}', 
+	// 				'First node definition was parsed incorrect');
+	// 	System.assertEquals(curStrategy.nodes[1].name, 
+	// 				'IfPaymentPastDueElseChurnNode', 
+	// 				'Second node name was parsed incorrect');
+	// 	System.assertEquals(curStrategy.nodes[1].definition, 
+	// 				'{testDefinition : true}', 
+	// 				'Second node definition was parsed incorrect');
 
-	}
+	// }
 
-	@isTest
-	public static void parseStrategyString_WhenStringIsNotAnXML_Fails() {
-		String xml = 'test fail xml';
+	// @isTest
+	// public static void parseStrategyString_WhenStringIsNotAnXML_Fails() {
+	// 	String xml = 'test fail xml';
 		
-		Test.startTest();
-        	Strategy curStrategy = StrategyCrafterController.parseStrategyString(xml);
-        Test.stopTest();
-        System.debug(curStrategy);        
-        System.assert(curStrategy.name == null,	'Failed strategy must have an empty name');   
-        System.assert(curStrategy.description == null, 'Failed strategy must have an empty description');
-        System.assert(curStrategy.notification.errors[0].startsWith('Failed to parse XML'), 'Failed strategy notification must contain an error message');
-	}	
+	// 	Test.startTest();
+    //     	Strategy curStrategy = StrategyCrafterController.parseStrategyString(xml);
+    //     Test.stopTest();
+    //     System.debug(curStrategy);        
+    //     System.assert(curStrategy.name == null,	'Failed strategy must have an empty name');   
+    //     System.assert(curStrategy.description == null, 'Failed strategy must have an empty description');
+    //     System.assert(curStrategy.notification.errors[0].startsWith('Failed to parse XML'), 'Failed strategy notification must contain an error message');
+	// }	
     
     @isTest
     public static void getStrategyNames_Always_ReturnsListOfNames() {

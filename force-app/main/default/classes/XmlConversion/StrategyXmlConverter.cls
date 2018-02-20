@@ -2,7 +2,7 @@ public with sharing class StrategyXmlConverter {
     
     private static INodeXmlConverter nodeXmlConverter = new CompositeNodeXmlConverter();
 
-    public static string ConvertStrategyToXml(Strategy strategy) {
+    public static string convertStrategyToXml(Strategy strategy) {
         System.debug('Started serializing strategy ' + strategy.Name);
         Dom.Document document = new Dom.Document();
         String xmlNamespace = 'http://soap.sforce.com/2006/04/metadata';
@@ -11,7 +11,7 @@ public with sharing class StrategyXmlConverter {
         Dom.XmlNode description = rootNode.addChildElement('description', null, null).addTextNode(strategy.Description);
         Dom.XmlNode masterLabel = rootNode.addChildElement('masterLabel', null, null).addTextNode(strategy.MasterLabel);
         for (BaseNode childNode : strategy.Nodes) {
-            var xmlChildNode = nodeXmlConverter.convertNodeToXml(childNode, xmlNamespace);
+            Dom.XmlNode xmlChildNode = nodeXmlConverter.convertNodeToXml(childNode);
             if (xmlChildNode == null) {
                 System.debug(System.LoggingLevel.ERROR, 'Failed to serialize \'' + childNode.Name + '\' node to XML');
             } else {
@@ -22,7 +22,7 @@ public with sharing class StrategyXmlConverter {
         return document.toXmlString();
     }
 
-    public static Strategy ConvertXmlToStrategy(string xml) {
+    public static Strategy convertXmlToStrategy(string xml) {
         Dom.Document document = new Dom.Document();
         Strategy result = new Strategy();
         try {
@@ -44,16 +44,12 @@ public with sharing class StrategyXmlConverter {
                 else if (childName == 'masterLabel') {
                     result.MasterLabel = child.getText();
                 }
-                else if (nodeXmlConverter.canConvertNodeToXml(child)) {
+                else if (nodeXmlConverter.canConvertXmlToNode(child, xmlNamespace)) {
                     result.Nodes.add(nodeXmlConverter.convertXmlToNode(child, xmlNamespace));
                 }
                 else {
                     result.Notification.addError('Strategy XML contains an unknown node with the name ' + childName);
                 }
-            }
-            System.debug('size = ' +result.nodes.Size() );
-            if (result.Nodes.Size() == 0) {
-                result.Notification.addError('Provided XML generated zero nodes. That is, frankly, lame.');
             }
             System.debug('Finished parsing strategy XML. Name - ' + result.Name + '. Node count - ' + result.Nodes.size());
             if (result.Notification.hasErrors()) {

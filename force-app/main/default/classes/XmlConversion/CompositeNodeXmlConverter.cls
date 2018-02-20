@@ -4,11 +4,11 @@ public with sharing class CompositeNodeXmlConverter implements INodeXmlConverter
 
     public CompositeNodeXmlConverter() {
         converters = new List<INodeXmlConverter>();
-        converters.add(new SoqlLoadNodeXmlConverter());
-        converters.add(new UnionNodeXmlConverter());
-        converters.add(new IfNodeXmlConverter());
-        converters.add(new FilterNodeXmlConverter());
-        converters.add(new RecommendationLimitNodeXmlConverter());
+        converters.add((INodeXmlConverter)new SoqlLoadNodeXmlConverter());
+        converters.add((INodeXmlConverter)new UnionNodeXmlConverter());
+        converters.add((INodeXmlConverter)new IfNodeXmlConverter());
+        converters.add((INodeXmlConverter)new FilterNodeXmlConverter());
+        converters.add((INodeXmlConverter)new RecommendationLimitNodeXmlConverter());
     }
 
     public Boolean canConvertXmlToNode(Dom.XmlNode node, String xmlNamespace) {

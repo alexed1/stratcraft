@@ -5,11 +5,7 @@
 //we should use it to generate an XML string and then create a Strategy__c to save
 
 public class StrategyCrafterController {
-	@AuraEnabled
-	public static String generateTreeData(String xml){	
-		return BuildTree.Assemble(ParseStrategyXML.parseStrategyString(xml));
-	}
-
+	
 	@AuraEnabled
     public static List<String> getStrategyNames() {
         List<Strategy__c> curStrategies =
@@ -32,23 +28,30 @@ public class StrategyCrafterController {
 
 	@AuraEnabled
 	public static Strategy parseStrategyString(String xml){	
-		Strategy result = new Strategy();
-		result = ParseStrategyXML.parseStrategyString(xml);	
-		return result;		
+		return StrategyXmlConverter.convertXmlToStrategy(xml);
 	}
 
 	@AuraEnabled
-	public static String persistStrategy(String curStratString){	
-		Strategy curStrat = (Strategy)System.JSON.deserializeStrict(curStratString, Strategy.Class);
-		System.debug('starting persistStrategy');
-		String result = '';
-		try {
-			result = curStrat.Persist();		
+	public static String persistStrategy(String strategyJson) {	
+		Strategy strategy = StrategyJsonConverter.convertJsonToStrategy(strategyJson);
+		try {				
+			System.debug('Started persisting strategy ' + strategy.Name);
+			String strategyXml = StrategyXmlConverter.convertStrategyToXml(strategy);
+			Strategy__c strategyC = new Strategy__c();
+			strategyC.StrategyXML__c = strategyXml;
+			strategyC.Name = strategy.Name;
+			strategyC.Id = strategy.Id;
+			upsert strategyC;
+			System.debug('Finished persisting strategy ' + strategy.Name);
+			return 'SUCCESS';	
+		}
+		catch (DmlException ex) {
+			System.debug(System.LoggingLevel.ERROR, 'Failed to persist strategy ' + strategy.Name + '. Details - ' + ex.getDmlMessage(0));
+			return ex.getDmlMessage(0);
 		}
 		catch (Exception ex) {
-			result = ex.getMessage();
-		}
-		return result;
-		
+			System.debug(System.LoggingLevel.ERROR, 'Failed to persist strategy ' + strategy.Name + '. Details - ' + ex.getMessage());
+			return ex.getMessage();
+		}		
 	}
 }
