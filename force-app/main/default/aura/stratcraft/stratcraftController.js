@@ -1,7 +1,6 @@
 ({
     init: function (cmp, event, helper) {
         helper.loadStrategyNames(cmp);
-
     },
 
     /*hopscotchLoaded: function (cmp, event, helper) {
@@ -9,7 +8,7 @@
 
     },*/
 
-    handleUploadFinished: function (cmp, event) {
+    handleUploadFinished: function (component, event) {
         // Get the list of uploaded files
         var uploadedFiles = event.getParam('files');
         alert('Files uploaded : ' + uploadedFiles.length);
@@ -42,17 +41,17 @@
         }
     },
     /** Handles strategy-node-related menu item click */
-    handleMenuSelect: function (cmp, event, helper) {
+    handleMenuSelect: function (component, event, helper) {
         var selectedMenuItemValue = event.getParam('value');
         switch (selectedMenuItemValue) {
             case 'newStrategy':
                 alert('This functionality is not implemented yet');
                 break;
             case 'saveStrategy':
-                helper.persistStrategy(cmp);
+                helper.persistStrategy(component);
                 break;
             case 'addElement':
-                helper.showNewNodeDialog(cmp);
+                helper.showNewNodeDialog(component);
                 break;
         }
     },
@@ -65,12 +64,13 @@
         //4. tree component handles it and adds a new node to itself
         //5. tree control raises a node selection event
         var nodeName = event.getParam('name');
+        var nodeType = event.getParam('nodeType');
         var parentNodeName = event.getParam('parentNodeName');
         var strategy = component.get('v.curStrat');
         strategy.nodes.push({
             name: nodeName,
             parentNodeName: parentNodeName,
-            definition: '{ }',
+            nodeType: nodeType,
             description: ''
         });
         component.set('v.curStrat', strategy);

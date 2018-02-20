@@ -77,7 +77,7 @@ public class StrategyCrafterControllerTest {
         	Strategy__c actual = StrategyCrafterController.loadStrategy('Test');
         Test.stopTest();
         System.assert(actual != null, 'No strategy was retrieved');
-        System.assertEquals('Test', actual.Name, 'The name of the retrieved strategy doesn\'t match');
+        System.assertEquals('Test', actual.name, 'The name of the retrieved strategy doesn\'t match');
     }
     
     @isTest

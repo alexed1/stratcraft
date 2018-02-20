@@ -6,23 +6,23 @@ public with sharing class StrategyJsonConverter {
         System.debug('Started deserializing strategy from JSON');
         Map<String, Object> parsedJson = (Map<String, Object>)JSON.deserializeUntyped(jsonString);
         Strategy result = new Strategy();
-        result.Id = (String)parsedJson.get('id');
-        result.Name = (String)parsedJson.get('name');
-        result.MasterLabel = (String)parsedJson.get('masterLabel');
-        result.Description = (String)parsedJson.get('description');
+        result.Id = (String)parsedJson.get('Id');
+        result.name = (String)parsedJson.get('name');
+        result.masterLabel = (String)parsedJson.get('masterLabel');
+        result.description = (String)parsedJson.get('description');
         for (Map<String, Object> childNodeJson : (List<Map<String, Object>>)parsedJson.get('nodes')) {
             BaseNode childNode = nodeJsonConverter.convertJsonToNode(childNodeJson);
             if (childNode != null) {
-                result.Nodes.add(childNode);
+                result.nodes.add(childNode);
             }
             else {
-                result.Notification.addError('Strategy JSON contains an unknown node with the name ' + childNodeJson.get('name'));
+                result.notification.addError('Strategy JSON contains an unknown node with the name ' + childNodeJson.get('name'));
             }
         }
-        System.debug('Finished parsing strategy JSON. Name - ' + result.Name + '. Node count - ' + result.Nodes.size());
-        if (result.Notification.hasErrors()) {
+        System.debug('Finished parsing strategy JSON. Name - ' + result.name + '. Node count - ' + result.nodes.size());
+        if (result.notification.hasErrors()) {
             System.debug(System.LoggingLevel.ERROR, 'The following errors occured:');
-            for (String error : result.Notification.errors) {
+            for (String error : result.notification.errors) {
                 System.debug(error);
             }
         }

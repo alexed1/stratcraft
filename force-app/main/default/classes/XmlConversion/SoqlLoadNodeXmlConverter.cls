@@ -7,9 +7,9 @@ public with sharing class SoqlLoadNodeXmlConverter extends BaseNodeXmlConverter 
         if (result == null) {
             return null;
         }
-        result.Soql = node.getChildElement('soql', xmlNamespace).getText();
+        result.soql = node.getChildElement('soql', xmlNamespace).getText();
         Dom.XmlNode fieldNameRemappingNode = node.getChildElement('fieldNameRemapping', xmlNamespace);
-        result.FieldNameRemapping = fieldNameRemappingNode == null ? '' : fieldNameRemappingNode.getText();
+        result.fieldNameRemapping = fieldNameRemappingNode == null ? '' : fieldNameRemappingNode.getText();
         return result;
     }
 
@@ -22,8 +22,8 @@ public with sharing class SoqlLoadNodeXmlConverter extends BaseNodeXmlConverter 
         }
         SoqlLoadNode actualNode = (SoqlLoadNode)node;
         result.addChildElement('soql', null, null).addTextNode(actualNode.Soql);
-        if (!String.isBlank(actualNode.FieldNameRemapping)) {
-            result.addChildElement('fieldNameRemapping', null, null).addTextNode(actualNode.FieldNameRemapping);
+        if (!String.isBlank(actualNode.fieldNameRemapping)) {
+            result.addChildElement('fieldNameRemapping', null, null).addTextNode(actualNode.fieldNameRemapping);
         }
         return result;
     }

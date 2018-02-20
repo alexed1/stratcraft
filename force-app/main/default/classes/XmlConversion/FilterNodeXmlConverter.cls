@@ -7,8 +7,8 @@ public with sharing class FilterNodeXmlConverter extends BaseNodeXmlConverter {
         if (result == null) {
             return null;
         }
-        result.RemoveDuplicates = Boolean.valueOf(node.getChildElement('removeDuplicates', xmlNamespace).getText());
-        result.Expression = node.getChildElement('expression', xmlNamespace).getText();
+        result.removeDuplicates = Boolean.valueOf(node.getChildElement('removeDuplicates', xmlNamespace).getText());
+        result.expression = node.getChildElement('expression', xmlNamespace).getText();
         return result;
     }
 
@@ -20,8 +20,8 @@ public with sharing class FilterNodeXmlConverter extends BaseNodeXmlConverter {
             return null;
         }
         FilterNode actualNode = (FilterNode)node;
-        result.addChildElement('removeDuplicates', null, null).addTextNode(String.valueOf(actualNode.RemoveDuplicates));
-        result.addChildElement('expression', null, null).addTextNode(actualNode.Expression);
+        result.addChildElement('removeDuplicates', null, null).addTextNode(String.valueOf(actualNode.removeDuplicates));
+        result.addChildElement('expression', null, null).addTextNode(actualNode.expression);
         return result;
     }
 

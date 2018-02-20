@@ -7,11 +7,11 @@ public with sharing class RecommendationLimitNodeJsonConverter extends BaseNodeJ
         if (result == null) {
             return null;
         }
-        result.RemoveDuplicates = (Boolean)jsonNode.get('removeDuplicates');
-        result.MaxRecommendationCount = (Integer)jsonNode.get('maxRecommendationCount');
-        result.LookbackDuration = (Integer)jsonNode.get('lookbackDuration');
+        result.removeDuplicates = (Boolean)jsonNode.get('removeDuplicates');
+        result.maxRecommendationCount = (Integer)jsonNode.get('maxRecommendationCount');
+        result.lookbackDuration = (Integer)jsonNode.get('lookbackDuration');
         for (String child : (List<String>)jsonNode.get('filterModes')) {
-            result.FilterModes.Add(child);
+            result.filterModes.Add(child);
         }
         return result;
     }

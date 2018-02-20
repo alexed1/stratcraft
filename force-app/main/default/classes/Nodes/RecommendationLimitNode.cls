@@ -1,14 +1,15 @@
 public with sharing class RecommendationLimitNode extends BaseNode {
 
-    @AuraEnabled public Boolean RemoveDuplicates { get; set; }
+    @AuraEnabled public Boolean removeDuplicates { get; set; }
 
-    @AuraEnabled public List<String> FilterModes { get; private set; }
+    @AuraEnabled public List<String> filterModes { get; private set; }
 
-    @AuraEnabled public Integer MaxRecommendationCount { get; set; }
+    @AuraEnabled public Integer maxRecommendationCount { get; set; }
 
-    @AuraEnabled public Integer LookbackDuration { get; set; }
+    @AuraEnabled public Integer lookbackDuration { get; set; }
 
     public RecommendationLimitNode() {
+        nodeType = NodeTypes.RECOMMENDATION_LIMIT;
         filterModes = new List<String>();
     }
 }

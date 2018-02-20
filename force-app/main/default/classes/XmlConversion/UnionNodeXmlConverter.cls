@@ -7,7 +7,7 @@ public with sharing class UnionNodeXmlConverter extends BaseNodeXmlConverter {
         if (result == null) {
             return null;
         }
-        result.RemoveDuplicates = Boolean.valueOf(node.getChildElement('removeDuplicates', xmlNamespace).getText());
+        result.removeDuplicates = Boolean.valueOf(node.getChildElement('removeDuplicates', xmlNamespace).getText());
         return result;
     }
 
@@ -17,7 +17,7 @@ public with sharing class UnionNodeXmlConverter extends BaseNodeXmlConverter {
             return null;
         }
         UnionNode actualNode = (UnionNode)node;
-        result.addChildElement('removeDuplicates', null, null).addTextNode(String.valueOf(actualNode.RemoveDuplicates));
+        result.addChildElement('removeDuplicates', null, null).addTextNode(String.valueOf(actualNode.removeDuplicates));
         return result;
     }
 

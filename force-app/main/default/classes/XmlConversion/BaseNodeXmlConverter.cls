@@ -5,9 +5,9 @@ public with sharing abstract class BaseNodeXmlConverter {
             return null;
         }
         BaseNode result = createNewNode();
-        result.Name = node.getChildElement('name', xmlNamespace).getText();
-        result.Description = node.getChildElement('description', xmlNamespace).getText();
-        result.ParentNodeName = node.getChildElement('parentNode', xmlNamespace).getText();
+        result.name = node.getChildElement('name', xmlNamespace).getText();
+        result.description = node.getChildElement('description', xmlNamespace).getText();
+        result.parentNodeName = node.getChildElement('parentNode', xmlNamespace).getText();
         return result;
     }
 
@@ -16,19 +16,19 @@ public with sharing abstract class BaseNodeXmlConverter {
             return null;
         }
         Dom.Document document = new Dom.Document();
-        Dom.XmlNode result = document.createRootElement(node.NodeType, null, null);
-        result.addChildElement('name', null, null).addTextNode(node.Name);
-        result.addChildElement('description', null, null).addTextNode(node.Description);
-        result.addChildElement('parentNode', null, null).addTextNode(node.ParentNodeName);
+        Dom.XmlNode result = document.createRootElement(node.nodeType, null, null);
+        result.addChildElement('name', null, null).addTextNode(node.name);
+        result.addChildElement('description', null, null).addTextNode(node.description);
+        result.addChildElement('parentNode', null, null).addTextNode(node.parentNodeName);
         return result;
     }
 
     public Boolean canConvertXmlToNode(Dom.XmlNode node, String xmlNamespace) {
-        return node.getName() == getPrototypeNode().NodeType;
+        return node.getName() == getPrototypeNode().nodeType;
     }
 
     public Boolean canConvertNodeToXml(BaseNode node) {
-        return node.NodeType == getPrototypeNode().Name;
+        return node.nodeType == getPrototypeNode().name;
     }
 
     protected abstract BaseNode createNewNode();

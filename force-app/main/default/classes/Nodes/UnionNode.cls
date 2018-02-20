@@ -1,8 +1,8 @@
 public with sharing class UnionNode extends BaseNode {
 
-    @AuraEnabled public Boolean RemoveDuplicates { get; set; }
+    @AuraEnabled public Boolean removeDuplicates { get; set; }
 
     public UnionNode() {
-        this.NodeType = 'union';
+        nodeType = NodeTypes.UNION;
     }
 }

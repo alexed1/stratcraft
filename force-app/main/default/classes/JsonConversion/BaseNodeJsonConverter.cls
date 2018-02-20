@@ -5,14 +5,14 @@ public with sharing abstract class BaseNodeJsonConverter implements INodeJsonCon
             return null;
         }
         BaseNode result = createNewNode();
-        result.Name = (String)jsonNode.get('name');
-        result.Description = (String)jsonNode.get('description');
-        result.ParentNodeName = (String)jsonNode.get('parentNode');
+        result.name = (String)jsonNode.get('name');
+        result.description = (String)jsonNode.get('description');
+        result.parentNodeName = (String)jsonNode.get('parentNode');
         return result;
     }
 
     public Boolean canConvertJsonToNode(Map<String, Object> jsonNode) {
-        return (String)jsonNode.get('nodeType') == getPrototypeNode().NodeType;
+        return (String)jsonNode.get('nodeType') == getPrototypeNode().nodeType;
     }
 
     protected abstract BaseNode createNewNode();

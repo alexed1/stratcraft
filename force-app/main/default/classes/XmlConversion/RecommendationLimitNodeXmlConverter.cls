@@ -7,12 +7,12 @@ public with sharing class RecommendationLimitNodeXmlConverter extends BaseNodeXm
         if (result == null) {
             return null;
         }
-        result.RemoveDuplicates = Boolean.valueOf(node.getChildElement('removeDuplicates', xmlNamespace).getText());
-        result.MaxRecommendationCount = Integer.valueOf(node.getChildElement('maxRecommendationCount', xmlNamespace).getText());
-        result.LookbackDuration = Integer.valueOf(node.getChildElement('lookbackDuration', xmlNamespace).getText());
+        result.removeDuplicates = Boolean.valueOf(node.getChildElement('removeDuplicates', xmlNamespace).getText());
+        result.maxRecommendationCount = Integer.valueOf(node.getChildElement('maxRecommendationCount', xmlNamespace).getText());
+        result.lookbackDuration = Integer.valueOf(node.getChildElement('lookbackDuration', xmlNamespace).getText());
         for (Dom.XMLNode child : node.getChildElements()) {
             if (child.getName() == 'filterMode') {
-                result.FilterModes.Add(child.getText());
+                result.filterModes.Add(child.getText());
             }
         }
         return result;
@@ -26,10 +26,10 @@ public with sharing class RecommendationLimitNodeXmlConverter extends BaseNodeXm
             return null;
         }
         RecommendationLimitNode actualNode = (RecommendationLimitNode)node;
-        result.addChildElement('removeDuplicates', null, null).addTextNode(String.valueOf(actualNode.RemoveDuplicates));
-        result.addChildElement('maxRecommendationCount', null, null).addTextNode(String.valueOf(actualNode.MaxRecommendationCount));
-        result.addChildElement('lookbackDuration', null, null).addTextNode(String.valueOf(actualNode.LookbackDuration));
-        for (String filterMode : actualNode.FilterModes) {
+        result.addChildElement('removeDuplicates', null, null).addTextNode(String.valueOf(actualNode.removeDuplicates));
+        result.addChildElement('maxRecommendationCount', null, null).addTextNode(String.valueOf(actualNode.maxRecommendationCount));
+        result.addChildElement('lookbackDuration', null, null).addTextNode(String.valueOf(actualNode.lookbackDuration));
+        for (String filterMode : actualNode.filterModes) {
             result.addChildElement('filterMode', null, null).addTextNode(filterMode);
         }
         return result;

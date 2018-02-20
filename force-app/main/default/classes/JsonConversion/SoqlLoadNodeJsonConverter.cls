@@ -7,8 +7,8 @@ public with sharing class SoqlLoadNodeJsonConverter extends BaseNodeJsonConverte
         if (result == null) {
             return null;
         }
-        result.Soql = (String)jsonNode.get('soql');
-        result.FieldNameRemapping = jsonNode.containsKey('fieldNameRemapping') ? (String)jsonNode.get('fieldNameRemapping') : null;
+        result.soql = (String)jsonNode.get('soql');
+        result.fieldNameRemapping = jsonNode.containsKey('fieldNameRemapping') ? (String)jsonNode.get('fieldNameRemapping') : null;
         return result;
     }
 

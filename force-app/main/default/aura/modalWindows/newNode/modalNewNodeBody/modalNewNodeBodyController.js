@@ -10,6 +10,14 @@
             }
         });
         nodeDataRequestEvent.fire();
+
+        var nodeDisplayNameMap = new Map();
+        nodeDisplayNameMap.set(_utils.NodeType.IF, 'If');
+        nodeDisplayNameMap.set(_utils.NodeType.SOQL_LOAD, 'SOQL Load');
+        nodeDisplayNameMap.set(_utils.NodeType.FILTER, 'Filter');
+        nodeDisplayNameMap.set(_utils.NodeType.UNION, 'Union');
+        nodeDisplayNameMap.set(_utils.NodeType.RECOMMENDATION_LIMIT, 'Recommendation Limit');
+        component.set('v.availableNodeTypes', nodeDisplayNameMap);
     },
 
     validate: function (component, event, helper) {
@@ -17,6 +25,9 @@
         var parentNameCmp = component.find('parentNode');
         var newNodeName = component.get('v.name');
         var parentNodes = component.get('v.availableParentNodeNames');
+        var nodeType = component.get('v.selectedNodeType');
+        var nodeDisplayNameMap = component.get('v._nodeDisplayNameMap');
+        nodeType = nodeDisplayNameMap.get(nodeType);
 
         var validity = helper.validateNewNodeName(newNodeName, parentNodes);
         nodeNameCmp.set("v.validity", validity);

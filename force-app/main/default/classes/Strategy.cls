@@ -1,25 +1,25 @@
 public with sharing class Strategy {
 
-    @AuraEnabled public String Name { get; set; }
+    @AuraEnabled public String name { get; set; }
 
-    @AuraEnabled public List<BaseNode> Nodes { get; private set; }
+    @AuraEnabled public List<BaseNode> nodes { get; private set; }
     
-    @AuraEnabled public String Description { get; set; }
+    @AuraEnabled public String description { get; set; }
     
-    @AuraEnabled public String MasterLabel { get; set; }
+    @AuraEnabled public String masterLabel { get; set; }
     
-    @AuraEnabled public Notification Notification { get; private set;}
+    @AuraEnabled public Notification notification { get; private set;}
     
     @AuraEnabled public String Id { get; set; }
 
     public Strategy() {
-        Nodes = new List<BaseNode> ();
-        Notification = new Notification ();
+        nodes = new List<BaseNode> ();
+        notification = new Notification ();
     }
 
     public BaseNode findNodeByName (String targetName) {
-        for (BaseNode node : this.Nodes) {
-            if (node.Name == targetName) {
+        for (BaseNode node : this.nodes) {
+            if (node.name == targetName) {
                 return node;
             }
         }

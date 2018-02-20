@@ -84,6 +84,14 @@ window._utils = (function () {
     ModalDialogButtonType: {
       OK: 'OK',
       CANCEL: 'CANCEL'
+    },
+
+    NodeType: {
+      IF: 'if',
+      SOQL_LOAD: 'soqlLoad',
+      UNION: 'union',
+      FILTER: 'filter',
+      RECOMMENDATION_LIMIT: 'recommendationLimit'
     }
   }
 })()
