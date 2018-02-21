@@ -3,9 +3,9 @@
         if (cmp.get("v.selectableNodes").length != 0)
             return;
 
-        var curStrat = cmp.get("v.curStrat");
-        if (curStrat) {
-            var selectableNodes = curStrat.nodes.map((item) => item.name);
+        var currentStrategy = cmp.get("v.currentStrategy");
+        if (currentStrategy) {
+            var selectableNodes = currentStrategy.nodes.map((item) => item.name);
             cmp.set("v.selectableNodes", selectableNodes);
         }
     },

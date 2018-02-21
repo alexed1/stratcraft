@@ -1,16 +1,12 @@
 <aura:component controller="TreeNodeController">
 	<ltng:require scripts="{!$Resource.utils}" />
 
-    <aura:attribute name="treeItems" type="String" />
+    <aura:attribute name="treeItems" type="List" />
 	<aura:attribute name="header" type="String" />
 	
 	<aura:handler event="c:strategyChangedEvent" action="{!c.handleStrategyChanged}" />
 
-    <lightning:tree items="{! v.treeItems }" header="{! v.header }" onselect="{! c.handleTreeSelect }"/>
-
-    <aura:method name="initialize" action="{!c.initializeTree}" > 
-	    <aura:attribute name="strategyXMLString" type="String" /> 
-	</aura:method>
+    <lightning:tree items="{!v.treeItems}" header="{!v.header}" onselect="{!c.handleTreeSelect}"/>
 
 	<aura:method name="renameNode" action="{!c.renameNode}" > 
 	    <aura:attribute name="curNode" type="Object" /> 

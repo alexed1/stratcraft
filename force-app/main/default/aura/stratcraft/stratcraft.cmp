@@ -9,7 +9,7 @@
     <ltng:require scripts="{!$Resource.hopscotchspriteorange}" />
     -->
 
-    <aura:attribute name="curStrat" type="Strategy" />
+    <aura:attribute name="currentStrategy" type="Object" />
     <aura:attribute name="curStratNode" type="Object" />
     <aura:attribute name="originalNode" type="Object" />
 
@@ -63,8 +63,7 @@
             <div class="slds-col slds-box">
                 <b>Node Properties</b>
                 {!v.body}
-                <c:BasePropertyPage aura:id="propertyPage" curStrat="{!v.curStrat}" />
-
+                <c:BasePropertyPage aura:id="propertyPage" currentStrategy="{!v.currentStrategy}" />
             </div>
 
         </div>

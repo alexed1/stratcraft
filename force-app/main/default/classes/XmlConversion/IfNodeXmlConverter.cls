@@ -7,16 +7,19 @@ public with sharing class IfNodeXmlConverter extends BaseNodeXmlConverter {
         if (result == null) {
             return null;
         }
-        result.removeDuplicates = Boolean.valueOf(node.getChildElement('removeDuplicates', xmlNamespace).getText());
-        result.onlyFirstMatch = Boolean.valueOf(node.getChildElement('onlyFirstMatch', xmlNamespace).getText());
         for (Dom.XMLNode child : node.getChildElements()) {
-            if (child.getName() == 'branch') {
+            String childName = child.getName();
+            if (childName == 'branch') {
                 IfBranch branch = new IfBranch();
                 branch.child = child.getChildElement('child', xmlNamespace).getText();
                 branch.expression = child.getChildElement('expression', xmlNamespace).getText();
                 result.branches.Add(branch);
+            } else if (childName == 'removeDuplicates') {
+                result.removeDuplicates = Boolean.valueOf(child.getText());
+            } else if (childName == 'onlyFirstMatch') {
+                result.onlyFirstMatch = Boolean.valueOf(child.getText());
             }
-        }
+        }        
         return result;
     }
 

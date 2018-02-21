@@ -1,10 +1,16 @@
 ({
+    handleInit: function (component, event, helper) {
+        if (typeof _utils !== 'undefined') {
+            component.set('v.availableNodeTypes', _utils.NodeType.getValueNamePairs());
+        }
+    },
+
     handleClick: function (cmp, event, helper) {
-        var cmpEvent = $A.get("e.c:propertyPageSaveRequestEvent");
-        console.log("processing handle click in base");
+        var cmpEvent = $A.get('e.c:propertyPageSaveRequestEvent');
+        console.log('processing handle click in base');
         cmpEvent.setParams({
-            "changedStrategyNode": cmp.get("v._currentNodeDirty"),
-            "originalNodeName": cmp.get("v.currentNode").name
+            'changedStrategyNode': cmp.get('v._currentNodeDirty'),
+            'originalNodeName': cmp.get('v.currentNode').name
         });
         cmpEvent.fire();
     },
@@ -15,20 +21,20 @@
     },
 
     handleTypeChange: function (cmp, event, helper) {
-        var curNode = cmp.get("v._currentNodeDirty");
+        var curNode = cmp.get('v._currentNodeDirty');
         if (curNode)
-            cmp.set("v.isIfNode", curNode.type == 4);
+            cmp.set('v.isIfNode', curNode.type == 4);
     },
 
     //reset the page
     resetPage: function (cmp, event, helper) {
-        cmp.set("v.currentNode", cmp.get("v._currentNodeDirty"));
+        cmp.set('v.currentNode', cmp.get('v._currentNodeDirty'));
     },
 
     //Clears everything related to current node and strategy
     clear: function (cmp, event, helper) {
         cmp.set('v.currentNode', null);
-        cmp.set('v.curStrat', null);
+        cmp.set('v.currentStrategy', null);
         cmp.set('v.isIfNode', false);
     },
 

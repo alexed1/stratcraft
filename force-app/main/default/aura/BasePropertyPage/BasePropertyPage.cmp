@@ -1,31 +1,39 @@
 <aura:component implements="flexipage:availableForAllPageTypes">
-    <aura:attribute name="curStrat" type="Strategy" />
+    <ltng:require scripts="{!$Resource.utils}" afterScriptsLoaded="{!c.handleInit}" />
+
+    <aura:attribute name="currentStrategy" type="Object" />
     <!--This attribute is set from the outside by component consumers and represents the original state of the node-->
     <aura:attribute name="currentNode" type="Object" />
     <!--This attribute is set privately and stores the current state of all the node fields in order not to spoil the state of actual node-->
     <aura:attribute name="_currentNodeDirty" type="Object" access="private" />
+    <aura:attribute name="availableNodeTypes" type="Map" />
     
-    <aura:attribute name="isIfNode" type="Boolean" default="false" />
     <aura:handler name="change" value="{!v._currentNodeDirty.type}" action="{!c.handleTypeChange}" />
     <aura:handler name="change" value="{!v.currentNode}" action="{!c.handleCurrentNodeChange}" />
+    <aura:handler name="init" value="{!this}" action="{!c.handleInit}" />
 
     <aura:registerEvent name="propertyPageSaveRequest" type="c:propertyPageSaveRequestEvent" />
     <aura:method name="reset" action="{!c.resetPage}" />
     <aura:method name="clear" action="{!c.clear}" />
     <aura:method name="isDirty" action="{!c.isDirty}" />
 
-    <ui:inputText aura:id="name" label="name" class="field" value="{!v._currentNodeDirty.name}" />
-    <ui:inputText aura:id="description" label="description" class="field" value="{!v._currentNodeDirty.description }" />
-    <ui:inputText aura:id="parentNode" label="parentNode" class="field" value="{!v._currentNodeDirty.parentNodeName }" />
-    <ui:inputText aura:id="type" label="type" class="field" value="{!v._currentNodeDirty.type }" />
+    <ui:inputText aura:id="name" label="Name" class="field" value="{!v._currentNodeDirty.name}" />
+    <ui:inputText aura:id="description" label="Description" class="field" value="{!v._currentNodeDirty.description }" />
+    <ui:inputText aura:id="parentNode" label="Parent Node" class="field" value="{!v._currentNodeDirty.parentNodeName }" />
 
-    <aura:renderIf isTrue="{!v.isIfNode}">
-        <c:filterSet curNode="{!v._currentNodeDirty}" curStrat="{!v.curStrat}" nodeType="{!v._currentNodeDirty.type}" />
+    <lightning:select aura:id="nodeType" label="Node Type" value="{!v._currentNodeDirty.nodeType}" class="select_box" required="true"
+                      messageWhenValueMissing="Please select node type">
+        <aura:iteration items="{!v.availableNodeTypes}" var="item">
+            <option value="{!item[0]}" text="{!item[1]}" />
+        </aura:iteration>
+    </lightning:select>
+
+    <!-- <aura:renderIf isTrue="{!v.isIfNode}">
+        <c:filterSet curNode="{!v._currentNodeDirty}" currentStrategy="{!v.currentStrategy}" nodeType="{!v._currentNodeDirty.type}" />
         <aura:set attribute="else">
             <c:GenericDefinitionsControlPanel localDefinitionString="{!v._currentNodeDirty.definition }" />
         </aura:set>
-    </aura:renderIf>
+    </aura:renderIf> -->
 
-    <lightning:button variant="brand" label="Save" onclick="{! c.handleClick }" />
-
+    <lightning:button variant="brand" label="Save" onclick="{!c.handleClick}" disabled="{!v.currentNode == null}" />
 </aura:component>

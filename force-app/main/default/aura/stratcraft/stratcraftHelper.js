@@ -20,7 +20,36 @@
     });
     $A.enqueueAction(action);
   },
-  //when a strategy is selected, load data from its Salesforce record
+
+  convertNodeToTreeItem: function (baseNode) {
+    return {
+      name: baseNode.name,
+      expanded: true,
+      items: [],
+      label: baseNode.name,
+      href: '#' + baseNode.name
+    }
+  },
+
+  buildTreeFromStrategy: function (strategy, currentNode) {
+    self = this;
+    if (!currentNode) {
+      currentNode = strategy.nodes.find(function (node) {
+        return node.name === 'RootNode'
+      });
+    }
+    var treeItem = this.convertNodeToTreeItem(currentNode);
+    var childNodes = strategy.nodes.filter(function (node) {
+      return node.parentNodeName === currentNode.name
+    });
+
+    childNodes.forEach(function (childNode) {
+      var childTreeItem = self.buildTreeFromStrategy(strategy, childNode);
+      treeItem.items.push(childTreeItem);
+    });
+    return treeItem;
+  },
+  //when a strategy is selected, loads data from its Salesforce record
   loadStrategy: function (component, strategyName) {
     self = this;
     var action = component.get('c.loadStrategy');
@@ -29,7 +58,8 @@
       var state = response.getState();
       if (state === 'SUCCESS') {
         var strategy = response.getReturnValue();
-        component.set('v.curStrat', strategy);
+        component.set('v.currentStrategy', strategy);
+        component.find('tree').set('v.treeItems', [this.buildTreeFromStrategy(strategy)]);
         console.log('Retrieved strategy with Id ' + strategy.Id);
       }
       else {
@@ -42,7 +72,7 @@
   persistStrategy: function (component) {
     console.log('Sending Strategy to Salesforce and persisting');
     var action = component.get('c.persistStrategy');
-    action.setParams({ strategyJson: JSON.stringify(component.get('v.curStrat')) });
+    action.setParams({ strategyJson: JSON.stringify(component.get('v.currentStrategy')) });
     action.setCallback(this, function (response) {
       var state = response.getState();
       if (component.isValid() && state === 'SUCCESS') {
@@ -123,8 +153,8 @@
 
     //then update the strategy model
     //find any children of this node and update their parentNodeNames
-    var curStrat = cmp.get('v.curStrat');
-    var childNodes = self.findChildStrategyNodes(curStrat, curNode.name);
+    var currentStrategy = cmp.get('v.currentStrategy');
+    var childNodes = self.findChildStrategyNodes(currentStrategy, curNode.name);
     childNodes.forEach(function (child) {
       child.parentNodeName = changedNode.name;
     }
@@ -134,15 +164,15 @@
     //REFACTOR: rename this function to highlight expanded scope?
     curNode.name = changedNode.name;
 
-    cmp.set('v.curStrat', curStrat);
+    cmp.set('v.currentStrategy', currentStrategy);
 
   },
 
   updateNodeBody: function (cmp, curNode, changedNode) {
-    //var curStrat = cmp.get('v.curStrat');
+    //var currentStrategy = cmp.get('v.currentStrategy');
     curNode.description = changedNode.description;
     curNode.type = changedNode.type;
-    //cmp.set('v.curStrat', curStrat);
+    //cmp.set('v.currentStrategy', currentStrategy);
   },
 
   updateNodeParent: function (curNode, changedNode) {
@@ -152,8 +182,8 @@
   //this updates the local model but does not persist the data to the server
   saveStrategyChanges: function (cmp, changedNode, originalNodeName, helper) {
 
-    var curStrat = cmp.get('v.curStrat');
-    var curNode = helper.findStrategyNodeByName(curStrat, originalNodeName);
+    var currentStrategy = cmp.get('v.currentStrategy');
+    var curNode = helper.findStrategyNodeByName(currentStrategy, originalNodeName);
 
     //if parent node was changed this is a move
     if (curNode.parentNodeName !== changedNode.parentNodeName) {
@@ -167,7 +197,7 @@
     }
 
     helper.updateNodeBody(cmp, curNode, changedNode);
-    cmp.set('v.curStrat', curStrat);
+    cmp.set('v.currentStrategy', currentStrategy);
 
     //fire this event so the property page knows to reset itself
     var propPage = cmp.find('propertyPage');

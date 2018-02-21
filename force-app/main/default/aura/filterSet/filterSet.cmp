@@ -2,7 +2,7 @@
 
     <aura:attribute name="filters" type="List" />
     <aura:attribute name="selectableNodes" type="List" />
-    <aura:attribute name="curStrat" type="Strategy" />
+    <aura:attribute name="currentStrategy" type="Object" />
     <aura:attribute name="onlyFirstMatch" type="Boolean" default="false" />
     <aura:attribute name="definition" type="String" />
     <aura:attribute name="nodeType" type="Integer" />

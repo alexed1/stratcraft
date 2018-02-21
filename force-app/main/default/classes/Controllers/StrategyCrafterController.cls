@@ -1,7 +1,7 @@
 //xml data is stored in a Strategy__c custom object. 
 //after it's retrieved by name, it's passed to the client as Strategy__c, where it's converted to an Object called strategyRecord
-//the client then evolves a Strategy object of nodes called curStrat
-//at persistence time, a curStrat Strategy gets uploaded
+//the client then evolves a Strategy object of nodes called currentStrategy
+//at persistence time, a current strategy Strategy gets uploaded
 //we should use it to generate an XML string and then create a Strategy__c to save
 
 public class StrategyCrafterController {
@@ -13,8 +13,8 @@ public class StrategyCrafterController {
                 FROM Strategy__c
 				ORDER BY Name];
         List<String> strategyNames = new List<String>();
-        for (Strategy__c curStrat : curStrategies) {
-   				strategyNames.add(curStrat.name);
+        for (Strategy__c currentStrategy : curStrategies) {
+   				strategyNames.add(currentStrategy.name);
         }
 		return strategyNames;
     }

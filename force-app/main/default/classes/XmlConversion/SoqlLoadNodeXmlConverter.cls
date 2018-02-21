@@ -7,9 +7,14 @@ public with sharing class SoqlLoadNodeXmlConverter extends BaseNodeXmlConverter 
         if (result == null) {
             return null;
         }
-        result.soql = node.getChildElement('soql', xmlNamespace).getText();
-        Dom.XmlNode fieldNameRemappingNode = node.getChildElement('fieldNameRemapping', xmlNamespace);
-        result.fieldNameRemapping = fieldNameRemappingNode == null ? '' : fieldNameRemappingNode.getText();
+        for (Dom.XMLNode child : node.getChildElements()) {
+            String childName = child.getName();
+            if (childName == 'soql') {
+                result.soql = child.getText();
+            } else if (childName == 'fieldNameRemapping') {
+                result.fieldNameRemapping = child.getText();
+            }
+        }     
         return result;
     }
 

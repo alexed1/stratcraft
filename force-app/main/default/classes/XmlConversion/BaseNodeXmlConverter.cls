@@ -1,4 +1,4 @@
-public with sharing abstract class BaseNodeXmlConverter {
+public with sharing abstract class BaseNodeXmlConverter implements INodeXmlConverter {
 
     public virtual BaseNode convertXmlToNode(Dom.XmlNode node, String xmlNamespace) {
         if (!canConvertXmlToNode(node, xmlNamespace)) {

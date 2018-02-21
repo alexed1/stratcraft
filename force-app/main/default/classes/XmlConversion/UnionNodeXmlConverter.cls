@@ -7,7 +7,12 @@ public with sharing class UnionNodeXmlConverter extends BaseNodeXmlConverter {
         if (result == null) {
             return null;
         }
-        result.removeDuplicates = Boolean.valueOf(node.getChildElement('removeDuplicates', xmlNamespace).getText());
+        for (Dom.XmlNode child : node.getChildElements()) {
+            String childName = child.getName();
+            if (childName == 'removeDuplicates') {
+                result.removeDuplicates = Boolean.valueOf(child.getText());
+            }
+        }
         return result;
     }
 

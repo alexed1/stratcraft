@@ -33,8 +33,8 @@ describe("c:stratCraft", function () {
                 setTimeout(function () {
                     //setting timeout since there is a $A.enqueAction call in treeNode
                     //and otherwise test runs asserts before proccessing is ended
-                    expect(component.get("v.curStrat")).toEqual(testStrategyResult);
-         
+                    expect(component.get("v.currentStrategy")).toEqual(testStrategyResult);
+
 
                     done();
                 }, 2000);
@@ -51,7 +51,7 @@ describe("c:stratCraft", function () {
 
                 //#######SETUP########
                 var testStrategyResult = { description: 'Test Strategy', masterLabel: 'SomeMasterLabel', name: 'testStrat1', nodes: [Object({ definition: '{removeDuplicates:true}', description: 'the root', name: 'RootNode', parentNodeName: '', type: '2' }), Object({ definition: '{expressions:{"LoadPpd":"$Record.Contact.Payment_Due_Date__c<(TODAY()-30)","LowCsatIfNode":"true"},onlyFirstMatch:true}', description: 'If payment is past due request payment else churn', name: 'IfPaymentPastDueElseChurnNode', parentNodeName: 'RootNode', type: '4' }), Object({ definition: '{expressions:{"LoadPpd":"$Record.Contact.Payment_Due_Date__c<(TODAY()-30)","LowCsatIfNode":"true"},onlyFirstMatch:true}', description: 'This is node 222', name: '222', parentNodeName: 'IfPaymentPastDueElseChurnNode', type: '4' }), Object({ definition: '{expressions:{"LoadPpd":"$Record.Contact.Payment_Due_Date__c<(TODAY()-30)","LowCsatIfNode":"true"},onlyFirstMatch:true}', description: 'This is node 333', name: '333', parentNodeName: 'RootNode', type: '4' }), Object({ definition: '{expressions:{"LoadPpd":"$Record.Contact.Payment_Due_Date__c<(TODAY()-30)","LowCsatIfNode":"true"},onlyFirstMatch:true}', description: 'This is node 444', name: '444', parentNodeName: 'RootNode', type: '4' })] };
-                component.set("v.curStrat", testStrategyResult);
+                component.set("v.currentStrategy", testStrategyResult);
 
                 //########ACT#########
                 $T.fireApplicationEvent("c:treeNodeSelectedEvent", { "name": "RootNode" });
@@ -76,7 +76,7 @@ describe("c:stratCraft", function () {
                 var testStrategy = { description: 'Test Strategy', masterLabel: 'SomeMasterLabel', name: 'testStrat1', nodes: [Object({ definition: '{removeDuplicates:true}', description: 'the root', name: 'RootNode', parentNodeName: '', type: '2' }), Object({ definition: '{expressions:{"LoadPpd":"$Record.Contact.Payment_Due_Date__c<(TODAY()-30)","LowCsatIfNode":"true"},onlyFirstMatch:true}', description: 'If payment is past due request payment else churn', name: 'IfPaymentPastDueElseChurnNode', parentNodeName: 'RootNode', type: '4' }), Object({ definition: '{expressions:{"LoadPpd":"$Record.Contact.Payment_Due_Date__c<(TODAY()-30)","LowCsatIfNode":"true"},onlyFirstMatch:true}', description: 'This is node 222', name: '222', parentNodeName: 'IfPaymentPastDueElseChurnNode', type: '4' }), Object({ definition: '{expressions:{"LoadPpd":"$Record.Contact.Payment_Due_Date__c<(TODAY()-30)","LowCsatIfNode":"true"},onlyFirstMatch:true}', description: 'This is node 333', name: '333', parentNodeName: 'RootNode', type: '4' }), Object({ definition: '{expressions:{"LoadPpd":"$Record.Contact.Payment_Due_Date__c<(TODAY()-30)","LowCsatIfNode":"true"},onlyFirstMatch:true}', description: 'This is node 444', name: '444', parentNodeName: 'RootNode', type: '4' })] };
                 //testStrategyResult - strategy with updated Name/ParentNode
                 var testStrategyResult = { description: 'Test Strategy', masterLabel: 'SomeMasterLabel', name: 'testStrat1', nodes: [Object({ definition: '{removeDuplicates:true}', description: 'the root', name: 'RootNode', parentNodeName: '', type: '2' }), Object({ definition: '{expressions:{"LoadPpd":"$Record.Contact.Payment_Due_Date__c<(TODAY()-30)","LowCsatIfNode":"true"},onlyFirstMatch:true}', description: 'If payment is past due request payment else churn', name: 'IfPaymentPastDueElseChurnNode', parentNodeName: 'RootNode', type: '4' }), Object({ definition: '{expressions:{"LoadPpd":"$Record.Contact.Payment_Due_Date__c<(TODAY()-30)","LowCsatIfNode":"true"},onlyFirstMatch:true}', description: 'This is node 222', name: '1337', parentNodeName: '333', type: '4' }), Object({ definition: '{expressions:{"LoadPpd":"$Record.Contact.Payment_Due_Date__c<(TODAY()-30)","LowCsatIfNode":"true"},onlyFirstMatch:true}', description: 'This is node 333', name: '333', parentNodeName: 'RootNode', type: '4' }), Object({ definition: '{expressions:{"LoadPpd":"$Record.Contact.Payment_Due_Date__c<(TODAY()-30)","LowCsatIfNode":"true"},onlyFirstMatch:true}', description: 'This is node 444', name: '444', parentNodeName: 'RootNode', type: '4' })] };
-                component.set("v.curStrat", testStrategy);
+                component.set("v.currentStrategy", testStrategy);
                 var treeItems = [{ "name": "RootNode", "label": "RootNode", "items": [{ "name": "IfPaymentPastDueElseChurnNode", "label": "IfPaymentPastDueElseChurnNode", "items": [{ "name": "222", "label": "222", "items": [], "href": null, "expanded": false }], "href": null, "expanded": true }, { "name": "333", "label": "333", "items": [], "href": null, "expanded": false }, { "name": "444", "label": "444", "items": [], "href": null, "expanded": false }], "href": null, "expanded": true }];
                 component.set("v.treeItems", treeItems);
                 //2. selecting a node
@@ -95,7 +95,7 @@ describe("c:stratCraft", function () {
 
 
                 //#######ASSERT#######
-                expect(component.get("v.curStrat")).toEqual(testStrategyResult);
+                expect(component.get("v.currentStrategy")).toEqual(testStrategyResult);
                 expect(propertyPage.get("v.originalName")).toEqual("1337");
                 done();
 

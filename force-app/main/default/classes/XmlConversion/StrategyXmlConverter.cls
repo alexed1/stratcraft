@@ -30,9 +30,6 @@ public with sharing class StrategyXmlConverter {
             document.load(xml);
             String xmlNamespace = 'http://soap.sforce.com/2006/04/metadata';
             Dom.XMLNode strategyNode = document.getRootElement();
-            result.name = strategyNode.getChildElement('recommendationStrategyName', xmlNamespace).getText();
-            result.nescription = strategyNode.getChildElement('description', xmlNamespace).getText();
-            result.masterLabel = strategyNode.getChildElement('masterLabel', xmlNamespace).getText();
             for(Dom.XMLNode child : strategyNode.getChildElements()) {
                 String childName = child.getName();
                 if (childName == 'recommendationStrategyName') {
@@ -61,7 +58,7 @@ public with sharing class StrategyXmlConverter {
         }
         catch (Exception e) {
             result.notification.addError(e.getMessage());
-            System.debug(System.LoggingLevel.ERROR, 'Failed to parse strategy XML. Error ' + e);
+            System.debug(System.LoggingLevel.ERROR, 'Failed to parse strategy XML. Error ' + e.getMessage() + '. ' + e.getStackTraceString());
         }
         return result;
     }

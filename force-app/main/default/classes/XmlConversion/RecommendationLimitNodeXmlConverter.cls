@@ -7,12 +7,19 @@ public with sharing class RecommendationLimitNodeXmlConverter extends BaseNodeXm
         if (result == null) {
             return null;
         }
-        result.removeDuplicates = Boolean.valueOf(node.getChildElement('removeDuplicates', xmlNamespace).getText());
-        result.maxRecommendationCount = Integer.valueOf(node.getChildElement('maxRecommendationCount', xmlNamespace).getText());
-        result.lookbackDuration = Integer.valueOf(node.getChildElement('lookbackDuration', xmlNamespace).getText());
         for (Dom.XMLNode child : node.getChildElements()) {
-            if (child.getName() == 'filterMode') {
+            String childName = child.getName();
+            if (childName == 'filterMode') {
                 result.filterModes.Add(child.getText());
+            }
+            else if (childName == 'removeDuplicates') {
+                result.removeDuplicates = Boolean.valueOf(child.getText());
+            }
+            else if (childName == 'maxRecommendationCount') {
+                result.maxRecommendationCount = Integer.valueOf(child.getText());
+            }
+            else if (childName == 'lookbackDuration') {
+                result.lookbackDuration = Integer.valueOf(child.getText());
             }
         }
         return result;

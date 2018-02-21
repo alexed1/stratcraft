@@ -10,19 +10,12 @@
             }
         });
         nodeDataRequestEvent.fire();
-
-        var nodeDisplayNameMap = new Map();
-        nodeDisplayNameMap.set(_utils.NodeType.IF, 'If');
-        nodeDisplayNameMap.set(_utils.NodeType.SOQL_LOAD, 'SOQL Load');
-        nodeDisplayNameMap.set(_utils.NodeType.FILTER, 'Filter');
-        nodeDisplayNameMap.set(_utils.NodeType.UNION, 'Union');
-        nodeDisplayNameMap.set(_utils.NodeType.RECOMMENDATION_LIMIT, 'Recommendation Limit');
-        component.set('v.availableNodeTypes', nodeDisplayNameMap);
+        component.set('v.availableNodeTypes', _utils.getNodeTypeToNameMap());
     },
 
     validate: function (component, event, helper) {
-        var nodeNameCmp = component.find('nodeName');
-        var parentNameCmp = component.find('parentNode');
+        var nodeNameComponent = component.find('nodeName');
+        var parentNameComponent = component.find('parentNode');
         var newNodeName = component.get('v.name');
         var parentNodes = component.get('v.availableParentNodeNames');
         var nodeType = component.get('v.selectedNodeType');
@@ -30,12 +23,12 @@
         nodeType = nodeDisplayNameMap.get(nodeType);
 
         var validity = helper.validateNewNodeName(newNodeName, parentNodes);
-        nodeNameCmp.set("v.validity", validity);
+        nodeNameComponent.set('v.validity', validity);
         if (validity.valid) {
             return true;
         }
-        parentNameCmp.focus();
-        nodeNameCmp.focus();
+        parentNameComponent.focus();
+        nodeNameComponent.focus();
         return false;
     }
 })

@@ -19,7 +19,7 @@ window._utils = (function () {
         for (var i in obj) {
           if (i == 'clone') continue;
           if (deep && typeof obj[i] == 'object') {
-            newObj[i] = obj[i].clone();
+            newObj[i] = this.clone(obj[i]);
           } else {
             newObj[i] = obj[i];
           }
@@ -91,7 +91,16 @@ window._utils = (function () {
       SOQL_LOAD: 'soqlLoad',
       UNION: 'union',
       FILTER: 'filter',
-      RECOMMENDATION_LIMIT: 'recommendationLimit'
+      RECOMMENDATION_LIMIT: 'recommendationLimit',
+      getValueNamePairs: function () {
+        return [
+          [this.IF, 'If'],
+          [this.SOQL_LOAD, 'SOQL Load'],
+          [this.FILTER, 'Filter'],
+          [this.UNION, 'Union'],
+          [this.RECOMMENDATION_LIMIT, 'Recommendation Limit']
+        ];
+      }
     }
   }
 })()

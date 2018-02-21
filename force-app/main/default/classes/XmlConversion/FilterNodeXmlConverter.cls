@@ -7,8 +7,14 @@ public with sharing class FilterNodeXmlConverter extends BaseNodeXmlConverter {
         if (result == null) {
             return null;
         }
-        result.removeDuplicates = Boolean.valueOf(node.getChildElement('removeDuplicates', xmlNamespace).getText());
-        result.expression = node.getChildElement('expression', xmlNamespace).getText();
+        for (Dom.XmlNode child : node.getChildElements()) {
+            String childName = child.getName();
+            if (childName == 'removeDuplicates') {
+                result.removeDuplicates = Boolean.valueOf(child.getText());
+            } else if (childName == 'expression') {
+                result.expression = child.getText();
+            }
+        }
         return result;
     }
 
