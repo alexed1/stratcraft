@@ -1,0 +1,6 @@
+<aura:component>
+    <aura:attribute name="currentNode" type="Object" />
+
+    <lightning:input aura:id="removeDuplicates" type="checkbox" label="Remove Duplicates" checked="{!v.currentNode.removeDuplicates}" />
+    <lightning:input aura:id="onlyFirstMatch" type="checkbox" label="Only First Match" checked="{!v.currentNode.onlyFirstMatch}" />
+</aura:component>	

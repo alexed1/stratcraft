@@ -27,7 +27,7 @@
       expanded: true,
       items: [],
       label: baseNode.name,
-      href: '#' + baseNode.name
+      href: ''
     }
   },
 

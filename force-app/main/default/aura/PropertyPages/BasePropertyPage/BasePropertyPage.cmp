@@ -1,0 +1,72 @@
+<aura:component implements="flexipage:availableForAllPageTypes">
+    <ltng:require scripts="{!$Resource.utils}" afterScriptsLoaded="{!c.handleInit}" />
+
+    <aura:attribute name="currentStrategy" type="Object" />
+    <!--This attribute is set from the outside by component consumers and represents the original state of the node-->
+    <aura:attribute name="currentNode" type="Object" />
+    <!--This attribute is set privately and stores the current state of all the node fields in order not to spoil the state of actual node-->
+    <aura:attribute name="_currentNodeDirty" type="Object" access="private" />
+    <aura:attribute name="_isIf" type="Boolean" access="private" default="false" />
+    <aura:attribute name="_isSoqlLoad" type="Boolean" access="private" default="false" />
+    <aura:attribute name="_isFilter" type="Boolean" access="private" default="false" />
+    <aura:attribute name="_isUnion" type="Boolean" access="private" default="false" />
+    <aura:attribute name="_isRecommendationLimit" type="Boolean" access="private" default="false" />
+    <aura:attribute name="availableNodeTypes" type="Map" />
+    
+    <aura:handler name="change" value="{!v._currentNodeDirty.nodeType}" action="{!c.handleTypeChange}" />
+    <aura:handler name="change" value="{!v.currentNode}" action="{!c.handleCurrentNodeChange}" />
+    <aura:handler name="init" value="{!this}" action="{!c.handleInit}" />
+
+    <aura:registerEvent name="propertyPageSaveRequest" type="c:propertyPageSaveRequestEvent" />
+    <aura:method name="reset" action="{!c.resetPage}" />
+    <aura:method name="clear" action="{!c.clear}" />
+    <aura:method name="isDirty" action="{!c.isDirty}" />
+
+    <ui:inputText aura:id="name" label="Name" class="field" value="{!v._currentNodeDirty.name}" disabled="{!v.currentNode == null}" />
+    <ui:inputText aura:id="description" label="Description" class="field" value="{!v._currentNodeDirty.description}" disabled="{!v.currentNode == null}" />
+    <ui:inputText aura:id="parentNode" label="Parent Node" class="field" value="{!v._currentNodeDirty.parentNodeName}" disabled="{!v.currentNode == null}" />
+
+    <lightning:select aura:id="nodeType" label="Node Type" value="{!v._currentNodeDirty.nodeType}" class="select_box" required="true"
+                      messageWhenValueMissing="Please select node type" disabled="{!v.currentNode == null}">
+        <aura:iteration items="{!v.availableNodeTypes}" var="item">
+            <option value="{!item[0]}" text="{!item[1]}" />
+        </aura:iteration>
+    </lightning:select>
+    
+    <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isIf}">
+        <c:ifNodePropertyPage currentNode="{!v._currentNodeDirty}" />
+        <aura:set attribute="else">
+            <div class="hidden" />
+        </aura:set>
+    </aura:if>
+    
+    <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isSoqlLoad}">
+        <c:soqlLoadNodePropertyPage currentNode="{!v._currentNodeDirty}" />
+        <aura:set attribute="else">
+            <div class="hidden" />
+        </aura:set>
+    </aura:if>
+    
+    <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isFilter}">
+        <c:filterNodePropertyPage currentNode="{!v._currentNodeDirty}" />
+        <aura:set attribute="else">
+            <div class="hidden" />
+        </aura:set>
+    </aura:if>
+    
+    <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isUnion}">
+        <c:unionNodePropertyPage currentNode="{!v._currentNodeDirty}" />
+        <aura:set attribute="else">
+            <div class="hidden" />
+        </aura:set>
+    </aura:if>
+    
+    <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isRecommendationLimit}">
+        <c:recommendationLimitNodePropertyPage currentNode="{!v._currentNodeDirty}" />
+        <aura:set attribute="else">
+            <div class="hidden" />
+        </aura:set>
+    </aura:if>   
+
+    <lightning:button variant="brand" label="Save" onclick="{!c.handleClick}" disabled="{!v.currentNode == null}" />
+</aura:component>

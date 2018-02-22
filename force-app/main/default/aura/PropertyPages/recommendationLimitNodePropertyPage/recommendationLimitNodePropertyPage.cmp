@@ -1,0 +1,12 @@
+<aura:component>
+    <aura:attribute name="currentNode" type="Object" />
+    <aura:attribute name="filterModes" type="String" />
+
+    <aura:handler name="change" value="{!v.currentNode}" action="{!c.handleCurrentNodeChanged}" />
+    <aura:handler name="change" value="{!v.filterModes}" action="{!c.handleFilterModesChanged}" />
+
+    <lightning:input aura:id="removeDuplicates" type="checkbox" label="Remove Duplicates" checked="{!v.currentNode.removeDuplicates}" />
+    <lightning:input aura:id="filterModes" label="Filter Modes" placeholder="Multiple values should be comma-separated" value="{!v.filterModes}" />
+    <lightning:input aura:id="maxRecommendationCount" type="number" label="Max Recommendation Count" min="0" step="1" value="{!v.currentNode.maxRecommendationCount}" />
+    <lightning:input aura:id="lookbackDuration" type="number" label="Lookback Duration" min="0" step="1" value="{!v.currentNode.lookbackDuration}" />
+</aura:component>	
