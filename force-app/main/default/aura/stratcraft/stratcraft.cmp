@@ -63,7 +63,7 @@
             <div class="slds-col slds-box">
                 <b>Node Properties</b>
                 {!v.body}
-                <c:BasePropertyPage aura:id="propertyPage" currentStrategy="{!v.currentStrategy}" />
+                <c:basePropertyPage aura:id="propertyPage" currentStrategy="{!v.currentStrategy}" />
             </div>
 
         </div>

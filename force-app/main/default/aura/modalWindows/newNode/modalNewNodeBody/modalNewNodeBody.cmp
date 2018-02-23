@@ -20,14 +20,14 @@
     <lightning:select aura:id="nodeType" label="Node type" value="{!v.selectedNodeType}" class="select_box" required="true"
                       messageWhenValueMissing="Please select node type">
         <aura:iteration items="{!v.availableNodeTypes}" var="item">
-            <option text="{!item}" />
+            <option value="{!item[0]}" text="{!item[1]}" />
         </aura:iteration>
     </lightning:select>
 
     <lightning:select aura:id="parentNode" label="Parent node" value="{!v.selectedParentNodeName}" class="select_box" required="true"
                       messageWhenValueMissing="Please select parent node">
         <aura:iteration items="{!v.availableParentNodeNames}" var="item">
-            <option value="{!item[0]}" text="{!item[1]}" />
+            <option text="{!item}" />
         </aura:iteration>
     </lightning:select>
 

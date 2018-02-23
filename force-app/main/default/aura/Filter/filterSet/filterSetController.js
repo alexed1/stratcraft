@@ -1,36 +1,31 @@
 ({
-    handleNodeSelection: function (cmp, event, helper) {
+    handleInit: function (component, event, helper) {
+        helper.updateSelectableNodes(component);
+    },
 
-        var params = event.getParams();
-        if (params.oldValue != params.value) {
-            helper.initSelectableNodes(cmp);
-            helper.initFilters(cmp);
+    handleCurrentNodeChanged: function (component, event, helper) {
+        helper.updateSelectableNodes(component);
+    },
+
+    handleFilterAdd: function (component, event, helper) {
+        var branches = component.get('v.currentNode.branches');
+        if (!branches) {
+            branches = [];
         }
-    },
-
-    handleAddFilter: function (cmp, event, helper) {
-        var filters = cmp.get("v.filters");
-        filters.push(
+        var selectableNodes = component.get('v.selectableNodes');
+        branches.push(
             {
-                selectedNode: cmp.get("v.selectedNodeName")
+                child: selectableNodes.length == 0 ? null : selectableNodes[0],
+                expression: 'true'
             });
-
-        cmp.set("v.filters", filters);
+        component.set('v.currentNode.branches', branches);
     },
 
-    handleDelete: function (cmp, event, helper) {
-        var filters = cmp.get("v.filters");
-        var index = event.getParam("index");
-        filters.splice(index, 1);
-        cmp.set("v.filters", filters);
-        helper.updateDefinition(cmp);
-    },
-
-    handleOnlyFirstMatchUpdate: function (cmp, event, helper) {
-        helper.updateDefinition(cmp);
-    },
-
-    handleFilterUpdate: function (cmp, event, helper) {
-        helper.updateDefinition(cmp);
+    handleFilterDelete: function (component, event, helper) {
+        var branches = component.get('v.currentNode.branches');
+        var currentBranch = event.getSource().get('v.currentBranch');
+        var index = branches.indexOf(currentBranch);
+        branches.splice(index, 1);
+        component.set('v.currentNode.branches', branches);
     }
 })

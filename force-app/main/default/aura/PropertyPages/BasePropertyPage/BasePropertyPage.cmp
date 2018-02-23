@@ -1,5 +1,5 @@
 <aura:component implements="flexipage:availableForAllPageTypes">
-    <ltng:require scripts="{!$Resource.utils}" afterScriptsLoaded="{!c.handleInit}" />
+    <ltng:require scripts="{!$Resource.utils}" />
 
     <aura:attribute name="currentStrategy" type="Object" />
     <!--This attribute is set from the outside by component consumers and represents the original state of the node-->
@@ -11,11 +11,11 @@
     <aura:attribute name="_isFilter" type="Boolean" access="private" default="false" />
     <aura:attribute name="_isUnion" type="Boolean" access="private" default="false" />
     <aura:attribute name="_isRecommendationLimit" type="Boolean" access="private" default="false" />
-    <aura:attribute name="availableNodeTypes" type="Map" />
+    <aura:attribute name="availableNodeTypes" type="List" />
     
+    <aura:handler name="change" value="{!v.currentStrategy}" action="{!c.handleStrategyChange}" />
     <aura:handler name="change" value="{!v._currentNodeDirty.nodeType}" action="{!c.handleTypeChange}" />
     <aura:handler name="change" value="{!v.currentNode}" action="{!c.handleCurrentNodeChange}" />
-    <aura:handler name="init" value="{!this}" action="{!c.handleInit}" />
 
     <aura:registerEvent name="propertyPageSaveRequest" type="c:propertyPageSaveRequestEvent" />
     <aura:method name="reset" action="{!c.resetPage}" />
@@ -29,7 +29,7 @@
     <lightning:select aura:id="nodeType" label="Node Type" value="{!v._currentNodeDirty.nodeType}" class="select_box" required="true"
                       messageWhenValueMissing="Please select node type" disabled="{!v.currentNode == null}">
         <aura:iteration items="{!v.availableNodeTypes}" var="item">
-            <option value="{!item[0]}" text="{!item[1]}" />
+            <option value="{!item[0]}" text="{!item[1]}" selected="{!item[0] == v._currentNodeDirty.nodeType}" />
         </aura:iteration>
     </lightning:select>
     

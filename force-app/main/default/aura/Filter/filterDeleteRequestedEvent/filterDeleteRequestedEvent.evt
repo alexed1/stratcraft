@@ -1,0 +1,1 @@
+<aura:event type="COMPONENT" description="Raised when source filter requests its removal from parent collection" />

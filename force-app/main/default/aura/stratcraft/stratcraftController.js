@@ -94,6 +94,9 @@
             case _utils.NodeRequestType.ALL:
                 nodes = strategy.nodes;
                 break;
+            case _utils.NodeRequestType.IMMEDIATE_DESCENDANTS:
+                nodes = strategy.nodes.filter(function (node) { return node.parentNodeName === nodeName; });
+                break;
             default:
                 throw new Error('Node relationship type ' + nodeRelationship + ' is not yet supported');
         }

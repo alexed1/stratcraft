@@ -10,7 +10,7 @@
             }
         });
         nodeDataRequestEvent.fire();
-        component.set('v.availableNodeTypes', _utils.getNodeTypeToNameMap());
+        component.set('v.availableNodeTypes', _utils.NodeType.getValueNamePairs());
     },
 
     validate: function (component, event, helper) {
@@ -20,7 +20,6 @@
         var parentNodes = component.get('v.availableParentNodeNames');
         var nodeType = component.get('v.selectedNodeType');
         var nodeDisplayNameMap = component.get('v._nodeDisplayNameMap');
-        nodeType = nodeDisplayNameMap.get(nodeType);
 
         var validity = helper.validateNewNodeName(newNodeName, parentNodes);
         nodeNameComponent.set('v.validity', validity);

@@ -1,10 +1,4 @@
 ({
-    handleInit: function (component, event, helper) {
-        if (typeof _utils !== 'undefined') {
-            component.set('v.availableNodeTypes', _utils.NodeType.getValueNamePairs());
-        }
-    },
-
     handleClick: function (component, event, helper) {
         var cmpEvent = $A.get('e.c:propertyPageSaveRequestEvent');
         console.log('processing handle click in base');
@@ -15,9 +9,18 @@
         cmpEvent.fire();
     },
 
+    handleStrategyChange: function (component, event, helper) {
+        helper.loadNodeTypes(component);
+    },
+
     handleCurrentNodeChange: function (component, event, helper) {
         var currentNode = component.get('v.currentNode');
         component.set('v._currentNodeDirty', currentNode ? _utils.clone(currentNode, true) : null);
+        if (currentNode) {
+            helper.removeEmptyNodeType(component);
+        } else {
+            helper.clearNodeTypes(component);
+        }
     },
 
     handleTypeChange: function (component, event, helper) {

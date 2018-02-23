@@ -6,15 +6,16 @@
 			operator = '&' + operator + ';';
 
 		var str = '$Record.' + objectName + '.' + fieldName + ' ' + operator + ' ' + textValue;
-		cmp.set("v.criterionValue", str);
+		cmp.set('v.criterionValue', str);
 	},
 
 	initExistingCriterion: function (cmp, helper) {
 
-		var criterion = cmp.get("v.criterionValue");
+		var criterion = cmp.get('v.criterionValue');
 		if (!criterion)
 			return false;
-
+		if (criterion === '$true')
+			return false;
 		//example: $Record.Strategy__c.LastModifiedById &amp;gt; (435)
 		try {
 
@@ -31,25 +32,25 @@
 
 			operatorName = helper.unifyOperators(operatorName);
 
-			cmp.set("v.selectedObjectName", objectName);
-			cmp.set("v.selectedFieldName", fieldName);
-			cmp.set("v.selectedOp", operatorName);
-			cmp.set("v.rightSideValue", textValue);
+			cmp.set('v.selectedObjectName', objectName);
+			cmp.set('v.selectedFieldName', fieldName);
+			cmp.set('v.selectedOp', operatorName);
+			cmp.set('v.rightSideValue', textValue);
 		}
 		catch (e) {
-			throw new Error("Couldn't parse existing criterion", e);
+			throw new Error('Couldn\'t parse existing criterion', e);
 		}
 		return true;
 	},
 
 	resetCriterion: function (cmp) {
-		cmp.set("v.criterionValue", '');
+		cmp.set('v.criterionValue', '');
 	},
 
 	notifyCriterionValueUpdate: function (cmp) {
-		var cmpEvent = $A.get("e.c:criterionUpdatedEvent");
+		var cmpEvent = $A.get('e.c:criterionUpdatedEvent');
 		cmpEvent.setParams({
-			"criterion": cmp.get("v.criterionValue")
+			'criterion': cmp.get('v.criterionValue')
 		});
 		cmpEvent.fire();
 	},
@@ -76,7 +77,7 @@
 			case '>=':
 				return 'gte';
 			default:
-				throw new Error("Can't parse operator: " + op);
+				throw new Error('Can\'t parse operator: ' + op);
 		}
 	}
 })
