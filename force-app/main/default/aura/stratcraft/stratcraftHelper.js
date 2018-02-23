@@ -1,19 +1,17 @@
 ({
-
-
   //Populates the select strategy drop down
-  loadStrategyNames: function (cmp) {
-    var action = cmp.get('c.getStrategyNames');
+  loadStrategyNames: function (component) {
+    var action = component.get('c.getStrategyNames');
     action.setCallback(this, function (response) {
       var state = response.getState();
-      if (state === "SUCCESS") {
+      if (state === 'SUCCESS') {
         //If we got at least one strategy, we add an empty name in the beginning of the list, so no strategy is selected by default
         var strategies = response.getReturnValue();
         if (!strategies || strategies.length === 0) {
-          cmp.set('v.strategyNames', []);
+          component.set('v.strategyNames', []);
         }
         else {
-          cmp.set('v.strategyNames', [''].concat(strategies));
+          component.set('v.strategyNames', [''].concat(strategies));
         }
       }
       else {
@@ -23,113 +21,87 @@
     $A.enqueueAction(action);
   },
 
+  convertNodeToTreeItem: function (baseNode) {
+    return {
+      name: baseNode.name,
+      expanded: true,
+      items: [],
+      label: baseNode.name,
+      href: ''
+    }
+  },
 
-  //when a strategy is selected, load data from its Salesforce record
-  loadStrategy: function (cmp, strategyName) {
+  buildTreeFromStrategy: function (strategy, currentNode) {
     self = this;
-    var action = cmp.get("c.loadStrategy");
+    if (!currentNode) {
+      currentNode = strategy.nodes.find(function (node) {
+        return node.name === 'RootNode'
+      });
+    }
+    var treeItem = this.convertNodeToTreeItem(currentNode);
+    var childNodes = strategy.nodes.filter(function (node) {
+      return node.parentNodeName === currentNode.name
+    });
 
+    childNodes.forEach(function (childNode) {
+      var childTreeItem = self.buildTreeFromStrategy(strategy, childNode);
+      treeItem.items.push(childTreeItem);
+    });
+    return treeItem;
+  },
+  //when a strategy is selected, loads data from its Salesforce record
+  loadStrategy: function (component, strategyName) {
+    self = this;
+    var action = component.get('c.loadStrategy');
     action.setParams({ name: strategyName });
-    // Add callback behavior for when response is received
     action.setCallback(this, function (response) {
       var state = response.getState();
-      if (state === "SUCCESS") {
-        var strategyRecord = response.getReturnValue();
-        console.log('returning strategy XML: ' + strategyRecord.StrategyXML__c);
-        cmp.set('v.strategyRecord', strategyRecord);
-        // var strategyId = response.getReturnValue().Id;
-        // cmp.set('v.strategyId', strategyId);
-        console.log('returning strategy Id: ' + strategyRecord.Id);
-
-        self.convertXMLToStrategy(cmp, self);
+      if (state === 'SUCCESS') {
+        var strategy = response.getReturnValue();
+        component.set('v.currentStrategy', strategy);
+        component.find('tree').set('v.treeItems', [this.buildTreeFromStrategy(strategy)]);
+        console.log('Retrieved strategy with Id ' + strategy.Id);
       }
       else {
-        console.log("Failed with state: " + state);
+        console.log('Failed to retrieve strategy with state: ' + state);
       }
-
-    });
-    // Send action off to be executed
-    $A.enqueueAction(action);
-  },
-
-  convertXMLToStrategy: function (cmp, helper) {
-    console.log('converting xml to Strategy object');
-    var action = cmp.get("c.parseStrategyString");
-    action.setParams({ xml: cmp.get("v.strategyRecord.StrategyXML__c") });
-    action.setCallback(this, function (response) {
-      var state = response.getState();
-      if (cmp.isValid() && state === "SUCCESS") {
-        var result = response.getReturnValue();
-        if (result.notification.errors.length != 0) {
-          //fix this to list all errors
-          alert('error attempting to parse strategy XML into a strategy object: ' + result.notification.errors[0]);
-        }
-        else {
-          result.Id = cmp.get("v.strategyRecord.Id");
-          cmp.set("v.curStrat", result); //SMELLY: probably should define an object and not just use the entire response
-          console.log('strategy is: ' + JSON.stringify(result));
-          console.log('strategy is: ' + cmp.get("v.curStrat"));
-
-          var tree = cmp.find('tree');
-          tree.initialize(cmp.get("v.strategyRecord.StrategyXML__c"));
-        }
-
-
-      }
-      else {
-        console.log("Failed with state: " + state);
-      }
-      //for some reason this was hanging
-      //_cmpUi.toggleSpinner();
-      console.log('exiting convert xml to Strategy object');
     });
     $A.enqueueAction(action);
   },
-
   //save the strategy as a Salesforce strategy object
-  persistStrategy: function (cmp) {
-    var self = this;
-    console.log('sending Strategy to Salesforce and persisting');
-    var action = cmp.get("c.persistStrategy");
-
-    action.setParams({ curStratString: JSON.stringify(cmp.get("v.curStrat")) });
+  persistStrategy: function (component) {
+    console.log('Sending Strategy to Salesforce and persisting');
+    var action = component.get('c.persistStrategy');
+    action.setParams({ strategyJson: JSON.stringify(component.get('v.currentStrategy')) });
     action.setCallback(this, function (response) {
       var state = response.getState();
-      if (cmp.isValid() && state === "SUCCESS") {
-
+      if (component.isValid() && state === 'SUCCESS') {
         var result = response.getReturnValue();
         //only show this if response indicates true success
-        _force.displayToast("Strategy Crafter", "Strategy changes saved");
+        _force.displayToast('Strategy Crafter', 'Strategy changes saved');
         console.log(' returned from persistStrategy: ' + result);
-
       }
       else {
-        console.log("Failed with state: " + state);
+        console.log('Failed with state: ' + state);
       }
-      //var spinner = cmp.find("mySpinner");
-      //$A.util.toggleClass(spinner, "slds-hide");
     });
     $A.enqueueAction(action);
   },
 
-
-
-
   findStrategyNodeByName: function (strategy, name) {
-    for (let curNode of strategy.nodes) {
-      if (curNode.name == name) {
-        return curNode;
+    for (let node of strategy.nodes) {
+      if (node.name == name) {
+        return node;
       }
     };
-    throw new Error("Did not find a Node with the requested Name, which is a big problem.");
-
+    throw new Error('Did not find a Node with the requested name');
   },
 
   findChildStrategyNodes: function (strategy, name) {
     var childNodes = [];
-    for (let curNode of strategy.nodes) {
-      if (curNode.parentNodeName == name) {
-        childNodes.push(curNode);
+    for (let node of strategy.nodes) {
+      if (node.parentNodeName == name) {
+        childNodes.push(node);
       }
     };
     return childNodes;
@@ -141,8 +113,6 @@
     }
     return errorList;
   },
-
-
 
   validateNodeMove: function (cmp, curNode, changedNode) {
     var self = this;
@@ -163,8 +133,8 @@
     var validationErrors = self.validateNodeMove(cmp, curNode, changedNode);
     if (validationErrors.length > 0) {
       var errorText = JSON.stringify(validationErrors);
-      var originalNode = _utils.clone(cmp.find("propertyPage").get("v.originalTreeNode"), true);
-      cmp.find("propertyPage").set("v.selectedTreeNode", originalNode);
+      var originalNode = _utils.clone(cmp.find('propertyPage').get('v.originalTreeNode'), true);
+      cmp.find('propertyPage').set('v.selectedTreeNode', originalNode);
       _force.displayToast('', errorText, 'error');
     }
     else {
@@ -183,8 +153,8 @@
 
     //then update the strategy model
     //find any children of this node and update their parentNodeNames
-    var curStrat = cmp.get("v.curStrat");
-    var childNodes = self.findChildStrategyNodes(curStrat, curNode.name);
+    var currentStrategy = cmp.get('v.currentStrategy');
+    var childNodes = self.findChildStrategyNodes(currentStrategy, curNode.name);
     childNodes.forEach(function (child) {
       child.parentNodeName = changedNode.name;
     }
@@ -194,16 +164,15 @@
     //REFACTOR: rename this function to highlight expanded scope?
     curNode.name = changedNode.name;
 
-    cmp.set("v.curStrat", curStrat);
+    cmp.set('v.currentStrategy', currentStrategy);
 
   },
 
   updateNodeBody: function (cmp, curNode, changedNode) {
-    //var curStrat = cmp.get("v.curStrat");
+    //var currentStrategy = cmp.get('v.currentStrategy');
     curNode.description = changedNode.description;
     curNode.type = changedNode.type;
-    curNode.definition = changedNode.definition;
-    //cmp.set("v.curStrat", curStrat);
+    //cmp.set('v.currentStrategy', currentStrategy);
   },
 
   updateNodeParent: function (curNode, changedNode) {
@@ -213,8 +182,8 @@
   //this updates the local model but does not persist the data to the server
   saveStrategyChanges: function (cmp, changedNode, originalNodeName, helper) {
 
-    var curStrat = cmp.get("v.curStrat");
-    var curNode = helper.findStrategyNodeByName(curStrat, originalNodeName);
+    var currentStrategy = cmp.get('v.currentStrategy');
+    var curNode = helper.findStrategyNodeByName(currentStrategy, originalNodeName);
 
     //if parent node was changed this is a move
     if (curNode.parentNodeName !== changedNode.parentNodeName) {
@@ -228,13 +197,13 @@
     }
 
     helper.updateNodeBody(cmp, curNode, changedNode);
-    cmp.set("v.curStrat", curStrat);
+    cmp.set('v.currentStrategy', currentStrategy);
 
     //fire this event so the property page knows to reset itself
     var propPage = cmp.find('propertyPage');
     propPage.reset();
 
-    console.log("exiting saveStrategyChanges");
+    console.log('exiting saveStrategyChanges');
 
 
   },
@@ -292,7 +261,7 @@
     var modalDialog = component.find('modalDialog');
     $A.createComponents(componentsToCreate,
       function (components, status, errorMessage) {
-        if (status === "SUCCESS") {
+        if (status === 'SUCCESS') {
           //Footer is always the last, body is always next to the last, header is always the first
           var footer = components[components.length - 1];
           header = headerConfiguration.isComponent ? components[0] : headerConfiguration.name;
@@ -305,7 +274,7 @@
             bodyConfiguration.initializer(body);
           }
 
-          footer.addEventHandler("buttonClickEvent", function (clickEvent) {
+          footer.addEventHandler('buttonClickEvent', function (clickEvent) {
             var buttonClicked = clickEvent.getParam('Button');
             switch (buttonClicked) {
               case _utils.ModalDialogButtonType.OK:
@@ -343,6 +312,7 @@
         var newNodeEvent = $A.get('e.c:newNodeCreationRequestedEvent');
         newNodeEvent.setParams({
           'name': bodyComponent.get('v.name').trim(),
+          'nodeType': bodyComponent.get('v.nodeType'),
           'parentNodeName': bodyComponent.get('v.selectedParentNodeName')
         });
         newNodeEvent.fire();
@@ -377,23 +347,23 @@
 
   initHopscotch: function (cmp, event, helper) {
 
-    var selectId = cmp.find("mySelect").getGlobalId();
-    var treeId = cmp.find("tree").getGlobalId();
+    var selectId = cmp.find('mySelect').getGlobalId();
+    var treeId = cmp.find('tree').getGlobalId();
 
     var tour = {
-      id: "hello-hopscotch",
+      id: 'hello-hopscotch',
       steps: [
         {
-          title: "My Header",
-          content: "This is the header of my page.",
+          title: 'My Header',
+          content: 'This is the header of my page.',
           target: selectId,
-          placement: "right"
+          placement: 'right'
         },
         {
-          title: "My content",
-          content: "Here is where I put my content.",
+          title: 'My content',
+          content: 'Here is where I put my content.',
           target: treeId,
-          placement: "bottom"
+          placement: 'bottom'
         }
       ]
     };

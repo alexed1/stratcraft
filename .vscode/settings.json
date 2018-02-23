@@ -8,5 +8,6 @@
     "terminal.integrated.env.windows": {
         "SFDX_SET_CLIENT_IDS": "sfdx-vscode"
     },
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "salesforcedx-vscode-core.show-cli-success-msg": false
 }

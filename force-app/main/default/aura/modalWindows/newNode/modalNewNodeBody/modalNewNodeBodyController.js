@@ -10,21 +10,24 @@
             }
         });
         nodeDataRequestEvent.fire();
+        component.set('v.availableNodeTypes', _utils.NodeType.getValueNamePairs());
     },
 
     validate: function (component, event, helper) {
-        var nodeNameCmp = component.find('nodeName');
-        var parentNameCmp = component.find('parentNode');
+        var nodeNameComponent = component.find('nodeName');
+        var parentNameComponent = component.find('parentNode');
         var newNodeName = component.get('v.name');
         var parentNodes = component.get('v.availableParentNodeNames');
+        var nodeType = component.get('v.selectedNodeType');
+        var nodeDisplayNameMap = component.get('v._nodeDisplayNameMap');
 
         var validity = helper.validateNewNodeName(newNodeName, parentNodes);
-        nodeNameCmp.set("v.validity", validity);
+        nodeNameComponent.set('v.validity', validity);
         if (validity.valid) {
             return true;
         }
-        parentNameCmp.focus();
-        nodeNameCmp.focus();
+        parentNameComponent.focus();
+        nodeNameComponent.focus();
         return false;
     }
 })

@@ -1,7 +1,6 @@
 ({
     init: function (cmp, event, helper) {
         helper.loadStrategyNames(cmp);
-
     },
 
     /*hopscotchLoaded: function (cmp, event, helper) {
@@ -9,7 +8,7 @@
 
     },*/
 
-    handleUploadFinished: function (cmp, event) {
+    handleUploadFinished: function (component, event) {
         // Get the list of uploaded files
         var uploadedFiles = event.getParam('files');
         alert('Files uploaded : ' + uploadedFiles.length);
@@ -18,7 +17,7 @@
     handleStrategySelection: function (component, event, helper) {
         helper.ensureEmptyStrategyIsRemoved(component);
 
-        var currentStrategy = component.get('v.curStrat');
+        var currentStrategy = component.get('v.currentStrategy');
         var newStrategyName = component.get('v.selectedStrategyName');
         //If we try to select the same strategy that is already selected, we do nothing
         //This may happen e.g. if we are selecting a new strategy, but the current one has unsaved changes and user decided to cancel the selection
@@ -42,17 +41,17 @@
         }
     },
     /** Handles strategy-node-related menu item click */
-    handleMenuSelect: function (cmp, event, helper) {
+    handleMenuSelect: function (component, event, helper) {
         var selectedMenuItemValue = event.getParam('value');
         switch (selectedMenuItemValue) {
             case 'newStrategy':
                 alert('This functionality is not implemented yet');
                 break;
             case 'saveStrategy':
-                helper.persistStrategy(cmp);
+                helper.persistStrategy(component);
                 break;
             case 'addElement':
-                helper.showNewNodeDialog(cmp);
+                helper.showNewNodeDialog(component);
                 break;
         }
     },
@@ -65,15 +64,16 @@
         //4. tree component handles it and adds a new node to itself
         //5. tree control raises a node selection event
         var nodeName = event.getParam('name');
+        var nodeType = event.getParam('nodeType');
         var parentNodeName = event.getParam('parentNodeName');
-        var strategy = component.get('v.curStrat');
+        var strategy = component.get('v.currentStrategy');
         strategy.nodes.push({
             name: nodeName,
             parentNodeName: parentNodeName,
-            definition: '{ }',
+            nodeType: nodeType,
             description: ''
         });
-        component.set('v.curStrat', strategy);
+        component.set('v.currentStrategy', strategy);
         var newNodeEvent = $A.get('e.c:strategyChangedEvent');
         newNodeEvent.setParams({
             'type': _utils.StrategyChangeType.ADD_NODE,
@@ -88,11 +88,14 @@
         var nodeName = event.getParam('nodeName');
         //Callback should be a function that accepts a single array argument which will contain the list of the requested nodes
         var callback = event.getParam('callback');
-        var strategy = component.get('v.curStrat');
+        var strategy = component.get('v.currentStrategy');
         var nodes = [];
         switch (nodeRelationship) {
             case _utils.NodeRequestType.ALL:
                 nodes = strategy.nodes;
+                break;
+            case _utils.NodeRequestType.IMMEDIATE_DESCENDANTS:
+                nodes = strategy.nodes.filter(function (node) { return node.parentNodeName === nodeName; });
                 break;
             default:
                 throw new Error('Node relationship type ' + nodeRelationship + ' is not yet supported');
@@ -107,7 +110,7 @@
     /** Reacts to the selection of the new node in the tree */
     handleTreeNodeSelect: function (component, event, helper) {
         var newSelectedNodeName = event.getParam('name');
-        var currentStrategy = component.get('v.curStrat');
+        var currentStrategy = component.get('v.currentStrategy');
         var newSelectedNode = helper.findStrategyNodeByName(currentStrategy, newSelectedNodeName);
         var propertyPage = component.find('propertyPage');
         var proceeedToSelect = function () {
@@ -127,7 +130,7 @@
         var originalNodeName = event.getParam('originalNodeName');
         var changedNode = event.getParam('changedStrategyNode');
         helper.saveStrategyChanges(component, changedNode, originalNodeName, helper);
-        //post the curStrat to the server
+        //post the current strategy to the server
         //save it by name overwriting as necessary
         //return a status message
         helper.persistStrategy(component);

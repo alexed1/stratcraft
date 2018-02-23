@@ -1,0 +1,30 @@
+<aura:component>
+    <aura:attribute name="selectableNodes" type="List" />
+    <aura:attribute name="currentNode" type="Object" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.handleInit}" />
+    <aura:handler name="change" value="{!v.currentNode}" action="{!c.handleCurrentNodeChanged}" />
+
+    <lightning:card>
+        <aura:set attribute="title">
+            Filters
+        </aura:set>
+        <aura:set attribute="actions">
+            <lightning:buttonIcon iconName="utility:add" variant="border" alternativeText="Add" iconClass="dark" onclick="{!c.handleFilterAdd}" />
+        </aura:set>
+
+        <aura:if isTrue="{!v.currentNode.branches.length == 0}">
+            <div>
+                No filters added yet
+            </div>
+        </aura:if>
+
+        <div>
+            <aura:iteration items="{!v.currentNode.branches}" var="item">
+                <div>
+                    <c:filter aura:id="filter" currentBranch="{!item}" selectableNodes="{!v.selectableNodes}" deleteRequested="{!c.handleFilterDelete}" />
+                </div>
+            </aura:iteration>
+        </div>
+    </lightning:card>
+</aura:component>

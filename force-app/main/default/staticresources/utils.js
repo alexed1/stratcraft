@@ -19,7 +19,7 @@ window._utils = (function () {
         for (var i in obj) {
           if (i == 'clone') continue;
           if (deep && typeof obj[i] == 'object') {
-            newObj[i] = obj[i].clone();
+            newObj[i] = this.clone(obj[i]);
           } else {
             newObj[i] = obj[i];
           }
@@ -73,7 +73,7 @@ window._utils = (function () {
       IMMEDIATE_ANTECENDENT: 'IMMEDIATE_ANTECENDENT',
       ALL_ANTECENDENTS: 'ALL_ANTECENDENTS',
       SIBLINGS: 'SIBLINGS',
-      IMMEDIATE_DESCENDANTS: 'SIBLINGS',
+      IMMEDIATE_DESCENDANTS: 'IMMEDIATE_DESCENDANTS',
       ALL_DESCENDANTS: 'ALL_DESCENDANTS'
     },
 
@@ -84,6 +84,23 @@ window._utils = (function () {
     ModalDialogButtonType: {
       OK: 'OK',
       CANCEL: 'CANCEL'
+    },
+
+    NodeType: {
+      IF: 'if',
+      SOQL_LOAD: 'soqlLoad',
+      UNION: 'union',
+      FILTER: 'filter',
+      RECOMMENDATION_LIMIT: 'recommendationLimit',
+      getValueNamePairs: function () {
+        return [
+          [this.IF, 'If'],
+          [this.SOQL_LOAD, 'SOQL Load'],
+          [this.FILTER, 'Filter'],
+          [this.UNION, 'Union'],
+          [this.RECOMMENDATION_LIMIT, 'Recommendation Limit']
+        ];
+      }
     }
   }
 })()

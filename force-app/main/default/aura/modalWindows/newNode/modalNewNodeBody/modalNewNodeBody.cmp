@@ -4,6 +4,8 @@
     <aura:attribute name="name" type="String" />
     <aura:attribute name="selectedParentNodeName" type="String" />
     <aura:attribute name="availableParentNodeNames" type="List" />
+    <aura:attribute name="selectedNodeType" type="String" />
+    <aura:attribute name="availableNodeTypes" type="Map" />    
 
     <aura:registerEvent name="nodeDataRequested" type="c:nodeDataRequestEvent" />
 
@@ -14,10 +16,19 @@
     <lightning:input aura:id="nodeName" label="Node name" required="true" placeholder="Enter new node name" value="{!v.name}"
                      messageWhenValueMissing="Node name can't be empty or contain only whitespaces"
                      messageWhenBadInput="A node with the same name already exists" />
+
+    <lightning:select aura:id="nodeType" label="Node type" value="{!v.selectedNodeType}" class="select_box" required="true"
+                      messageWhenValueMissing="Please select node type">
+        <aura:iteration items="{!v.availableNodeTypes}" var="item">
+            <option value="{!item[0]}" text="{!item[1]}" />
+        </aura:iteration>
+    </lightning:select>
+
     <lightning:select aura:id="parentNode" label="Parent node" value="{!v.selectedParentNodeName}" class="select_box" required="true"
-        messageWhenValueMissing="Please select parent node">
+                      messageWhenValueMissing="Please select parent node">
         <aura:iteration items="{!v.availableParentNodeNames}" var="item">
             <option text="{!item}" />
         </aura:iteration>
     </lightning:select>
+
 </aura:component>
