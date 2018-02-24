@@ -8,14 +8,14 @@ public with sharing class StrategyXmlConverter {
         String xmlNamespace = 'http://soap.sforce.com/2006/04/metadata';
         Dom.XmlNode rootNode = document.createRootElement('recommendationStrategy',xmlNamespace,'');
         Dom.XmlNode name = rootNode.addChildElement('recommendationStrategyName', null,null).addTextNode(strategy.name);
-        Dom.XmlNode description = rootNode.addChildElement('description', null, null).addTextNode(strategy.description);
-        Dom.XmlNode masterLabel = rootNode.addChildElement('masterLabel', null, null).addTextNode(strategy.masterLabel);
+        Dom.XmlNode description = rootNode.addChildElement('description', null, null).addTextNode(strategy.description == null ? '' : strategy.description);
+        Dom.XmlNode masterLabel = rootNode.addChildElement('masterLabel', null, null).addTextNode(strategy.masterLabel == null ? '' : strategy.masterLabel);
         for (BaseNode childNode : strategy.nodes) {
             Dom.XmlNode xmlChildNode = nodeXmlConverter.convertNodeToXml(childNode);
             if (xmlChildNode == null) {
                 System.debug(System.LoggingLevel.ERROR, 'Failed to serialize \'' + childNode.name + '\' node to XML');
             } else {
-                rootNode.insertBefore(xmlChildNode, null);
+                rootNode.insertBefore(xmlChildNode, null);           
             }
         }
         System.debug('Finished serializing strategy ' + strategy.name);

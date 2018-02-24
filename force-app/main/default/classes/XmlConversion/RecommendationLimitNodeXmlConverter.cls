@@ -36,8 +36,10 @@ public with sharing class RecommendationLimitNodeXmlConverter extends BaseNodeXm
         result.addChildElement('removeDuplicates', null, null).addTextNode(String.valueOf(actualNode.removeDuplicates));
         result.addChildElement('maxRecommendationCount', null, null).addTextNode(String.valueOf(actualNode.maxRecommendationCount));
         result.addChildElement('lookbackDuration', null, null).addTextNode(String.valueOf(actualNode.lookbackDuration));
-        for (String filterMode : actualNode.filterModes) {
-            result.addChildElement('filterMode', null, null).addTextNode(filterMode);
+        if (actualNode.filterModes != null) {
+            for (String filterMode : actualNode.filterModes) {
+                result.addChildElement('filterMode', null, null).addTextNode(filterMode);
+            }
         }
         return result;
     }

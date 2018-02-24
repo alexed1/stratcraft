@@ -27,6 +27,7 @@ public class StrategyCrafterController {
 		}
 		String xml = curStratList[0].StrategyXML__c;
 		Strategy parsedStrategy = StrategyXmlConverter.convertXmlToStrategy(xml);
+		parsedStrategy.Id = curStratList[0].Id;
 		return parsedStrategy;
 	}
 

@@ -1,4 +1,23 @@
 ({
+  /**Returns the list of current strategy nodes that relate in a specific way to a specified node
+   * @param {object} strategy - Strategy
+   * @param {string} nodeRelationship - Relationship type. For possible values see _utils.NodeRelationshipType
+   * @param {string} nodeName - Name of node that requested nodes should be related to. Optional if the requested type is ALL
+   */
+  getRelatedNodes: function (strategy, nodeRelationship, nodeName) {
+    var nodes = [];
+    switch (nodeRelationship) {
+      case _utils.NodeRequestType.ALL:
+        nodes = strategy.nodes;
+        break;
+      case _utils.NodeRequestType.IMMEDIATE_DESCENDANTS:
+        nodes = _strategy.getDirectChildrenNodes(strategy, nodeName);
+        break;
+      default:
+        throw new Error('Node relationship type ' + nodeRelationship + ' is not yet supported');
+    }
+    return nodes;
+  },
   //Populates the select strategy drop down
   loadStrategyNames: function (component) {
     var action = component.get('c.getStrategyNames');
@@ -82,130 +101,79 @@
         console.log(' returned from persistStrategy: ' + result);
       }
       else {
-        console.log('Failed with state: ' + state);
+        console.log('Failed to save strategy: ' + state);
+        _force.displayToast('Strategy Crafter', 'Failed to save strategy');
       }
     });
     $A.enqueueAction(action);
   },
-
-  findStrategyNodeByName: function (strategy, name) {
-    for (let node of strategy.nodes) {
-      if (node.name == name) {
-        return node;
+  /**Validates if changes to the node are valid and can be applied to the strategy
+   * @param {object} strategy - Current strategy
+   * @param {object} originalNode - Original state of the node before change
+   * @param {object} changedNode - Current state of the node after change
+   */
+  validateNodeChange: function (strategy, originalNode, changedNode) {
+    self = this;
+    if (changedNode.name == changedNode.parentNodeName) {
+      return 'A node can\'t be a parent to itself';
+    }
+    if (originalNode.name != changedNode.name) {
+      var sameNameNodes = strategy.nodes.filter(function (item) {
+        return item.name.trim().toLowerCase() == changedNode.name.trim().toLowerCase();
+      })
+      if (sameNameNodes.length > 1) {
+        return 'A node with the same name already exists';
       }
-    };
-    throw new Error('Did not find a Node with the requested name');
-  },
-
-  findChildStrategyNodes: function (strategy, name) {
-    var childNodes = [];
-    for (let node of strategy.nodes) {
-      if (node.parentNodeName == name) {
-        childNodes.push(node);
+    }
+    if (originalNode.parentNodeName != changedNode.parentNodeName) {
+      var wasRoot = originalNode.parentNodeName == '';
+      var isRoot = changedNode.parentNodeName == '';
+      if (!wasRoot && isRoot) {
+        return 'A strategy can\'t have two root nodes';
       }
-    };
-    return childNodes;
-  },
-
-  validateParentNodeNotBlank: function (changedNode, errorList) {
-    if (changedNode.parentNodeName == '') {
-      errorList.push('Parent Node Name can not be blank');
     }
-    return errorList;
+    return null;
   },
 
-  validateNodeMove: function (cmp, curNode, changedNode) {
-    var self = this;
-
-    var errorList = [];
-    errorList = self.validateParentNodeNotBlank(changedNode, errorList);
-
-    var tree = cmp.find('tree');
-
-    //Maybe we should pass 2 parameters here
-    var treeErrors = tree.validateNodeUpdate(changedNode, curNode.name);
-
-    return errorList.concat(treeErrors);
-  },
-
-  moveNode: function (cmp, curNode, changedNode) {
-    var self = this;
-    var validationErrors = self.validateNodeMove(cmp, curNode, changedNode);
-    if (validationErrors.length > 0) {
-      var errorText = JSON.stringify(validationErrors);
-      var originalNode = _utils.clone(cmp.find('propertyPage').get('v.originalTreeNode'), true);
-      cmp.find('propertyPage').set('v.selectedTreeNode', originalNode);
-      _force.displayToast('', errorText, 'error');
+  /**Compares original and actual node states, updates this node in strategy and trigger the tree rebuilding
+   * @param {object} component - A reference to stratcraft component
+   * @param {object} originalNode - Original state of the node before change
+   * @param {object} changedNode - Current state of the node after change
+   */
+  applyChangesToStrategy: function (strategy, originalNode, changedNode) {
+    self = this;
+    var isNameChanged = originalNode.name != changedNode.name;
+    var isParentChanged = originalNode.parentNodeName != changedNode.parentNodeName;
+    var originalParent = _strategy.getParentNode(strategy, originalNode);
+    var isMovingToOwnChild = _strategy.isParentOf(strategy, originalNode.name, changedNode.parentNodeName);
+    //Update parent of original children
+    if (isNameChanged) {
+      var originalChildren = _strategy.getDirectChildrenNodes(strategy, originalNode);
+      originalChildren.forEach(function (item) {
+        item.parentNodeName = changedNode.name;
+      });
+      //If parent node refers the current one in one of its branches, we should update this branch
+      if (originalParent.nodeType == _utils.NodeType.IF) {
+        if (originalParent.branches) {
+          originalParent.branches.forEach(function (item) {
+            if (item.child == originalNode.name) {
+              item.child = changedNode.name;
+            }
+          });
+        }
+      }
     }
-    else {
-      var tree = cmp.find('tree');
-      tree.moveNode(curNode.parentNodeName, changedNode.parentNodeName, curNode.name);
-      //seems like we should also be adjusting the strategy here, and not just the tree
+    //Update children
+    if (isParentChanged) {
+      if (isMovingToOwnChild) {
+        originalChildren.forEach(function (item) {
+          item.parentNodeName = originalParent.name;
+        });
+      }
+      //There is no 'else' as in this case changedNode will already have changes and will be injected into strategy
     }
-  },
-
-  updateNodeName: function (cmp, curNode, changedNode) {
-    var self = this;
-
-    //first update the tree....
-    var tree = cmp.find('tree');
-    tree.renameNode(curNode, changedNode);
-
-    //then update the strategy model
-    //find any children of this node and update their parentNodeNames
-    var currentStrategy = cmp.get('v.currentStrategy');
-    var childNodes = self.findChildStrategyNodes(currentStrategy, curNode.name);
-    childNodes.forEach(function (child) {
-      child.parentNodeName = changedNode.name;
-    }
-
-    );
-    //finally, update the node itself
-    //REFACTOR: rename this function to highlight expanded scope?
-    curNode.name = changedNode.name;
-
-    cmp.set('v.currentStrategy', currentStrategy);
-
-  },
-
-  updateNodeBody: function (cmp, curNode, changedNode) {
-    //var currentStrategy = cmp.get('v.currentStrategy');
-    curNode.description = changedNode.description;
-    curNode.type = changedNode.type;
-    //cmp.set('v.currentStrategy', currentStrategy);
-  },
-
-  updateNodeParent: function (curNode, changedNode) {
-    curNode.parentNodeName = changedNode.parentNodeName;
-  },
-
-  //this updates the local model but does not persist the data to the server
-  saveStrategyChanges: function (cmp, changedNode, originalNodeName, helper) {
-
-    var currentStrategy = cmp.get('v.currentStrategy');
-    var curNode = helper.findStrategyNodeByName(currentStrategy, originalNodeName);
-
-    //if parent node was changed this is a move
-    if (curNode.parentNodeName !== changedNode.parentNodeName) {
-      helper.moveNode(cmp, curNode, changedNode);
-      helper.updateNodeParent(curNode, changedNode);
-    }
-
-    //if name was changed - also need to update nodes that are children of current node
-    if (curNode.name !== changedNode.name) {
-      helper.updateNodeName(cmp, curNode, changedNode);
-    }
-
-    helper.updateNodeBody(cmp, curNode, changedNode);
-    cmp.set('v.currentStrategy', currentStrategy);
-
-    //fire this event so the property page knows to reset itself
-    var propPage = cmp.find('propertyPage');
-    propPage.reset();
-
-    console.log('exiting saveStrategyChanges');
-
-
+    var index = strategy.nodes.findIndex(function (item) { return item.name == originalNode.name; });
+    strategy.nodes[index] = changedNode;
   },
   /** Converts the incoming parameter to the format used by showDialog method */
   parseComponentConfiguration: function (configuration) {

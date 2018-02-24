@@ -4,13 +4,14 @@ public with sharing class StrategyJsonConverter {
 
     public static Strategy convertJsonToStrategy(String jsonString) {
         System.debug('Started deserializing strategy from JSON');
-        Map<String, Object> parsedJson = (Map<String, Object>)JSON.deserializeUntyped(jsonString);
+        Map<String, Object> parsedJson = (Map<String,Object>)JSON.deserializeUntyped(jsonString);
         Strategy result = new Strategy();
         result.Id = (String)parsedJson.get('Id');
         result.name = (String)parsedJson.get('name');
         result.masterLabel = (String)parsedJson.get('masterLabel');
         result.description = (String)parsedJson.get('description');
-        for (Map<String, Object> childNodeJson : (List<Map<String, Object>>)parsedJson.get('nodes')) {
+        for (Object childNodeJsonObj : (List<Object>)parsedJson.get('nodes')) {
+            Map<String, Object> childNodeJson = (Map<String, Object>)childNodeJsonObj;
             BaseNode childNode = nodeJsonConverter.convertJsonToNode(childNodeJson);
             if (childNode != null) {
                 result.nodes.add(childNode);

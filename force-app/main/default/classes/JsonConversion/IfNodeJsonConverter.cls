@@ -7,14 +7,17 @@ public with sharing class IfNodeJsonConverter extends BaseNodeJsonConverter {
         if (result == null) {
             return null;
         }
-        result.removeDuplicates = (Boolean)jsonNode.get('removeDuplicates');
-        result.onlyFirstMatch = (Boolean)jsonNode.get('onlyFirstMatch');
-        for (Map<String, Object> child : (List<Map<String, Object>>)jsonNode.get('branches')) {
-            IfBranch branch = new IfBranch();
-            branch.child = (String)child.get('child');
-            branch.expression = (String)child.get('expression');
-            result.branches.Add(branch);
-        }
+        result.removeDuplicates = jsonNode.containsKey('removeDuplicates') ? (Boolean)jsonNode.get('removeDuplicates') : false;
+        result.onlyFirstMatch = jsonNode.containsKey('onlyFirstMatch') ? (Boolean)jsonNode.get('onlyFirstMatch') : false;
+        if (jsonNode.containsKey('branches')) {
+            for (Object childObj : (List<Object>)jsonNode.get('branches')) {
+                Map<String, Object> child = (Map<String, Object>)childObj;
+                IfBranch branch = new IfBranch();
+                branch.child = (String)child.get('child');
+                branch.expression = (String)child.get('expression');
+                result.branches.Add(branch);
+            }
+        }        
         return result;
     }
 

@@ -34,7 +34,7 @@ public with sharing class IfNodeXmlConverter extends BaseNodeXmlConverter {
         for (IfBranch branch : actualNode.branches) {
             Dom.XmlNode branchNode = result.addChildElement('branch', null, null);
             branchNode.addChildElement('child', null, null).addTextNode(branch.child);
-            branchNode.addChildElement('expression', null, null).addTextNode(branch.expression);
+            branchNode.addChildElement('expression', null, null).addTextNode(branch.expression == null ? '' : branch.expression);
         }
         return result;
     }
