@@ -40,7 +40,9 @@ public class StrategyCrafterController {
 			Strategy__c strategyC = new Strategy__c();
 			strategyC.StrategyXML__c = strategyXml;
 			strategyC.Name = strategy.name;
-			strategyC.Id = strategy.Id;
+			if (!String.isBlank(strategy.Id)) {
+				strategyC.Id = strategy.Id;
+			}
 			upsert strategyC;
 			System.debug('Finished persisting strategy ' + strategy.name);
 			return 'SUCCESS';	

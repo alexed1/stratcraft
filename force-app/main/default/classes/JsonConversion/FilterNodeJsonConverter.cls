@@ -8,7 +8,7 @@ public with sharing class FilterNodeJsonConverter extends BaseNodeJsonConverter 
             return result;
         }
         result.removeDuplicates = jsonNode.containsKey('removeDuplicates') ? (Boolean)jsonNode.get('removeDuplicates') : false;
-        result.expression = jsonNode.containsKey('removeDuplicates') ? (String)jsonNode.get('removeDuplicates') : '';
+        result.expression = jsonNode.containsKey('expression') ? (String)jsonNode.get('expression') : '';
         return result;
     }
 

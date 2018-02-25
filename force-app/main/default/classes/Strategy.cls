@@ -16,13 +16,4 @@ public with sharing class Strategy {
         nodes = new List<BaseNode> ();
         notification = new Notification ();
     }
-
-    public BaseNode findNodeByName (String targetName) {
-        for (BaseNode node : this.nodes) {
-            if (node.name == targetName) {
-                return node;
-            }
-        }
-        return null;
-    }
 }

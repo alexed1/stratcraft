@@ -17,7 +17,8 @@ public with sharing class StrategyJsonConverter {
                 result.nodes.add(childNode);
             }
             else {
-                result.notification.addError('Strategy JSON contains an unknown node with the name ' + childNodeJson.get('name'));
+                result.notification.addError(
+                    'Strategy JSON contains an unknown node with the name ' + childNodeJson.get('name') + ' and node type ' + childNodeJson.get('nodeType'));
             }
         }
         System.debug('Finished parsing strategy JSON. Name - ' + result.name + '. Node count - ' + result.nodes.size());
