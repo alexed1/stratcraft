@@ -7,7 +7,7 @@ public with sharing abstract class BaseNodeJsonConverter implements INodeJsonCon
         BaseNode result = createNewNode();
         result.name = (String)jsonNode.get('name');
         result.description = (String)jsonNode.get('description');
-        result.parentNodeName = (String)jsonNode.get('parentNode');
+        result.parentNodeName = (String)jsonNode.get('parentNodeName');
         return result;
     }
 

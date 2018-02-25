@@ -75,8 +75,157 @@ public class StrategyXmlConverterTest {
     @isTest
     public static void convertXmlToStrategy_WhenXmlContainsUnionNodes_NodePropertiesAreSet() {
         Strategy strategy = StrategyXmlConverter.convertXmlToStrategy(FixturesXml.UnionNodeStrategyXml);
-        System.assertEquals(1, strategy.nodes.size(), 'Strategy must contain one nodes');
+        System.assertEquals(1, strategy.nodes.size(), 'Strategy must contain one node');
         UnionNode node = (UnionNode)strategy.nodes[0];
         System.assert(node.removeDuplicates, '"Remove duplicates" field value mismatches');
+    }
+
+    @isTest
+    public static void convertStrategyToXml_Always_SerializesStrategyProperties() {
+        String xml = StrategyXmlConverter.convertStrategyToXml(FixturesStrategy.NoNodesStrategy());
+        Dom.Document document = new Dom.Document();
+        document.load(xml);
+        Dom.XmlNode root = document.getRootElement();
+        String xmlNamespace = 'http://soap.sforce.com/2006/04/metadata';
+        System.assertEquals('recommendationStrategy', root.getName(), 'Root element name mismatches');
+        Dom.XmlNode name = root.getChildElement('recommendationStrategyName', xmlNamespace);
+        System.assert(name != null, '"Name" node is not found');
+        System.assertEquals('Name', name.getText(), 'Name of the strategy mismatches');
+        Dom.XmlNode description = root.getChildElement('description', xmlNamespace);
+        System.assert(description != null, '"Description" node is not found');
+        System.assertEquals('Description', description.getText(), 'Description of the strategy mismatches');
+        Dom.XmlNode masterLabel = root.getChildElement('masterLabel', xmlNamespace);
+        System.assert(masterLabel != null, '"Master Label" node is not found');
+        System.assertEquals('Master Label', masterLabel.getText(), 'Master Label of the strategy mismatches');
+    }
+
+    @isTest
+    public static void convertStategyToXml_WhenStrategyContainsNode_NodePropertiesAreSet() {
+        String xml = StrategyXmlConverter.convertStrategyToXml(FixturesStrategy.UnionNodeStrategy());
+        Dom.Document document = new Dom.Document();
+        document.load(xml);
+        Dom.XmlNode root = document.getRootElement();
+        String xmlNamespace = 'http://soap.sforce.com/2006/04/metadata';
+        Dom.XmlNode node = root.getChildElement('union', xmlNamespace);
+        System.assert(node != null, 'Node is node found');
+        Dom.XmlNode name = node.getChildElement('name', xmlNamespace);
+        System.assert(name != null, '"Name" node is not found');
+        System.assertEquals('Name', name.getText(), 'Name of the node mismatches');
+
+        Dom.XmlNode description = node.getChildElement('description', xmlNamespace);
+        System.assert(description != null, '"Description" node is not found');
+        System.assertEquals('Description', description.getText(), 'Description of the node mismatches');
+
+        Dom.XmlNode parentNode = node.getChildElement('parentNode', xmlNamespace);
+        System.assert(parentNode != null, '"Parent Node" node is not found');
+        System.assert(String.isBlank(parentNode.getText()), 'Parent Node of the node mismatches');
+    }
+
+    @isTest
+    public static void convertStategyToXml_WhenStrategyContainsFilterNode_NodePropertiesAreSet() {
+        String xml = StrategyXmlConverter.convertStrategyToXml(FixturesStrategy.FilterNodeStrategy());
+        Dom.Document document = new Dom.Document();
+        document.load(xml);
+        Dom.XmlNode root = document.getRootElement();
+        String xmlNamespace = 'http://soap.sforce.com/2006/04/metadata';
+        Dom.XmlNode node = root.getChildElement('filter', xmlNamespace);
+        System.assert(node != null, 'Node is node found');
+        Dom.XmlNode removeDuplicates = node.getChildElement('removeDuplicates', xmlNamespace);
+        System.assert(removeDuplicates != null, '"Remove Duplicates" node is not found');
+        System.assertEquals('true', removeDuplicates.getText(), 'Remove Duplicates of the node mismatches');
+
+        Dom.XmlNode expression = node.getChildElement('expression', xmlNamespace);
+        System.assert(expression != null, '"Expression" node is not found');
+        System.assertEquals('Expression', expression.getText(), 'Expression of the node mismatches');
+    }
+
+    @isTest
+    public static void convertStategyToXml_WhenStrategyContainsIfNode_NodePropertiesAreSet() {
+        String xml = StrategyXmlConverter.convertStrategyToXml(FixturesStrategy.IfNodeStrategy());
+        Dom.Document document = new Dom.Document();
+        document.load(xml);
+        Dom.XmlNode root = document.getRootElement();
+        String xmlNamespace = 'http://soap.sforce.com/2006/04/metadata';
+        Dom.XmlNode node = root.getChildElement('if', xmlNamespace);
+        System.assert(node != null, 'Node is node found');
+        Dom.XmlNode removeDuplicates = node.getChildElement('removeDuplicates', xmlNamespace);
+        System.assert(removeDuplicates != null, '"Remove Duplicates" node is not found');
+        System.assertEquals('true', removeDuplicates.getText(), 'Remove Duplicates of the node mismatches');
+
+        
+        Dom.XmlNode onlyFirstMatch = node.getChildElement('onlyFirstMatch', xmlNamespace);
+        System.assert(onlyFirstMatch != null, '"Only First Match" node is not found');
+        System.assertEquals('true', onlyFirstMatch.getText(), 'Only First Match of the node mismatches');
+
+        Dom.XmlNode branch = node.getChildElement('branch', xmlNamespace);
+        System.assert(branch != null, '"Branch" node is not found');
+
+        Dom.XmlNode child = branch.getChildElement('child', xmlNamespace);
+        System.assert(child != null, '"Child" node is not found');
+        System.assertEquals('Child', child.getText(), 'Child of the node mismatches');
+
+        Dom.XmlNode expression = branch.getChildElement('expression', xmlNamespace);
+        System.assert(expression != null, '"Expression" node is not found');
+        System.assertEquals('Expression', expression.getText(), 'Expression of the node mismatches');
+    }
+
+    @isTest
+    public static void convertStategyToXml_WhenStrategyContainsRecommendationLimitNode_NodePropertiesAreSet() {
+        String xml = StrategyXmlConverter.convertStrategyToXml(FixturesStrategy.RecommendationLimitStrategy());
+        Dom.Document document = new Dom.Document();
+        document.load(xml);
+        Dom.XmlNode root = document.getRootElement();
+        String xmlNamespace = 'http://soap.sforce.com/2006/04/metadata';
+        Dom.XmlNode node = root.getChildElement('recommendationLimit', xmlNamespace);
+        System.assert(node != null, 'Node is node found');
+        Dom.XmlNode removeDuplicates = node.getChildElement('removeDuplicates', xmlNamespace);
+        System.assert(removeDuplicates != null, '"Remove Duplicates" node is not found');
+        System.assertEquals('true', removeDuplicates.getText(), 'Remove Duplicates of the node mismatches');
+
+        Dom.XmlNode maxRecommendationCount = node.getChildElement('maxRecommendationCount', xmlNamespace);
+        System.assert(maxRecommendationCount != null, '"Max Recommendation Count" node is not found');
+        System.assertEquals('2', maxRecommendationCount.getText(), 'Max Recommendation Count of the node mismatches');
+
+        Dom.XmlNode lookbackDuration = node.getChildElement('lookbackDuration', xmlNamespace);
+        System.assert(lookbackDuration != null, '"Lookback Duration" node is not found');
+        System.assertEquals('1', lookbackDuration.getText(), 'Lookback Duration of the node mismatches');
+
+        Dom.XmlNode filterMode = node.getChildElement('filterMode', xmlNamespace);
+        System.assert(filterMode != null, '"Filter Mode" node is not found');
+        System.assertEquals('Filter Mode', filterMode.getText(), 'Filter Mode of the node mismatches');
+    }
+
+    @isTest
+    public static void convertStategyToXml_WhenStrategyContainsSoqlLoadNode_NodePropertiesAreSet() {
+        String xml = StrategyXmlConverter.convertStrategyToXml(FixturesStrategy.SoqlLoadStrategy());
+        Dom.Document document = new Dom.Document();
+        document.load(xml);
+        Dom.XmlNode root = document.getRootElement();
+        String xmlNamespace = 'http://soap.sforce.com/2006/04/metadata';
+        Dom.XmlNode node = root.getChildElement('soqlLoad', xmlNamespace);
+        System.assert(node != null, 'Node is node found');
+
+        Dom.XmlNode soql = node.getChildElement('soql', xmlNamespace);
+        System.assert(soql != null, '"soql" node is not found');
+        System.assertEquals('Soql', soql.getText(), 'soql of the node mismatches');
+
+        Dom.XmlNode fieldNameRemapping = node.getChildElement('fieldNameRemapping', xmlNamespace);
+        System.assert(fieldNameRemapping != null, '"Field Name Remapping" node is not found');
+        System.assertEquals('Field Name Remapping', fieldNameRemapping.getText(), 'Field Name Remapping of the node mismatches');
+    }
+
+    @isTest
+    public static void convertStategyToXml_WhenStrategyContainsUnionNode_NodePropertiesAreSet() {
+        String xml = StrategyXmlConverter.convertStrategyToXml(FixturesStrategy.UnionNodeStrategy());
+        Dom.Document document = new Dom.Document();
+        document.load(xml);
+        Dom.XmlNode root = document.getRootElement();
+        String xmlNamespace = 'http://soap.sforce.com/2006/04/metadata';
+        Dom.XmlNode node = root.getChildElement('union', xmlNamespace);
+        System.assert(node != null, 'Node is not found');
+
+        Dom.XmlNode removeDuplicates = node.getChildElement('removeDuplicates', xmlNamespace);
+        System.assert(removeDuplicates != null, '"Remove Duplicates" node is not found');
+        System.assertEquals('true', removeDuplicates.getText(), 'Remove Duplicates of the node mismatches');
     }
 }

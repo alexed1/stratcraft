@@ -1,19 +1,18 @@
 ({
     handleClick: function (component, event, helper) {
         var cmpEvent = $A.get('e.c:propertyPageSaveRequestEvent');
-        console.log('processing handle click in base');
         cmpEvent.setParams({
-            'changedStrategyNode': component.get('v._currentNodeDirty'),
-            'originalNodeName': component.get('v.currentNode').name
+            'newNodeState': component.get('v._currentNodeDirty'),
+            'originalNodeState': component.get('v.currentNode')
         });
         cmpEvent.fire();
     },
 
-    handleStrategyChange: function (component, event, helper) {
+    handleStrategyChanged: function (component, event, helper) {
         helper.loadNodeTypes(component);
     },
 
-    handleCurrentNodeChange: function (component, event, helper) {
+    handleCurrentNodeChanged: function (component, event, helper) {
         var currentNode = component.get('v.currentNode');
         component.set('v._currentNodeDirty', currentNode ? _utils.clone(currentNode, true) : null);
         if (currentNode) {
@@ -23,7 +22,7 @@
         }
     },
 
-    handleTypeChange: function (component, event, helper) {
+    handleTypeChanged: function (component, event, helper) {
         var currentNode = component.get('v._currentNodeDirty');
         component.set('v._isIf', currentNode && currentNode.nodeType === _utils.NodeType.IF);
         component.set('v._isSoqlLoad', currentNode && currentNode.nodeType === _utils.NodeType.SOQL_LOAD);

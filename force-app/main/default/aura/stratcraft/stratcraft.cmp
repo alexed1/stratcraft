@@ -1,7 +1,8 @@
 <aura:component implements="flexipage:availableForAllPageTypes, force:appHostable" access="global" controller="StrategyCrafterController">
-
-    <ltng:require scripts="{!$Resource.utils}" />
+    
     <ltng:require scripts="{!$Resource.force}" />
+    <ltng:require scripts="{!$Resource.strategy}" />
+    <ltng:require scripts="{!$Resource.utils}" />
     <!-- 
     <ltng:require scripts="{!$Resource.hopscotch}" afterScriptsLoaded="{!c.hopscotchLoaded}" />
     <ltng:require scripts="{!$Resource.hopscotchcss}" />

@@ -89,17 +89,7 @@
         //Callback should be a function that accepts a single array argument which will contain the list of the requested nodes
         var callback = event.getParam('callback');
         var strategy = component.get('v.currentStrategy');
-        var nodes = [];
-        switch (nodeRelationship) {
-            case _utils.NodeRequestType.ALL:
-                nodes = strategy.nodes;
-                break;
-            case _utils.NodeRequestType.IMMEDIATE_DESCENDANTS:
-                nodes = strategy.nodes.filter(function (node) { return node.parentNodeName === nodeName; });
-                break;
-            default:
-                throw new Error('Node relationship type ' + nodeRelationship + ' is not yet supported');
-        }
+        var nodes = helper.getRelatedNodes(strategy, nodeRelationship, nodeName);
         if (!callback) {
             console.log('WARN: Node relationship was requested but the callback was not provided');
         }
@@ -111,7 +101,7 @@
     handleTreeNodeSelect: function (component, event, helper) {
         var newSelectedNodeName = event.getParam('name');
         var currentStrategy = component.get('v.currentStrategy');
-        var newSelectedNode = helper.findStrategyNodeByName(currentStrategy, newSelectedNodeName);
+        var newSelectedNode = _strategy.getNode(currentStrategy, newSelectedNodeName);
         var propertyPage = component.find('propertyPage');
         var proceeedToSelect = function () {
             propertyPage.set('v.currentNode', newSelectedNode);
@@ -127,9 +117,20 @@
 
     saveStrategy: function (component, event, helper) {
         console.log('in save strategy in parent controller');
-        var originalNodeName = event.getParam('originalNodeName');
-        var changedNode = event.getParam('changedStrategyNode');
-        helper.saveStrategyChanges(component, changedNode, originalNodeName, helper);
+        var strategy = component.get('v.currentStrategy');
+        var originalNodeState = event.getParam('originalNodeState');
+        var actualNodeState = event.getParam('newNodeState');
+        var validationResult = helper.validateNodeChange(strategy, originalNodeState, actualNodeState);
+        if (validationResult) {
+            _force.displayToast('Error', 'Node can\'t be changes this way.\n' + validationResult, 'error');
+            return;
+        }
+        helper.applyChangesToStrategy(strategy, originalNodeState, actualNodeState);
+        //TODO: check that the node it sill selected
+        //Fire this event so the property page knows to reset itself
+        component.find('propertyPage').reset();
+        var newTree = helper.buildTreeFromStrategy(strategy);
+        component.find('tree').set('v.treeItems', [newTree]);
         //post the current strategy to the server
         //save it by name overwriting as necessary
         //return a status message

@@ -26,7 +26,7 @@ public with sharing class SoqlLoadNodeXmlConverter extends BaseNodeXmlConverter 
             return null;
         }
         SoqlLoadNode actualNode = (SoqlLoadNode)node;
-        result.addChildElement('soql', null, null).addTextNode(actualNode.Soql);
+        result.addChildElement('soql', null, null).addTextNode(actualNode.Soql == null ? '' : actualNode.Soql);
         if (!String.isBlank(actualNode.fieldNameRemapping)) {
             result.addChildElement('fieldNameRemapping', null, null).addTextNode(actualNode.fieldNameRemapping);
         }

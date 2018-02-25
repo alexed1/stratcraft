@@ -18,8 +18,8 @@ public with sharing abstract class BaseNodeXmlConverter implements INodeXmlConve
         Dom.Document document = new Dom.Document();
         Dom.XmlNode result = document.createRootElement(node.nodeType, null, null);
         result.addChildElement('name', null, null).addTextNode(node.name);
-        result.addChildElement('description', null, null).addTextNode(node.description);
-        result.addChildElement('parentNode', null, null).addTextNode(node.parentNodeName);
+        result.addChildElement('description', null, null).addTextNode(node.description == null ? '' : node.description);
+        result.addChildElement('parentNode', null, null).addTextNode(node.parentNodeName == null ? '' : node.parentNodeName);
         return result;
     }
 
@@ -28,7 +28,7 @@ public with sharing abstract class BaseNodeXmlConverter implements INodeXmlConve
     }
 
     public Boolean canConvertNodeToXml(BaseNode node) {
-        return node.nodeType == getPrototypeNode().name;
+        return node.nodeType == getPrototypeNode().nodeType;
     }
 
     protected abstract BaseNode createNewNode();

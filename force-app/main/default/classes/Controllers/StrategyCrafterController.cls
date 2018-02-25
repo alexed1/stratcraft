@@ -27,6 +27,7 @@ public class StrategyCrafterController {
 		}
 		String xml = curStratList[0].StrategyXML__c;
 		Strategy parsedStrategy = StrategyXmlConverter.convertXmlToStrategy(xml);
+		parsedStrategy.Id = curStratList[0].Id;
 		return parsedStrategy;
 	}
 
@@ -39,7 +40,9 @@ public class StrategyCrafterController {
 			Strategy__c strategyC = new Strategy__c();
 			strategyC.StrategyXML__c = strategyXml;
 			strategyC.Name = strategy.name;
-			strategyC.Id = strategy.Id;
+			if (!String.isBlank(strategy.Id)) {
+				strategyC.Id = strategy.Id;
+			}
 			upsert strategyC;
 			System.debug('Finished persisting strategy ' + strategy.name);
 			return 'SUCCESS';	

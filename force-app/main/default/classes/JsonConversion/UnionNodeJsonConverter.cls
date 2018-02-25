@@ -7,7 +7,7 @@ public with sharing class UnionNodeJsonConverter extends BaseNodeJsonConverter{
         if (result == null) {
             return null;
         }
-        result.removeDuplicates = (Boolean)jsonNode.get('removeDuplicates');
+        result.removeDuplicates = jsonNode.containsKey('removeDuplicates') ? (Boolean)jsonNode.get('removeDuplicates') : false;
         return result;
     }
 
