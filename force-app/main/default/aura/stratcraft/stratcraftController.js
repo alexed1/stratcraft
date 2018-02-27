@@ -28,7 +28,12 @@
         var propertyPage = component.find('propertyPage');
         var proceedToSelect = function () {
             propertyPage.clear();
-            helper.loadStrategy(component, newStrategyName);
+            if (newStrategyName) {
+                helper.loadStrategy(component, newStrategyName);
+            }
+            else {
+                component.set('v.currentStrategy', null);
+            }
         };
         var reverseSelection = function () {
             component.set('v.selectedStrategyName', currentStrategy.name);
@@ -48,7 +53,10 @@
                 alert('This functionality is not implemented yet');
                 break;
             case 'saveStrategy':
-                helper.persistStrategy(component);
+                var propertyPage = component.find('propertyPage');
+                var originalNodeState = propertyPage.get('v.currentNode');
+                var actualNodeState = propertyPage.get('v._currentNodeDirty');
+                helper.saveStrategy(component, originalNodeState, actualNodeState);
                 break;
             case 'addElement':
                 helper.showNewNodeDialog(component);
@@ -116,24 +124,8 @@
     },
 
     saveStrategy: function (component, event, helper) {
-        console.log('in save strategy in parent controller');
-        var strategy = component.get('v.currentStrategy');
         var originalNodeState = event.getParam('originalNodeState');
         var actualNodeState = event.getParam('newNodeState');
-        var validationResult = helper.validateNodeChange(strategy, originalNodeState, actualNodeState);
-        if (validationResult) {
-            _force.displayToast('Error', 'Node can\'t be changes this way.\n' + validationResult, 'error');
-            return;
-        }
-        helper.applyChangesToStrategy(strategy, originalNodeState, actualNodeState);
-        //TODO: check that the node it sill selected
-        //Fire this event so the property page knows to reset itself
-        component.find('propertyPage').reset();
-        var newTree = helper.buildTreeFromStrategy(strategy);
-        component.find('tree').set('v.treeItems', [newTree]);
-        //post the current strategy to the server
-        //save it by name overwriting as necessary
-        //return a status message
-        helper.persistStrategy(component);
+        helper.saveStrategy(component, originalNodeState, actualNodeState);
     }
 })

@@ -54,7 +54,7 @@
     self = this;
     if (!currentNode) {
       currentNode = strategy.nodes.find(function (node) {
-        return node.name === 'RootNode'
+        return !node.parentNodeName;
       });
     }
     var treeItem = this.convertNodeToTreeItem(currentNode);
@@ -87,6 +87,31 @@
     });
     $A.enqueueAction(action);
   },
+
+  saveStrategy: function (component, originalNodeState, actualNodeState) {
+    console.log('in save strategy in parent controller');
+    var strategy = component.get('v.currentStrategy');
+    //This scenario describes changes to the strategy that came from altering the node properties    
+    if (originalNodeState && actualNodeState) {
+      var validationResult = this.validateNodeChange(strategy, originalNodeState, actualNodeState);
+      if (validationResult) {
+        _force.displayToast('Error', 'Node can\'t be changed this way.\n' + validationResult, 'error');
+        return;
+      }
+      this.applyChangesToStrategy(strategy, originalNodeState, actualNodeState);
+    }
+    //Another possible scenario is when strategy structure is changed (e.g. node is added or removed) but in this case there is nothing to validate
+    //TODO: check that the node it sill selected
+    //Fire this event so the property page knows to reset itself
+    component.find('propertyPage').reset();
+    var newTree = this.buildTreeFromStrategy(strategy);
+    component.find('tree').set('v.treeItems', [newTree]);
+    //post the current strategy to the server
+    //save it by name overwriting as necessary
+    //return a status message
+    this.persistStrategy(component);
+  },
+
   //save the strategy as a Salesforce strategy object
   persistStrategy: function (component) {
     console.log('Sending Strategy to Salesforce and persisting');
@@ -101,8 +126,9 @@
         console.log(' returned from persistStrategy: ' + result);
       }
       else {
-        console.log('Failed to save strategy: ' + state);
-        _force.displayToast('Strategy Crafter', 'Failed to save strategy');
+        var error = response.getError();
+        console.log('Failed to save strategy: ' + JSON.stringify(error));
+        _force.displayToast('Strategy Crafter', 'Failed to save strategy. ' + error[0].message, 'Error');
       }
     });
     $A.enqueueAction(action);
@@ -145,7 +171,6 @@
     var isNameChanged = originalNode.name != changedNode.name;
     var isParentChanged = originalNode.parentNodeName != changedNode.parentNodeName;
     var originalParent = _strategy.getParentNode(strategy, originalNode);
-    var isMovingToOwnChild = _strategy.isParentOf(strategy, originalNode.name, changedNode.parentNodeName);
     //Update parent of original children
     if (isNameChanged) {
       var originalChildren = _strategy.getDirectChildrenNodes(strategy, originalNode);
@@ -153,7 +178,8 @@
         item.parentNodeName = changedNode.name;
       });
       //If parent node refers the current one in one of its branches, we should update this branch
-      if (originalParent.nodeType == _utils.NodeType.IF) {
+      //If original parent is empty then we are renaming the root node
+      if (originalParent && originalParent.nodeType == _utils.NodeType.IF) {
         if (originalParent.branches) {
           originalParent.branches.forEach(function (item) {
             if (item.child == originalNode.name) {
@@ -165,6 +191,8 @@
     }
     //Update children
     if (isParentChanged) {
+      //TODO: process the case where empty node is selected as a new parent
+      var isMovingToOwnChild = _strategy.isParentOf(strategy, originalNode.name, changedNode.parentNodeName);
       if (isMovingToOwnChild) {
         originalChildren.forEach(function (item) {
           item.parentNodeName = originalParent.name;

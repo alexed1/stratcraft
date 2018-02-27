@@ -44,11 +44,7 @@
     <classAccesses>
         <apexClass>StrategyCrafterControllerTest</apexClass>
         <enabled>true</enabled>
-    </classAccesses>   
-    <classAccesses>
-        <apexClass>StrategyTests</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
+    </classAccesses>  
     <classAccesses>
         <apexClass>TreeNodeController</apexClass>
         <enabled>true</enabled>
