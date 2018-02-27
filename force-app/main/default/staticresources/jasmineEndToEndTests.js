@@ -2,7 +2,7 @@ describe("end-to-end", function () {
 
     beforeEach(function () {
         //fix for jasmine sometimes failing to run tests at all with a callback timeout error
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000;
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
     });
 
     afterEach(function () {
@@ -11,8 +11,57 @@ describe("end-to-end", function () {
         $T.clearRenderedTestComponents();
     });
 
-    it('hello world passing test', function (done) {
-        expect(true).toBe(true);
+    it('Load strategy, change node property, save strategy, load strategy => node property is saved', function (done) {
+        $T.createComponent('c:stratCraft', null, true)
+            .then(function (component) {
+                //We select strategy by name and expect it to be loaded and parsed
+                component.set('v.selectedStrategyName', 'Test Strategy');
+                setTimeout(function () {
+                    try {
+                        var currentStrategy = component.get('v.currentStrategy');
+                        expect(currentStrategy).toBeTruthy();
+                        expect(currentStrategy.nodes.length).toBe(5);
+                        //Now we emulate tree node selection
+                        $T.fireApplicationEvent('c:treeNodeSelectedEvent', { 'name': 'Union' });
+                        //Verifying that proper node was selected
+                        var propertyPage = component.find('propertyPage');
+                        var currentNode = propertyPage.get('v.currentNode');
+                        expect(currentNode).toBeTruthy();
+                        expect(currentNode.nodeType).toBe('union');
+                        //Now we stash the original value of 'removeDuplicates' field, find related checkbox and toggle it
+                        //It should mark the current node as dirty which will allow us to trigger the saving of the strategy
+                        var originalRemoveDuplicates = currentNode.removeDuplicates;
+                        var unionNodePropertyPage = propertyPage.find('unionNode');
+                        var removeDuplicatesCheckBox = unionNodePropertyPage.find('removeDuplicates');
+                        removeDuplicatesCheckBox.set('v.checked', !removeDuplicatesCheckBox.get('v.checked'));
+                        expect(propertyPage.isDirty()).toBeTruthy();
+                        //Now we trigger save and wait some time for it to be completed
+                        $T.fireApplicationEvent('c:propertyPageSaveRequestEvent', {
+                            'newNodeState': propertyPage.get('v._currentNodeDirty'),
+                            'originalNodeState': propertyPage.get('v.currentNode')
+                        });
+                        setTimeout(function () {
+                            component.set('v.selectedStrategyName', '');
+                            component.set('v.selectedStrategyName', 'Test Strategy');
+                            //Now we give time for strategy to be loaded again
+                            setTimeout(function () {
+                                try {
+                                    var currentStrategy = component.get('v.currentStrategy');
+                                    var unionNode = currentStrategy.nodes.filter(function (item) { return item.nodeType === 'union'; })[0];
+                                    expect(unionNode.removeDuplicates).toBe(!originalRemoveDuplicates);
+                                    done();
+                                }
+                                catch (e) {
+                                    done.fail(e);
+                                }
+                            }, 2000);
+                        }, 2000);
+                    }
+                    catch (e) {
+                        done.fail(e);
+                    }
+                }, 2000);
+            });
     });
 
 

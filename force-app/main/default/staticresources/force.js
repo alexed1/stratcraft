@@ -14,8 +14,10 @@ window._force = (function () {
         });
 
         toast.fire();
-      } else { // otherwise throw an alert
-        alert(title + ': ' + message);
+      } else {
+        //We won't throw alert here because this branch is executed if the app is running in a test environment namely jasmine tests
+        //In this case alert will require user interaction in order for tests to proceed
+        //alert(title + ': ' + message);
       }
     },
 

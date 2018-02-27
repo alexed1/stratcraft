@@ -87,6 +87,31 @@
     });
     $A.enqueueAction(action);
   },
+
+  saveStrategy: function (component, originalNodeState, actualNodeState) {
+    console.log('in save strategy in parent controller');
+    var strategy = component.get('v.currentStrategy');
+    //This scenario describes changes to the strategy that came from altering the node properties    
+    if (originalNodeState && actualNodeState) {
+      var validationResult = this.validateNodeChange(strategy, originalNodeState, actualNodeState);
+      if (validationResult) {
+        _force.displayToast('Error', 'Node can\'t be changed this way.\n' + validationResult, 'error');
+        return;
+      }
+      this.applyChangesToStrategy(strategy, originalNodeState, actualNodeState);
+    }
+    //Another possible scenario is when strategy structure is changed (e.g. node is added or removed) but in this case there is nothing to validate
+    //TODO: check that the node it sill selected
+    //Fire this event so the property page knows to reset itself
+    component.find('propertyPage').reset();
+    var newTree = this.buildTreeFromStrategy(strategy);
+    component.find('tree').set('v.treeItems', [newTree]);
+    //post the current strategy to the server
+    //save it by name overwriting as necessary
+    //return a status message
+    this.persistStrategy(component);
+  },
+
   //save the strategy as a Salesforce strategy object
   persistStrategy: function (component) {
     console.log('Sending Strategy to Salesforce and persisting');

@@ -5,7 +5,7 @@
     <!--This attribute is set from the outside by component consumers and represents the original state of the node-->
     <aura:attribute name="currentNode" type="Object" />
     <!--This attribute is set privately and stores the current state of all the node fields in order not to spoil the state of actual node-->
-    <aura:attribute name="_currentNodeDirty" type="Object" access="private" />
+    <aura:attribute name="_currentNodeDirty" type="Object" />
     <aura:attribute name="_isIf" type="Boolean" access="private" default="false" />
     <aura:attribute name="_isSoqlLoad" type="Boolean" access="private" default="false" />
     <aura:attribute name="_isFilter" type="Boolean" access="private" default="false" />
@@ -34,35 +34,35 @@
     </lightning:select>
     
     <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isIf}">
-        <c:ifNodePropertyPage currentNode="{!v._currentNodeDirty}" />
+        <c:ifNodePropertyPage aura:id="ifNode" currentNode="{!v._currentNodeDirty}" />
         <aura:set attribute="else">
             <div class="hidden" />
         </aura:set>
     </aura:if>
     
     <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isSoqlLoad}">
-        <c:soqlLoadNodePropertyPage currentNode="{!v._currentNodeDirty}" />
+        <c:soqlLoadNodePropertyPage aura:id="soqlLoadNode" currentNode="{!v._currentNodeDirty}" />
         <aura:set attribute="else">
             <div class="hidden" />
         </aura:set>
     </aura:if>
     
     <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isFilter}">
-        <c:filterNodePropertyPage currentNode="{!v._currentNodeDirty}" />
+        <c:filterNodePropertyPage aura:id="filterNode" currentNode="{!v._currentNodeDirty}" />
         <aura:set attribute="else">
             <div class="hidden" />
         </aura:set>
     </aura:if>
     
     <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isUnion}">
-        <c:unionNodePropertyPage currentNode="{!v._currentNodeDirty}" />
+        <c:unionNodePropertyPage aura:id="unionNode" currentNode="{!v._currentNodeDirty}" />
         <aura:set attribute="else">
             <div class="hidden" />
         </aura:set>
     </aura:if>
     
     <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isRecommendationLimit}">
-        <c:recommendationLimitNodePropertyPage currentNode="{!v._currentNodeDirty}" />
+        <c:recommendationLimitNodePropertyPage aura:id="recommendationLimitNode" currentNode="{!v._currentNodeDirty}" />
         <aura:set attribute="else">
             <div class="hidden" />
         </aura:set>
