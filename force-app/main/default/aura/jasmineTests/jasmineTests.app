@@ -1,9 +1,5 @@
 <aura:application >
-<!--
     <c:lts_jasmineRunner testFiles="{!join(',', 
-    	$Resource.stratcraftTests
-    )}" />
-
-    -->
-
+    	$Resource.jasmineEndToEndTests
+    )}" />  
 </aura:application>

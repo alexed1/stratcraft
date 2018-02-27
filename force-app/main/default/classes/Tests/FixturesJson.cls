@@ -27,7 +27,7 @@ public with sharing class FixturesJson {
     public static String RecommendationLimitNodeStrategyJson =
         '{ "Id" : "Id", "name" : "Name", "description" : "Description", "masterLabel" : "Master Label", "nodes" : '
         + '[ { "nodeType" : "recommendationLimit", "name" : "Name", "description" : "Description", "parentNodeName" : "", '
-        + '"removeDuplicates" : true, "maxRecommendationCount" : 1, "lookbackDuration" : 2, "filterModes" : [ "Filter" ] } ] }';
+        + '"removeDuplicates" : true, "maxRecommendationCount" : "1", "lookbackDuration" : "2", "filterModes" : [ "Filter" ] } ] }';
 
     public static String SoqlLoadNodeStrategyJson =
         '{ "Id" : "Id", "name" : "Name", "description" : "Description", "masterLabel" : "Master Label", "nodes" : '

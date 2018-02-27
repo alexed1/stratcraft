@@ -54,7 +54,7 @@
     self = this;
     if (!currentNode) {
       currentNode = strategy.nodes.find(function (node) {
-        return node.name === 'RootNode'
+        return !node.parentNodeName;
       });
     }
     var treeItem = this.convertNodeToTreeItem(currentNode);
@@ -101,8 +101,9 @@
         console.log(' returned from persistStrategy: ' + result);
       }
       else {
-        console.log('Failed to save strategy: ' + state);
-        _force.displayToast('Strategy Crafter', 'Failed to save strategy');
+        var error = response.getError();
+        console.log('Failed to save strategy: ' + JSON.stringify(error));
+        _force.displayToast('Strategy Crafter', 'Failed to save strategy. ' + error[0].message, 'Error');
       }
     });
     $A.enqueueAction(action);
@@ -145,7 +146,6 @@
     var isNameChanged = originalNode.name != changedNode.name;
     var isParentChanged = originalNode.parentNodeName != changedNode.parentNodeName;
     var originalParent = _strategy.getParentNode(strategy, originalNode);
-    var isMovingToOwnChild = _strategy.isParentOf(strategy, originalNode.name, changedNode.parentNodeName);
     //Update parent of original children
     if (isNameChanged) {
       var originalChildren = _strategy.getDirectChildrenNodes(strategy, originalNode);
@@ -153,7 +153,8 @@
         item.parentNodeName = changedNode.name;
       });
       //If parent node refers the current one in one of its branches, we should update this branch
-      if (originalParent.nodeType == _utils.NodeType.IF) {
+      //If original parent is empty then we are renaming the root node
+      if (originalParent && originalParent.nodeType == _utils.NodeType.IF) {
         if (originalParent.branches) {
           originalParent.branches.forEach(function (item) {
             if (item.child == originalNode.name) {
@@ -165,6 +166,8 @@
     }
     //Update children
     if (isParentChanged) {
+      //TODO: process the case where empty node is selected as a new parent
+      var isMovingToOwnChild = _strategy.isParentOf(strategy, originalNode.name, changedNode.parentNodeName);
       if (isMovingToOwnChild) {
         originalChildren.forEach(function (item) {
           item.parentNodeName = originalParent.name;
