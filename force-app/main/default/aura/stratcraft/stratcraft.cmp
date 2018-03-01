@@ -11,7 +11,6 @@
     -->
 
     <aura:attribute name="currentStrategy" type="Object" />
-    <aura:attribute name="curStratNode" type="Object" />
     <aura:attribute name="originalNode" type="Object" />
 
     <aura:attribute name="strategyNames" type="List" />
@@ -19,7 +18,9 @@
 
     <aura:handler name="change" value="{!v.selectedStrategyName}" action="{!c.handleStrategySelection}" />
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
+
     <aura:handler event="c:propertyPageSaveRequestEvent" action="{!c.saveStrategy}" />
+    <aura:handler event="c:nodeDeletionRequestedEvent" action="{!c.handleNodeDeletionRequested}" />
     <aura:handler event="c:treeNodeSelectedEvent" action="{!c.handleTreeNodeSelect }" />
     <aura:handler event="c:nodeDataRequestEvent" action="{!c.handleNodeDataRequest}" />
     <aura:handler event="c:newNodeCreationRequestedEvent" action="{!c.handleNewNodeCreationRequested}" />

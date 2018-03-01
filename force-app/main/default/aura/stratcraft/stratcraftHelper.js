@@ -51,7 +51,7 @@
   },
 
   buildTreeFromStrategy: function (strategy, currentNode) {
-    self = this;
+    var self = this;
     if (!currentNode) {
       currentNode = strategy.nodes.find(function (node) {
         return !node.parentNodeName;
@@ -70,7 +70,7 @@
   },
   //when a strategy is selected, loads data from its Salesforce record
   loadStrategy: function (component, strategyName) {
-    self = this;
+    var self = this;
     var action = component.get('c.loadStrategy');
     action.setParams({ name: strategyName });
     action.setCallback(this, function (response) {
@@ -88,7 +88,7 @@
     $A.enqueueAction(action);
   },
 
-  saveStrategy: function (component, originalNodeState, actualNodeState) {
+  saveStrategy: function (component, originalNodeState, actualNodeState, onSuccess) {
     console.log('in save strategy in parent controller');
     var strategy = component.get('v.currentStrategy');
     //This scenario describes changes to the strategy that came from altering the node properties    
@@ -109,11 +109,11 @@
     //post the current strategy to the server
     //save it by name overwriting as necessary
     //return a status message
-    this.persistStrategy(component);
+    this.persistStrategy(component, onSuccess);
   },
 
   //save the strategy as a Salesforce strategy object
-  persistStrategy: function (component) {
+  persistStrategy: function (component, onSuccess) {
     console.log('Sending Strategy to Salesforce and persisting');
     var action = component.get('c.persistStrategy');
     action.setParams({ strategyJson: JSON.stringify(component.get('v.currentStrategy')) });
@@ -124,6 +124,9 @@
         //only show this if response indicates true success
         _force.displayToast('Strategy Crafter', 'Strategy changes saved');
         console.log(' returned from persistStrategy: ' + result);
+        if (onSuccess) {
+          onSuccess();
+        }
       }
       else {
         var error = response.getError();
@@ -139,7 +142,7 @@
    * @param {object} changedNode - Current state of the node after change
    */
   validateNodeChange: function (strategy, originalNode, changedNode) {
-    self = this;
+    var self = this;
     if (changedNode.name == changedNode.parentNodeName) {
       return 'A node can\'t be a parent to itself';
     }
@@ -167,7 +170,7 @@
    * @param {object} changedNode - Current state of the node after change
    */
   applyChangesToStrategy: function (strategy, originalNode, changedNode) {
-    self = this;
+    var self = this;
     var isNameChanged = originalNode.name != changedNode.name;
     var isParentChanged = originalNode.parentNodeName != changedNode.parentNodeName;
     var originalParent = _strategy.getParentNode(strategy, originalNode);
@@ -297,6 +300,33 @@
           });
         }
       });
+  },
+
+  showDeleteNodeDialog: function (component, strategy, node) {
+    var self = this;
+    var hasChildren = _strategy.hasChildrenNodes(strategy, node);
+    var question = 'Are you sure you want to delete this node';
+    if (hasChildren) {
+      question = question + ' and all its children?';
+    }
+    else {
+      question = question + '?';
+    }
+    question = question + ' This can\'t be undone';
+    this.showDialog(
+      component,
+      'Confirm Node Deletion',
+      ['c:modalWindowGenericBody', function (body) {
+        body.set('v.text', question);
+        body.set('v.iconName', _force.Icons.Action.Delete);
+      }],
+      function (bodyComponent) {
+        _strategy.deleteNode(strategy, node);
+        self.saveStrategy(component, null, null, function () {
+          component.find('propertyPage').set('v.currentNode', null);
+        });
+      }
+    )
   },
 
   showNewNodeDialog: function (component) {
