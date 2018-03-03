@@ -12,6 +12,7 @@
 
     <aura:attribute name="currentStrategy" type="Object" />
     <aura:attribute name="originalNode" type="Object" />
+    <aura:attribute name="isTreeView" type="Boolean" default="true" />
 
     <aura:attribute name="strategyNames" type="List" />
     <aura:attribute name="selectedStrategyName" type="String" default="" />
@@ -51,24 +52,39 @@
             </lightning:select>
 
         </div>
+        <div class="slds-float_left slds-m-left_small slds-m-bottom_x-small slds-grid slds-m-top_large slds-grid_vertical-align-center">
+            <div class="slds-col">
+                <p>Graph</p>
+            </div>
+            <div class="slds-col slds-m-horizontal_x-small">
+                <lightning:input type="toggle" messageToggleActive="" messageToggleInactive="" checked="{!v.isTreeView}" /> 
+            </div>
+            <div class="slds-col">
+                <p>Tree</p>
+            </div>                         
+        </div>
         <p />
         <hr class="myhr"></hr>
 
         <!-- <div aura:id="fileInput" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" >Drop Here!</div> -->
         <br />
-        <div class="slds-grid ">
-
-            <div class="slds-col slds-box slds-size_1-of-3">
-                <c:treeNode aura:id="tree"  header="NodeTree" />
+        <aura:if isTrue="{!v.isTreeView}">            
+            <div class="slds-grid">
+                <div class="slds-col slds-box slds-size_1-of-3">
+                    <c:treeNode aura:id="tree"  header="NodeTree" />
+                </div>    
+                <div class="slds-col slds-box">
+                    <b>Node Properties</b>
+                    {!v.body}
+                    <c:basePropertyPage aura:id="propertyPage" currentStrategy="{!v.currentStrategy}" />
+                </div>    
             </div>
-
-            <div class="slds-col slds-box">
-                <b>Node Properties</b>
-                {!v.body}
-                <c:basePropertyPage aura:id="propertyPage" currentStrategy="{!v.currentStrategy}" />
-            </div>
-
-        </div>
+            <aura:set attribute="else">
+                <div id="graphContainer">
+                    <p>Graph view placeholder</p>
+                </div>
+            </aura:set>
+        </aura:if>
     </div>
 
 </aura:component>
