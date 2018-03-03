@@ -68,5 +68,14 @@
         </aura:set>
     </aura:if>   
 
-    <lightning:button variant="brand" label="Save" onclick="{!c.handleClick}" disabled="{!v.currentNode == null}" />
+    <div class="slds-grid">
+        <div class="slds-col slds-size_6-of-12">
+            <lightning:button variant="brand" label="Save" onclick="{!c.handleSaveClick}" disabled="{!v.currentNode == null}" />
+        </div>
+        <div class="slds-col slds-size_6-of-12">
+            <div class="slds-float_right">
+                <lightning:button variant="destructive" label="Delete" onclick="{!c.handleDeleteClick}" disabled="{!v.currentNode == null}" />
+            </div>
+        </div>
+    </div>    
 </aura:component>

@@ -1,11 +1,17 @@
 ({
-    handleClick: function (component, event, helper) {
-        var cmpEvent = $A.get('e.c:propertyPageSaveRequestEvent');
-        cmpEvent.setParams({
+    handleSaveClick: function (component, event, helper) {
+        var componentEvent = $A.get('e.c:propertyPageSaveRequestEvent');
+        componentEvent.setParams({
             'newNodeState': component.get('v._currentNodeDirty'),
             'originalNodeState': component.get('v.currentNode')
         });
-        cmpEvent.fire();
+        componentEvent.fire();
+    },
+
+    handleDeleteClick: function (component, event, helper) {
+        var componentEvent = $A.get('e.c:nodeDeletionRequestedEvent');
+        componentEvent.setParams({ 'node': component.get('v.currentNode') });
+        componentEvent.fire();
     },
 
     handleStrategyChanged: function (component, event, helper) {
@@ -18,7 +24,7 @@
         if (currentNode) {
             helper.removeEmptyNodeType(component);
         } else {
-            helper.clearNodeTypes(component);
+            helper.loadNodeTypes(component);
         }
     },
 

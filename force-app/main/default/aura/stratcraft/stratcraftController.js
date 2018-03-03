@@ -63,6 +63,16 @@
                 break;
         }
     },
+    /** Handles request for deletion of an existing node */
+    handleNodeDeletionRequested: function (component, event, helper) {
+        var node = event.getParam('node');
+        var strategy = component.get('v.currentStrategy');
+        if (!node.parentNodeName) {
+            _force.displayToast('Error', 'Can\'t delete a root node', 'Error');
+            return;
+        }
+        helper.showDeleteNodeDialog(component, strategy, node);
+    },
     /** Handles request for creation of a new node */
     handleNewNodeCreationRequested: function (component, event, helper) {
         //When user confirms creation of the new node the below flow occurs:
