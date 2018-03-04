@@ -20,7 +20,7 @@ describe("end-to-end", function () {
                     try {
                         var currentStrategy = component.get('v.currentStrategy');
                         expect(currentStrategy).toBeTruthy();
-                        expect(currentStrategy.nodes.length).toBe(5);
+                        expect(currentStrategy.nodes.length).toBe(1);
                         //Now we emulate tree node selection
                         $T.fireApplicationEvent('c:treeNodeSelectedEvent', { 'name': 'Union' });
                         //Verifying that proper node was selected
