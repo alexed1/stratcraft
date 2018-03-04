@@ -23,7 +23,8 @@ window._force = (function () {
 
     Icons: {
       Action: {
-        Question: 'action:question_post_action'
+        Question: 'action:question_post_action',
+        Delete: 'action:delete'
       }
     }
   }
