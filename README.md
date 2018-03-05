@@ -1,4 +1,4 @@
-# StratCraft
+# StratCraft [![Build Status](https://travis-ci.com/alexed1/stratcraft.svg?token=pk3BMsTxRofwFWDGUSeM&branch=master)](https://travis-ci.com/alexed1/stratcraft)
 
 # Object Types
 
