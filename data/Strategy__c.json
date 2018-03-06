@@ -30,7 +30,7 @@
                 "referenceId": "Strategy__cRef4"
             },
             "Name": "Test Strategy",
-            "StrategyXML__c": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><RecommendationStrategy xmlns=\"http://soap.sforce.com/2006/04/metadata\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><description>Strategy used for JS tests</description><masterLabel>Some master label</masterLabel><recommendationStrategyName>Test Strategy</recommendationStrategyName><union><description>the root</description><name>RootNode</name><parentNode xsi:nil=\"true\"/><removeDuplicates>true</removeDuplicates></union></RecommendationStrategy>"
+            "StrategyXML__c": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><RecommendationStrategy xmlns=\"http://soap.sforce.com/2006/04/metadata\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><description>Strategy used for JS tests</description><masterLabel>Some master label</masterLabel><recommendationStrategyName>Test Strategy</recommendationStrategyName><union><description>the root</description><name>Union</name><parentNode xsi:nil=\"true\"/><removeDuplicates>true</removeDuplicates></union></RecommendationStrategy>"
         }
     ]
 }
