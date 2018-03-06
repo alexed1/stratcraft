@@ -137,5 +137,22 @@
         var originalNodeState = event.getParam('originalNodeState');
         var actualNodeState = event.getParam('newNodeState');
         helper.saveStrategy(component, originalNodeState, actualNodeState);
+    },
+
+    handleViewChanged: function (component, event, helper) {
+        var isGraphInitialized = component.get('v._isGraphInitialized');
+        var isTreeView = component.get('v.isTreeView');
+        var strategy = component.get('v.currentStrategy');
+        if (isGraphInitialized) {
+            if (isTreeView) {
+                helper.rebuildStrategyGraph(strategy);
+            }
+        } else {
+            window.setTimeout($A.getCallback(function () {
+                helper.initializeGraph();
+                component.set('v._isGraphInitialized', true);
+                helper.rebuildStrategyGraph(strategy);
+            }));
+        }
     }
 })

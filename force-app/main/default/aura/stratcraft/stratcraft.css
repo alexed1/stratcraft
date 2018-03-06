@@ -15,3 +15,25 @@
 	font-size: 200%;
 }
 
+.THIS .graphContainer {
+	position: relative;
+	min-height: 400px;
+	border: solid 1px black;
+}
+
+.THIS .node-header {
+	border-bottom: solid 1px black;
+}
+
+.THIS .node-header p {
+	margin: 2px auto;
+	font-size: 10px;
+}
+
+.THIS .node {
+	width: 80px;
+	height: 40px;
+	position: absolute;
+	border: solid 1px black;
+}
+

@@ -368,6 +368,26 @@
       strategyNames = strategyNames.slice(1);
       component.set('v.strategyNames', strategyNames);
     }
+  },
+
+  initializeGraph: function () {
+    var container = document.getElementsByClassName('graphContainer')[0];
+    jsPlumb.setContainer(container);
+  },
+
+  clearGraph: function () {
+    var container = document.getElementsByClassName('graphContainer')[0];
+    jsPlumb.reset();
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
+  },
+
+  rebuildStrategyGraph: function (strategy) {
+    this.clearGraph();
+    var container = document.getElementsByClassName('graphContainer')[0];
+    var treeLayout = _jsplumbWalker.buildTreeLayout(strategy);
+    //Build nodes code goes here
   }
   /*,
 

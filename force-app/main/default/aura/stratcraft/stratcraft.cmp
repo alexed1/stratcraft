@@ -3,6 +3,8 @@
     <ltng:require scripts="{!$Resource.force}" />
     <ltng:require scripts="{!$Resource.strategy}" />
     <ltng:require scripts="{!$Resource.utils}" />
+    <ltng:require scripts="{!$Resource.jsplumb}" />
+    <ltng:require scripts="{!$Resource.jsplumbWalker}" />
     <!-- 
     <ltng:require scripts="{!$Resource.hopscotch}" afterScriptsLoaded="{!c.hopscotchLoaded}" />
     <ltng:require scripts="{!$Resource.hopscotchcss}" />
@@ -13,11 +15,13 @@
     <aura:attribute name="currentStrategy" type="Object" />
     <aura:attribute name="originalNode" type="Object" />
     <aura:attribute name="isTreeView" type="Boolean" default="true" />
+    <aura:attribute name="_isGraphInitialized" type="Boolean" default="false" />
 
     <aura:attribute name="strategyNames" type="List" />
     <aura:attribute name="selectedStrategyName" type="String" default="" />
 
     <aura:handler name="change" value="{!v.selectedStrategyName}" action="{!c.handleStrategySelection}" />
+    <aura:handler name="change" value="{!v.isTreeView}" action="{!c.handleViewChanged}" />
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
 
     <aura:handler event="c:propertyPageSaveRequestEvent" action="{!c.saveStrategy}" />
@@ -80,7 +84,7 @@
                 </div>    
             </div>
             <aura:set attribute="else">
-                <div id="graphContainer">
+                <div class="graphContainer">
                     <p>Graph view placeholder</p>
                 </div>
             </aura:set>
