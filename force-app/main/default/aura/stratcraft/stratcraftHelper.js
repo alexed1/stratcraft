@@ -79,6 +79,13 @@
         var strategy = response.getReturnValue();
         component.set('v.currentStrategy', strategy);
         component.find('tree').set('v.treeItems', [this.buildTreeFromStrategy(strategy)]);
+        var isTreeView = component.get('v.isTreeView');
+        if (isTreeView) {
+          self.clearGraph();
+        }
+        else {
+          self.rebuildStrategyGraph(strategy);
+        }
         console.log('Retrieved strategy with Id ' + strategy.Id);
       }
       else {
@@ -371,12 +378,12 @@
   },
 
   initializeGraph: function () {
-    var container = document.getElementsByClassName('graphContainer')[0];
+    var container = document.getElementsByClassName('graph-container')[0];
     jsPlumb.setContainer(container);
   },
 
   clearGraph: function () {
-    var container = document.getElementsByClassName('graphContainer')[0];
+    var container = document.getElementsByClassName('graph-container')[0];
     jsPlumb.reset();
     while (container.firstChild) {
       container.removeChild(container.firstChild);
@@ -384,10 +391,84 @@
   },
 
   rebuildStrategyGraph: function (strategy) {
+    self = this;
     this.clearGraph();
-    var container = document.getElementsByClassName('graphContainer')[0];
-    var treeLayout = _jsplumbWalker.buildTreeLayout(strategy);
-    //Build nodes code goes here
+    var container = document.getElementsByClassName('graph-container')[0];
+    var containerScrollView = document.getElementsByClassName('graph-scroll-view')[0];
+    if (strategy) {
+      var treeLayout = _jsplumbWalker.buildTreeLayout(strategy);
+      //This is the adjustment step in order to put the whole tree in the middle of the container
+      //(and adjust the size of the container if it is less than the width of the tree)
+      container.style.width = treeLayout.width + 'px';
+      container.style.height = treeLayout.height + 'px';
+      if (containerScrollView.clientHeight > treeLayout.height) {
+        container.style.marginTop = container.style.marginBottom = (containerScrollView.clientHeight - treeLayout.height - containerScrollView.style.padding) / 2 - 21 + 'px';
+      }
+      else {
+        container.style.marginTop = container.style.marginBottom = 'inherit';
+      }
+      var queue = [];
+      queue.push({
+        layoutNode: treeLayout.root,
+        visualNode: self.createNode(container, treeLayout.root)
+      });
+      jsPlumb.batch(function () {
+        var parentVisualNode = null;
+        while (queue.length > 0) {
+          var parentNodePair = queue.shift();
+          parentNodePair.layoutNode.children.forEach(function (item) {
+            var childNodePair = {
+              layoutNode: item,
+              visualNode: self.createNode(container, item)
+            };
+            jsPlumb.connect({
+              source: childNodePair.visualNode,
+              target: parentNodePair.visualNode,
+              anchors: ['Right', 'Left'],
+              endpoint: 'Blank',
+              connector: 'Flowchart'
+            });
+            queue.push(childNodePair);
+          });
+        }
+      });
+    } else {
+      container.style.width = '0px';
+      container.style.height = '0px';
+    }
+
+  },
+
+  createNode: function (container, treeLayoutNode) {
+    var visualNode = document.createElement('div');
+    visualNode.id = 'node_' + treeLayoutNode.strategyNode.name.replace(/ /g, "_");
+    var specificNodeClass = '';
+    switch (treeLayoutNode.strategyNode.nodeType) {
+      case _utils.NodeType.IF:
+        specificNodeClass = 'if-node';
+        break;
+      case _utils.NodeType.UNION:
+        specificNodeClass = 'union-node';
+        break;
+      case _utils.NodeType.SOQL_LOAD:
+        specificNodeClass = 'soql-load-node';
+        break;
+      case _utils.NodeType.RECOMMENDATION_LIMIT:
+        specificNodeClass = 'recommendation-limit-node';
+        break;
+      case _utils.NodeType.FILTER:
+        specificNodeClass = 'filter-node';
+        break;
+    }
+    visualNode.classList.add('node');
+    if (specificNodeClass) {
+      visualNode.classList.add(specificNodeClass);
+    }
+    visualNode.style.left = treeLayoutNode.x + 'px';
+    visualNode.style.top = treeLayoutNode.y + 'px';
+    visualNode.innerHTML = '<p>' + treeLayoutNode.strategyNode.name + '</p>';
+    container.appendChild(visualNode);
+    return visualNode;
   }
   /*,
 

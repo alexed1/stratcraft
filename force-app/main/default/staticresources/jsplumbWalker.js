@@ -222,7 +222,7 @@ window._jsplumbWalker = (function () {
         var leftNeighbor = null;
         while (!queue.isEmpty()) {
             var node = queue.dequeue();
-            var strategyChildNodes = _strategy.getDirectChildrenNodes(strategy, node._strategyNode);
+            var strategyChildNodes = _strategy.getDirectChildrenNodes(strategy, node.strategyNode);
             for (var i = 0; i < strategyChildNodes.length; i++) {
                 var child = new Node(strategyChildNodes[i]).setParent(node);
                 node.addChild(child);
@@ -242,14 +242,14 @@ window._jsplumbWalker = (function () {
     /*
      * Represents Walker's algorithm itself.
      */
-    Algorithm = {
+    var Algorithm = {
         'xAdjustment': 0,
         'yAdjustment': 0,
         'levelSeparation': 80,
         'siblingSeparation': 40,
         'subtreeSeparation': 100,
-        'nodeWidth': 80,
-        'nodeHeight': 40
+        'nodeWidth': 120,
+        'nodeHeight': 60
     };
     /** Positions tree in accordance with the assigned configuration. */
     Algorithm.position = function position(tree) {
@@ -349,18 +349,27 @@ window._jsplumbWalker = (function () {
     Algorithm.postPosition = function postPosition(tree) {
         var minX = 0;
         var minY = 0;
-        tree.eachInPostorder(function (node) {
-            if (node.x < minX) {
-                minX = node.x;
+        var maxX = Algorithm.nodeWidth;
+        var maxY = 0;
+        tree.eachInPostorder(function () {
+            if (this.x < minX) {
+                minX = this.x;
             }
-            if (node.y < minY) {
-                minY = node.y;
+            if (this.y < minY) {
+                minY = this.y;
+            }
+            if (this.y > maxY) {
+                maxY = this.y;
             }
         });
-        tree.eachInPostorder(function (node) {
-            node.x = node.x - minX;
-            node.y = node.y - minY;
+        maxY = maxY + Algorithm.nodeHeight;
+        tree.eachInPostorder(function () {
+            this.x = this.x - minX;
+            this.y = this.y - minY;
         });
+        //Tree width and height are how many pixels the tree should occupy        
+        tree.width = maxX - minX;
+        tree.height = maxY - minY;
     };
 
     return {

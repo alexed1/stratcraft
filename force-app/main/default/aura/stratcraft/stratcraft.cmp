@@ -72,23 +72,19 @@
 
         <!-- <div aura:id="fileInput" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" >Drop Here!</div> -->
         <br />
-        <aura:if isTrue="{!v.isTreeView}">            
-            <div class="slds-grid">
-                <div class="slds-col slds-box slds-size_1-of-3">
-                    <c:treeNode aura:id="tree"  header="NodeTree" />
-                </div>    
-                <div class="slds-col slds-box">
-                    <b>Node Properties</b>
-                    {!v.body}
-                    <c:basePropertyPage aura:id="propertyPage" currentStrategy="{!v.currentStrategy}" />
-                </div>    
-            </div>
-            <aura:set attribute="else">
-                <div class="graphContainer">
-                    <p>Graph view placeholder</p>
-                </div>
-            </aura:set>
-        </aura:if>
+                    
+        <div class="slds-grid" aura:id="treeContainer">
+            <div class="slds-col slds-box slds-size_1-of-3">
+                <c:treeNode aura:id="tree"  header="NodeTree" />
+            </div>    
+            <div class="slds-col slds-box">
+                <b>Node Properties</b>
+                {!v.body}
+                <c:basePropertyPage aura:id="propertyPage" currentStrategy="{!v.currentStrategy}" />
+            </div>    
+        </div>
+        <div class="slds-hide graph-scroll-view" aura:id="graphView">
+            <div class="graph-container" aura:id="graphContainer" />
+        </div>        
     </div>
-
 </aura:component>

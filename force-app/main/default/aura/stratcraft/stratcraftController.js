@@ -143,9 +143,16 @@
         var isGraphInitialized = component.get('v._isGraphInitialized');
         var isTreeView = component.get('v.isTreeView');
         var strategy = component.get('v.currentStrategy');
+        var graphContainer = component.find('graphContainer');
+        var treeContainer = component.find('treeContainer');
+        var graphScrollView = component.find('graphView');
+        $A.util.toggleClass(graphScrollView, 'slds-hide');
+        $A.util.toggleClass(treeContainer, 'slds-hide');
         if (isGraphInitialized) {
-            if (isTreeView) {
-                helper.rebuildStrategyGraph(strategy);
+            if (!isTreeView) {
+                window.setTimeout($A.getCallback(function () { helper.rebuildStrategyGraph(strategy); }));
+            } else {
+                helper.clearGraph();
             }
         } else {
             window.setTimeout($A.getCallback(function () {

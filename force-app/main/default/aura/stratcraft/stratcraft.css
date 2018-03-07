@@ -15,25 +15,51 @@
 	font-size: 200%;
 }
 
-.THIS .graphContainer {
-	position: relative;
-	min-height: 400px;
+.THIS .graph-scroll-view {
+	height: 400px;
+	width: 100%;
+	padding: 20px;
+	overflow: auto;
 	border: solid 1px black;
+}
+
+.THIS .graph-container {
+	position: relative;
+	margin: auto;
 }
 
 .THIS .node-header {
 	border-bottom: solid 1px black;
 }
 
-.THIS .node-header p {
-	margin: 2px auto;
-	font-size: 10px;
-}
-
 .THIS .node {
-	width: 80px;
-	height: 40px;
+	width: 120px;
+	height: 60px;
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+	font-size: 10px;
 	position: absolute;
 	border: solid 1px black;
+}
+
+.THIS .if-node {
+	background: thistle;
+}
+
+.THIS .union-node {
+	background: skyblue;
+}
+
+.THIS .soql-load-node {
+	background: salmon;
+}
+
+.THIS .recommendation-limit-node {
+	background: green;
+}
+
+.THIS .filter-node {
+	background: floralwhite;
 }
 
