@@ -150,7 +150,7 @@
         $A.util.toggleClass(treeContainer, 'slds-hide');
         if (isGraphInitialized) {
             if (!isTreeView) {
-                window.setTimeout($A.getCallback(function () { helper.rebuildStrategyGraph(strategy); }));
+                window.setTimeout($A.getCallback(function () { helper.rebuildStrategyGraph(component, strategy); }));
             } else {
                 helper.clearGraph();
             }
@@ -158,7 +158,7 @@
             window.setTimeout($A.getCallback(function () {
                 helper.initializeGraph();
                 component.set('v._isGraphInitialized', true);
-                helper.rebuildStrategyGraph(strategy);
+                helper.rebuildStrategyGraph(component, strategy);
             }));
         }
     }

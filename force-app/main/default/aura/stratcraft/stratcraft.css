@@ -35,12 +35,20 @@
 .THIS .node {
 	width: 120px;
 	height: 60px;
-	display: table-cell;
-	vertical-align: middle;
-	text-align: center;
-	font-size: 10px;
+	display: table;
 	position: absolute;
 	border: solid 1px black;
+	cursor: pointer;
+}
+
+.THIS .node-text {
+	display: table-cell;
+	font-size: 10px;
+	vertical-align: middle;
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+	word-break: break-all;
+	text-align: center;
 }
 
 .THIS .if-node {

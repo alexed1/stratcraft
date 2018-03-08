@@ -84,7 +84,7 @@
           self.clearGraph();
         }
         else {
-          self.rebuildStrategyGraph(strategy);
+          self.rebuildStrategyGraph(component, strategy);
         }
         console.log('Retrieved strategy with Id ' + strategy.Id);
       }
@@ -116,7 +116,19 @@
     //post the current strategy to the server
     //save it by name overwriting as necessary
     //return a status message
-    this.persistStrategy(component, onSuccess);
+    this.persistStrategy(component, function () {
+      //This is to close modal dialog with base property page if a save was triggered from it
+      var popup = window.open(location, '_self', '');
+      popup.close();
+      //If we currently see a graph, we need to rebuild it
+      var isTreeView = component.get('v.isTreeView');
+      if (!isTreeView) {
+        self.rebuildStrategyGraph(component, component.get('v.currentStrategy'));
+      }
+      if (onSuccess) {
+        onSuccess();
+      }
+    });
   },
 
   //save the strategy as a Salesforce strategy object
@@ -240,7 +252,8 @@
    * - plain string: will be displayed as is
    * - component name (starts with namespace:): specified component will be created and used
    * - array: first element of array is treated as component name, second is treated as an initializer function that accepts newly created component
-   * @param {function} okCallback - Function that accepts modal body component and is invoked when modal body component passed validation and modal window is closed
+   * @param {function} okCallback - (Optional)Function that accepts modal body component and is invoked when modal body component passed validation and modal window is closed.
+   * If it is not provided, than standard footer with 'Continue' and 'Cancel' won't be used, leaving modal window closing responsibility to the body component
    * @param {function} validateCallback - (Optional)Function that accepts modal body component and returns true if it is in a valid state to proceed
    * @param {function} cancelCallback - (Optional)Function that is invoked when modal window is closed without validation
    * @example: Examples for header and body:
@@ -249,15 +262,13 @@
    * ['c:myComponentName', function (component) { component.set('v.name', 'Initial value for the name property')}]
    */
   showDialog: function (component, header, body, okCallback, validateCallback, cancelCallback) {
-    if (!okCallback) {
-      throw new Error('OK callback is not provided. Use force:showToast for notification that don\'t block UI');
-    }
     //TODO: probably worth check the actual namespace
     var headerConfiguration = this.parseComponentConfiguration(header);
     var bodyConfiguration = this.parseComponentConfiguration(body);
-    var componentsToCreate = [
-      ['c:modalWindowFooter', {}]
-    ];
+    var componentsToCreate = [];
+    if (okCallback) {
+      componentsToCreate.unshift(['c:modalWindowFooter', {}]);
+    }
     if (bodyConfiguration.isComponent) {
       componentsToCreate.unshift([bodyConfiguration.name, {}]);
     }
@@ -268,6 +279,9 @@
     $A.createComponents(componentsToCreate,
       function (components, status, errorMessage) {
         if (status === 'SUCCESS') {
+          if (!okCallback) {
+            components.push(undefined);
+          }
           //Footer is always the last, body is always next to the last, header is always the first
           var footer = components[components.length - 1];
           header = headerConfiguration.isComponent ? components[0] : headerConfiguration.name;
@@ -279,25 +293,26 @@
           if (bodyConfiguration.isComponent && bodyConfiguration.initializer) {
             bodyConfiguration.initializer(body);
           }
-
-          footer.addEventHandler('buttonClickEvent', function (clickEvent) {
-            var buttonClicked = clickEvent.getParam('Button');
-            switch (buttonClicked) {
-              case _utils.ModalDialogButtonType.OK:
-                var isValid = !validateCallback || validateCallback(body);
-                if (isValid) {
-                  okCallback(body);
+          if (footer) {
+            footer.addEventHandler('buttonClickEvent', function (clickEvent) {
+              var buttonClicked = clickEvent.getParam('Button');
+              switch (buttonClicked) {
+                case _utils.ModalDialogButtonType.OK:
+                  var isValid = !validateCallback || validateCallback(body);
+                  if (isValid) {
+                    okCallback(body);
+                    modalDialog.notifyClose();
+                  }
+                  break;
+                case _utils.ModalDialogButtonType.CANCEL:
+                  if (cancelCallback) {
+                    cancelCallback();
+                  }
                   modalDialog.notifyClose();
-                }
-                break;
-              case _utils.ModalDialogButtonType.CANCEL:
-                if (cancelCallback) {
-                  cancelCallback();
-                }
-                modalDialog.notifyClose();
-                break;
-            }
-          });
+                  break;
+              }
+            });
+          }
           modalDialog.showCustomModal({
             header: header,
             body: body,
@@ -331,6 +346,9 @@
         _strategy.deleteNode(strategy, node);
         self.saveStrategy(component, null, null, function () {
           component.find('propertyPage').set('v.currentNode', null);
+          //This is to close modal dialog with base property page if a save was triggered from it
+          var popup = window.open(location, '_self', '');
+          popup.close();
         });
       }
     )
@@ -366,6 +384,17 @@
       cancelCallback);
   },
 
+  showNodePropertiesDialog: function (component, strategy, strategyNode) {
+    self = this;
+    this.showDialog(
+      component,
+      'Node Properties',
+      ['c:basePropertyPage', function (body) {
+        body.set('v.currentStrategy', strategy);
+        body.set('v.currentNode', strategyNode);
+      }]);
+  },
+
   /**Makes sure that an empty option in the strategy selection list is removed
    * @param {object} component - a reference to a stratcraft component
    */
@@ -386,11 +415,14 @@
     var container = document.getElementsByClassName('graph-container')[0];
     jsPlumb.reset();
     while (container.firstChild) {
-      container.removeChild(container.firstChild);
+      var firstChild = container.firstChild;
+      firstChild.removeEventListener('click', firstChild.clickHandler);
+      delete firstChild.clickHandler;
+      container.removeChild(firstChild);
     }
   },
 
-  rebuildStrategyGraph: function (strategy) {
+  rebuildStrategyGraph: function (component, strategy) {
     self = this;
     this.clearGraph();
     var container = document.getElementsByClassName('graph-container')[0];
@@ -410,7 +442,7 @@
       var queue = [];
       queue.push({
         layoutNode: treeLayout.root,
-        visualNode: self.createNode(container, treeLayout.root)
+        visualNode: self.createNode(component, container, strategy, treeLayout.root)
       });
       jsPlumb.batch(function () {
         var parentVisualNode = null;
@@ -419,7 +451,7 @@
           parentNodePair.layoutNode.children.forEach(function (item) {
             var childNodePair = {
               layoutNode: item,
-              visualNode: self.createNode(container, item)
+              visualNode: self.createNode(component, container, strategy, item)
             };
             jsPlumb.connect({
               source: childNodePair.visualNode,
@@ -436,10 +468,10 @@
       container.style.width = '0px';
       container.style.height = '0px';
     }
-
   },
 
-  createNode: function (container, treeLayoutNode) {
+  createNode: function (component, container, strategy, treeLayoutNode) {
+    self = this;
     var visualNode = document.createElement('div');
     visualNode.id = 'node_' + treeLayoutNode.strategyNode.name.replace(/ /g, "_");
     var specificNodeClass = '';
@@ -466,8 +498,15 @@
     }
     visualNode.style.left = treeLayoutNode.x + 'px';
     visualNode.style.top = treeLayoutNode.y + 'px';
-    visualNode.innerHTML = '<p>' + treeLayoutNode.strategyNode.name + '</p>';
+    var text = document.createElement('p');
+    text.className = 'node-text';
+    text.innerText = treeLayoutNode.strategyNode.name;
+    visualNode.appendChild(text);
     container.appendChild(visualNode);
+    visualNode.clickHandler = $A.getCallback(function () {
+      self.showNodePropertiesDialog(component, strategy, treeLayoutNode.strategyNode);
+    });
+    visualNode.addEventListener('click', visualNode.clickHandler);
     return visualNode;
   }
   /*,
