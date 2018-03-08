@@ -2,7 +2,7 @@
 <CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
     <description>Created by Lightning App Builder</description>
     <flexiPage>Strategy_Crafter</flexiPage>
-    <label>Strategy Crafter</label>
+    <label>Strategy Builder</label>
     <mobileReady>true</mobileReady>
     <motif>Custom90: Scales</motif>
 </CustomTab>
