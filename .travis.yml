@@ -18,7 +18,7 @@ before_install:
 - sfdx force:auth:jwt:grant --clientid $CONSUMERKEY --jwtkeyfile server.key
   --username $USERNAME --setdefaultdevhubusername -a HubOrg
 script:
-- sfdx force:org:create -v HubOrg -s -f config/project-scratch-def.json -a ciorg
+- sfdx force:org:create -v HubOrg -s -f config/project-scratch-def.json -a ciorg --json --loglevel debug -w 10
 - sfdx force:lightning:test:install -u ciorg
 - sfdx force:source:push -u ciorg 
 - sfdx force:data:tree:import -u ciorg -f data/Strategy__c.json
