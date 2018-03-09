@@ -1,5 +1,0 @@
-<aura:event type="APPLICATION" description="Raised when the strategy node structure is changed">
-    <aura:attribute name="type" type="String" description="Operation type. See utils.StrategyChangeType for available values" />
-    <aura:attribute name="nodeName" type="String" description="Name of the changed node" />
-    <aura:attribute name="parentNodeName" type="String" description="Optional name of the parent node" />
-</aura:event>

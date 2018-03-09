@@ -116,6 +116,7 @@
     //post the current strategy to the server
     //save it by name overwriting as necessary
     //return a status message
+    self = this;
     this.persistStrategy(component, function () {
       //This is to close modal dialog with base property page if a save was triggered from it
       var popup = window.open(location, '_self', '');
@@ -363,7 +364,7 @@
         var newNodeEvent = $A.get('e.c:newNodeCreationRequestedEvent');
         newNodeEvent.setParams({
           'name': bodyComponent.get('v.name').trim(),
-          'nodeType': bodyComponent.get('v.nodeType'),
+          'nodeType': bodyComponent.get('v.selectedNodeType'),
           'parentNodeName': bodyComponent.get('v.selectedParentNodeName')
         });
         newNodeEvent.fire();

@@ -75,6 +75,7 @@
     },
     /** Handles request for creation of a new node */
     handleNewNodeCreationRequested: function (component, event, helper) {
+        self = this;
         //When user confirms creation of the new node the below flow occurs:
         //1. newNodeCreationRequestedEvent is raised by the modal dialog
         //2. stratcraft handles it and adds new node to the current strategy
@@ -85,20 +86,21 @@
         var nodeType = event.getParam('nodeType');
         var parentNodeName = event.getParam('parentNodeName');
         var strategy = component.get('v.currentStrategy');
-        strategy.nodes.push({
+        var newNode = {
             name: nodeName,
             parentNodeName: parentNodeName,
             nodeType: nodeType,
             description: ''
-        });
+        };
+        strategy.nodes.push(newNode);
         component.set('v.currentStrategy', strategy);
-        var newNodeEvent = $A.get('e.c:strategyChangedEvent');
-        newNodeEvent.setParams({
-            'type': _utils.StrategyChangeType.ADD_NODE,
-            'nodeName': nodeName,
-            'parentNodeName': parentNodeName
+        helper.saveStrategy(component, null, newNode, function () {
+            var nodeSelectedEvent = $A.get('e.c:treeNodeSelectedEvent');
+            nodeSelectedEvent.setParams({
+                'name': nodeName
+            });
+            nodeSelectedEvent.fire();
         });
-        newNodeEvent.fire();
     },
     /** Handles request for related nodes, calculates the related nodes and pass it to the callback */
     handleNodeDataRequest: function (component, event, helper) {
