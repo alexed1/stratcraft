@@ -81,10 +81,10 @@
         component.find('tree').set('v.treeItems', [this.buildTreeFromStrategy(strategy)]);
         var isTreeView = component.get('v.isTreeView');
         if (isTreeView) {
-          self.clearGraph();
+          self.clearDiagram();
         }
         else {
-          self.rebuildStrategyGraph(component, strategy);
+          self.rebuildStrategyDiagram(component, strategy);
         }
         console.log('Retrieved strategy with Id ' + strategy.Id);
       }
@@ -121,10 +121,10 @@
       //This is to close modal dialog with base property page if a save was triggered from it
       var popup = window.open(location, '_self', '');
       popup.close();
-      //If we currently see a graph, we need to rebuild it
+      //If we currently see a diagram, we need to rebuild it
       var isTreeView = component.get('v.isTreeView');
       if (!isTreeView) {
-        self.rebuildStrategyGraph(component, component.get('v.currentStrategy'));
+        self.rebuildStrategyDiagram(component, component.get('v.currentStrategy'));
       }
       if (onSuccess) {
         onSuccess();
@@ -407,13 +407,13 @@
     }
   },
 
-  initializeGraph: function () {
-    var container = document.getElementsByClassName('graph-container')[0];
+  initializeDiagram: function () {
+    var container = document.getElementsByClassName('diagram-container')[0];
     jsPlumb.setContainer(container);
   },
 
-  clearGraph: function () {
-    var container = document.getElementsByClassName('graph-container')[0];
+  clearDiagram: function () {
+    var container = document.getElementsByClassName('diagram-container')[0];
     jsPlumb.reset();
     while (container.firstChild) {
       var firstChild = container.firstChild;
@@ -423,11 +423,11 @@
     }
   },
 
-  rebuildStrategyGraph: function (component, strategy) {
+  rebuildStrategyDiagram: function (component, strategy) {
     self = this;
-    this.clearGraph();
-    var container = document.getElementsByClassName('graph-container')[0];
-    var containerScrollView = document.getElementsByClassName('graph-scroll-view')[0];
+    this.clearDiagram();
+    var container = document.getElementsByClassName('diagram-container')[0];
+    var containerScrollView = document.getElementsByClassName('diagram-scroll-view')[0];
     if (strategy) {
       var treeLayout = _jsplumbWalker.buildTreeLayout(strategy);
       //This is the adjustment step in order to put the whole tree in the middle of the container

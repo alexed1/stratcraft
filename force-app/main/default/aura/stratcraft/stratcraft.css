@@ -3,27 +3,35 @@
 	margin: 0 0 10px;
 }
 
-.THIS .hr {
-	margin: 0px;
-}
-
-.THIS .myhr {
-	margin: 0 0 0 0;
-}
-
 .THIS .heading {
 	font-size: 200%;
 }
 
-.THIS .graph-scroll-view {
-	height: 400px;
+.THIS.root {
+	height: 79vh;
+	margin-bottom: -2.5rem;
+	display: flex;
+	flex-direction: column;
+}
+
+.THIS .tool-bar {
+	display: flex;
+	align-items: center;
+	min-height: 63px;
+}
+
+.THIS .full-height {
+	flex-grow: 1;
+}
+
+.THIS .diagram-scroll-view {
 	width: 100%;
 	padding: 20px;
 	overflow: auto;
 	border: solid 1px black;
 }
 
-.THIS .graph-container {
+.THIS .diagram-container {
 	position: relative;
 	margin: auto;
 }
