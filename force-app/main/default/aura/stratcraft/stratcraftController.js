@@ -1,6 +1,23 @@
 ({
-    init: function (cmp, event, helper) {
-        helper.loadStrategyNames(cmp);
+    init: function (component, event, helper) {
+        helper.loadStrategyNames(component);
+    },
+
+    onRender: function (component, event, helper) {
+        // var container = document.getElementsByClassName('oneFlexipage')[0];
+        // container.style.height = '100%';
+        // container = container.getElementsByClassName('pageBody')[0];
+        // //This is to leave some space for header and avoid vertical scroll
+        // container.style.height = '96%';
+        // container = container.getElementsByClassName('flexipagePage')[0];
+        // container.style.height = '100%';
+        // container = container.getElementsByClassName('regions flexipageDefaultAppHomeTemplate')[0];
+        // container.style.height = '100%';
+        // container = container.getElementsByClassName('region')[0];
+        // container.style.height = '100%';
+        // container.style.marginBottom = '0px';
+        // container = container.getElementsByClassName('flexipageComponent')[0];
+        // container = container.style.height = '100%';
     },
 
     /*hopscotchLoaded: function (cmp, event, helper) {
@@ -75,6 +92,7 @@
     },
     /** Handles request for creation of a new node */
     handleNewNodeCreationRequested: function (component, event, helper) {
+        self = this;
         //When user confirms creation of the new node the below flow occurs:
         //1. newNodeCreationRequestedEvent is raised by the modal dialog
         //2. stratcraft handles it and adds new node to the current strategy
@@ -85,20 +103,21 @@
         var nodeType = event.getParam('nodeType');
         var parentNodeName = event.getParam('parentNodeName');
         var strategy = component.get('v.currentStrategy');
-        strategy.nodes.push({
+        var newNode = {
             name: nodeName,
             parentNodeName: parentNodeName,
             nodeType: nodeType,
             description: ''
-        });
+        };
+        strategy.nodes.push(newNode);
         component.set('v.currentStrategy', strategy);
-        var newNodeEvent = $A.get('e.c:strategyChangedEvent');
-        newNodeEvent.setParams({
-            'type': _utils.StrategyChangeType.ADD_NODE,
-            'nodeName': nodeName,
-            'parentNodeName': parentNodeName
+        helper.saveStrategy(component, null, newNode, function () {
+            var nodeSelectedEvent = $A.get('e.c:treeNodeSelectedEvent');
+            nodeSelectedEvent.setParams({
+                'name': nodeName
+            });
+            nodeSelectedEvent.fire();
         });
-        newNodeEvent.fire();
     },
     /** Handles request for related nodes, calculates the related nodes and pass it to the callback */
     handleNodeDataRequest: function (component, event, helper) {
@@ -137,5 +156,29 @@
         var originalNodeState = event.getParam('originalNodeState');
         var actualNodeState = event.getParam('newNodeState');
         helper.saveStrategy(component, originalNodeState, actualNodeState);
+    },
+
+    handleViewChanged: function (component, event, helper) {
+        var isDiagramInitialized = component.get('v._isDiagramInitialized');
+        var isTreeView = component.get('v.isTreeView');
+        var strategy = component.get('v.currentStrategy');
+        var diagramContainer = component.find('diagramContainer');
+        var treeContainer = component.find('treeContainer');
+        var diagramScrollView = component.find('diagramView');
+        $A.util.toggleClass(diagramScrollView, 'slds-hide');
+        $A.util.toggleClass(treeContainer, 'slds-hide');
+        if (isDiagramInitialized) {
+            if (!isTreeView) {
+                window.setTimeout($A.getCallback(function () { helper.rebuildStrategyDiagram(component, strategy); }));
+            } else {
+                helper.clearDiagram();
+            }
+        } else {
+            window.setTimeout($A.getCallback(function () {
+                helper.initializeDiagram();
+                component.set('v._isDiagramInitialized', true);
+                helper.rebuildStrategyDiagram(component, strategy);
+            }));
+        }
     }
 })

@@ -12,7 +12,7 @@ describe("end-to-end", function () {
     });
 
     it('Load strategy, change node property, save strategy, load strategy => node property is saved', function (done) {
-        $T.createComponent('c:stratCraft', null, true)
+        $T.createComponent('c:stratcraft', null, true)
             .then(function (component) {
                 //We select strategy by name and expect it to be loaded and parsed
                 component.set('v.selectedStrategyName', 'Test Strategy');
@@ -61,7 +61,10 @@ describe("end-to-end", function () {
                         done.fail(e);
                     }
                 }, 2000);
-            });
+            },
+                function (reason) {
+                    done.fail(reason);
+                });
     });
 
 

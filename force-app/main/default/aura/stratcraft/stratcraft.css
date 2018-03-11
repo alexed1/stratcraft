@@ -3,15 +3,79 @@
 	margin: 0 0 10px;
 }
 
-.THIS .hr {
-	margin: 0px;
-}
-
-.THIS .myhr {
-	margin: 0 0 0 0;
-}
-
 .THIS .heading {
 	font-size: 200%;
+}
+
+.THIS.root {
+	height: 79vh;
+	margin-bottom: -2.5rem;
+	display: flex;
+	flex-direction: column;
+}
+
+.THIS .tool-bar {
+	display: flex;
+	align-items: center;
+	min-height: 63px;
+}
+
+.THIS .full-height {
+	flex-grow: 1;
+}
+
+.THIS .diagram-scroll-view {
+	width: 100%;
+	padding: 20px;
+	overflow: auto;
+	border: solid 1px black;
+}
+
+.THIS .diagram-container {
+	position: relative;
+	margin: auto;
+}
+
+.THIS .node-header {
+	border-bottom: solid 1px black;
+}
+
+.THIS .node {
+	width: 120px;
+	height: 60px;
+	display: table;
+	position: absolute;
+	border: solid 1px black;
+	cursor: pointer;
+}
+
+.THIS .node-text {
+	display: table-cell;
+	font-size: 10px;
+	vertical-align: middle;
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+	word-break: break-all;
+	text-align: center;
+}
+
+.THIS .if-node {
+	background: thistle;
+}
+
+.THIS .union-node {
+	background: skyblue;
+}
+
+.THIS .soql-load-node {
+	background: salmon;
+}
+
+.THIS .recommendation-limit-node {
+	background: green;
+}
+
+.THIS .filter-node {
+	background: floralwhite;
 }
 

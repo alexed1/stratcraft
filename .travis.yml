@@ -18,10 +18,11 @@ before_install:
 - sfdx force:auth:jwt:grant --clientid $CONSUMERKEY --jwtkeyfile server.key
   --username $USERNAME --setdefaultdevhubusername -a HubOrg
 script:
-- sfdx force:org:create -v HubOrg -s -f config/project-scratch-def.json -a ciorg
-- sfdx force:lightning:test:install -u ciorg
-- sfdx force:source:push -u ciorg 
-- sfdx force:data:tree:import -u ciorg -f data/Strategy__c.json
-- sfdx force:apex:test:run -u ciorg -c -r human
-- sfdx force:lightning:test:run -f config/lts-config.json -a jasmineTests.app
-- sfdx force:org:delete -u ciorg -p
+#- sfdx force:org:create -v HubOrg -s -f config/project-scratch-def.json -a ciorg --json --loglevel debug -w 2
+- sfdx force:org:list --all
+#- sfdx force:lightning:test:install -u ciorg
+#- sfdx force:source:push -u ciorg 
+#- sfdx force:data:tree:import -u ciorg -f data/Strategy__c.json
+#- sfdx force:apex:test:run -u ciorg -c -r human
+#- sfdx force:lightning:test:run -f config/lts-config.json -a jasmineTests.app
+#- sfdx force:org:delete -u ciorg -p

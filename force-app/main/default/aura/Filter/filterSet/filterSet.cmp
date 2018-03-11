@@ -21,7 +21,7 @@
 
         <div>
             <aura:iteration items="{!v.currentNode.branches}" var="item">
-                <div>
+                <div class="slds-m-top_x-small">
                     <c:filter aura:id="filter" currentBranch="{!item}" selectableNodes="{!v.selectableNodes}" deleteRequested="{!c.handleFilterDelete}" />
                 </div>
             </aura:iteration>

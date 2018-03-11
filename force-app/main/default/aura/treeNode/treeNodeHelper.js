@@ -12,31 +12,6 @@
     cmp.set('v.treeItems', treeItems);
   },
 
-  addNode: function (cmp, parentNodeName, childNodeName) {
-    var treeItems = cmp.get('v.treeItems');
-    var parentNode = this.searchTreeBranch(treeItems[0], parentNodeName);
-    if (!parentNode) {
-      throw new Error('Current strategy doesn\'t contain node with name ' + parentNodeName);
-    }
-    if (!parentNode.items) {
-      parentNode.items = [];
-    }
-    parentNode.expanded = true;
-    parentNode.items.push({
-      name: childNodeName,
-      label: childNodeName,
-      expanded: false,
-      items: []
-    });
-    cmp.set('v.treeItems', treeItems);
-    var nodeSelectedEvent = $A.get('e.c:treeNodeSelectedEvent');
-    nodeSelectedEvent.setParams({
-      'name': childNodeName
-    });
-    nodeSelectedEvent.fire();
-  },
-
-
   updateTreeNode: function (cmp, originalNodeName, updatedNode) {
     var treeItems = cmp.get('v.treeItems');
     var curTreeNode = this.searchTreeBranch(treeItems[0], originalNodeName);
