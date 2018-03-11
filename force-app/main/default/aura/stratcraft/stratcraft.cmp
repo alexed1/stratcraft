@@ -62,7 +62,7 @@
                 <c:treeNode aura:id="tree"  header="NodeTree" />
             </div>    
             <div class="slds-col slds-box slds-m-left_x-small slds-scrollable_y">
-                <b>Node Properties</b>
+                <b>Properties</b>
                 {!v.body}
                 <c:basePropertyPage aura:id="propertyPage" currentStrategy="{!v.currentStrategy}" />
             </div>    
