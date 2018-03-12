@@ -6,6 +6,6 @@
     }
   ],
   "namespace": "",
-  "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "41.0"
+  "sfdcLoginUrl": "https://csr.mobile01.blitz.salesforce.com",
+  "sourceApiVersion": "43.0"
 }

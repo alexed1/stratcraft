@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="Event template">
+    <aura:attribute name="newStrategyName" type="String" />
+    <aura:attribute name="strategyXML" type="String" />
+    <aura:attribute name="callback" type="Object" />
+</aura:event>

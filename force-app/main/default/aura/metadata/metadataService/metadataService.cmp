@@ -1,0 +1,24 @@
+<aura:component controller="MetadataServiceController">
+
+    <aura:attribute type="String" name="sessionId" />
+    <aura:attribute type="String" name="message" />
+    <aura:attribute type="String" name="id" />
+    <aura:attribute type="String" name="pollingId" />
+    <aura:attribute type="Object" name="callback" />
+
+    <aura:handler event="c:mdLoadStrategyNamesRequest" action="{!c.loadStrategyNames}" />
+    <aura:handler event="c:mdGetStrategyRequest" action="{!c.getStrategy}" />
+    <aura:handler event="c:mdCreateOrUpdateStrategyRequest" action="{!c.createOrUpdateStrategy}" />
+    <aura:handler event="c:mdDeleteStrategyRequest" action="{!c.deleteStrategy}" />
+    <aura:handler event="c:mdRenameStrategyRequest" action="{!c.renameStrategy}" />
+    <aura:handler event="c:mdCopyStrategyRequest" action="{!c.copyStrategy}" />
+
+    <!-- below is ui for debugging -->
+    <div>
+        <div> Id: {!v.id }</div>
+        <div> Response: {!v.message }</div>
+        <div> SessionId: {!v.sessionId }</div>
+        <c:sessionIdRetrievalComponent sessionId="{!v.sessionId}" />
+    </div>
+
+</aura:component>
