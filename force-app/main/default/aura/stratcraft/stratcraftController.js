@@ -3,6 +3,9 @@
         helper.loadStrategyNames(cmp);
     },
 
+    modalDialogLoaded: function (component, event, helper) {
+        _modalDialog.initialize(component);
+    },
     /*hopscotchLoaded: function (cmp, event, helper) {
         helper.initHopscotch(cmp, event, helper);
 
@@ -39,7 +42,7 @@
             component.set('v.selectedStrategyName', currentStrategy.name);
         };
         if (propertyPage.isDirty()) {
-            helper.showUnsavedChangesDialog(component, proceedToSelect, reverseSelection);
+            helper.showUnsavedChangesDialog(proceedToSelect, reverseSelection);
         }
         else {
             proceedToSelect();
@@ -59,7 +62,7 @@
                 helper.saveStrategy(component, originalNodeState, actualNodeState);
                 break;
             case 'addElement':
-                helper.showNewNodeDialog(component);
+                helper.showNewNodeDialog();
                 break;
         }
     },
@@ -71,7 +74,7 @@
             _force.displayToast('Error', 'Can\'t delete a root node', 'Error');
             return;
         }
-        helper.showDeleteNodeDialog(component, strategy, node);
+        helper.showDeleteNodeDialog(strategy, node);
     },
     /** Handles request for creation of a new node */
     handleNewNodeCreationRequested: function (component, event, helper) {
@@ -128,7 +131,7 @@
         }
         if (propertyPage.isDirty()) {
             //TODO: provide cancel callback that will switch the selected node back to the original (i.e. visually highlight it)
-            helper.showUnsavedChangesDialog(component, proceeedToSelect);
+            helper.showUnsavedChangesDialog(proceeedToSelect);
         }
         else {
             proceeedToSelect();

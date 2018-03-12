@@ -3,6 +3,7 @@
     <ltng:require scripts="{!$Resource.force}" />
     <ltng:require scripts="{!$Resource.strategy}" />
     <ltng:require scripts="{!$Resource.utils}" />
+    <ltng:require scripts="{!$Resource.modalDialog}" afterScriptsLoaded="{!c.modalDialogLoaded}" />
     <ltng:require scripts="{!$Resource.jsplumb}" />
     <ltng:require scripts="{!$Resource.jsplumbWalker}" />
     <!-- 
