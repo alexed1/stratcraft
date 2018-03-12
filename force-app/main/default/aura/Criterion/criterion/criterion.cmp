@@ -52,10 +52,10 @@
                     <aura:if isTrue="{!v.value.fieldName != ''}">
                         <option value="==">equals</option>
                         <option value="!=">not equal to</option>
-                        <option value="lt">less than</option>
-                        <option value="gt">greater than</option>
-                        <option value="lte">less or equal</option>
-                        <option value="gte">greater or equal</option>
+                        <option value="&lt;">less than</option>
+                        <option value="&gt;">greater than</option>
+                        <option value="=&lt;">less or equal</option>
+                        <option value=">=">greater or equal</option>
                     </aura:if>
                 </lightning:select>
             </div>
