@@ -3,3 +3,4 @@
 .cache
 .vscode
 /server.key
+mdapi_output_dir
