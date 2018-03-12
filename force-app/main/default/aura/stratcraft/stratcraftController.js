@@ -1,6 +1,23 @@
 ({
-    init: function (cmp, event, helper) {
-        helper.loadStrategyNames(cmp);
+    init: function (component, event, helper) {
+        helper.loadStrategyNames(component);
+    },
+
+    onRender: function (component, event, helper) {
+        // var container = document.getElementsByClassName('oneFlexipage')[0];
+        // container.style.height = '100%';
+        // container = container.getElementsByClassName('pageBody')[0];
+        // //This is to leave some space for header and avoid vertical scroll
+        // container.style.height = '96%';
+        // container = container.getElementsByClassName('flexipagePage')[0];
+        // container.style.height = '100%';
+        // container = container.getElementsByClassName('regions flexipageDefaultAppHomeTemplate')[0];
+        // container.style.height = '100%';
+        // container = container.getElementsByClassName('region')[0];
+        // container.style.height = '100%';
+        // container.style.marginBottom = '0px';
+        // container = container.getElementsByClassName('flexipageComponent')[0];
+        // container = container.style.height = '100%';
     },
 
     modalDialogLoaded: function (component, event, helper) {
@@ -145,25 +162,25 @@
     },
 
     handleViewChanged: function (component, event, helper) {
-        var isGraphInitialized = component.get('v._isGraphInitialized');
+        var isDiagramInitialized = component.get('v._isDiagramInitialized');
         var isTreeView = component.get('v.isTreeView');
         var strategy = component.get('v.currentStrategy');
-        var graphContainer = component.find('graphContainer');
+        var diagramContainer = component.find('diagramContainer');
         var treeContainer = component.find('treeContainer');
-        var graphScrollView = component.find('graphView');
-        $A.util.toggleClass(graphScrollView, 'slds-hide');
+        var diagramScrollView = component.find('diagramView');
+        $A.util.toggleClass(diagramScrollView, 'slds-hide');
         $A.util.toggleClass(treeContainer, 'slds-hide');
-        if (isGraphInitialized) {
+        if (isDiagramInitialized) {
             if (!isTreeView) {
-                window.setTimeout($A.getCallback(function () { helper.rebuildStrategyGraph(component, strategy); }));
+                window.setTimeout($A.getCallback(function () { helper.rebuildStrategyDiagram(component, strategy); }));
             } else {
-                helper.clearGraph();
+                helper.clearDiagram();
             }
         } else {
             window.setTimeout($A.getCallback(function () {
-                helper.initializeGraph();
-                component.set('v._isGraphInitialized', true);
-                helper.rebuildStrategyGraph(component, strategy);
+                helper.initializeDiagram();
+                component.set('v._isDiagramInitialized', true);
+                helper.rebuildStrategyDiagram(component, strategy);
             }));
         }
     }
