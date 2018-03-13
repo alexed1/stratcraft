@@ -193,9 +193,9 @@
     var isNameChanged = originalNode.name != changedNode.name;
     var isParentChanged = originalNode.parentNodeName != changedNode.parentNodeName;
     var originalParent = _strategy.getParentNode(strategy, originalNode);
+    var originalChildren = _strategy.getDirectChildrenNodes(strategy, originalNode);
     //Update parent of original children
     if (isNameChanged) {
-      var originalChildren = _strategy.getDirectChildrenNodes(strategy, originalNode);
       originalChildren.forEach(function (item) {
         item.parentNodeName = changedNode.name;
       });

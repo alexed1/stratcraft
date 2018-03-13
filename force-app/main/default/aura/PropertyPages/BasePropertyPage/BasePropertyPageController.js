@@ -16,6 +16,7 @@
 
     handleStrategyChanged: function (component, event, helper) {
         helper.loadNodeTypes(component);
+        component.set('v.availableParentNodes', []);
     },
 
     handleCurrentNodeChanged: function (component, event, helper) {
@@ -23,8 +24,10 @@
         component.set('v._currentNodeDirty', currentNode ? _utils.clone(currentNode, true) : null);
         if (currentNode) {
             helper.removeEmptyNodeType(component);
+            helper.loadParentNodes(component);
         } else {
             helper.loadNodeTypes(component);
+            component.set('v.availableParentNodes', []);
         }
     },
 
