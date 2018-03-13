@@ -25,7 +25,7 @@
     cmpEvent.setParams({
       "callback": function (strategyNames) {
         console.log(strategyNames);
-        cmp.set("v.strategyNames", strategyNames);
+        component.set("v.strategyNames", strategyNames);
       }
     });
 
@@ -63,31 +63,42 @@
   //when a strategy is selected, loads data from its Salesforce record
   loadStrategy: function (component, strategyName) {
     var self = this;
-    var action = component.get('c.loadStrategy');
-    action.setParams({ name: strategyName });
-    action.setCallback(this, function (response) {
-      var state = response.getState();
-      if (state === 'SUCCESS') {
-        var strategy = response.getReturnValue();
-        component.set('v.currentStrategy', strategy);
-        component.find('tree').set('v.treeItems', [this.buildTreeFromStrategy(strategy)]);
-        var isTreeView = component.get('v.isTreeView');
-        if (isTreeView) {
-          self.clearDiagram();
-        }
-        else {
-          self.rebuildStrategyDiagram(component, strategy);
-        }
-        console.log('Retrieved strategy with Id ' + strategy.Id);
-      }
-      else {
-        console.log('Failed to retrieve strategy with state: ' + state);
+
+    var cmpEvent = $A.get("e.c:mdGetStrategyRequest");
+    cmpEvent.setParams({
+      "strategyName": component.get("v.selectedStrategyName"),
+      "callback": function (strategyXML) {
+
+        var action = component.get('c.strategyXMLToObject');
+        action.setParams({ xml: strategyXML });
+        action.setCallback(this, function (response) {
+          var state = response.getState();
+          if (state === 'SUCCESS') {
+            var strategy = response.getReturnValue();
+            component.set('v.currentStrategy', strategy);
+            component.find('tree').set('v.treeItems', [self.buildTreeFromStrategy(strategy)]);
+            var isTreeView = component.get('v.isTreeView');
+            if (isTreeView) {
+              self.clearDiagram();
+            }
+            else {
+              self.rebuildStrategyDiagram(component, strategy);
+            }
+            console.log('Retrieved strategy with Id ' + strategy.Id);
+          }
+          else {
+            console.log('Failed to retrieve strategy with state: ' + state);
+          }
+        });
+        $A.enqueueAction(action);
+
       }
     });
-    $A.enqueueAction(action);
+    cmpEvent.fire();
   },
 
   saveStrategy: function (component, originalNodeState, actualNodeState, onSuccess) {
+    var self = this;
     console.log('in save strategy in parent controller');
     var strategy = component.get('v.currentStrategy');
     //This scenario describes changes to the strategy that came from altering the node properties    
@@ -103,14 +114,13 @@
     //TODO: check that the node it sill selected
     //Fire this event so the property page knows to reset itself
     component.find('propertyPage').reset();
-    var newTree = this.buildTreeFromStrategy(strategy);
+    var newTree = self.buildTreeFromStrategy(strategy);
     component.find('tree').set('v.treeItems', [newTree]);
     //post the current strategy to the server
     //save it by name overwriting as necessary
     //return a status message
-    self = this;
 
-    this.persistStrategy(component, function () {
+    self.persistStrategy(component, function () {
       //This is to close modal dialog with base property page if a save was triggered from it
       var popup = window.open(location, '_self', '');
       popup.close();
@@ -141,7 +151,7 @@
         var cmpEvent = $A.get("e.c:mdCreateOrUpdateStrategyRequest");
         cmpEvent.setParams({
           "strategyXML": result,
-          "strategyName": cmp.get("v.selectedStrategyName"),
+          "strategyName": component.get("v.selectedStrategyName"),
           "callback": function () {
             //only show this if response indicates true success
             _force.displayToast('Strategy Crafter', 'Strategy changes saved');

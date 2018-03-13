@@ -82,7 +82,6 @@ public static String copyStrategyRequest(String sessionId, String strategyXML, S
 
 @AuraEnabled
 public static String checkRetrievalStatusRequest(String sessionId, String id){
-
 	try {
 		MetadataService.MetadataPort service = createClient(sessionId);
 		MetadataService.RetrieveResult retrieveResult = service.checkRetrieveStatus(id, true);
@@ -93,6 +92,7 @@ public static String checkRetrievalStatusRequest(String sessionId, String id){
 			{
 				Zippex archive = new Zippex(EncodingUtil.base64Decode(retrieveResult.zipFile));
 				Set <String> fileNames = archive.getFileNames();
+
 				for (String fileName : fileNames)
 				{
 					if (fileName.startsWith('recommendationStrategies'))
@@ -102,6 +102,7 @@ public static String checkRetrievalStatusRequest(String sessionId, String id){
 						return xml;
 					}
 				}
+				return ''; //it shouldn't be called really
 			}
 			else
 			{
@@ -111,22 +112,20 @@ public static String checkRetrievalStatusRequest(String sessionId, String id){
 		}
 		else
 		{
-			response = 'deploying';
+			return 'deploying';
 		}
 	}
-
 	catch (Exception ex) {
-		response = ex.getMessage() + ' at line ' + ex.getLineNumber();
+		throw new AuraHandledException('Sorry but we couldn\'t load strategy content. Error: '+ex.getMessage());
 	}
-
-	return response;
 }
 
 
 @AuraEnabled
 public static String getStrategyRequest(String sessionId, String strategyName){
 	try{
-
+		if (strategyName == null || strategyName == '')
+			throw new AuraHandledException('Strategy name wasn\'t provided');
 		return retrievePackage(sessionId, strategyName);
 	}
 	catch(Exception exc)
