@@ -18,26 +18,18 @@
     }
     return nodes;
   },
+
   //Populates the select strategy drop down
   loadStrategyNames: function (component) {
-    var action = component.get('c.getStrategyNames');
-    action.setCallback(this, function (response) {
-      var state = response.getState();
-      if (state === 'SUCCESS') {
-        //If we got at least one strategy, we add an empty name in the beginning of the list, so no strategy is selected by default
-        var strategies = response.getReturnValue();
-        if (!strategies || strategies.length === 0) {
-          component.set('v.strategyNames', []);
-        }
-        else {
-          component.set('v.strategyNames', [''].concat(strategies));
-        }
-      }
-      else {
-        console.log('Failed with state: ' + state);
+    var cmpEvent = $A.get("e.c:mdLoadStrategyNamesRequest");
+    cmpEvent.setParams({
+      "callback": function (strategyNames) {
+        console.log(strategyNames);
+        cmp.set("v.strategyNames", strategyNames);
       }
     });
-    $A.enqueueAction(action);
+
+    cmpEvent.fire();
   },
 
   convertNodeToTreeItem: function (baseNode) {
@@ -117,6 +109,7 @@
     //save it by name overwriting as necessary
     //return a status message
     self = this;
+
     this.persistStrategy(component, function () {
       //This is to close modal dialog with base property page if a save was triggered from it
       var popup = window.open(location, '_self', '');
@@ -134,19 +127,31 @@
 
   //save the strategy as a Salesforce strategy object
   persistStrategy: function (component, onSuccess) {
-    console.log('Sending Strategy to Salesforce and persisting');
-    var action = component.get('c.persistStrategy');
+
+    console.log('requesting strategy XML')
+    //request xml from controller
+    var action = component.get('c.strategyJSONtoXML');
     action.setParams({ strategyJson: JSON.stringify(component.get('v.currentStrategy')) });
     action.setCallback(this, function (response) {
       var state = response.getState();
       if (component.isValid() && state === 'SUCCESS') {
         var result = response.getReturnValue();
-        //only show this if response indicates true success
-        _force.displayToast('Strategy Crafter', 'Strategy changes saved');
-        console.log(' returned from persistStrategy: ' + result);
-        if (onSuccess) {
-          onSuccess();
-        }
+        console.log('Sending Strategy to Salesforce and persisting');
+        //send xml to metadataservice
+        var cmpEvent = $A.get("e.c:mdCreateOrUpdateStrategyRequest");
+        cmpEvent.setParams({
+          "strategyXML": result,
+          "strategyName": cmp.get("v.selectedStrategyName"),
+          "callback": function () {
+            //only show this if response indicates true success
+            _force.displayToast('Strategy Crafter', 'Strategy changes saved');
+            console.log(' returned from MetadataService: ' + result);
+            if (onSuccess) {
+              onSuccess();
+            }
+          }
+        });
+        cmpEvent.fire();
       }
       else {
         var error = response.getError();
@@ -154,6 +159,7 @@
         _force.displayToast('Strategy Crafter', 'Failed to save strategy. ' + error[0].message, 'Error');
       }
     });
+
     $A.enqueueAction(action);
   },
   /**Validates if changes to the node are valid and can be applied to the strategy

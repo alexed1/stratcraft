@@ -1,5 +1,7 @@
 <aura:component controller="MetadataServiceController">
 
+    <ltng:require scripts="{!$Resource.force}" />
+
     <aura:attribute type="String" name="sessionId" />
     <aura:attribute type="String" name="message" />
     <aura:attribute type="String" name="id" />
@@ -13,11 +15,12 @@
     <aura:handler event="c:mdRenameStrategyRequest" action="{!c.renameStrategy}" />
     <aura:handler event="c:mdCopyStrategyRequest" action="{!c.copyStrategy}" />
 
-    <!-- below is ui for debugging -->
+
     <div>
-        <div> Id: {!v.id }</div>
+        <!-- below is ui for debugging -->
+        <!-- <div> Id: {!v.id }</div>
         <div> Response: {!v.message }</div>
-        <div> SessionId: {!v.sessionId }</div>
+        <div> SessionId: {!v.sessionId }</div> -->
         <c:sessionIdRetrievalComponent sessionId="{!v.sessionId}" />
     </div>
 

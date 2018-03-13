@@ -32,28 +32,15 @@ public class StrategyCrafterController {
 	}
 
 	@AuraEnabled
-	public static String persistStrategy(String strategyJson) {	
+	public static String strategyJSONtoXML(String strategyJson){	
 		Strategy strategy = StrategyJsonConverter.convertJsonToStrategy(strategyJson);
 		try {				
 			System.debug('Started persisting strategy ' + strategy.name);
 			String strategyXml = StrategyXmlConverter.convertStrategyToXml(strategy);
-			Strategy__c strategyC = new Strategy__c();
-			strategyC.StrategyXML__c = strategyXml;
-			strategyC.Name = strategy.name;
-			if (!String.isBlank(strategy.Id)) {
-				strategyC.Id = strategy.Id;
-			}
-			upsert strategyC;
-			System.debug('Finished persisting strategy ' + strategy.name);
-			return 'SUCCESS';	
+			return strategyXml;
 		}
-		catch (DmlException ex) {
-			System.debug(System.LoggingLevel.ERROR, 'Failed to persist strategy ' + strategy.name + '. Details - ' + ex.getDmlMessage(0));
-			return ex.getDmlMessage(0);
+		catch(Exception exc){
+			throw new AuraException('Couldn\'t convert strategy JSON object to XML');
 		}
-		catch (Exception ex) {
-			System.debug(System.LoggingLevel.ERROR, 'Failed to persist strategy ' + strategy.name + '. Details - ' + ex.getMessage());
-			return ex.getMessage();
-		}		
 	}
 }
