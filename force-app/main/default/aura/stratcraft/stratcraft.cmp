@@ -5,6 +5,7 @@
     <ltng:require scripts="{!$Resource.utils}" />
     <ltng:require scripts="{!$Resource.jsplumb}" />
     <ltng:require scripts="{!$Resource.jsplumbWalker}" />
+    <ltng:require scripts="{!$Resource.cmpUi}" />
     <!-- 
     <ltng:require scripts="{!$Resource.hopscotch}" afterScriptsLoaded="{!c.hopscotchLoaded}" />
     <ltng:require scripts="{!$Resource.hopscotchcss}" />
@@ -34,7 +35,7 @@
 
     <div class="slds-card slds-p-around_small root">
         <c:metadataService/>
-        <lightning:spinner aura:id="mySpinner" class="slds-hide" size="large" />
+        <lightning:spinner aura:id="spinner" class="slds-hide" size="large" />
         <lightning:overlayLibrary aura:id="modalDialog" />
         <div class="tool-bar">
             <div class="slds-grid-col slds-m-top_x-small">

@@ -14,8 +14,10 @@
                     var result = response.getReturnValue();
                     callback(result);
                 }
-                else
-                    _force.displayToast('Metadata Service', 'Failed to send a load strategy names request: ' + response.getError()[0], 'Error');
+                else {
+                    callback();
+                    _force.displayToast('Metadata Service', 'Failed to send a load strategy names request: ' + response.getError()[0].message, 'Error');
+                }
             });
             $A.enqueueAction(action);
         });
@@ -40,8 +42,10 @@
                         }), 2000);
                     cmp.set("v.pollingId", pollingId);
                 }
-                else
-                    _force.displayToast('Metadata Service', 'Failed to send a load strategy request: ' + response.getError()[0], 'Error');
+                else {
+                    callback();
+                    _force.displayToast('Metadata Service', 'Failed to send a load strategy request: ' + response.getError()[0].message, 'Error');
+                }
             });
             $A.enqueueAction(action);
         });
@@ -67,8 +71,10 @@
                         }), 2000);
                     cmp.set("v.pollingId", pollingId);
                 }
-                else
-                    _force.displayToast('Metadata Service', 'Failed to send a create/update strategy request: ' + response.getError()[0], 'Error');
+                else {
+                    callback();
+                    _force.displayToast('Metadata Service', 'Failed to send a create/update strategy request: ' + response.getError()[0].message, 'Error');
+                }
             });
             $A.enqueueAction(action);
         });
@@ -93,8 +99,10 @@
                         }), 2000);
                     cmp.set("v.pollingId", pollingId);
                 }
-                else
-                    _force.displayToast('Metadata Service', 'Failed to send a delete strategy request: ' + response.getError()[0], 'Error');
+                else {
+                    callback();
+                    _force.displayToast('Metadata Service', 'Failed to send a delete strategy request: ' + response.getError()[0].message, 'Error');
+                }
             });
             $A.enqueueAction(action);
         });
@@ -121,8 +129,10 @@
                         }), 2000);
                     cmp.set("v.pollingId", pollingId);
                 }
-                else
-                    _force.displayToast('Metadata Service', 'Failed to send a rename strategy request: ' + response.getError()[0], 'Error');
+                else {
+                    callback();
+                    _force.displayToast('Metadata Service', 'Failed to send a rename strategy request: ' + response.getError()[0].message, 'Error');
+                }
             });
             $A.enqueueAction(action);
         });
@@ -148,8 +158,10 @@
                         }), 2000);
                     cmp.set("v.pollingId", pollingId);
                 }
-                else
-                    _force.displayToast('Metadata Service', 'Failed to send a copy strategy request: ' + response.getError()[0], 'Error');
+                else {
+                    callback();
+                    _force.displayToast('Metadata Service', 'Failed to send a copy strategy request: ' + response.getError()[0].message, 'Error');
+                }
             });
             $A.enqueueAction(action);
         });
@@ -178,7 +190,7 @@
             }
             else {
                 window.clearInterval(pollingId);
-                _force.displayToast('Metadata Service', 'Failed a retrieve strategy content operation: ' + response.getError()[0], 'Error');
+                _force.displayToast('Metadata Service', 'Failed a retrieve strategy content operation: ' + response.getError()[0].message, 'Error');
             }
         });
         $A.enqueueAction(action);
@@ -202,7 +214,7 @@
             }
             else {
                 window.clearInterval(pollingId);
-                _force.displayToast('Metadata Service', 'Failed a deploy operation: ' + response.getError()[0], 'Error');
+                _force.displayToast('Metadata Service', 'Failed a deploy operation: ' + response.getError()[0].message, 'Error');
             }
 
         });
@@ -213,8 +225,9 @@
         console.log("ensureSessionIdIsLoaded running at " + (new Date()).toLocaleTimeString());
         self = this;
         var sessionId = cmp.get("v.sessionId");
-        if (sessionId)
+        if (sessionId) {
             onRetrieved();
+        }
         else
             window.setTimeout(
                 $A.getCallback(function () {

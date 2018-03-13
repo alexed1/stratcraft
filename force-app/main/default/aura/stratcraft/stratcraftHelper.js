@@ -62,6 +62,7 @@
   },
   //when a strategy is selected, loads data from its Salesforce record
   loadStrategy: function (component, strategyName) {
+    _cmpUi.toggleSpinner(component, "spinner");
     var self = this;
 
     var cmpEvent = $A.get("e.c:mdGetStrategyRequest");
@@ -89,6 +90,8 @@
           else {
             console.log('Failed to retrieve strategy with state: ' + state);
           }
+
+          _cmpUi.toggleSpinner(component, "spinner");
         });
         $A.enqueueAction(action);
 
@@ -98,6 +101,7 @@
   },
 
   saveStrategy: function (component, originalNodeState, actualNodeState, onSuccess) {
+    _cmpUi.toggleSpinner(component, "spinner");
     var self = this;
     console.log('in save strategy in parent controller');
     var strategy = component.get('v.currentStrategy');
@@ -132,6 +136,8 @@
       if (onSuccess) {
         onSuccess();
       }
+
+      _cmpUi.toggleSpinner(component, "spinner");
     });
   },
 

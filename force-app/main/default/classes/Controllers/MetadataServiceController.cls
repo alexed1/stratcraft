@@ -1,5 +1,6 @@
 public with sharing class MetadataServiceController {
 
+public static Integer API_VERSION = 43;
 
 @AuraEnabled
 public static String createOrUpdateStrategyRequest(String sessionId, String strategyXML, String strategyName){
@@ -144,7 +145,7 @@ public static List<String> loadStrategyNamesRequest(String sessionId){
 		MetadataService.ListMetadataQuery queryWorkflow = new MetadataService.ListMetadataQuery();
 		queryWorkflow.type_x = 'RecommendationStrategy';
 		queries.add(queryWorkflow);
-		MetadataService.FileProperties[] fileProperties = service.listMetadata(queries, 42);
+		MetadataService.FileProperties[] fileProperties = service.listMetadata(queries, API_VERSION);
 		List<String> names = new List<String>();
 		for(MetadataService.FileProperties fileProperty : fileProperties)
 		{
@@ -202,7 +203,7 @@ private static String formXML(string strategyName){
 	        '        <members>' + strategyName + '</members>'+
 	        '        <name>RecommendationStrategy</name>'+
 	        '    </types>'+
-	        '    <version>42.0</version>'+
+	        '    <version>'+API_VERSION+'.0</version>'+
 	        '</Package>';
 }
 
@@ -211,7 +212,7 @@ private static MetadataService.MetadataPort createClient(String sessionId){
 
 	// fix for refresh token from this article https://www.gscloudsolutions.com/blogpost/Using-Named-Credentials-with-the-Apex-Wrapper-Salesforce-Metadata-API-apex-mdapi?blogpost=true&utm_source=twitter&utm_medium=social&utm_campaign=named_credentials
 	// needed only if we user named credentials
-	// String restUrl = 'callout:StratcraftMDAPI/services/data/v42.0/limits';
+	// String restUrl = 'callout:StratcraftMDAPI/services/data/v'+API_VERSION+'.0/limits';
 	// Http h = new Http();
 	// HttpRequest req = new HttpRequest();
 	// req.setEndpoint(restUrl);
@@ -244,7 +245,7 @@ private static String deployPackage(String sessionId, String base64EncodedArchiv
 private static String retrievePackage(String sessionId, String strategyName){
 	MetadataService.MetadataPort service = createClient(sessionId);
 	MetadataService.RetrieveRequest request = new MetadataService.RetrieveRequest();
-	request.apiVersion = 42;
+	request.apiVersion = API_VERSION;
 	request.singlePackage = true;
 
 	MetadataService.Package_x manifest = new MetadataService.Package_x();
