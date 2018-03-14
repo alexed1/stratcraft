@@ -39,7 +39,7 @@
                     var pollingId = window.setInterval(
                         $A.getCallback(function (callback) {
                             helper.callRetrievalStatus(cmp, helper);
-                        }), 2000);
+                        }), 1000);
                     cmp.set("v.pollingId", pollingId);
                 }
                 else {
@@ -68,7 +68,7 @@
                     var pollingId = window.setInterval(
                         $A.getCallback(function (callback) {
                             helper.callDeployStatus(cmp, helper);
-                        }), 2000);
+                        }), 1000);
                     cmp.set("v.pollingId", pollingId);
                 }
                 else {
@@ -96,7 +96,7 @@
                     var pollingId = window.setInterval(
                         $A.getCallback(function (callback) {
                             helper.callDeployStatus(cmp, helper);
-                        }), 2000);
+                        }), 1000);
                     cmp.set("v.pollingId", pollingId);
                 }
                 else {
@@ -126,7 +126,7 @@
                     var pollingId = window.setInterval(
                         $A.getCallback(function (callback) {
                             helper.callDeployStatus(cmp, helper);
-                        }), 2000);
+                        }), 1000);
                     cmp.set("v.pollingId", pollingId);
                 }
                 else {
@@ -181,8 +181,8 @@
                 var retVal = response.getReturnValue();
                 if (retVal != "deploying") {
                     cmp.set("v.message", retVal);
-                    callback(retVal);
                     window.clearInterval(pollingId);
+                    callback(retVal);
                 }
                 else {
                     //the message says "deploying", so we play the waiting game
@@ -191,6 +191,7 @@
             else {
                 window.clearInterval(pollingId);
                 _force.displayToast('Metadata Service', 'Failed a retrieve strategy content operation: ' + response.getError()[0].message, 'Error');
+                callback();
             }
         });
         $A.enqueueAction(action);
@@ -208,13 +209,14 @@
                 var retVal = response.getReturnValue();
                 if (retVal != "deploying") {
                     cmp.set("v.message", retVal);
-                    callback(retVal);
                     window.clearInterval(pollingId);
+                    callback();
                 }
             }
             else {
                 window.clearInterval(pollingId);
                 _force.displayToast('Metadata Service', 'Failed a deploy operation: ' + response.getError()[0].message, 'Error');
+                callback();
             }
 
         });
@@ -232,7 +234,7 @@
             window.setTimeout(
                 $A.getCallback(function () {
                     self.ensureSessionIdIsLoaded(cmp, onRetrieved);
-                }), 500
+                }), 250
             );
     }
 })

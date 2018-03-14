@@ -66,10 +66,18 @@ public static String renameStrategyRequest(String sessionId, String strategyXML,
 public static String copyStrategyRequest(String sessionId, String strategyXML, String newStrategyName){
 	try {
 
+		XPath xp = new XPath(strategyXML);
+		//replace name to a new one
+		Dom.XmlNode[] nameNode = xp.find('/RecommendationStrategy/recommendationStrategyName');
+		Dom.XmlNode[] children = nameNode[0].getChildren();
+		nameNode[0].removeChild(children[0]);
+		nameNode[0].addTextNode(newStrategyName);
+		String renamedStrategyXML = xp.doc.toXmlString();
+
 		Zippex archive = new Zippex();
 		Blob packageXMLBlob = Blob.valueOf(formXML(newStrategyName));
 		archive.addFile('package.xml', packageXMLBlob, null);
-		archive.addFile('recommendationStrategies/' + newStrategyName + '.recommendationStrategy', Blob.valueOf(strategyXML), null);
+		archive.addFile('recommendationStrategies/' + newStrategyName + '.recommendationStrategy', Blob.valueOf(renamedStrategyXML), null);
 		Blob zipData = archive.getZipArchive();
 
 		String base64EncodedArchive = EncodingUtil.base64Encode(zipData);
@@ -179,14 +187,17 @@ public static String checkDeployStatusRequest(String sessionId, String id){
 					if(deployMessage.problem!=null)
 						response += deployMessage.problem;
 				if (response!='')
-					throw new AuraHandledException('Sorry but we couldn\'t check deploy status. Error: ' + response);
+					throw new AuraHandledException('Sorry but we couldn\'t check deploy status. Error:' + response);
 			}
 		}
 		else
 			response = 'deploying';
 	}
+	catch (AuraHandledException ex) {
+		throw ex;
+	}
 	catch (Exception ex) {
-		throw new AuraHandledException('Sorry but we couldn\'t check deploy status. Error: ' + ex);
+		throw new AuraHandledException('Sorry but we couldn\'t check deploy status. Error: ' + ex.getMessage());
 	}
 
 	return response;

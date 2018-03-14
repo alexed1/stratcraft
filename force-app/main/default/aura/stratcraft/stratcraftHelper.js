@@ -25,7 +25,9 @@
     cmpEvent.setParams({
       "callback": function (strategyNames) {
         console.log(strategyNames);
+        strategyNames.splice(0, 0, '');
         component.set("v.strategyNames", strategyNames);
+        _cmpUi.toggleSpinner(component, "spinner");
       }
     });
 
@@ -407,6 +409,39 @@
       cancelCallback);
   },
 
+  copyStrategy: function (cmp) {
+    var self = this;
+    self.showCopyStrategyDialog(cmp, function (body) {
+      _cmpUi.toggleSpinner(cmp, "spinner");
+      self.strategyObjectToXML(cmp, function (strategyXml) {
+        var newName = body.get("v.input");
+        var cmpEvent = $A.get("e.c:mdCopyStrategyRequest");
+        cmpEvent.setParams({
+          "strategyXML": strategyXml,
+          "newStrategyName": newName,
+          "callback": function () {
+            _cmpUi.toggleSpinner(cmp, "spinner");
+          }
+        });
+
+        cmpEvent.fire();
+      });
+    });
+  },
+
+
+  showCopyStrategyDialog: function (component, okCallback) {
+    self = this;
+    this.showDialog(
+      component,
+      'Copying strategy',
+      ['c:modalWindowInputBody', function (body) {
+        body.set('v.text', 'What would the name of the copy be?');
+        body.set('v.iconName', _force.Icons.Action.Question);
+      }],
+      okCallback);
+  },
+
   showNodePropertiesDialog: function (component, strategy, strategyNode) {
     self = this;
     this.showDialog(
@@ -531,7 +566,19 @@
     });
     visualNode.addEventListener('click', visualNode.clickHandler);
     return visualNode;
+  },
+
+  strategyObjectToXML: function (cmp, callback) {
+    var action = cmp.get('c.strategyJSONtoXML');
+    action.setParams({ strategyJson: JSON.stringify(cmp.get('v.currentStrategy')) });
+    action.setCallback(this, function (response) {
+      var state = response.getState();
+      callback(response.getReturnValue());
+    });
+    $A.enqueueAction(action);
   }
+
+
   /*,
 
   initHopscotch: function (cmp, event, helper) {

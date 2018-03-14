@@ -78,6 +78,15 @@
             case 'addElement':
                 helper.showNewNodeDialog(component);
                 break;
+            case 'renameStrategy':
+                helper.showNewNodeDialog(component);
+                break;
+            case 'copyStrategy':
+                helper.copyStrategy(component);
+                break;
+            case 'deleteStrategy':
+                helper.showNewNodeDialog(component);
+                break;
         }
     },
     /** Handles request for deletion of an existing node */

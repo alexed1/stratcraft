@@ -35,7 +35,7 @@
 
     <div class="slds-card slds-p-around_small root">
         <c:metadataService/>
-        <lightning:spinner aura:id="spinner" class="slds-hide" size="large" />
+        <lightning:spinner aura:id="spinner" size="large" />
         <lightning:overlayLibrary aura:id="modalDialog" />
         <div class="tool-bar">
             <div class="slds-grid-col slds-m-top_x-small">
@@ -45,6 +45,10 @@
                         <hr class="slds-m-vertical_xx-small" />
                         <lightning:menuItem label="New Node" value="addElement" />
                         <lightning:menuItem label="Save Strategy" value="saveStrategy" />
+                        <hr class="slds-m-vertical_xx-small" />
+                        <lightning:menuItem label="Rename Strategy" value="renameStrategy" />
+                        <lightning:menuItem label="Copy Strategy" value="copyStrategy" />
+                        <lightning:menuItem label="Delete Strategy" value="deleteStrategy" />
                     </aura:if>
                 </lightning:buttonMenu>
             </div>
