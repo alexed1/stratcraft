@@ -119,7 +119,8 @@
     self = this;
     this.persistStrategy(component, function () {
       //This is to close modal dialog with base property page if a save was triggered from it
-      _modalDialog.close();
+      var popup = window.open(location, '_self', '');
+      popup.close();
       //If we currently see a diagram, we need to rebuild it
       var isTreeView = component.get('v.isTreeView');
       if (!isTreeView) {
@@ -225,8 +226,106 @@
     var index = strategy.nodes.findIndex(function (item) { return item.name == originalNode.name; });
     strategy.nodes[index] = changedNode;
   },
+  /** Converts the incoming parameter to the format used by showDialog method */
+  parseComponentConfiguration: function (configuration) {
+    if (!configuration) {
+      return configuration;
+    }
+    var result = { name: '', initializer: null };
+    if (Array.isArray(configuration)) {
+      result.name = configuration[0];
+      result.isComponent = true;
+      result.initializer = configuration[1];
+    }
+    else {
+      result.name = configuration;
+      result.isComponent = configuration.startsWith('c:');
+    }
+    return result;
+  },
 
-  showDeleteNodeDialog: function (strategy, node) {
+  /**@param {object} component - A reference to stratcraft component
+   * @param {object} header - Header of the modal window. Can be one of the following:
+   * - plain string: will be displayed as is
+   * - component name (starts with namespace:): specified component will be created and used
+   * - array: first element of array is treated as component name, second is treated as an initializer function that accepts newly created component
+   * @param {object} body - Body of the modal window. Can be one of the following:
+   * - plain string: will be displayed as is
+   * - component name (starts with namespace:): specified component will be created and used
+   * - array: first element of array is treated as component name, second is treated as an initializer function that accepts newly created component
+   * @param {function} okCallback - (Optional)Function that accepts modal body component and is invoked when modal body component passed validation and modal window is closed.
+   * If it is not provided, than standard footer with 'Continue' and 'Cancel' won't be used, leaving modal window closing responsibility to the body component
+   * @param {function} validateCallback - (Optional)Function that accepts modal body component and returns true if it is in a valid state to proceed
+   * @param {function} cancelCallback - (Optional)Function that is invoked when modal window is closed without validation
+   * @example: Examples for header and body:
+   * 'This text will be shown as is'
+   * 'c:myComponentName'
+   * ['c:myComponentName', function (component) { component.set('v.name', 'Initial value for the name property')}]
+   */
+  showDialog: function (component, header, body, okCallback, validateCallback, cancelCallback) {
+    //TODO: probably worth check the actual namespace
+    var headerConfiguration = this.parseComponentConfiguration(header);
+    var bodyConfiguration = this.parseComponentConfiguration(body);
+    var componentsToCreate = [];
+    if (okCallback) {
+      componentsToCreate.unshift(['c:modalWindowFooter', {}]);
+    }
+    if (bodyConfiguration.isComponent) {
+      componentsToCreate.unshift([bodyConfiguration.name, {}]);
+    }
+    if (headerConfiguration.isComponent) {
+      componentsToCreate.unshift([headerConfiguration.name, {}]);
+    }
+    var modalDialog = component.find('modalDialog');
+    $A.createComponents(componentsToCreate,
+      function (components, status, errorMessage) {
+        if (status === 'SUCCESS') {
+          if (!okCallback) {
+            components.push(undefined);
+          }
+          //Footer is always the last, body is always next to the last, header is always the first
+          var footer = components[components.length - 1];
+          header = headerConfiguration.isComponent ? components[0] : headerConfiguration.name;
+          body = bodyConfiguration.isComponent ? components[components.length - 2] : bodyConfiguration.name;
+
+          if (headerConfiguration.isComponent && headerConfiguration.initializer) {
+            headerConfiguration.initializer(header);
+          }
+          if (bodyConfiguration.isComponent && bodyConfiguration.initializer) {
+            bodyConfiguration.initializer(body);
+          }
+          if (footer) {
+            footer.addEventHandler('buttonClickEvent', function (clickEvent) {
+              var buttonClicked = clickEvent.getParam('Button');
+              switch (buttonClicked) {
+                case _utils.ModalDialogButtonType.OK:
+                  var isValid = !validateCallback || validateCallback(body);
+                  if (isValid) {
+                    okCallback(body);
+                    modalDialog.notifyClose();
+                  }
+                  break;
+                case _utils.ModalDialogButtonType.CANCEL:
+                  if (cancelCallback) {
+                    cancelCallback();
+                  }
+                  modalDialog.notifyClose();
+                  break;
+              }
+            });
+          }
+          modalDialog.showCustomModal({
+            header: header,
+            body: body,
+            footer: footer,
+            //In this case if we provide cancellation callback, we don't allow user to just close the window, as we are interested in the councious choice 
+            showCloseButton: cancelCallback === null || cancelCallback === undefined
+          });
+        }
+      });
+  },
+
+  showDeleteNodeDialog: function (component, strategy, node) {
     var self = this;
     var hasChildren = _strategy.hasChildrenNodes(strategy, node);
     var question = 'Are you sure you want to delete this node';
@@ -237,7 +336,8 @@
       question = question + '?';
     }
     question = question + ' This can\'t be undone';
-    _modalDialog.show(
+    this.showDialog(
+      component,
       'Confirm Node Deletion',
       ['c:modalWindowGenericBody', function (body) {
         body.set('v.text', question);
@@ -248,14 +348,16 @@
         self.saveStrategy(component, null, null, function () {
           component.find('propertyPage').set('v.currentNode', null);
           //This is to close modal dialog with base property page if a save was triggered from it
-          _modalDialog.close();
+          var popup = window.open(location, '_self', '');
+          popup.close();
         });
       }
     )
   },
 
-  showNewNodeDialog: function () {
-    _modalDialog.show(
+  showNewNodeDialog: function (component) {
+    this.showDialog(
+      component,
       'New Node',
       'c:modalNewNodeBody',
       function (bodyComponent) {
@@ -270,8 +372,9 @@
       function (bodyComponent) { return bodyComponent.validate(); });
   },
 
-  showUnsavedChangesDialog: function (okCallback, cancelCallback) {
-    _modalDialog.show(
+  showUnsavedChangesDialog: function (component, okCallback, cancelCallback) {
+    this.showDialog(
+      component,
       'Unsaved changes',
       ['c:modalWindowGenericBody', function (body) {
         body.set('v.text', 'The selected node has unsaved changes. Do you want to discard those changes and proceeed?');
@@ -282,8 +385,10 @@
       cancelCallback);
   },
 
-  showNodePropertiesDialog: function (strategy, strategyNode) {
-    _modalDialog.show(
+  showNodePropertiesDialog: function (component, strategy, strategyNode) {
+    self = this;
+    this.showDialog(
+      component,
       'Node Properties',
       ['c:basePropertyPage', function (body) {
         body.set('v.currentStrategy', strategy);
@@ -400,7 +505,7 @@
     visualNode.appendChild(text);
     container.appendChild(visualNode);
     visualNode.clickHandler = $A.getCallback(function () {
-      self.showNodePropertiesDialog(strategy, treeLayoutNode.strategyNode);
+      self.showNodePropertiesDialog(component, strategy, treeLayoutNode.strategyNode);
     });
     visualNode.addEventListener('click', visualNode.clickHandler);
     return visualNode;

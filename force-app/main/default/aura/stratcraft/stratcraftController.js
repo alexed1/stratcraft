@@ -3,9 +3,23 @@
         helper.loadStrategyNames(component);
     },
 
-    modalDialogLoaded: function (component, event, helper) {
-        _modalDialog.initialize(component);
+    onRender: function (component, event, helper) {
+        // var container = document.getElementsByClassName('oneFlexipage')[0];
+        // container.style.height = '100%';
+        // container = container.getElementsByClassName('pageBody')[0];
+        // //This is to leave some space for header and avoid vertical scroll
+        // container.style.height = '96%';
+        // container = container.getElementsByClassName('flexipagePage')[0];
+        // container.style.height = '100%';
+        // container = container.getElementsByClassName('regions flexipageDefaultAppHomeTemplate')[0];
+        // container.style.height = '100%';
+        // container = container.getElementsByClassName('region')[0];
+        // container.style.height = '100%';
+        // container.style.marginBottom = '0px';
+        // container = container.getElementsByClassName('flexipageComponent')[0];
+        // container = container.style.height = '100%';
     },
+
     /*hopscotchLoaded: function (cmp, event, helper) {
         helper.initHopscotch(cmp, event, helper);
 
@@ -42,7 +56,7 @@
             component.set('v.selectedStrategyName', currentStrategy.name);
         };
         if (propertyPage.isDirty()) {
-            helper.showUnsavedChangesDialog(proceedToSelect, reverseSelection);
+            helper.showUnsavedChangesDialog(component, proceedToSelect, reverseSelection);
         }
         else {
             proceedToSelect();
@@ -62,7 +76,7 @@
                 helper.saveStrategy(component, originalNodeState, actualNodeState);
                 break;
             case 'addElement':
-                helper.showNewNodeDialog();
+                helper.showNewNodeDialog(component);
                 break;
         }
     },
@@ -74,7 +88,7 @@
             _force.displayToast('Error', 'Can\'t delete a root node', 'Error');
             return;
         }
-        helper.showDeleteNodeDialog(strategy, node);
+        helper.showDeleteNodeDialog(component, strategy, node);
     },
     /** Handles request for creation of a new node */
     handleNewNodeCreationRequested: function (component, event, helper) {
@@ -131,7 +145,7 @@
         }
         if (propertyPage.isDirty()) {
             //TODO: provide cancel callback that will switch the selected node back to the original (i.e. visually highlight it)
-            helper.showUnsavedChangesDialog(proceeedToSelect);
+            helper.showUnsavedChangesDialog(component, proceeedToSelect);
         }
         else {
             proceeedToSelect();

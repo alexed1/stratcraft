@@ -8,7 +8,8 @@
 }
 
 .THIS.root {
-	height: 75vh;
+	height: 79vh;
+	margin-bottom: -2.5rem;
 	display: flex;
 	flex-direction: column;
 }
