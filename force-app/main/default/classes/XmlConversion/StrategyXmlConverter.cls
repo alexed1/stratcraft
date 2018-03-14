@@ -27,7 +27,9 @@ public with sharing class StrategyXmlConverter {
         Strategy result = new Strategy();
         try {
             System.debug('Started parsing strategy XML...');
+            xml = xml.replaceAll(' < ', ' &lt; ').replaceAll(' <= ', ' &lt;= ');
             document.load(xml);
+            System.debug('XML document loaded');
             String xmlNamespace = 'http://soap.sforce.com/2006/04/metadata';
             Dom.XMLNode strategyNode = document.getRootElement();
             for(Dom.XMLNode child : strategyNode.getChildElements()) {
