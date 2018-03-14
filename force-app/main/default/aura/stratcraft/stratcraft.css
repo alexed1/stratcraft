@@ -56,6 +56,12 @@
 	word-wrap: break-word;
 	word-break: break-all;
 	text-align: center;
+	/* This is to make text undraggable */
+	-moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 }
 
 .THIS .if-node {

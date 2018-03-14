@@ -6,6 +6,7 @@
     <ltng:require scripts="{!$Resource.modalDialog}" afterScriptsLoaded="{!c.modalDialogLoaded}" />
     <ltng:require scripts="{!$Resource.jsplumb}" />
     <ltng:require scripts="{!$Resource.jsplumbWalker}" />
+    <ltng:require scripts="{!$Resource.dragula}" styles="{!$Resource.dragulacss}" />
     <!-- 
     <ltng:require scripts="{!$Resource.hopscotch}" afterScriptsLoaded="{!c.hopscotchLoaded}" />
     <ltng:require scripts="{!$Resource.hopscotchcss}" />
