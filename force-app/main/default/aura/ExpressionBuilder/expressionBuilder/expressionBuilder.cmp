@@ -1,37 +1,29 @@
-<aura:component>
+<aura:component controller="CriterionController">
     <aura:attribute name="expression" type="String" />
     <aura:attribute name="criteria" type="List" />
+    <aura:attribute name="isBuilderMode" type="Boolean" default="true" />
+    <aura:attribute name="isLoading" type="Boolean" default="true" />
+    <aura:attribute name="availableObjects" type="List" />
 
     <aura:handler name="deleteCriterion" event="c:criterionDeleteRequestEvent" action="{!c.handleCriterionDelete }" />
     <aura:handler name="addCriterion" event="c:criterionAddRequestEvent" action="{!c.handleCriterionAdd }" />
-    <aura:handler event="c:criterionUpdatedEvent" action="{!c.handleCriterionUpdatedEvent }" />
 
-    <aura:registerEvent name="expressionBuilderDialogClosedEvent" type="c:expressionBuilderDialogClosedEvent" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
-    <aura:method name="initExpressionBuilder" action="{!c.doInit}">
-        <aura:attribute name="expression" type="String" />
-    </aura:method>
-
-    <lightning:overlayLibrary aura:id="expressionBuilderDialog" />
-
-    <p class="slds-p-horizontal_small">
-        <div>
+    <aura:method name="resolveExpression" action="{!c.resolveExpression}" />
+    <aura:if isTrue="{!v.isLoading}">
+        <p>Loading availabe objects and parsing expression...</p>
+    </aura:if>
+    <aura:if isTrue="{!v.isBuilderMode}">
+        <div class="criteria-list-container slds-p-horizontal_small ">
             <aura:iteration items="{!v.criteria}" var="item" indexVar="index">
                 <div class="slds-p-vertical_medium">
-                    <c:criterion index="{!index}" criterionValue="{!item.criterionValue}" canRemove="{!v.criteria.length != 1 }" />
+                    <c:criterion index="{!index}" availableObjects="{!v.availableObjects}" value="{!item}" canRemove="{!v.criteria.length != 1}" />
                 </div>
             </aura:iteration>
         </div>
-
-        <div class="slds-grid slds-grid_align-end slds-p-vertical_medium">
-            <div class="slds-col">
-                <lightning:button class="slds-p-horizontal_small" name="cancel" label="Cancel" onclick="{!c.handleCancelClick}" />
-                <lightning:button class="slds-p-horizontal_small" name="ok" label="Save" variant="brand" onclick="{!c.handleOKClick}" />
-            </div>
-        </div>
-
-    </p>
-
-
-
+        <aura:set attribute="else">
+            <lightning:textarea label="Expression Text" value="{!v.expression}" />
+        </aura:set>
+    </aura:if>
 </aura:component>
