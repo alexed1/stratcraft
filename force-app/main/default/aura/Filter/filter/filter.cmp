@@ -1,13 +1,13 @@
 <aura:component>
 
-    <ltng:require scripts="{!$Resource.modalDialog}" />
-
     <aura:attribute name="currentBranch" type="Object" />
     <aura:attribute name="selectableNodes" type="List" />
 
     <aura:registerEvent name="deleteRequested" type="c:filterDeleteRequestedEvent" />
 
     <div class="slds-has-top-magnet slds-box">
+        <lightning:overlayLibrary aura:id="expressionBuilderDialog" />
+
         <div class="slds-grid slds-wrap">
             <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-top">
                 <div class="slds-col  slds-size_10-of-12">
