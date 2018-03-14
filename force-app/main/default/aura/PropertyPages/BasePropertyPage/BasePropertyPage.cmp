@@ -12,6 +12,7 @@
     <aura:attribute name="_isUnion" type="Boolean" access="private" default="false" />
     <aura:attribute name="_isRecommendationLimit" type="Boolean" access="private" default="false" />
     <aura:attribute name="availableNodeTypes" type="List" />
+    <aura:attribute name="availableParentNodes" type="List" />
     
     <aura:handler name="change" value="{!v.currentStrategy}" action="{!c.handleStrategyChanged}" />
     <aura:handler name="change" value="{!v._currentNodeDirty.nodeType}" action="{!c.handleTypeChanged}" />
@@ -24,7 +25,12 @@
 
     <ui:inputText aura:id="name" label="Name" class="field" value="{!v._currentNodeDirty.name}" disabled="{!v.currentNode == null}" />
     <ui:inputText aura:id="description" label="Description" class="field" value="{!v._currentNodeDirty.description}" disabled="{!v.currentNode == null}" />
-    <ui:inputText aura:id="parentNode" label="Parent Node" class="field" value="{!v._currentNodeDirty.parentNodeName}" disabled="{!v.currentNode == null}" />
+
+    <lightning:select aura:id="parentNode" label="Parent Node" value="{!v._currentNodeDirty.parentNodeName}" class="select_box" disabled="{!v.currentNode == null}">
+        <aura:iteration items="{!v.availableParentNodes}" var="item">
+            <option value="{!item[0]}" text="{!item[1]}" selected="{!item[0] == v._currentNodeDirty.parentNodeName}" />
+        </aura:iteration>
+    </lightning:select>
 
     <lightning:select aura:id="nodeType" label="Node Type" value="{!v._currentNodeDirty.nodeType}" class="select_box" required="true"
                       messageWhenValueMissing="Please select node type" disabled="{!v.currentNode == null}">
