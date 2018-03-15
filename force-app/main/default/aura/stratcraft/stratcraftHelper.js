@@ -102,7 +102,7 @@
     if (originalNodeState && actualNodeState) {
       var validationResult = this.validateNodeChange(strategy, originalNodeState, actualNodeState);
       if (validationResult) {
-        _force.displayToast('Error', 'Node can\'t be changed this way.\n' + validationResult, 'error');
+        _force.displayToast('Error', validationResult, 'error');
         return;
       }
       this.applyChangesToStrategy(strategy, originalNodeState, actualNodeState);
@@ -113,6 +113,11 @@
     component.find('propertyPage').reset();
     var newTree = this.buildTreeFromStrategy(strategy);
     component.find('tree').set('v.treeItems', [newTree]);
+    //If we currently see a diagram, we need to rebuild it
+    var isTreeView = component.get('v.isTreeView');
+    if (!isTreeView) {
+      self.rebuildStrategyDiagram(component, component.get('v.currentStrategy'));
+    }
     //post the current strategy to the server
     //save it by name overwriting as necessary
     //return a status message
@@ -120,11 +125,6 @@
     this.persistStrategy(component, function () {
       //This is to close modal dialog with base property page if a save was triggered from it
       _modalDialog.close();
-      //If we currently see a diagram, we need to rebuild it
-      var isTreeView = component.get('v.isTreeView');
-      if (!isTreeView) {
-        self.rebuildStrategyDiagram(component, component.get('v.currentStrategy'));
-      }
       if (onSuccess) {
         onSuccess();
       }
@@ -174,10 +174,15 @@
       }
     }
     if (originalNode.parentNodeName != changedNode.parentNodeName) {
-      var wasRoot = originalNode.parentNodeName == '';
-      var isRoot = changedNode.parentNodeName == '';
+      var wasRoot = !originalNode.parentNodeName;
+      var isRoot = !changedNode.parentNodeName;
       if (!wasRoot && isRoot) {
         return 'A strategy can\'t have two root nodes';
+      }
+      //This is for the case where we move root node to one of its children. This leads to its direct children to lose the root as a parent
+      //and becoming roots themselves but we don't allow more than one root
+      if (wasRoot && _strategy.getDirectChildrenNodes(strategy, originalNode).length > 1) {
+        return 'A strategy can\'t have more than one root';
       }
     }
     return null;
@@ -217,7 +222,7 @@
       var isMovingToOwnChild = _strategy.isParentOf(strategy, originalNode.name, changedNode.parentNodeName);
       if (isMovingToOwnChild) {
         originalChildren.forEach(function (item) {
-          item.parentNodeName = originalParent.name;
+          item.parentNodeName = originalParent ? originalParent.name : '';
         });
       }
       //There is no 'else' as in this case changedNode will already have changes and will be injected into strategy
@@ -360,7 +365,10 @@
           });
         }
       });
-
+      //It means that drag-n-drop is already configured
+      if (container.drake) {
+        return;
+      }
       var drake = dragula([container], {
         moves: function (parent, container, handle) {
           return parent.classList.contains('node');
@@ -400,6 +408,23 @@
           document.addEventListener('mousemove', mouseMoveHandler);
         });
       });
+      drake.on('drop', function (element, target, source, sibling) {
+        var activeDropTargets = Array.from(container.getElementsByClassName('active-drop-target'));
+        var activeDropTarget = activeDropTargets.length === 0 ? null : activeDropTargets[0];
+        //It means that we dropped it somewhere outside of the node
+        if (activeDropTarget === null) {
+          return;
+        }
+        var newParentName = activeDropTarget.dataset.nodeName;
+        var currentNodeName = element.dataset.nodeName;
+        var originalNodeState = _strategy.getNode(strategy, currentNodeName);
+        var actualNodeState = _utils.clone(originalNodeState);
+        actualNodeState.parentNodeName = newParentName;
+        //This is to allow dragula to clean up first, so we rebuild our diagram after it
+        window.setTimeout(function () {
+          self.saveStrategy(component, originalNodeState, actualNodeState);
+        });
+      });
       drake.on('dragend', function (element) {
         var nodes = Array.from(container.getElementsByClassName('node'));
         nodes.forEach(function (item) {
@@ -408,6 +433,7 @@
         document.removeEventListener('mousemove', container.mouseMoveHandler);
         delete container.mouseMoveHandler;
       });
+      container.drake = drake;
     } else {
       container.style.width = '0px';
       container.style.height = '0px';
