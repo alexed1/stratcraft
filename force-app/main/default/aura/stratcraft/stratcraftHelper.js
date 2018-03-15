@@ -305,15 +305,6 @@
   initializeDiagram: function () {
     var container = document.getElementsByClassName('diagram-container')[0];
     jsPlumb.setContainer(container);
-    document.onmouseup = function (e) {
-      //console.log('Mouse up ' + document.elementsFromPoint(e.clientX, e.clientY)[1].className);
-    };
-    document.onmousemove = function (e) {
-      var items = document.elementsFromPoint(e.clientX, e.clientY);
-      if (items && items.length > 1) {
-        console.log('Mouse move ' + items.map(x => x.className).join(','));
-      }
-    };
   },
 
   clearDiagram: function () {
@@ -369,31 +360,28 @@
           });
         }
       });
+
       var drake = dragula([container], {
         moves: function (parent, container, handle) {
           return parent.classList.contains('node');
         },
         mirrorContainer: container
       });
-      // drake.on('shadow', function (element, container, source) {
-      //   console.log('on shadow');
-      //   console.log('element - ' + element.className);
-      //   console.log('container - ' + container.className);
-      //   console.log('source - ' + source.className);
-      // });
-      // drake.on('over', function (element, container, source) {
-      //   console.log('on over');
-      //   console.log('element - ' + element.className);
-      //   console.log('container - ' + container.className);
-      //   console.log('source - ' + source.className);
-      // });
-      // drake.on('drop', function (element, target, source, sibling) {
-      //   console.log('on drop');
-      //   console.log('element - ' + element.className);
-      //   console.log('target - ' + target.className);
-      //   console.log('source - ' + source.className);
-      //   console.log('sibling - ' + sibling.className);
-      // });
+      drake.on('drag', function (element, container, source) {
+        var nodes = Array.from(container.getElementsByClassName('node'));
+        nodes.forEach(function (item) {
+          if (item != element) {
+            item.classList.add('drop-target');
+          }
+        });
+        console.log('Drag started, ' + nodes.length + 'nodes are highlighted');
+      });
+      drake.on('dragend', function (element) {
+        var nodes = Array.from(container.getElementsByClassName('node'));
+        nodes.forEach(function (item) {
+          item.classList.remove('drop-target');
+        });
+      });
     } else {
       container.style.width = '0px';
       container.style.height = '0px';
@@ -436,10 +424,6 @@
     visualNode.clickHandler = $A.getCallback(function () {
       self.showNodePropertiesDialog(strategy, treeLayoutNode.strategyNode);
     });
-    visualNode.mouseEnterHandler = function (e) {
-      console.log('Mouse enter ' + visualNode.id);
-    };
-    visualNode.addEventListener('mouseenter', visualNode.mouseEnterHandler);
     visualNode.addEventListener('click', visualNode.clickHandler);
     return visualNode;
   }
