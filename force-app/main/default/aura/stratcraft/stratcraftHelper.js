@@ -371,7 +371,7 @@
         var nodes = Array.from(container.getElementsByClassName('node'));
         nodes.forEach(function (item) {
           //Not to highlight the dragged node
-          if (item.id != element.id) {
+          if (item.dataset.nodeName != element.dataset.nodeName) {
             item.classList.add('drop-target');
           }
           //Start tracking the mouse to identify the hover item
@@ -390,11 +390,9 @@
             //Now if we have new drop target, it should get marked
             if (newDropTarget) {
               newDropTarget.classList.add('active-drop-target');
-              console.log('Now ' + newDropTarget.id + ' is an active drop target');
             }
             //If there was previous drop target and it is different from the new one, it should get unmarked
-            if (previousDropTarget && (!newDropTarget || previousDropTarget.id != newDropTarget.id)) {
-              console.log('Now ' + previousDropTarget.id + ' is no longer an active drop target');
+            if (previousDropTarget && (!newDropTarget || previousDropTarget.dataset.nodeName != newDropTarget.dataset.nodeName)) {
               previousDropTarget.classList.remove('active-drop-target');
             }
           };
@@ -419,7 +417,7 @@
   createNode: function (component, container, strategy, treeLayoutNode) {
     self = this;
     var visualNode = document.createElement('div');
-    visualNode.id = 'node_' + treeLayoutNode.strategyNode.name.replace(/ /g, "_");
+    visualNode.dataset.nodeName = treeLayoutNode.strategyNode.name;
     var specificNodeClass = '';
     switch (treeLayoutNode.strategyNode.nodeType) {
       case _utils.NodeType.IF:
