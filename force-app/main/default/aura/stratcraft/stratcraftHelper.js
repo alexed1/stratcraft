@@ -370,17 +370,45 @@
       drake.on('drag', function (element, container, source) {
         var nodes = Array.from(container.getElementsByClassName('node'));
         nodes.forEach(function (item) {
-          if (item != element) {
+          //Not to highlight the dragged node
+          if (item.id != element.id) {
             item.classList.add('drop-target');
           }
+          //Start tracking the mouse to identify the hover item
+          //This is done because the mirror of the dragged node will have the highest z-order
+          //thus no events regarding drag enter or mouse hover can be properly tracked
+          var mouseMoveHandler = function (e) {
+            var elements = Array.from(document.elementsFromPoint(e.clientX, e.clientY));
+            //Take the current drop target (should be one or none)
+            var previousDropTargets = Array.from(container.getElementsByClassName('active-drop-target'));
+            var previousDropTarget = previousDropTargets.length === 0 ? null : previousDropTargets[0];
+            //Find node under mouse other than the dragged one
+            var newDropTargets = elements.filter(function (item) {
+              return item.classList.contains('node') && item.classList.contains('drop-target');
+            });
+            var newDropTarget = newDropTargets.length === 0 ? null : newDropTargets[0];
+            //Now if we have new drop target, it should get marked
+            if (newDropTarget) {
+              newDropTarget.classList.add('active-drop-target');
+              console.log('Now ' + newDropTarget.id + ' is an active drop target');
+            }
+            //If there was previous drop target and it is different from the new one, it should get unmarked
+            if (previousDropTarget && (!newDropTarget || previousDropTarget.id != newDropTarget.id)) {
+              console.log('Now ' + previousDropTarget.id + ' is no longer an active drop target');
+              previousDropTarget.classList.remove('active-drop-target');
+            }
+          };
+          container.mouseMoveHandler = mouseMoveHandler;
+          document.addEventListener('mousemove', mouseMoveHandler);
         });
-        console.log('Drag started, ' + nodes.length + 'nodes are highlighted');
       });
       drake.on('dragend', function (element) {
         var nodes = Array.from(container.getElementsByClassName('node'));
         nodes.forEach(function (item) {
           item.classList.remove('drop-target');
         });
+        document.removeEventListener('mousemove', container.mouseMoveHandler);
+        delete container.mouseMoveHandler;
       });
     } else {
       container.style.width = '0px';
