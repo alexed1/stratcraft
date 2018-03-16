@@ -7,7 +7,7 @@
         <name>main</name>
         <type>Region</type>
     </flexiPageRegions>
-    <masterLabel>Strategy Builder</masterLabel>
+    <masterLabel>Strategy Crafter</masterLabel>
     <template>
         <name>flexipage:defaultAppHomeTemplate</name>
     </template>
