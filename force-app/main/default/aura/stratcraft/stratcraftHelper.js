@@ -122,13 +122,13 @@
     //save it by name overwriting as necessary
     //return a status message
     self = this;
-    this.persistStrategy(component, function () {
+    this.persistStrategy(component, $A.getCallback(function () {
       //This is to close modal dialog with base property page if a save was triggered from it
       _modalDialog.close();
       if (onSuccess) {
         onSuccess();
       }
-    });
+    }));
   },
 
   //save the strategy as a Salesforce strategy object
@@ -141,7 +141,7 @@
       if (component.isValid() && state === 'SUCCESS') {
         var result = response.getReturnValue();
         //only show this if response indicates true success
-        _force.displayToast('Strategy Crafter', 'Strategy changes saved');
+        _force.displayToast('Strategy Crafter', 'Strategy changes saved', 'info', 1000);
         console.log(' returned from persistStrategy: ' + result);
         if (onSuccess) {
           onSuccess();
@@ -377,36 +377,40 @@
       });
       drake.on('drag', function (element, container, source) {
         var nodes = Array.from(container.getElementsByClassName('node'));
+        var draggedNodeName = element.dataset.nodeName;
+        var directParent = _strategy.getParentNode(strategy, draggedNodeName);
         nodes.forEach(function (item) {
-          //Not to highlight the dragged node
-          if (item.dataset.nodeName != element.dataset.nodeName) {
-            item.classList.add('drop-target');
+          //Dragged node and its direct parent (if any) shouldn't be highlighted
+          if (item.dataset.nodeName === element.dataset.nodeName
+            || (directParent && directParent.name === item.dataset.nodeName)) {
+            return;
           }
-          //Start tracking the mouse to identify the hover item
-          //This is done because the mirror of the dragged node will have the highest z-order
-          //thus no events regarding drag enter or mouse hover can be properly tracked
-          var mouseMoveHandler = function (e) {
-            var elements = Array.from(document.elementsFromPoint(e.clientX, e.clientY));
-            //Take the current drop target (should be one or none)
-            var previousDropTargets = Array.from(container.getElementsByClassName('active-drop-target'));
-            var previousDropTarget = previousDropTargets.length === 0 ? null : previousDropTargets[0];
-            //Find node under mouse other than the dragged one
-            var newDropTargets = elements.filter(function (item) {
-              return item.classList.contains('node') && item.classList.contains('drop-target');
-            });
-            var newDropTarget = newDropTargets.length === 0 ? null : newDropTargets[0];
-            //Now if we have new drop target, it should get marked
-            if (newDropTarget) {
-              newDropTarget.classList.add('active-drop-target');
-            }
-            //If there was previous drop target and it is different from the new one, it should get unmarked
-            if (previousDropTarget && (!newDropTarget || previousDropTarget.dataset.nodeName != newDropTarget.dataset.nodeName)) {
-              previousDropTarget.classList.remove('active-drop-target');
-            }
-          };
-          container.mouseMoveHandler = mouseMoveHandler;
-          document.addEventListener('mousemove', mouseMoveHandler);
+          item.classList.add('drop-target');
         });
+        //Start tracking the mouse to identify the hover item
+        //This is done because the mirror of the dragged node will have the highest z-order
+        //thus no events regarding drag enter or mouse hover can be properly tracked
+        var mouseMoveHandler = function (e) {
+          var elements = Array.from(document.elementsFromPoint(e.clientX, e.clientY));
+          //Take the current drop target (should be one or none)
+          var previousDropTargets = Array.from(container.getElementsByClassName('active-drop-target'));
+          var previousDropTarget = previousDropTargets.length === 0 ? null : previousDropTargets[0];
+          //Find node under mouse other than the dragged one
+          var newDropTargets = elements.filter(function (item) {
+            return item.classList.contains('node') && item.classList.contains('drop-target');
+          });
+          var newDropTarget = newDropTargets.length === 0 ? null : newDropTargets[0];
+          //Now if we have new drop target, it should get marked
+          if (newDropTarget) {
+            newDropTarget.classList.add('active-drop-target');
+          }
+          //If there was previous drop target and it is different from the new one, it should get unmarked
+          if (previousDropTarget && (!newDropTarget || previousDropTarget.dataset.nodeName != newDropTarget.dataset.nodeName)) {
+            previousDropTarget.classList.remove('active-drop-target');
+          }
+        };
+        container.mouseMoveHandler = mouseMoveHandler;
+        document.addEventListener('mousemove', mouseMoveHandler);
       });
       drake.on('drop', function (element, target, source, sibling) {
         var activeDropTargets = Array.from(container.getElementsByClassName('active-drop-target'));
@@ -421,14 +425,15 @@
         var actualNodeState = _utils.clone(originalNodeState);
         actualNodeState.parentNodeName = newParentName;
         //This is to allow dragula to clean up first, so we rebuild our diagram after it
-        window.setTimeout(function () {
+        window.setTimeout($A.getCallback(function () {
           self.saveStrategy(component, originalNodeState, actualNodeState);
-        });
+        }));
       });
       drake.on('dragend', function (element) {
         var nodes = Array.from(container.getElementsByClassName('node'));
         nodes.forEach(function (item) {
           item.classList.remove('drop-target');
+          item.classList.remove('active-drop-target');
         });
         document.removeEventListener('mousemove', container.mouseMoveHandler);
         delete container.mouseMoveHandler;
