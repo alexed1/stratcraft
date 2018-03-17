@@ -248,8 +248,8 @@ window._jsplumbWalker = (function () {
         'levelSeparation': 80,
         'siblingSeparation': 40,
         'subtreeSeparation': 100,
-        'nodeWidth': 120,
-        'nodeHeight': 60
+        'nodeWidth': 48,
+        'nodeHeight': 48
     };
     /** Positions tree in accordance with the assigned configuration. */
     Algorithm.position = function position(tree) {

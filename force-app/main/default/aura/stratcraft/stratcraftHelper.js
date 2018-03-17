@@ -359,7 +359,10 @@
               target: parentNodePair.visualNode,
               anchors: ['Right', 'Left'],
               endpoint: 'Blank',
-              connector: 'Flowchart'
+              connector: 'Flowchart',
+              overlays: [
+                ['Arrow', { width: 8, length: 8, location: 1, foldback: 1 }]
+              ]
             });
             queue.push(childNodePair);
           });
@@ -473,10 +476,10 @@
     }
     visualNode.style.left = treeLayoutNode.x + 'px';
     visualNode.style.top = treeLayoutNode.y + 'px';
-    var text = document.createElement('p');
-    text.className = 'node-text';
-    text.innerText = treeLayoutNode.strategyNode.name;
-    visualNode.appendChild(text);
+    // var text = document.createElement('p');
+    // text.className = 'node-text';
+    // text.innerText = treeLayoutNode.strategyNode.name;
+    // visualNode.appendChild(text);
     container.appendChild(visualNode);
     visualNode.clickHandler = $A.getCallback(function () {
       self.showNodePropertiesDialog(strategy, treeLayoutNode.strategyNode);
@@ -484,32 +487,4 @@
     visualNode.addEventListener('click', visualNode.clickHandler);
     return visualNode;
   }
-  /*,
-
-  initHopscotch: function (cmp, event, helper) {
-
-    var selectId = cmp.find('mySelect').getGlobalId();
-    var treeId = cmp.find('tree').getGlobalId();
-
-    var tour = {
-      id: 'hello-hopscotch',
-      steps: [
-        {
-          title: 'My Header',
-          content: 'This is the header of my page.',
-          target: selectId,
-          placement: 'right'
-        },
-        {
-          title: 'My content',
-          content: 'Here is where I put my content.',
-          target: treeId,
-          placement: 'bottom'
-        }
-      ]
-    };
-
-    // Start the tour!
-    hopscotch.startTour(tour);
-    }*/
 })

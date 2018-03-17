@@ -25,9 +25,11 @@
 
 .THIS .diagram-scroll-view {
 	width: 100%;
-	padding: 20px;
+	padding: 10px;
 	overflow: auto;
-	border: solid 1px black;
+	border: solid 1px black;	
+	background-image: url(../resource/graphBackground);
+	background-attachment: local;
 }
 
 .THIS .diagram-container {
@@ -40,11 +42,12 @@
 }
 
 .THIS .node {
-	width: 120px;
-	height: 60px;
+	width: 48px;
+	height: 48px;
+	border-radius: 5px;
 	display: table;
 	position: absolute;
-	border: solid 1px black;
+	border: solid 1px dimgray;
 	cursor: pointer;
 }
 
@@ -76,22 +79,22 @@
 }
 
 .THIS .if-node {
-	background: thistle;
+	background-image: url(../resource/ifNode);
 }
 
 .THIS .union-node {
-	background: skyblue;
+	background-image: url(../resource/unionNode);
 }
 
 .THIS .soql-load-node {
-	background: salmon;
+	background-image: url(../resource/loadSoqlNode);
 }
 
 .THIS .recommendation-limit-node {
-	background: green;
+	background-image: url(../resource/recommendationLimitNode);
 }
 
 .THIS .filter-node {
-	background: floralwhite;
+	background-image: url(../resource/filterNode);
 }
 
