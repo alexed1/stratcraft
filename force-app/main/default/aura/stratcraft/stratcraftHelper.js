@@ -102,7 +102,7 @@
     if (originalNodeState && actualNodeState) {
       var validationResult = this.validateNodeChange(strategy, originalNodeState, actualNodeState);
       if (validationResult) {
-        _force.displayToast('Error', 'Node can\'t be changed this way.\n' + validationResult, 'error');
+        _force.displayToast('Error', validationResult, 'error');
         return;
       }
       this.applyChangesToStrategy(strategy, originalNodeState, actualNodeState);
@@ -113,22 +113,22 @@
     component.find('propertyPage').reset();
     var newTree = this.buildTreeFromStrategy(strategy);
     component.find('tree').set('v.treeItems', [newTree]);
+    //If we currently see a diagram, we need to rebuild it
+    var isTreeView = component.get('v.isTreeView');
+    if (!isTreeView) {
+      self.rebuildStrategyDiagram(component, component.get('v.currentStrategy'));
+    }
     //post the current strategy to the server
     //save it by name overwriting as necessary
     //return a status message
     self = this;
-    this.persistStrategy(component, function () {
+    this.persistStrategy(component, $A.getCallback(function () {
       //This is to close modal dialog with base property page if a save was triggered from it
       _modalDialog.close();
-      //If we currently see a diagram, we need to rebuild it
-      var isTreeView = component.get('v.isTreeView');
-      if (!isTreeView) {
-        self.rebuildStrategyDiagram(component, component.get('v.currentStrategy'));
-      }
       if (onSuccess) {
         onSuccess();
       }
-    });
+    }));
   },
 
   //save the strategy as a Salesforce strategy object
@@ -141,7 +141,7 @@
       if (component.isValid() && state === 'SUCCESS') {
         var result = response.getReturnValue();
         //only show this if response indicates true success
-        _force.displayToast('Strategy Crafter', 'Strategy changes saved');
+        _force.displayToast('Strategy Crafter', 'Strategy changes saved', 'info', 1000);
         console.log(' returned from persistStrategy: ' + result);
         if (onSuccess) {
           onSuccess();
@@ -174,10 +174,15 @@
       }
     }
     if (originalNode.parentNodeName != changedNode.parentNodeName) {
-      var wasRoot = originalNode.parentNodeName == '';
-      var isRoot = changedNode.parentNodeName == '';
+      var wasRoot = !originalNode.parentNodeName;
+      var isRoot = !changedNode.parentNodeName;
       if (!wasRoot && isRoot) {
         return 'A strategy can\'t have two root nodes';
+      }
+      //This is for the case where we move root node to one of its children. This leads to its direct children to lose the root as a parent
+      //and becoming roots themselves but we don't allow more than one root
+      if (wasRoot && _strategy.getDirectChildrenNodes(strategy, originalNode).length > 1) {
+        return 'A strategy can\'t have more than one root';
       }
     }
     return null;
@@ -217,7 +222,7 @@
       var isMovingToOwnChild = _strategy.isParentOf(strategy, originalNode.name, changedNode.parentNodeName);
       if (isMovingToOwnChild) {
         originalChildren.forEach(function (item) {
-          item.parentNodeName = originalParent.name;
+          item.parentNodeName = originalParent ? originalParent.name : '';
         });
       }
       //There is no 'else' as in this case changedNode will already have changes and will be injected into strategy
@@ -360,6 +365,80 @@
           });
         }
       });
+      //It means that drag-n-drop is already configured
+      if (container.drake) {
+        return;
+      }
+      var drake = dragula([container], {
+        moves: function (parent, container, handle) {
+          return parent.classList.contains('node');
+        },
+        mirrorContainer: container
+      });
+      drake.on('drag', function (element, container, source) {
+        var nodes = Array.from(container.getElementsByClassName('node'));
+        var draggedNodeName = element.dataset.nodeName;
+        var directParent = _strategy.getParentNode(strategy, draggedNodeName);
+        nodes.forEach(function (item) {
+          //Dragged node and its direct parent (if any) shouldn't be highlighted
+          if (item.dataset.nodeName === element.dataset.nodeName
+            || (directParent && directParent.name === item.dataset.nodeName)) {
+            return;
+          }
+          item.classList.add('drop-target');
+        });
+        //Start tracking the mouse to identify the hover item
+        //This is done because the mirror of the dragged node will have the highest z-order
+        //thus no events regarding drag enter or mouse hover can be properly tracked
+        var mouseMoveHandler = function (e) {
+          var elements = Array.from(document.elementsFromPoint(e.clientX, e.clientY));
+          //Take the current drop target (should be one or none)
+          var previousDropTargets = Array.from(container.getElementsByClassName('active-drop-target'));
+          var previousDropTarget = previousDropTargets.length === 0 ? null : previousDropTargets[0];
+          //Find node under mouse other than the dragged one
+          var newDropTargets = elements.filter(function (item) {
+            return item.classList.contains('node') && item.classList.contains('drop-target');
+          });
+          var newDropTarget = newDropTargets.length === 0 ? null : newDropTargets[0];
+          //Now if we have new drop target, it should get marked
+          if (newDropTarget) {
+            newDropTarget.classList.add('active-drop-target');
+          }
+          //If there was previous drop target and it is different from the new one, it should get unmarked
+          if (previousDropTarget && (!newDropTarget || previousDropTarget.dataset.nodeName != newDropTarget.dataset.nodeName)) {
+            previousDropTarget.classList.remove('active-drop-target');
+          }
+        };
+        container.mouseMoveHandler = mouseMoveHandler;
+        document.addEventListener('mousemove', mouseMoveHandler);
+      });
+      drake.on('drop', function (element, target, source, sibling) {
+        var activeDropTargets = Array.from(container.getElementsByClassName('active-drop-target'));
+        var activeDropTarget = activeDropTargets.length === 0 ? null : activeDropTargets[0];
+        //It means that we dropped it somewhere outside of the node
+        if (activeDropTarget === null) {
+          return;
+        }
+        var newParentName = activeDropTarget.dataset.nodeName;
+        var currentNodeName = element.dataset.nodeName;
+        var originalNodeState = _strategy.getNode(strategy, currentNodeName);
+        var actualNodeState = _utils.clone(originalNodeState);
+        actualNodeState.parentNodeName = newParentName;
+        //This is to allow dragula to clean up first, so we rebuild our diagram after it
+        window.setTimeout($A.getCallback(function () {
+          self.saveStrategy(component, originalNodeState, actualNodeState);
+        }));
+      });
+      drake.on('dragend', function (element) {
+        var nodes = Array.from(container.getElementsByClassName('node'));
+        nodes.forEach(function (item) {
+          item.classList.remove('drop-target');
+          item.classList.remove('active-drop-target');
+        });
+        document.removeEventListener('mousemove', container.mouseMoveHandler);
+        delete container.mouseMoveHandler;
+      });
+      container.drake = drake;
     } else {
       container.style.width = '0px';
       container.style.height = '0px';
@@ -369,7 +448,7 @@
   createNode: function (component, container, strategy, treeLayoutNode) {
     self = this;
     var visualNode = document.createElement('div');
-    visualNode.id = 'node_' + treeLayoutNode.strategyNode.name.replace(/ /g, "_");
+    visualNode.dataset.nodeName = treeLayoutNode.strategyNode.name;
     var specificNodeClass = '';
     switch (treeLayoutNode.strategyNode.nodeType) {
       case _utils.NodeType.IF:
