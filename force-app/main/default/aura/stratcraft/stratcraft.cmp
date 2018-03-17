@@ -3,9 +3,11 @@
     <ltng:require scripts="{!$Resource.force}" />
     <ltng:require scripts="{!$Resource.strategy}" />
     <ltng:require scripts="{!$Resource.utils}" />
+    <ltng:require scripts="{!$Resource.modalDialog}" afterScriptsLoaded="{!c.modalDialogLoaded}" />
     <ltng:require scripts="{!$Resource.jsplumb}" />
     <ltng:require scripts="{!$Resource.jsplumbWalker}" />
     <ltng:require scripts="{!$Resource.cmpUi}" />
+    <ltng:require scripts="{!$Resource.dragula}" styles="{!$Resource.dragulacss}" />
     <!-- 
     <ltng:require scripts="{!$Resource.hopscotch}" afterScriptsLoaded="{!c.hopscotchLoaded}" />
     <ltng:require scripts="{!$Resource.hopscotchcss}" />
@@ -25,7 +27,6 @@
     <aura:handler name="change" value="{!v.selectedStrategyName}" action="{!c.handleStrategySelection}" />
     <aura:handler name="change" value="{!v.isTreeView}" action="{!c.handleViewChanged}" />
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
-    <aura:handler name="render" value="{!this}" action="{!c.onRender}" />
 
     <aura:handler event="c:propertyPageSaveRequestEvent" action="{!c.saveStrategy}" />
     <aura:handler event="c:nodeDeletionRequestedEvent" action="{!c.handleNodeDeletionRequested}" />

@@ -4,6 +4,7 @@
 
     <aura:handler name="change" value="{!v.currentNode}" action="{!c.handleCurrentNodeChanged}" />
     <aura:handler name="change" value="{!v.filterModes}" action="{!c.handleFilterModesChanged}" />
+    <aura:handler name="init" value="{!this}" action="{!c.handleInit}" />
 
     <lightning:input aura:id="removeDuplicates" type="checkbox" label="Remove Duplicates" checked="{!v.currentNode.removeDuplicates}" />
     <lightning:input aura:id="filterModes" label="Filter Modes" placeholder="Multiple values should be comma-separated" value="{!v.filterModes}" />

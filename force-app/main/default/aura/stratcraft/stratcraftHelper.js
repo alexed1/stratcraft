@@ -111,7 +111,7 @@
     if (originalNodeState && actualNodeState) {
       var validationResult = this.validateNodeChange(strategy, originalNodeState, actualNodeState);
       if (validationResult) {
-        _force.displayToast('Error', 'Node can\'t be changed this way.\n' + validationResult, 'error');
+        _force.displayToast('Error', validationResult, 'error');
         return;
       }
       this.applyChangesToStrategy(strategy, originalNodeState, actualNodeState);
@@ -122,14 +122,17 @@
     component.find('propertyPage').reset();
     var newTree = self.buildTreeFromStrategy(strategy);
     component.find('tree').set('v.treeItems', [newTree]);
+    //If we currently see a diagram, we need to rebuild it
+    var isTreeView = component.get('v.isTreeView');
+    if (!isTreeView) {
+      self.rebuildStrategyDiagram(component, component.get('v.currentStrategy'));
+    }
     //post the current strategy to the server
     //save it by name overwriting as necessary
     //return a status message
-
     self.persistStrategy(component, function () {
       //This is to close modal dialog with base property page if a save was triggered from it
-      // var popup = window.open(location, '_self', '');
-      // popup.close();
+      _modalDialog.close();
       //If we currently see a diagram, we need to rebuild it
       var isTreeView = component.get('v.isTreeView');
       if (!isTreeView) {
@@ -199,10 +202,15 @@
       }
     }
     if (originalNode.parentNodeName != changedNode.parentNodeName) {
-      var wasRoot = originalNode.parentNodeName == '';
-      var isRoot = changedNode.parentNodeName == '';
+      var wasRoot = !originalNode.parentNodeName;
+      var isRoot = !changedNode.parentNodeName;
       if (!wasRoot && isRoot) {
         return 'A strategy can\'t have two root nodes';
+      }
+      //This is for the case where we move root node to one of its children. This leads to its direct children to lose the root as a parent
+      //and becoming roots themselves but we don't allow more than one root
+      if (wasRoot && _strategy.getDirectChildrenNodes(strategy, originalNode).length > 1) {
+        return 'A strategy can\'t have more than one root';
       }
     }
     return null;
@@ -218,9 +226,9 @@
     var isNameChanged = originalNode.name != changedNode.name;
     var isParentChanged = originalNode.parentNodeName != changedNode.parentNodeName;
     var originalParent = _strategy.getParentNode(strategy, originalNode);
+    var originalChildren = _strategy.getDirectChildrenNodes(strategy, originalNode);
     //Update parent of original children
     if (isNameChanged) {
-      var originalChildren = _strategy.getDirectChildrenNodes(strategy, originalNode);
       originalChildren.forEach(function (item) {
         item.parentNodeName = changedNode.name;
       });
@@ -242,7 +250,7 @@
       var isMovingToOwnChild = _strategy.isParentOf(strategy, originalNode.name, changedNode.parentNodeName);
       if (isMovingToOwnChild) {
         originalChildren.forEach(function (item) {
-          item.parentNodeName = originalParent.name;
+          item.parentNodeName = originalParent ? originalParent.name : '';
         });
       }
       //There is no 'else' as in this case changedNode will already have changes and will be injected into strategy
@@ -250,106 +258,8 @@
     var index = strategy.nodes.findIndex(function (item) { return item.name == originalNode.name; });
     strategy.nodes[index] = changedNode;
   },
-  /** Converts the incoming parameter to the format used by showDialog method */
-  parseComponentConfiguration: function (configuration) {
-    if (!configuration) {
-      return configuration;
-    }
-    var result = { name: '', initializer: null };
-    if (Array.isArray(configuration)) {
-      result.name = configuration[0];
-      result.isComponent = true;
-      result.initializer = configuration[1];
-    }
-    else {
-      result.name = configuration;
-      result.isComponent = configuration.startsWith('c:');
-    }
-    return result;
-  },
 
-  /**@param {object} component - A reference to stratcraft component
-   * @param {object} header - Header of the modal window. Can be one of the following:
-   * - plain string: will be displayed as is
-   * - component name (starts with namespace:): specified component will be created and used
-   * - array: first element of array is treated as component name, second is treated as an initializer function that accepts newly created component
-   * @param {object} body - Body of the modal window. Can be one of the following:
-   * - plain string: will be displayed as is
-   * - component name (starts with namespace:): specified component will be created and used
-   * - array: first element of array is treated as component name, second is treated as an initializer function that accepts newly created component
-   * @param {function} okCallback - (Optional)Function that accepts modal body component and is invoked when modal body component passed validation and modal window is closed.
-   * If it is not provided, than standard footer with 'Continue' and 'Cancel' won't be used, leaving modal window closing responsibility to the body component
-   * @param {function} validateCallback - (Optional)Function that accepts modal body component and returns true if it is in a valid state to proceed
-   * @param {function} cancelCallback - (Optional)Function that is invoked when modal window is closed without validation
-   * @example: Examples for header and body:
-   * 'This text will be shown as is'
-   * 'c:myComponentName'
-   * ['c:myComponentName', function (component) { component.set('v.name', 'Initial value for the name property')}]
-   */
-  showDialog: function (component, header, body, okCallback, validateCallback, cancelCallback) {
-    //TODO: probably worth check the actual namespace
-    var headerConfiguration = this.parseComponentConfiguration(header);
-    var bodyConfiguration = this.parseComponentConfiguration(body);
-    var componentsToCreate = [];
-    if (okCallback) {
-      componentsToCreate.unshift(['c:modalWindowFooter', {}]);
-    }
-    if (bodyConfiguration.isComponent) {
-      componentsToCreate.unshift([bodyConfiguration.name, {}]);
-    }
-    if (headerConfiguration.isComponent) {
-      componentsToCreate.unshift([headerConfiguration.name, {}]);
-    }
-    var modalDialog = component.find('modalDialog');
-    $A.createComponents(componentsToCreate,
-      function (components, status, errorMessage) {
-        if (status === 'SUCCESS') {
-          if (!okCallback) {
-            components.push(undefined);
-          }
-          //Footer is always the last, body is always next to the last, header is always the first
-          var footer = components[components.length - 1];
-          header = headerConfiguration.isComponent ? components[0] : headerConfiguration.name;
-          body = bodyConfiguration.isComponent ? components[components.length - 2] : bodyConfiguration.name;
-
-          if (headerConfiguration.isComponent && headerConfiguration.initializer) {
-            headerConfiguration.initializer(header);
-          }
-          if (bodyConfiguration.isComponent && bodyConfiguration.initializer) {
-            bodyConfiguration.initializer(body);
-          }
-          if (footer) {
-            footer.addEventHandler('buttonClickEvent', function (clickEvent) {
-              var buttonClicked = clickEvent.getParam('Button');
-              switch (buttonClicked) {
-                case _utils.ModalDialogButtonType.OK:
-                  var isValid = !validateCallback || validateCallback(body);
-                  if (isValid) {
-                    okCallback(body);
-                    modalDialog.notifyClose();
-                  }
-                  break;
-                case _utils.ModalDialogButtonType.CANCEL:
-                  if (cancelCallback) {
-                    cancelCallback();
-                  }
-                  modalDialog.notifyClose();
-                  break;
-              }
-            });
-          }
-          modalDialog.showCustomModal({
-            header: header,
-            body: body,
-            footer: footer,
-            //In this case if we provide cancellation callback, we don't allow user to just close the window, as we are interested in the councious choice 
-            showCloseButton: cancelCallback === null || cancelCallback === undefined
-          });
-        }
-      });
-  },
-
-  showDeleteNodeDialog: function (component, strategy, node) {
+  showDeleteNodeDialog: function (strategy, node) {
     var self = this;
     var hasChildren = _strategy.hasChildrenNodes(strategy, node);
     var question = 'Are you sure you want to delete this node';
@@ -360,8 +270,7 @@
       question = question + '?';
     }
     question = question + ' This can\'t be undone';
-    this.showDialog(
-      component,
+    _modalDialog.show(
       'Confirm Node Deletion',
       ['c:modalWindowGenericBody', function (body) {
         body.set('v.text', question);
@@ -372,16 +281,14 @@
         self.saveStrategy(component, null, null, function () {
           component.find('propertyPage').set('v.currentNode', null);
           //This is to close modal dialog with base property page if a save was triggered from it
-          var popup = window.open(location, '_self', '');
-          popup.close();
+          _modalDialog.close();
         });
       }
     )
   },
 
-  showNewNodeDialog: function (component) {
-    this.showDialog(
-      component,
+  showNewNodeDialog: function () {
+    _modalDialog.show(
       'New Node',
       'c:modalNewNodeBody',
       function (bodyComponent) {
@@ -396,9 +303,8 @@
       function (bodyComponent) { return bodyComponent.validate(); });
   },
 
-  showUnsavedChangesDialog: function (component, okCallback, cancelCallback) {
-    this.showDialog(
-      component,
+  showUnsavedChangesDialog: function (okCallback, cancelCallback) {
+    _modalDialog.show(
       'Unsaved changes',
       ['c:modalWindowGenericBody', function (body) {
         body.set('v.text', 'The selected node has unsaved changes. Do you want to discard those changes and proceeed?');
@@ -443,10 +349,9 @@
       okCallback);
   },
 
-  showNodePropertiesDialog: function (component, strategy, strategyNode) {
-    self = this;
-    this.showDialog(
-      component,
+
+  showNodePropertiesDialog: function (strategy, strategyNode) {
+    _modalDialog.show(
       'Node Properties',
       ['c:basePropertyPage', function (body) {
         body.set('v.currentStrategy', strategy);
@@ -523,6 +428,80 @@
           });
         }
       });
+      //It means that drag-n-drop is already configured
+      if (container.drake) {
+        return;
+      }
+      var drake = dragula([container], {
+        moves: function (parent, container, handle) {
+          return parent.classList.contains('node');
+        },
+        mirrorContainer: container
+      });
+      drake.on('drag', function (element, container, source) {
+        var nodes = Array.from(container.getElementsByClassName('node'));
+        var draggedNodeName = element.dataset.nodeName;
+        var directParent = _strategy.getParentNode(strategy, draggedNodeName);
+        nodes.forEach(function (item) {
+          //Dragged node and its direct parent (if any) shouldn't be highlighted
+          if (item.dataset.nodeName === element.dataset.nodeName
+            || (directParent && directParent.name === item.dataset.nodeName)) {
+            return;
+          }
+          item.classList.add('drop-target');
+        });
+        //Start tracking the mouse to identify the hover item
+        //This is done because the mirror of the dragged node will have the highest z-order
+        //thus no events regarding drag enter or mouse hover can be properly tracked
+        var mouseMoveHandler = function (e) {
+          var elements = Array.from(document.elementsFromPoint(e.clientX, e.clientY));
+          //Take the current drop target (should be one or none)
+          var previousDropTargets = Array.from(container.getElementsByClassName('active-drop-target'));
+          var previousDropTarget = previousDropTargets.length === 0 ? null : previousDropTargets[0];
+          //Find node under mouse other than the dragged one
+          var newDropTargets = elements.filter(function (item) {
+            return item.classList.contains('node') && item.classList.contains('drop-target');
+          });
+          var newDropTarget = newDropTargets.length === 0 ? null : newDropTargets[0];
+          //Now if we have new drop target, it should get marked
+          if (newDropTarget) {
+            newDropTarget.classList.add('active-drop-target');
+          }
+          //If there was previous drop target and it is different from the new one, it should get unmarked
+          if (previousDropTarget && (!newDropTarget || previousDropTarget.dataset.nodeName != newDropTarget.dataset.nodeName)) {
+            previousDropTarget.classList.remove('active-drop-target');
+          }
+        };
+        container.mouseMoveHandler = mouseMoveHandler;
+        document.addEventListener('mousemove', mouseMoveHandler);
+      });
+      drake.on('drop', function (element, target, source, sibling) {
+        var activeDropTargets = Array.from(container.getElementsByClassName('active-drop-target'));
+        var activeDropTarget = activeDropTargets.length === 0 ? null : activeDropTargets[0];
+        //It means that we dropped it somewhere outside of the node
+        if (activeDropTarget === null) {
+          return;
+        }
+        var newParentName = activeDropTarget.dataset.nodeName;
+        var currentNodeName = element.dataset.nodeName;
+        var originalNodeState = _strategy.getNode(strategy, currentNodeName);
+        var actualNodeState = _utils.clone(originalNodeState);
+        actualNodeState.parentNodeName = newParentName;
+        //This is to allow dragula to clean up first, so we rebuild our diagram after it
+        window.setTimeout($A.getCallback(function () {
+          self.saveStrategy(component, originalNodeState, actualNodeState);
+        }));
+      });
+      drake.on('dragend', function (element) {
+        var nodes = Array.from(container.getElementsByClassName('node'));
+        nodes.forEach(function (item) {
+          item.classList.remove('drop-target');
+          item.classList.remove('active-drop-target');
+        });
+        document.removeEventListener('mousemove', container.mouseMoveHandler);
+        delete container.mouseMoveHandler;
+      });
+      container.drake = drake;
     } else {
       container.style.width = '0px';
       container.style.height = '0px';
@@ -532,7 +511,7 @@
   createNode: function (component, container, strategy, treeLayoutNode) {
     self = this;
     var visualNode = document.createElement('div');
-    visualNode.id = 'node_' + treeLayoutNode.strategyNode.name.replace(/ /g, "_");
+    visualNode.dataset.nodeName = treeLayoutNode.strategyNode.name;
     var specificNodeClass = '';
     switch (treeLayoutNode.strategyNode.nodeType) {
       case _utils.NodeType.IF:
@@ -563,7 +542,7 @@
     visualNode.appendChild(text);
     container.appendChild(visualNode);
     visualNode.clickHandler = $A.getCallback(function () {
-      self.showNodePropertiesDialog(component, strategy, treeLayoutNode.strategyNode);
+      self.showNodePropertiesDialog(strategy, treeLayoutNode.strategyNode);
     });
     visualNode.addEventListener('click', visualNode.clickHandler);
     return visualNode;
