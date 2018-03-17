@@ -128,8 +128,8 @@
 
     self.persistStrategy(component, function () {
       //This is to close modal dialog with base property page if a save was triggered from it
-      var popup = window.open(location, '_self', '');
-      popup.close();
+      // var popup = window.open(location, '_self', '');
+      // popup.close();
       //If we currently see a diagram, we need to rebuild it
       var isTreeView = component.get('v.isTreeView');
       if (!isTreeView) {
@@ -412,15 +412,16 @@
   copyStrategy: function (cmp) {
     var self = this;
     self.showCopyStrategyDialog(cmp, function (body) {
+      var newName = body.get("v.input");
       _cmpUi.toggleSpinner(cmp, "spinner");
       self.strategyObjectToXML(cmp, function (strategyXml) {
-        var newName = body.get("v.input");
         var cmpEvent = $A.get("e.c:mdCopyStrategyRequest");
         cmpEvent.setParams({
           "strategyXML": strategyXml,
           "newStrategyName": newName,
           "callback": function () {
-            _cmpUi.toggleSpinner(cmp, "spinner");
+            _force.displayToast('Strategy Crafter', 'Strategy copied');
+            self.loadStrategyNames(cmp);
           }
         });
 

@@ -160,6 +160,7 @@ public static List<String> loadStrategyNamesRequest(String sessionId){
 			names.add(fileProperty.fullName);
 		}
 
+		names.sort();
 		return names;
 	}
 	catch (Exception exc) {

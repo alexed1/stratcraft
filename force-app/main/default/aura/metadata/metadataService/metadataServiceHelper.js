@@ -39,7 +39,7 @@
                     var pollingId = window.setInterval(
                         $A.getCallback(function (callback) {
                             helper.callRetrievalStatus(cmp, helper);
-                        }), 1000);
+                        }), 2000);
                     cmp.set("v.pollingId", pollingId);
                 }
                 else {
@@ -68,7 +68,7 @@
                     var pollingId = window.setInterval(
                         $A.getCallback(function (callback) {
                             helper.callDeployStatus(cmp, helper);
-                        }), 1000);
+                        }), 2000);
                     cmp.set("v.pollingId", pollingId);
                 }
                 else {
@@ -96,7 +96,7 @@
                     var pollingId = window.setInterval(
                         $A.getCallback(function (callback) {
                             helper.callDeployStatus(cmp, helper);
-                        }), 1000);
+                        }), 2000);
                     cmp.set("v.pollingId", pollingId);
                 }
                 else {
@@ -126,7 +126,7 @@
                     var pollingId = window.setInterval(
                         $A.getCallback(function (callback) {
                             helper.callDeployStatus(cmp, helper);
-                        }), 1000);
+                        }), 2000);
                     cmp.set("v.pollingId", pollingId);
                 }
                 else {
@@ -159,6 +159,7 @@
                     cmp.set("v.pollingId", pollingId);
                 }
                 else {
+
                     callback();
                     _force.displayToast('Metadata Service', 'Failed to send a copy strategy request: ' + response.getError()[0].message, 'Error');
                 }
@@ -189,9 +190,12 @@
                 }
             }
             else {
-                window.clearInterval(pollingId);
-                _force.displayToast('Metadata Service', 'Failed a retrieve strategy content operation: ' + response.getError()[0].message, 'Error');
-                callback();
+                //race conditions leads to this error, we can ignore it
+                if (!response.getError()[0].message.includes('Retrieve result has been deleted')) {
+                    window.clearInterval(pollingId);
+                    _force.displayToast('Metadata Service', 'Failed a retrieve strategy content operation: ' + response.getError()[0].message, 'Error');
+                    callback();
+                }
             }
         });
         $A.enqueueAction(action);

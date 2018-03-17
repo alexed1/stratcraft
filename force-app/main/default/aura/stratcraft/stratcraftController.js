@@ -79,13 +79,13 @@
                 helper.showNewNodeDialog(component);
                 break;
             case 'renameStrategy':
-                helper.showNewNodeDialog(component);
+                alert('This functionality is not implemented yet');
                 break;
             case 'copyStrategy':
                 helper.copyStrategy(component);
                 break;
             case 'deleteStrategy':
-                helper.showNewNodeDialog(component);
+                alert('This functionality is not implemented yet');
                 break;
         }
     },
