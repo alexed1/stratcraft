@@ -51,6 +51,56 @@
 	cursor: pointer;
 }
 
+.THIS .hidden-overlay {
+	opacity: 0;
+	z-index: -1;
+}
+
+.THIS .node-label {
+	opacity: 0.9;
+	width: 144px;
+	padding: 5px 10px;
+}
+
+.THIS .node-label-part {
+	height: 20px;
+}
+
+.THIS .node-label-tooltip {
+	position: relative;
+}
+
+.THIS .node-label-tooltip .node-label-tooltiptext {
+	opacity: 0;
+	background-color: black;
+	color: white;
+	padding: 5px;
+	border-radius: 5px;
+	position: absolute;
+	z-index: 1;
+	transition: opacity 0.5s;
+	transition-delay: .5s;
+}
+
+.THIS .node-label-tooltip:hover .node-label-tooltiptext {
+	opacity: 1;
+}
+
+.THIS .node-label-header {
+	font-weight: 600;
+}
+
+.THIS .node-label-body {
+	font-size: 0.9em
+}
+
+.THIS .node-label-part p {
+	text-align: center;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
 .THIS .node.drop-target {
 	box-shadow: 0px 0px 5px 3px gray
 }
@@ -95,6 +145,7 @@
 }
 
 .THIS .filter-node {
+	border-radius: 24px;
 	background-image: url(../resource/filterNode);
 }
 

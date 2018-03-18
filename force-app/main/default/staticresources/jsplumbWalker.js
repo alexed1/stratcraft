@@ -245,9 +245,9 @@ window._jsplumbWalker = (function () {
     var Algorithm = {
         'xAdjustment': 0,
         'yAdjustment': 0,
-        'levelSeparation': 80,
-        'siblingSeparation': 40,
-        'subtreeSeparation': 100,
+        'levelSeparation': 96,
+        'siblingSeparation': 96,
+        'subtreeSeparation': 96,
         'nodeWidth': 48,
         'nodeHeight': 48
     };
