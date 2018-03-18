@@ -6,6 +6,8 @@ echo "Installing test package..."
 sfdx force:lightning:test:install
 echo "Pushing source code..."
 sfdx force:source:push
+echo "assign permission set to the user"
+sfdx force:user:permset:assign -n stratcraft
 echo "Importing strategies..."
 sfdx force:data:tree:import  -f data/Strategy__c.json 
 echo "Opening org..."
