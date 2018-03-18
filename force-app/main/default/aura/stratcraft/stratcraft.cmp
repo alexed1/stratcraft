@@ -1,11 +1,12 @@
 <aura:component implements="flexipage:availableForAllPageTypes, force:appHostable" access="global" controller="StrategyCrafterController">
-    
+
     <ltng:require scripts="{!$Resource.force}" />
     <ltng:require scripts="{!$Resource.strategy}" />
     <ltng:require scripts="{!$Resource.utils}" />
     <ltng:require scripts="{!$Resource.modalDialog}" afterScriptsLoaded="{!c.modalDialogLoaded}" />
     <ltng:require scripts="{!$Resource.jsplumb}" />
     <ltng:require scripts="{!$Resource.jsplumbWalker}" />
+    <ltng:require scripts="{!$Resource.cmpUi}" />
     <ltng:require scripts="{!$Resource.dragula}" styles="{!$Resource.dragulacss}" />
     <!-- 
     <ltng:require scripts="{!$Resource.hopscotch}" afterScriptsLoaded="{!c.hopscotchLoaded}" />
@@ -18,7 +19,8 @@
     <aura:attribute name="originalNode" type="Object" />
     <aura:attribute name="isTreeView" type="String" default="true" />
     <aura:attribute name="_isDiagramInitialized" type="Boolean" default="false" />
-    <aura:attribute name="viewModes" type="List" default="[ {'label': 'Diagram', 'value': ''}, {'label': 'Tree', 'value': 'true' } ]"/>
+    <aura:attribute name="viewModes" type="List" default="[ {'label': 'Diagram', 'value': ''}, {'label': 'Tree', 'value': 'true' } ]"
+    />
     <aura:attribute name="strategyNames" type="List" />
     <aura:attribute name="selectedStrategyName" type="String" default="" />
 
@@ -33,17 +35,23 @@
     <aura:handler event="c:newNodeCreationRequestedEvent" action="{!c.handleNewNodeCreationRequested}" />
 
     <div class="slds-card slds-p-around_small root">
-        <lightning:spinner aura:id="mySpinner" class="slds-hide" size="large" />
+        <c:metadataService/>
+        <lightning:spinner aura:id="spinner" size="large" />
         <lightning:overlayLibrary aura:id="modalDialog" />
         <div class="tool-bar">
             <div class="slds-grid-col slds-m-top_x-small">
                 <lightning:buttonMenu iconName="utility:settings" alternativeText="Settings" onselect="{!c.handleMenuSelect}">
-                    <lightning:menuItem label="New Strategy" value="newStrategy" />                
+                    <lightning:menuItem label="New Strategy" value="newStrategy" />
+                    <lightning:menuItem label="Import Strategy from XML" value="importStrategy" />
                     <aura:if isTrue="{!v.selectedStrategyName != ''}">
                         <hr class="slds-m-vertical_xx-small" />
-                        <lightning:menuItem label="New Node" value="addElement" />                          
+                        <lightning:menuItem label="New Node" value="addElement" />
                         <lightning:menuItem label="Save Strategy" value="saveStrategy" />
-                    </aura:if>  
+                        <hr class="slds-m-vertical_xx-small" />
+                        <lightning:menuItem label="Rename Strategy" value="renameStrategy" />
+                        <lightning:menuItem label="Copy Strategy" value="copyStrategy" />
+                        <lightning:menuItem label="Delete Strategy" value="deleteStrategy" />
+                    </aura:if>
                 </lightning:buttonMenu>
             </div>
             <div class="slds-grid-col slds-m-horizontal_small">
@@ -54,22 +62,22 @@
                 </lightning:select>
             </div>
             <div class="slds-grid-col">
-                <lightning:radioGroup  name="viewRadioGroup" label="Display Mode" options="{!v.viewModes}" value="{!v.isTreeView}" />  
+                <lightning:radioGroup name="viewRadioGroup" label="Display Mode" options="{!v.viewModes}" value="{!v.isTreeView}" />
             </div>
         </div>
-        <hr class="slds-m-vertical_x-small" />                    
+        <hr class="slds-m-vertical_x-small" />
         <div class="slds-grid tree-container full-height" aura:id="treeContainer">
             <div class="slds-col slds-box slds-size_1-of-3">
-                <c:treeNode aura:id="tree"  header="NodeTree" />
-            </div>    
+                <c:treeNode aura:id="tree" header="NodeTree" />
+            </div>
             <div class="slds-col slds-box slds-m-left_x-small slds-scrollable_y">
                 <b>Properties</b>
                 {!v.body}
                 <c:basePropertyPage aura:id="propertyPage" currentStrategy="{!v.currentStrategy}" />
-            </div>    
+            </div>
         </div>
         <div class="slds-hide diagram-scroll-view full-height" aura:id="diagramView">
             <div class="diagram-container" aura:id="diagramContainer" />
-        </div>        
+        </div>
     </div>
 </aura:component>

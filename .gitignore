@@ -3,3 +3,6 @@
 .cache
 .vscode
 /server.key
+mdapi_output_dir
+sfdx-project.json
+uncrustify.cfg

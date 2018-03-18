@@ -1,0 +1,15 @@
+<apex:page>
+    <!--we use VF page to retrieve SessionId capable of API call. We pass sessionId to lighnting component-->
+    <!-- https://salesforce.stackexchange.com/questions/110515/getting-session-id-in-lightning -->
+    <apex:outputtext id="sessionId" value='{!$Api.Session_ID}' />
+
+    <script>
+        var url = window.location.search.substring(1); //get rid of "?" in querystring
+        url = url.split('=');
+        url = url[1];
+        console.log(url);
+        var origin = decodeURIComponent(url);
+        var sessionId = document.getElementById('{!$Component.sessionId}').innerHTML;
+        parent.postMessage(sessionId, origin);
+    </script>
+</apex:page>
