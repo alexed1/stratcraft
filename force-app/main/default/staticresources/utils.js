@@ -94,11 +94,11 @@ window._utils = (function () {
       RECOMMENDATION_LIMIT: 'recommendationLimit',
       getValueNamePairs: function () {
         return [
-          [this.IF, 'If'],
-          [this.SOQL_LOAD, 'SOQL Load'],
+          [this.IF, 'Gate'],
+          [this.SOQL_LOAD, 'Load Propositions'],
           [this.FILTER, 'Filter'],
-          [this.UNION, 'Union'],
-          [this.RECOMMENDATION_LIMIT, 'Recommendation Limit']
+          [this.UNION, 'Combine'],
+          [this.RECOMMENDATION_LIMIT, 'Prevent Re-Offers']
         ];
       }
     }

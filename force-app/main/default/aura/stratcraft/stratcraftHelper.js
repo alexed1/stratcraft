@@ -315,12 +315,33 @@
   clearDiagram: function () {
     var container = document.getElementsByClassName('diagram-container')[0];
     jsPlumb.reset();
+    if (container.drake) {
+      container.drake.destroy();
+      delete container.drake;
+    }
     while (container.firstChild) {
       var firstChild = container.firstChild;
       firstChild.removeEventListener('click', firstChild.clickHandler);
       delete firstChild.clickHandler;
       container.removeChild(firstChild);
     }
+  },
+
+  addLabelOverlay: function (endpoint, name, description, isSource) {
+    endpoint.addOverlay([
+      'Custom', {
+        create: function (component) {
+          var nodeLabel = document.createElement('div');
+          nodeLabel.innerHTML =
+            '<div class="node-label-part node-label-tooltip"><p class="node-label-header">' + name + '</p></div>'
+            + '<div class="node-label-part node-label-tooltip"><p class="node-label-body">' + description + '</p>'
+            + '<span class="node-label-tooltiptext">' + description + '</span></div>';
+          return nodeLabel;
+        },
+        location: [isSource ? -1.5 : -0.5, 1],
+        cssClass: 'node-label'
+      }
+    ]);
   },
 
   rebuildStrategyDiagram: function (component, strategy) {
@@ -346,7 +367,7 @@
         visualNode: self.createNode(component, container, strategy, treeLayout.root)
       });
       jsPlumb.batch(function () {
-        var parentVisualNode = null;
+        var parentIsRoot = true;
         while (queue.length > 0) {
           var parentNodePair = queue.shift();
           parentNodePair.layoutNode.children.forEach(function (item) {
@@ -354,21 +375,32 @@
               layoutNode: item,
               visualNode: self.createNode(component, container, strategy, item)
             };
-            jsPlumb.connect({
+            var connection = jsPlumb.connect({
               source: childNodePair.visualNode,
               target: parentNodePair.visualNode,
               anchors: ['Right', 'Left'],
-              endpoint: 'Blank',
-              connector: 'Flowchart'
+              endpoint: ['Rectangle', { width: 48, height: 48, cssClass: 'hidden-overlay' }],
+              connector: 'Flowchart',
+              paintStyle: { stroke: 'black', strokeWidth: 2 },
+              overlays: [['Arrow', { width: 8, length: 8, location: 1, foldback: 1 }]]
             });
             queue.push(childNodePair);
+            //We add label overlay to the source (child) endpoint
+            //If we are processing a root node's childrent at the moment, we also add overlay to the target (parent) endpoint
+            var sourceEndpoint = connection.endpoints[0];
+            self.addLabelOverlay(sourceEndpoint, childNodePair.layoutNode.strategyNode.name, childNodePair.layoutNode.strategyNode.description, true);
+            if (parentIsRoot) {
+              var targetEndpoint = connection.endpoints[1];
+              self.addLabelOverlay(targetEndpoint, parentNodePair.layoutNode.strategyNode.name, parentNodePair.layoutNode.strategyNode.description, false);
+              parentIsRoot = false;
+            }
           });
         }
       });
-      //It means that drag-n-drop is already configured
-      if (container.drake) {
-        return;
-      }
+      var overlays = Array.from(container.getElementsByClassName('jtk-overlay'));
+      overlays.forEach(function (item) {
+        item.style.transform = 'none';
+      });
       var drake = dragula([container], {
         moves: function (parent, container, handle) {
           return parent.classList.contains('node');
@@ -473,10 +505,10 @@
     }
     visualNode.style.left = treeLayoutNode.x + 'px';
     visualNode.style.top = treeLayoutNode.y + 'px';
-    var text = document.createElement('p');
-    text.className = 'node-text';
-    text.innerText = treeLayoutNode.strategyNode.name;
-    visualNode.appendChild(text);
+    // var text = document.createElement('p');
+    // text.className = 'node-text';
+    // text.innerText = treeLayoutNode.strategyNode.name;
+    // visualNode.appendChild(text);
     container.appendChild(visualNode);
     visualNode.clickHandler = $A.getCallback(function () {
       self.showNodePropertiesDialog(strategy, treeLayoutNode.strategyNode);
@@ -484,32 +516,4 @@
     visualNode.addEventListener('click', visualNode.clickHandler);
     return visualNode;
   }
-  /*,
-
-  initHopscotch: function (cmp, event, helper) {
-
-    var selectId = cmp.find('mySelect').getGlobalId();
-    var treeId = cmp.find('tree').getGlobalId();
-
-    var tour = {
-      id: 'hello-hopscotch',
-      steps: [
-        {
-          title: 'My Header',
-          content: 'This is the header of my page.',
-          target: selectId,
-          placement: 'right'
-        },
-        {
-          title: 'My content',
-          content: 'Here is where I put my content.',
-          target: treeId,
-          placement: 'bottom'
-        }
-      ]
-    };
-
-    // Start the tour!
-    hopscotch.startTour(tour);
-    }*/
 })
