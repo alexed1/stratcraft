@@ -3,10 +3,12 @@ public with sharing class MetadataServiceController {
 public static Integer API_VERSION = 43;
 
 @AuraEnabled
-public static String createOrUpdateStrategyRequest(String sessionId, String strategyXML, String strategyName){
+public static String createOrUpdateStrategyRequest(String sessionId, String strategyXML){
 	try {
+		XPath xp = new XPath(strategyXML);
+		String strategyName = xp.find('/RecommendationStrategy/recommendationStrategyName')[0].getText();
 		Zippex archive = new Zippex();
-		Blob packageXMLBlob = Blob.valueOf(formXML('*'));
+		Blob packageXMLBlob = Blob.valueOf(formXML(strategyName));
 		archive.addFile('package.xml', packageXMLBlob, null);
 		Blob strategyXMLBlob = Blob.valueOf(strategyXML);
 
@@ -26,8 +28,8 @@ public static String createOrUpdateStrategyRequest(String sessionId, String stra
 public static String deleteStrategyRequest(String sessionId, String strategyName){
 	try {
 		Zippex archive = new Zippex();
-		Blob packageXMLBlob = Blob.valueOf(formXML('*'));
 		//package.xml is still needed when you apply destructive changes
+		Blob packageXMLBlob = Blob.valueOf(formXML('*'));
 		archive.addFile('package.xml', packageXMLBlob, null);
 		Blob destructiveChangesXMLBlob = Blob.valueOf(formXML(strategyName));
 		archive.addFile('destructiveChanges.xml', destructiveChangesXMLBlob, null);
@@ -43,14 +45,22 @@ public static String deleteStrategyRequest(String sessionId, String strategyName
 }
 
 @AuraEnabled
-public static String renameStrategyRequest(String sessionId, String strategyXML, String oldStrategyName, String newStrategyName){
+public static String renameStrategyRequest(String sessionId, String strategyXML, String newStrategyName){
 	try {
+		XPath xp = new XPath(strategyXML);
+		Dom.XmlNode[] nameNode = xp.find('/RecommendationStrategy/recommendationStrategyName');
+		String oldStrategyName = nameNode[0].getText();
+		Dom.XmlNode[] children = nameNode[0].getChildren();
+		nameNode[0].removeChild(children[0]);
+		nameNode[0].addTextNode(newStrategyName);
+		String renamedStrategyXML = xp.doc.toXmlString();
+
 		Zippex archive = new Zippex();
 		Blob packageXMLBlob = Blob.valueOf(formXML(newStrategyName));
 		archive.addFile('package.xml', packageXMLBlob, null);
 		Blob destructiveChangesXMLBlob = Blob.valueOf(formXML(oldStrategyName));
 		archive.addFile('destructiveChanges.xml', destructiveChangesXMLBlob, null);
-		archive.addFile('recommendationStrategies/' + newStrategyName + '.recommendationStrategy', Blob.valueOf(strategyXML), null);
+		archive.addFile('recommendationStrategies/' + newStrategyName + '.recommendationStrategy', Blob.valueOf(renamedStrategyXML), null);
 		Blob zipData = archive.getZipArchive();
 
 		String base64EncodedArchive = EncodingUtil.base64Encode(zipData);
@@ -99,19 +109,7 @@ public static String checkRetrievalStatusRequest(String sessionId, String id){
 		{
 			if (retrieveResult.success)
 			{
-				Zippex archive = new Zippex(EncodingUtil.base64Decode(retrieveResult.zipFile));
-				Set <String> fileNames = archive.getFileNames();
-
-				for (String fileName : fileNames)
-				{
-					if (fileName.startsWith('recommendationStrategies'))
-					{
-						Blob file = archive.getFile(fileName);
-						String xml = file.toString();
-						return xml;
-					}
-				}
-				return ''; //it shouldn't be called really
+				return finStrategyInZipArchive(retrieveResult.zipFile);
 			}
 			else
 			{
@@ -127,6 +125,23 @@ public static String checkRetrievalStatusRequest(String sessionId, String id){
 	catch (Exception ex) {
 		throw new AuraHandledException('Sorry but we couldn\'t load strategy content. Error: '+ex.getMessage());
 	}
+}
+
+private static String finStrategyInZipArchive(String base64Archive){
+	Zippex archive = new Zippex(EncodingUtil.base64Decode(base64Archive));
+	Set <String> fileNames = archive.getFileNames();
+
+	for (String fileName : fileNames)
+	{
+		if (fileName.startsWith('recommendationStrategies'))
+		{
+			Blob file = archive.getFile(fileName);
+			String xml = file.toString();
+			return xml;
+		}
+	}
+
+	throw new AuraException('Couldn\'t find strategy in retrieved zip archive');
 }
 
 
@@ -171,10 +186,8 @@ public static List<String> loadStrategyNamesRequest(String sessionId){
 
 
 @AuraEnabled
-//empty response means it is all good
-public static String checkDeployStatusRequest(String sessionId, String id){
+public static String checkDeployStatusRequest(String sessionId, String id, Boolean retrieveAffectedStrategy){
 
-	String response = '';
 	try {
 		MetadataService.MetadataPort service = createClient(sessionId);
 		MetadataService.DeployResult deployResult = service.checkDeployStatus(id, true);
@@ -182,17 +195,35 @@ public static String checkDeployStatusRequest(String sessionId, String id){
 		if(deployResult.done)
 		{
 			// Deployment errors?
-			if(deployResult.details!=null && deployResult.details.componentFailures!=null)
+			if(deployResult.details.componentFailures!=null)
 			{
+				String errors = '';
 				for(MetadataService.DeployMessage deployMessage : deployResult.details.componentFailures)
 					if(deployMessage.problem!=null)
-						response += deployMessage.problem;
-				if (response!='')
-					throw new AuraHandledException('Sorry but we couldn\'t check deploy status. Error:' + response);
+						errors += deployMessage.problem;
+
+				if (errors!='')
+					throw new AuraHandledException('Sorry but we couldn\'t check deploy status. Error:' + errors);
 			}
+
+			if (retrieveAffectedStrategy != null && retrieveAffectedStrategy) {
+				if (deployResult.details.retrieveResult!=null && deployResult.details.retrieveResult.done)
+				{
+					if (deployResult.details.retrieveResult.zipFile!=null)
+						return finStrategyInZipArchive(deployResult.details.retrieveResult.zipFile);
+					else
+						throw new AuraHandledException('Deploy was successfull but we couldn\'t retrieve back resulting strategy');
+				}
+				else
+				{
+					return 'deploying';
+				}
+			}
+			else
+				return '';
 		}
 		else
-			response = 'deploying';
+			return 'deploying';
 	}
 	catch (AuraHandledException ex) {
 		throw ex;
@@ -200,8 +231,6 @@ public static String checkDeployStatusRequest(String sessionId, String id){
 	catch (Exception ex) {
 		throw new AuraHandledException('Sorry but we couldn\'t check deploy status. Error: ' + ex.getMessage());
 	}
-
-	return response;
 }
 
 
@@ -245,7 +274,7 @@ private static String deployPackage(String sessionId, String base64EncodedArchiv
 	deployOptions.autoUpdatePackage = false;
 	deployOptions.checkOnly = false;
 	deployOptions.ignoreWarnings = false;
-	deployOptions.performRetrieve = false;
+	deployOptions.performRetrieve = true;
 	deployOptions.purgeOnDelete = false;
 	deployOptions.rollbackOnError = false;
 	deployOptions.singlePackage = true;

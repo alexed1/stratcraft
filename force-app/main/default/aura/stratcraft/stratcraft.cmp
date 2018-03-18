@@ -42,6 +42,7 @@
             <div class="slds-grid-col slds-m-top_x-small">
                 <lightning:buttonMenu iconName="utility:settings" alternativeText="Settings" onselect="{!c.handleMenuSelect}">
                     <lightning:menuItem label="New Strategy" value="newStrategy" />
+                    <lightning:menuItem label="Import Strategy from XML" value="importStrategy" />
                     <aura:if isTrue="{!v.selectedStrategyName != ''}">
                         <hr class="slds-m-vertical_xx-small" />
                         <lightning:menuItem label="New Node" value="addElement" />

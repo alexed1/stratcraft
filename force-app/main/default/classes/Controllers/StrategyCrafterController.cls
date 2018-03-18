@@ -1,8 +1,4 @@
-//xml data is stored in a Strategy__c custom object.
-//after it's retrieved by name, it's passed to the client as Strategy__c, where it's converted to an Object called strategyRecord
-//the client then evolves a Strategy object of nodes called currentStrategy
-//at persistence time, a current strategy Strategy gets uploaded
-//we should use it to generate an XML string and then create a Strategy__c to save
+//this controller is used to convert xml to Strategy object and back
 
 public class StrategyCrafterController {
 

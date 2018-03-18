@@ -1,5 +1,9 @@
 ({
-    //##############controller methods
+
+    // General approach here is to store callback, and then schedulle recurring call to one of controller methods: checkRetrieveStatus or checkDeployStatus
+    // If anything bad happens I try to display an error and still call callback
+    // Also no matter if a call was successfull or not - its important to deschedule recurring calls 
+    // Controller methods are designed to either return valid value or to throw exception
 
     loadStrategyNames: function (cmp, event, helper) {
         var self = this;
@@ -32,7 +36,7 @@
             var strategyName = event.getParam("strategyName");
             var action = cmp.get("c.getStrategyRequest");
             action.setParams({ sessionId: sessionId, strategyName: strategyName });
-            action.setCallback(this, function (response, callback) {
+            action.setCallback(this, function (response) {
                 if (cmp.isValid() && response.getState() === "SUCCESS") {
                     var id = response.getReturnValue();
                     cmp.set("v.id", id);
@@ -58,16 +62,15 @@
             var callback = event.getParam('callback');
             cmp.set("v.callback", callback);
             var strategyXML = event.getParam("strategyXML");
-            var strategyName = event.getParam("strategyName");
             var action = cmp.get("c.createOrUpdateStrategyRequest");
-            action.setParams({ sessionId: sessionId, strategyXML: strategyXML, strategyName: strategyName });
-            action.setCallback(this, function (response, callback) {
+            action.setParams({ sessionId: sessionId, strategyXML: strategyXML });
+            action.setCallback(this, function (response) {
                 if (cmp.isValid() && response.getState() === "SUCCESS") {
                     var id = response.getReturnValue();
                     cmp.set("v.id", id);
                     var pollingId = window.setInterval(
                         $A.getCallback(function (callback) {
-                            helper.callDeployStatus(cmp, helper);
+                            helper.callDeployStatus(cmp, helper, true);
                         }), 2000);
                     cmp.set("v.pollingId", pollingId);
                 }
@@ -89,13 +92,13 @@
             var strategyName = event.getParam("strategyName");
             var action = cmp.get("c.deleteStrategyRequest");
             action.setParams({ sessionId: sessionId, strategyName: strategyName });
-            action.setCallback(this, function (response, callback) {
+            action.setCallback(this, function (response) {
                 if (cmp.isValid() && response.getState() === "SUCCESS") {
                     var id = response.getReturnValue();
                     cmp.set("v.id", id);
                     var pollingId = window.setInterval(
                         $A.getCallback(function (callback) {
-                            helper.callDeployStatus(cmp, helper);
+                            helper.callDeployStatus(cmp, helper, false);
                         }), 2000);
                     cmp.set("v.pollingId", pollingId);
                 }
@@ -116,16 +119,15 @@
             cmp.set("v.callback", callback);
             var strategyXML = event.getParam("strategyXML");
             var newStrategyName = event.getParam("newStrategyName");
-            var oldStrategyName = event.getParam("oldStrategyName");
             var action = cmp.get("c.renameStrategyRequest");
-            action.setParams({ sessionId: sessionId, newStrategyName: newStrategyName, strategyXML: strategyXML, oldStrategyName: oldStrategyName });
-            action.setCallback(this, function (response, callback) {
+            action.setParams({ sessionId: sessionId, newStrategyName: newStrategyName, strategyXML: strategyXML });
+            action.setCallback(this, function (response) {
                 if (cmp.isValid() && response.getState() === "SUCCESS") {
                     var id = response.getReturnValue();
                     cmp.set("v.id", id);
                     var pollingId = window.setInterval(
                         $A.getCallback(function (callback) {
-                            helper.callDeployStatus(cmp, helper);
+                            helper.callDeployStatus(cmp, helper, true);
                         }), 2000);
                     cmp.set("v.pollingId", pollingId);
                 }
@@ -148,13 +150,13 @@
             var newStrategyName = event.getParam("newStrategyName");
             var action = cmp.get("c.copyStrategyRequest");
             action.setParams({ sessionId: sessionId, newStrategyName: newStrategyName, strategyXML: strategyXML });
-            action.setCallback(this, function (response, callback) {
+            action.setCallback(this, function (response) {
                 if (cmp.isValid() && response.getState() === "SUCCESS") {
                     var id = response.getReturnValue();
                     cmp.set("v.id", id);
                     var pollingId = window.setInterval(
                         $A.getCallback(function (callback) {
-                            helper.callDeployStatus(cmp, helper);
+                            helper.callDeployStatus(cmp, helper, true);
                         }), 2000);
                     cmp.set("v.pollingId", pollingId);
                 }
@@ -201,20 +203,23 @@
         $A.enqueueAction(action);
     },
 
-    callDeployStatus: function (cmp, helper) {
+    callDeployStatus: function (cmp, helper, retrieveAffectedStrategy) {
         var action = cmp.get("c.checkDeployStatusRequest");
         var id = cmp.get("v.id");
         var sessionId = cmp.get("v.sessionId");
         var pollingId = cmp.get("v.pollingId");
         var callback = cmp.get("v.callback");
-        action.setParams({ sessionId: sessionId, id: id });
+        action.setParams({ sessionId: sessionId, id: id, retrieveAffectedStrategy: retrieveAffectedStrategy });
         action.setCallback(this, function (response) {
             if (response.getState() === "SUCCESS") {
                 var retVal = response.getReturnValue();
                 if (retVal != "deploying") {
                     cmp.set("v.message", retVal);
                     window.clearInterval(pollingId);
-                    callback();
+                    if (retrieveAffectedStrategy)
+                        callback(retVal);
+                    else
+                        callback('success');
                 }
             }
             else {

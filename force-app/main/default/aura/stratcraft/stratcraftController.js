@@ -52,6 +52,9 @@
     handleMenuSelect: function (component, event, helper) {
         var selectedMenuItemValue = event.getParam('value');
         switch (selectedMenuItemValue) {
+            case 'importStrategy':
+                helper.showImportXMLDialog(component);
+                break;
             case 'newStrategy':
                 alert('This functionality is not implemented yet');
                 break;
@@ -65,13 +68,13 @@
                 helper.showNewNodeDialog();
                 break;
             case 'renameStrategy':
-                alert('This functionality is not implemented yet');
+                helper.showRenameStrategyDialog(component);
                 break;
             case 'copyStrategy':
                 helper.copyStrategy(component);
                 break;
             case 'deleteStrategy':
-                alert('This functionality is not implemented yet');
+                helper.showDeleteStrategyDialog(component);
                 break;
         }
     },

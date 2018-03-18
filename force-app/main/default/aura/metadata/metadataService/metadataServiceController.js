@@ -8,6 +8,6 @@
     deleteStrategy: function (cmp, event, helper) { helper.deleteStrategy(cmp, event, helper); },
 
     renameStrategy: function (cmp, event, helper) { helper.renameStrategy(cmp, event, helper); },
-    
+
     copyStrategy: function (cmp, event, helper) { helper.copyStrategy(cmp, event, helper); }
 })

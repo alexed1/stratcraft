@@ -5,6 +5,6 @@
 
     <div class="slds-text-align_center">
         <lightning:icon class="slds-m-right_x-small" iconName="{!v.iconName}" alternativeText="{!v.iconName}" /> {!v.text}
-        <lightning:input required="true" label="Required value" value="{!v.input}" />
+        <lightning:textarea value="{!v.input}" required="true" label="Strategy XML" />
     </div>
 </aura:component>
