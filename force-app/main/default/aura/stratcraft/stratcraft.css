@@ -28,8 +28,8 @@
 	padding: 10px;
 	overflow: auto;
 	border: solid 1px black;	
-	background-image: url(../resource/graphBackground);
-	background-attachment: local;
+	/*background-image: url(../resource/graphBackground);
+	background-attachment: local;*/
 }
 
 .THIS .diagram-container {
