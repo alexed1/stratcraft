@@ -170,12 +170,14 @@ public static List<String> loadStrategyNamesRequest(String sessionId){
 		queries.add(queryWorkflow);
 		MetadataService.FileProperties[] fileProperties = service.listMetadata(queries, API_VERSION);
 		List<String> names = new List<String>();
-		for(MetadataService.FileProperties fileProperty : fileProperties)
-		{
-			names.add(fileProperty.fullName);
-		}
+		if (fileProperties!=null) {
+			for(MetadataService.FileProperties fileProperty : fileProperties)
+			{
+				names.add(fileProperty.fullName);
+			}
 
-		names.sort();
+			names.sort();
+		}
 		return names;
 	}
 	catch (Exception exc) {

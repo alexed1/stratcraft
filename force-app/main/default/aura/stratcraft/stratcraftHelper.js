@@ -25,8 +25,10 @@
     cmpEvent.setParams({
       "callback": function (strategyNames) {
         console.log(strategyNames);
-        strategyNames.splice(0, 0, '');
-        component.set("v.strategyNames", strategyNames);
+        if (strategyNames) {
+          strategyNames.splice(0, 0, '');
+          component.set("v.strategyNames", strategyNames);
+        }
         _cmpUi.spinnerOff(component, "spinner");
       }
     });
@@ -372,8 +374,6 @@
             }
             else {
               _force.displayToast('Strategy Crafter', 'Strategy was deleted');
-              cmp.set("v.selectedStrategyName", ' ')
-              cmp.set("v.currentStrategy", null);
               self.loadStrategyNames(cmp);
             }
           }
