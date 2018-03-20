@@ -56,7 +56,7 @@
                 helper.showImportXMLDialog(component);
                 break;
             case 'newStrategy':
-                alert('This functionality is not implemented yet');
+                helper.showNewStrategyDialog(component);
                 break;
             case 'saveStrategy':
                 var propertyPage = component.find('propertyPage');
