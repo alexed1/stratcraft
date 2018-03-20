@@ -1,0 +1,14 @@
+<aura:component>
+    <aura:attribute name="iconName" type="String" />
+    <aura:attribute name="text" type="String" />
+    <aura:attribute name="strategyName" type="String" />
+    <aura:attribute name="strategyDescription" type="String" />
+    <aura:attribute name="strategyMasterLabel" type="String" />
+
+    <div class="slds-text-align_center">
+        <lightning:icon class="slds-m-right_x-small" iconName="{!v.iconName}" alternativeText="{!v.iconName}" /> {!v.text}
+        <lightning:input required="true" label="Strategy name" value="{!v.strategyName}" />
+        <lightning:input required="true" label="Strategy description" value="{!v.strategyDescription}" />
+        <lightning:input required="true" label="Strategy master label" value="{!v.strategyMasterLabel}" />
+    </div>
+</aura:component>
