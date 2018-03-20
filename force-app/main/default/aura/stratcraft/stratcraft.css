@@ -28,7 +28,7 @@
 	padding: 10px;
 	overflow: auto;
 	border: solid 1px black;	
-	/*background-image: url(../resource/graphBackground);
+	/*background-image: url(/resource/graphBackground);
 	background-attachment: local;*/
 }
 
@@ -129,23 +129,23 @@
 }
 
 .THIS .if-node {
-	background-image: url(../resource/ifNode);
+	background-image: url(/resource/ifNode);
 }
 
 .THIS .union-node {
-	background-image: url(../resource/unionNode);
+	background-image: url(/resource/unionNode);
 }
 
 .THIS .soql-load-node {
-	background-image: url(../resource/loadSoqlNode);
+	background-image: url(/resource/loadSoqlNode);
 }
 
 .THIS .recommendation-limit-node {
-	background-image: url(../resource/recommendationLimitNode);
+	background-image: url(/resource/recommendationLimitNode);
 }
 
 .THIS .filter-node {
 	border-radius: 24px;
-	background-image: url(../resource/filterNode);
+	background-image: url(/resource/filterNode);
 }
 
