@@ -67,7 +67,7 @@
         </div>
         <hr class="slds-m-vertical_x-small" />
         <div class="slds-grid tree-container full-height" aura:id="treeContainer">
-            <div class="slds-col slds-box slds-size_1-of-3">
+            <div class="slds-col slds-box slds-size_1-of-3  slds-scrollable_y">
                 <c:treeNode aura:id="tree" header="NodeTree" />
             </div>
             <div class="slds-col slds-box slds-m-left_x-small slds-scrollable_y">
