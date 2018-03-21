@@ -18,35 +18,7 @@
     },
     /** Handles selection of a new strategy */
     handleStrategySelection: function (component, event, helper) {
-        helper.ensureEmptyStrategyIsRemoved(component);
-
-        var currentStrategy = component.get('v.currentStrategy');
-        var newStrategyName = component.get('v.selectedStrategyName');
-        //If we try to select the same strategy that is already selected, we do nothing
-        //This may happen e.g. if we are selecting a new strategy, but the current one has unsaved changes and user decided to cancel the selection
-        if (currentStrategy && currentStrategy.name === newStrategyName) {
-            return;
-        }
-        //Since we are selecting a different strategy, we need to clear the property page
-        var propertyPage = component.find('propertyPage');
-        var proceedToSelect = function () {
-            propertyPage.clear();
-            if (newStrategyName) {
-                helper.loadStrategy(component, newStrategyName);
-            }
-            else {
-                component.set('v.currentStrategy', null);
-            }
-        };
-        var reverseSelection = function () {
-            component.set('v.selectedStrategyName', currentStrategy.name);
-        };
-        if (propertyPage.isDirty()) {
-            helper.showUnsavedChangesDialog(proceedToSelect, reverseSelection);
-        }
-        else {
-            proceedToSelect();
-        }
+        helper.handleStrategySelection(component);
     },
     /** Handles strategy-node-related menu item click */
     handleMenuSelect: function (component, event, helper) {

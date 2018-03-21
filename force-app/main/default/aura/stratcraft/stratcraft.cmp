@@ -8,6 +8,8 @@
     <ltng:require scripts="{!$Resource.jsplumbWalker}" />
     <ltng:require scripts="{!$Resource.cmpUi}" />
     <ltng:require scripts="{!$Resource.dragula}" styles="{!$Resource.dragulacss}" />
+    <ltng:require styles="{!$Resource.modalStyles}" />
+
     <!-- 
     <ltng:require scripts="{!$Resource.hopscotch}" afterScriptsLoaded="{!c.hopscotchLoaded}" />
     <ltng:require scripts="{!$Resource.hopscotchcss}" />

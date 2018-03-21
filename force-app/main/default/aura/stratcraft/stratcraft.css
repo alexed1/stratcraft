@@ -1,3 +1,8 @@
+.THIS .narrowpopoverclass {
+	min-width: 20rem;
+	width:15%;
+}
+
 .THIS .select_box {
 	width: 250px;
 	margin: 0 0 10px;
