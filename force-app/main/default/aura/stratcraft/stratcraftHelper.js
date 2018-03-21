@@ -19,6 +19,39 @@
     return nodes;
   },
 
+  handleStrategySelection: function (component) {
+    var self = this;
+    self.ensureEmptyStrategyIsRemoved(component);
+
+    var currentStrategy = component.get('v.currentStrategy');
+    var newStrategyName = component.get('v.selectedStrategyName');
+    //If we try to select the same strategy that is already selected, we do nothing
+    //This may happen e.g. if we are selecting a new strategy, but the current one has unsaved changes and user decided to cancel the selection
+    if (currentStrategy && currentStrategy.name === newStrategyName) {
+      return;
+    }
+    //Since we are selecting a different strategy, we need to clear the property page
+    var propertyPage = component.find('propertyPage');
+    var proceedToSelect = function () {
+      propertyPage.clear();
+      if (newStrategyName) {
+        self.loadStrategy(component, newStrategyName);
+      }
+      else {
+        component.set('v.currentStrategy', null);
+      }
+    };
+    var reverseSelection = function () {
+      component.set('v.selectedStrategyName', currentStrategy.name);
+    };
+    if (propertyPage.isDirty()) {
+      self.showUnsavedChangesDialog(proceedToSelect, reverseSelection);
+    }
+    else {
+      proceedToSelect();
+    }
+  },
+
   //Populates the select strategy drop down
   loadStrategyNames: function (component) {
     var cmpEvent = $A.get("e.c:mdLoadStrategyNamesRequest");
@@ -302,17 +335,14 @@
           _modalDialog.close();
         });
       }
-    )
+    );
   },
 
   showNewStrategyDialog: function (cmp) {
     var self = this;
     _modalDialog.show(
       'Creating a Strategy',
-      ['c:modalWindowNewStrategy', function (body) {
-        body.set('v.text', 'Please enter data for a new Strategy?');
-        body.set('v.iconName', _force.Icons.Action.Question);
-      }],
+      ['c:modalWindowNewStrategy'],
       function (body) {
         //construct an object and send it to be converted to xml
         _cmpUi.spinnerOn(cmp, "spinner");
@@ -338,6 +368,7 @@
                 else {
                   _force.displayToast('Strategy Crafter', 'Strategy created');
                   self.loadStrategyNames(cmp);
+                  cmp.set("v.selectedStrategyName", newStrategy.name);
                 }
               }
             });
@@ -350,7 +381,7 @@
         });
 
         $A.enqueueAction(action);
-      });
+      }, null, null, 'narrowpopoverclass');
   },
 
   showImportXMLDialog: function (cmp) {

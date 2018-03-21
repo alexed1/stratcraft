@@ -35,12 +35,13 @@ window._modalDialog = (function () {
          * If it is not provided, than standard footer with 'Continue' and 'Cancel' won't be used, leaving modal window closing responsibility to the body component
          * @param {function} validateCallback - (Optional)Function that accepts modal body component and returns true if it is in a valid state to proceed
          * @param {function} cancelCallback - (Optional)Function that is invoked when modal window is closed without validation
+         * @param {object} cssClass - (Optional) name of css class to be applied to modal window. 
          * @example: Examples for header and body:
          * 'This text will be shown as is'
          * 'c:myComponentName'
          * ['c:myComponentName', function (component) { component.set('v.name', 'Initial value for the name property')}]
          */
-        show: function (header, body, okCallback, validateCallback, cancelCallback) {
+        show: function (header, body, okCallback, validateCallback, cancelCallback, cssClass) {
             if (overlay === null) {
                 throw new Error('Overlay is not yet initialized. You should call "initialize" prior to it');
             }
@@ -97,6 +98,7 @@ window._modalDialog = (function () {
                             header: header,
                             body: body,
                             footer: footer,
+                            cssClass: cssClass,
                             //In this case if we provide cancellation callback, we don't allow user to just close the window, as we are interested in the councious choice 
                             showCloseButton: cancelCallback === null || cancelCallback === undefined
                         }).then(function (overlay) {
