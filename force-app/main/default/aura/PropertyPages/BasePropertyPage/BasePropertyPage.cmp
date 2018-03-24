@@ -23,7 +23,7 @@
     <aura:method name="clear" action="{!c.clear}" />
     <aura:method name="isDirty" action="{!c.isDirty}" />
 
-    <ui:inputText aura:id="name" label="Name" class="field" value="{!v._currentNodeDirty.name}" disabled="{!v.currentNode == null}" />
+    <ui:inputText aura:id="name" label="Unique Name (no spaces)" class="field" value="{!v._currentNodeDirty.name}" disabled="{!v.currentNode == null}" />
     <ui:inputText aura:id="description" label="Description" class="field" value="{!v._currentNodeDirty.description}" disabled="{!v.currentNode == null}" />
 
     <lightning:select aura:id="parentNode" label="Parent Node" value="{!v._currentNodeDirty.parentNodeName}" class="select_box" disabled="{!v.currentNode == null}">
