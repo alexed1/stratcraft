@@ -182,13 +182,27 @@
     });
   },
 
-  //save the strategy as a Salesforce strategy object
+  //save the strategy 
   persistStrategy: function (component, onSuccess) {
 
     console.log('requesting strategy XML')
     //request xml from controller
     var action = component.get('c.strategyJSONtoXML');
-    action.setParams({ strategyJson: JSON.stringify(component.get('v.currentStrategy')) });
+
+    //the nodes have to be resorted to meet the requirements of the salesforce mdapi processor
+    //TODO: inefficient to do this every time this method is called.
+    var curStrat = component.get('v.currentStrategy');
+    var unsortedNodes = curStrat.nodes;
+    var sortAlgo = function(x,y){
+        return ((x.nodeType == y.nodeType) ? 0 : ((x.nodeType > y.nodeType) ? 1 : -1 ));
+    }
+    var sortedNodes = unsortedNodes.sort(sortAlgo);
+    curStrat.nodes = sortedNodes;
+    var json = JSON.stringify(curStrat);
+
+    //need to resort the nodes of this json, or maybe earlier, in order to avoid blowing up mdapi
+    console.log('transmitting this json for conversion to XML: ' + json);
+    action.setParams({ strategyJson: json });
     action.setCallback(this, function (response) {
       var state = response.getState();
       if (component.isValid() && state === 'SUCCESS') {
@@ -196,6 +210,7 @@
         console.log('Sending Strategy to Salesforce and persisting');
         //send xml to metadataservice
         var cmpEvent = $A.get("e.c:mdCreateOrUpdateStrategyRequest");
+        console.log('transmitting this xml for metadata persistence: ' + result);
         cmpEvent.setParams({
           "strategyXML": result,
           "callback": function (persistedStrategyXML) {
@@ -310,7 +325,7 @@
     strategy.nodes[index] = changedNode;
   },
 
-  showDeleteNodeDialog: function (strategy, node) {
+  showDeleteNodeDialog: function (strategy, node, component) {
     var self = this;
     var hasChildren = _strategy.hasChildrenNodes(strategy, node);
     var question = 'Are you sure you want to delete this node';
@@ -328,6 +343,7 @@
         body.set('v.iconName', _force.Icons.Action.Delete);
       }],
       function (bodyComponent) {
+        _modalDialog.close();
         _strategy.deleteNode(strategy, node);
         self.saveStrategy(component, null, null, function () {
           component.find('propertyPage').set('v.currentNode', null);

@@ -58,7 +58,7 @@
             _force.displayToast('Error', 'Can\'t delete a root node', 'Error');
             return;
         }
-        helper.showDeleteNodeDialog(strategy, node);
+        helper.showDeleteNodeDialog(strategy, node, component);
     },
     /** Handles request for creation of a new node */
     handleNewNodeCreationRequested: function (component, event, helper) {
