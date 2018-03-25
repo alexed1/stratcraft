@@ -38,6 +38,8 @@
         component.set('v._isFilter', currentNode && currentNode.nodeType === _utils.NodeType.FILTER);
         component.set('v._isUnion', currentNode && currentNode.nodeType === _utils.NodeType.UNION);
         component.set('v._isRecommendationLimit', currentNode && currentNode.nodeType === _utils.NodeType.RECOMMENDATION_LIMIT);
+        component.set('v._isSort', currentNode && currentNode.nodeType === _utils.NodeType.SORT);
+        component.set('v._isExternalConnection', currentNode && currentNode.nodeType === _utils.NodeType.EXTERNAL_CONNECTION);
     },
 
     //reset the page

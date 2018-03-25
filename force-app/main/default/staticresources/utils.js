@@ -92,13 +92,17 @@ window._utils = (function () {
       UNION: 'union',
       FILTER: 'filter',
       RECOMMENDATION_LIMIT: 'recommendationLimit',
+      SORT: 'sort',
+      EXTERNAL_CONNECTION: 'external',
       getValueNamePairs: function () {
         return [
           [this.IF, 'Gate'],
           [this.SOQL_LOAD, 'Load Propositions'],
           [this.FILTER, 'Filter'],
           [this.UNION, 'Combine'],
-          [this.RECOMMENDATION_LIMIT, 'Prevent Re-Offers']
+          [this.RECOMMENDATION_LIMIT, 'Prevent Re-Offers'],
+          [this.SORT, 'Sort'],
+          [this.EXTERNAL_CONNECTION, 'Create External Connection']
         ];
       }
     }

@@ -1,0 +1,7 @@
+<aura:component>
+	<aura:attribute name="currentNode" type="Object" />
+
+    
+
+    <c:filterSet aura:id="filterSet" currentNode="{!v.currentNode}" title="Sort Keys" emptySetMessage="No sort keys added yet" memberType="sort"/>
+</aura:component>	

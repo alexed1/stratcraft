@@ -4,5 +4,5 @@
     <lightning:input aura:id="removeDuplicates" type="checkbox" label="Remove Duplicates" checked="{!v.currentNode.removeDuplicates}" />
     <lightning:input aura:id="onlyFirstMatch" type="checkbox" label="Only First Match" checked="{!v.currentNode.onlyFirstMatch}" />
 
-    <c:filterSet aura:id="filterSet" currentNode="{!v.currentNode}" />
+    <c:filterSet aura:id="filterSet" currentNode="{!v.currentNode}" title="Filters" emptySetMessage="No filters added yet" memberType="filter"/>
 </aura:component>	

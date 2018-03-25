@@ -13,7 +13,7 @@
 
     <aura:method name="validate" action="{!c.validate}" />
 
-    <lightning:input aura:id="nodeName" label="Node name" required="true" placeholder="Enter new node name" value="{!v.name}"
+    <lightning:input aura:id="nodeName" label="Name (No spaces)" required="true" placeholder="Enter new node name" value="{!v.name}"
                      messageWhenValueMissing="Node name can't be empty or contain only whitespaces"
                      messageWhenBadInput="A node with the same name already exists" />
 

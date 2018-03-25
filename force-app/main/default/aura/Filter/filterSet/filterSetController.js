@@ -7,7 +7,7 @@
         helper.updateSelectableNodes(component);
     },
 
-    handleFilterAdd: function (component, event, helper) {
+    handleMemberAdd: function (component, event, helper) {
         var branches = component.get('v.currentNode.branches');
         if (!branches) {
             branches = [];
@@ -21,7 +21,7 @@
         component.set('v.currentNode.branches', branches);
     },
 
-    handleFilterDelete: function (component, event, helper) {
+    handleMemberDelete: function (component, event, helper) {
         var branches = component.get('v.currentNode.branches');
         var currentBranch = event.getSource().get('v.currentBranch');
         var index = branches.indexOf(currentBranch);
