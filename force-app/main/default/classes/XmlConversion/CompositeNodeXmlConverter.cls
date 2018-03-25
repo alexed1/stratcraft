@@ -9,6 +9,7 @@ public with sharing class CompositeNodeXmlConverter implements INodeXmlConverter
         converters.add((INodeXmlConverter)new IfNodeXmlConverter());
         converters.add((INodeXmlConverter)new FilterNodeXmlConverter());
         converters.add((INodeXmlConverter)new RecommendationLimitNodeXmlConverter());
+        converters.add((INodeXmlConverter)new SortNodeXmlConverter());
     }
 
     public Boolean canConvertXmlToNode(Dom.XmlNode node, String xmlNamespace) {
