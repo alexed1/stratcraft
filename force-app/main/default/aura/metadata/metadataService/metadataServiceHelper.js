@@ -196,6 +196,7 @@
                 if (!response.getError()[0].message.includes('Retrieve result has been deleted')) {
                     window.clearInterval(pollingId);
                     _force.displayToast('Metadata Service', 'Failed a retrieve strategy content operation: ' + response.getError()[0].message, 'Error');
+                    _cmpUi.spinnerOff(cmp, "spinner");
                     callback();
                 }
             }
@@ -225,6 +226,7 @@
             else {
                 window.clearInterval(pollingId);
                 _force.displayToast('Metadata Service', 'Failed a deploy operation: ' + response.getError()[0].message, 'Error');
+                _cmpUi.spinnerOff(cmp, "spinner");
                 callback();
             }
 

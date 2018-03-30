@@ -10,6 +10,7 @@ public with sharing class CompositeNodeJsonConverter implements INodeJsonConvert
         converters.add((INodeJsonConverter)new FilterNodeJsonConverter());
         converters.add((INodeJsonConverter)new RecommendationLimitNodeJsonConverter());
         converters.add((INodeJsonConverter)new SortNodeJsonConverter());
+        converters.add((INodeJsonConverter)new ExternalConnectionNodeJsonConverter());
     }
 
     public Boolean canConvertJsonToNode(Map<String, Object> jsonNode) {

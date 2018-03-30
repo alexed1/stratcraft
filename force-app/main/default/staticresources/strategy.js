@@ -97,6 +97,7 @@ window._strategy = (function () {
             if (!strategy) {
                 throw new Error('Strategy can\'t be empty');
             }
+            console.log ("strategy.nodes is: " + strategy.nodes);
             var rootNode = strategy.nodes.filter(function (item) { return !item.parentNodeName; });
             if (rootNode.length == 0) {
                 throw new Error('Strategy doesn\'t contain a root node');

@@ -12,6 +12,7 @@
     <aura:attribute name="_isUnion" type="Boolean" access="private" default="false" />
     <aura:attribute name="_isSort" type="Boolean" access="private" default="false" />
     <aura:attribute name="_isRecommendationLimit" type="Boolean" access="private" default="false" />
+    <aura:attribute name="_isExternalConnection" type="Boolean" access="private" default="false" />
     <aura:attribute name="availableNodeTypes" type="List" />
     <aura:attribute name="availableParentNodes" type="List" />
     
@@ -81,6 +82,13 @@
             <div class="hidden" />
         </aura:set>
     </aura:if>  
+
+    <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isExternalConnection}">
+        <c:externalConnectionPropertyPage aura:id="externalConnectionNode" currentNode="{!v._currentNodeDirty}" />
+        <aura:set attribute="else">
+            <div class="hidden" />
+        </aura:set>
+    </aura:if> 
 
     <div class="slds-grid">
         <div class="slds-col slds-size_6-of-12">

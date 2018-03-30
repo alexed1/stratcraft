@@ -9,11 +9,13 @@ public with sharing class IfNodeXmlConverter extends BaseNodeXmlConverter {
         }
         for (Dom.XMLNode child : node.getChildElements()) {
             String childName = child.getName();
+
             if (childName == 'branch') {
                 IfBranch branch = new IfBranch();
                 branch.child = child.getChildElement('child', xmlNamespace).getText();
                 branch.expression = child.getChildElement('expression', xmlNamespace).getText();
                 result.branches.Add(branch);
+
             } else if (childName == 'removeDuplicates') {
                 result.removeDuplicates = Boolean.valueOf(child.getText());
             } else if (childName == 'onlyFirstMatch') {
@@ -31,6 +33,7 @@ public with sharing class IfNodeXmlConverter extends BaseNodeXmlConverter {
         IfNode actualNode = (IfNode)node;
         result.addChildElement('removeDuplicates', null, null).addTextNode(String.valueOf(actualNode.removeDuplicates));
         result.addChildElement('onlyFirstMatch', null, null).addTextNode(String.valueOf(actualNode.onlyFirstMatch));
+       
         for (IfBranch branch : actualNode.branches) {
             Dom.XmlNode branchNode = result.addChildElement('branch', null, null);
             branchNode.addChildElement('child', null, null).addTextNode(branch.child);

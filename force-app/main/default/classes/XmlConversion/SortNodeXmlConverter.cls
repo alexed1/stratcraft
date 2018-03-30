@@ -25,9 +25,9 @@ public with sharing class SortNodeXmlConverter extends BaseNodeXmlConverter{
         }
         SortNode actualNode = (SortNode)node;
         for (SortKey sortKey : actualNode.sortKeys) {
-            Dom.XmlNode sortNode = result.addChildElement('sortKey', null, null);
-            sortNode.addChildElement('property', null, null).addTextNode(sortKey.property);
-            sortNode.addChildElement('direction', null, null).addTextNode(sortKey.direction);
+            Dom.XmlNode sortNode = result.addChildElement('property', null, null);
+            sortNode.addChildElement('name', null, null).addTextNode(sortKey.property);
+            sortNode.addChildElement('order', null, null).addTextNode(sortKey.direction == null ? '' : sortkey.direction);
         }
         return result;
     }

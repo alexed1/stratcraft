@@ -1,11 +1,11 @@
 <aura:component>
     <ltng:require scripts="{!$Resource.modalDialog}" />
 
-    <aura:attribute name="currentItem" type="Object" /> 
-    <aura:attribute name="selectableNodes" type="List" />
+     <aura:attribute name="currentItem" type="Object" />  
+  
 
-    <aura:attribute name="sortField" type="String" />
-    <aura:attribute name="sortDirection" type="String" />
+    <aura:attribute name="argName" type="String" />
+    <aura:attribute name="argValue" type="String" />
 
     <aura:registerEvent name="deleteRequested" type="c:filterDeleteRequestedEvent" />
 
@@ -14,7 +14,7 @@
             <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-top">
                 <div class="slds-col  slds-size_10-of-12">
                     
-                   <lightning:input aura:id="sortField"  name="sortField" label="Sort on which Proposition Field?" value="{!v.currentItem.property}" />
+                   <lightning:input aura:id="argName"  name="argName" label="Argument Name:" value="{!v.currentItem.name}" />
 
                    
 
@@ -28,11 +28,8 @@
             <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-center">
                 <div class="slds-col  slds-size_1-of-1">
                     <div class="slds-p-vertical_xx-small">
-                       <lightning:select aura:id="sortDirection" name="sortDirection" label="Select a sort direction" onchange="{!c.handleDirectionChange}">
-                        <option value="">choose one...</option>
-                        <option value="asc">ascending</option>
-                        <option value="desc">descending</option>
-                        </lightning:select>
+                      <lightning:input aura:id="argValue"  name="argValue" label="Argument Value:" value="{!v.currentItem.value}" />
+
                     </div>
                 </div>
             </div>

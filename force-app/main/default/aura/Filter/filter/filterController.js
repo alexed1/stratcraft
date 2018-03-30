@@ -8,11 +8,11 @@
         _modalDialog.show(
             'Expression Builder',
             ['c:expressionBuilder', function (body) {
-                body.set('v.expression', component.get('v.currentBranch.expression'));
+                body.set('v.expression', component.get('v.currentItem.expression'));
             }],
             function (body) {
                 var expression = body.resolveExpression();
-                component.set('v.currentBranch.expression', expression);
+                component.set('v.currentItem.expression', expression);
             });
     }
 })

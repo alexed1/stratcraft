@@ -2,7 +2,7 @@
 
     <ltng:require scripts="{!$Resource.modalDialog}" />
 
-    <aura:attribute name="currentBranch" type="Object" />
+    <aura:attribute name="currentItem" type="Object" />
     <aura:attribute name="selectableNodes" type="List" />
 
     <aura:registerEvent name="deleteRequested" type="c:filterDeleteRequestedEvent" />
@@ -11,9 +11,9 @@
         <div class="slds-grid slds-wrap">
             <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-top">
                 <div class="slds-col  slds-size_10-of-12">
-                    <lightning:select aura:id="nodeSelect" label="Block Propositions from:" value="{!v.currentBranch.child}">
+                    <lightning:select aura:id="nodeSelect" label="Block Propositions from:" value="{!v.currentItem.child}">
                         <aura:iteration items="{!v.selectableNodes}" var="nodeName">
-                            <option label="{!nodeName}" selected="{!nodeName==v.currentBranch.child}" value="{!nodeName}">{!nodeName}</option>
+                            <option label="{!nodeName}" selected="{!nodeName==v.currentItem.child}" value="{!nodeName}">{!nodeName}</option>
                         </aura:iteration>
                     </lightning:select>
                 </div>
@@ -33,8 +33,8 @@
             <div class="slds-grid slds-col slds-size_1-of-1">
                 <div class="slds-col  slds-size_1-of-1">
                     <lightning:button onclick="{!c.openExpressionBuilder}">
-                        <aura:if isTrue="{!v.currentBranch.expression}">
-                            {!v.currentBranch.expression}
+                        <aura:if isTrue="{!v.currentItem.expression}">
+                            {!v.currentItem.expression}
                             <aura:set attribute="else">
                                 Configure
                             </aura:set>

@@ -93,7 +93,7 @@ window._utils = (function () {
       FILTER: 'filter',
       RECOMMENDATION_LIMIT: 'recommendationLimit',
       SORT: 'sort',
-      EXTERNAL_CONNECTION: 'external',
+      EXTERNAL_CONNECTION: 'actionContext',
       getValueNamePairs: function () {
         return [
           [this.IF, 'Gate'],

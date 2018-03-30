@@ -7,7 +7,15 @@ public with sharing abstract class BaseNodeXmlConverter implements INodeXmlConve
         BaseNode result = createNewNode();
         result.name = node.getChildElement('name', xmlNamespace).getText();
         result.description = node.getChildElement('description', xmlNamespace).getText();
-        result.parentNodeName = node.getChildElement('parentNode', xmlNamespace).getText();
+
+        Dom.XmlNode parentNode = node.getChildElement('parentNode', xmlNamespace);
+        if (parentNode != null) {
+            result.parentNodeName = parentNode.getText();
+        } else {
+            //if it doesn't return a parent node, assign it to root. this is done mainly for actionContexts
+            result.parentNodeName = 'RootNode';
+        }
+        
         return result;
     }
 
