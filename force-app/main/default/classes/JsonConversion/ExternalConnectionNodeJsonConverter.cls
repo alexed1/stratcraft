@@ -12,8 +12,8 @@ public with sharing class ExternalConnectionNodeJsonConverter extends BaseNodeJs
         result.action = jsonNode.containsKey('action') ? (String)jsonNode.get('action') : '';
     
         
-        if (jsonNode.containsKey('argumentPairs')) {
-            for (Object childObj : (List<Object>)jsonNode.get('argumentPairs')) {
+        if (jsonNode.containsKey('argPairs')) {
+            for (Object childObj : (List<Object>)jsonNode.get('argPairs')) {
                 Map<String, Object> child = (Map<String, Object>)childObj;
                 ArgumentPair argumentPair = new ArgumentPair();
                 argumentPair.name = (String)child.get('name');
@@ -21,6 +21,8 @@ public with sharing class ExternalConnectionNodeJsonConverter extends BaseNodeJs
                 result.argPairs.Add(argumentPair);
             }
         }        
+        System.debug('in convertJsonToNode for external, result node is: '+ result);
+
         return result;
     }
 

@@ -7,7 +7,7 @@
 	<lightning:input aura:id="action" label="Action Name" required="false" 
 	value="{!v.currentNode.action}"  />
 
- 	 <c:filterSet aura:id="filterSet" currentNode="{!v.currentNode}" title="ArgumentPairs" emptySetMessage="No argument pairs added yet" memberType="argumentPair"/>
+ 	 <c:filterSet aura:id="filterSet" currentNode="{!v.currentNode}" title="ArgumentPairs" emptySetMessage="No argument pairs added yet" memberType="externalConnection"/>
 
 
 </aura:component>	

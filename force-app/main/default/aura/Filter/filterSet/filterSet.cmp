@@ -33,7 +33,7 @@
             </aura:iteration>
         </aura:if>
 
-         <aura:if isTrue="{!v.memberType == 'argumentPair'}">
+         <aura:if isTrue="{!v.memberType == 'externalConnection'}">
             <aura:if isTrue="{!v.currentNode.argPairs.length == 0}">
                 <div>
                     {!v.emptySetMessage}
@@ -42,7 +42,7 @@
             
             <aura:iteration items="{!v.currentNode.argPairs}" var="item">
                 <div class="slds-m-top_x-small">
-                  
+
                     <c:argumentPair aura:id="argumentPair" currentItem="{!item}"  deleteRequested="{!c.handleMemberDelete}" />
                 </div>
             </aura:iteration>

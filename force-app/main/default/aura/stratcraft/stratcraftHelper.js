@@ -163,6 +163,8 @@
     if (!isTreeView) {
       self.rebuildStrategyDiagram(component, component.get('v.currentStrategy'));
     }
+
+    
     //post the current strategy to the server
     //save it by name overwriting as necessary
     //return a status message

@@ -2,10 +2,6 @@
     <ltng:require scripts="{!$Resource.modalDialog}" />
 
      <aura:attribute name="currentItem" type="Object" />  
-  
-
-    <aura:attribute name="argName" type="String" />
-    <aura:attribute name="argValue" type="String" />
 
     <aura:registerEvent name="deleteRequested" type="c:filterDeleteRequestedEvent" />
 

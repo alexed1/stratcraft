@@ -43,7 +43,7 @@
                 component.set('v.currentNode.sortKeys', sortKeys);
             break;
 
-            case 'argumentPair':
+            case 'externalConnection':
                 var argPairs = component.get('v.currentNode.argPairs');
 
                 if (!argPairs) {

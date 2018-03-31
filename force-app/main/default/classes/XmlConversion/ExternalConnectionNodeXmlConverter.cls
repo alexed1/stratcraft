@@ -54,8 +54,12 @@ public with sharing class ExternalConnectionNodeXmlConverter extends BaseNodeXml
             argumentNode.addChildElement('name', null, null).addTextNode(argPair.name);
             argumentNode.addChildElement('value', null, null).addTextNode(argPair.value == null ? '' : argPair.value);
         }
+        result.addChildElement('action', null, null).addTextNode(actualNode.action);
+        result.addChildElement('type', null, null).addTextNode(actualNode.type);
+          
 
-           
+
+        //DEFAULTS   
         //crafter is set up to first create an empty node with a type and name, and save it, and then
         //have the user bring up the property page to flesh it out with type-specific data.
         //if you try to dothat with External Connection it won't save because it doesn't start out with a 
@@ -73,18 +77,17 @@ public with sharing class ExternalConnectionNodeXmlConverter extends BaseNodeXml
             result.getChildElement('description',null).addTextNode('Sweden mandates a description in every actionContext');
         }
 
+        System.debug('actualNode.argPairs is: ' + actualNode.argPairs);
+        System.debug('actualNode.argPairs.size() is: ' + actualNode.argPairs.size());
 
-        result.addChildElement('action', null, null).addTextNode(actualNode.action);
-        result.addChildElement('type', null, null).addTextNode(actualNode.type);
-        
-        
-        String name = 'foo';
-        String value= 'bar';
-        Dom.XmlNode curArgument = result.addChildElement('argument', null, null);
-        curArgument.addChildElement('name', null, null).addTextNode(name);
-        curArgument.addChildElement('value', null, null).addTextNode(value);
-
-        
+        if (actualNode.argPairs == null || (actualNode.argPairs.size() == 0)){
+            String name = 'placeholdername';
+            String value= 'placeholdervalue';
+            Dom.XmlNode curArgument = result.addChildElement('argument', null, null);
+            curArgument.addChildElement('name', null, null).addTextNode(name);
+            curArgument.addChildElement('value', null, null).addTextNode(value);
+        }
+          
         //the BaseNode adds a ParentNode element because when it was built, all nodes have one. But this node does not, so remove it
         Dom.XmlNode superfluousParent = result.getChildElement('parentNode',null);
         result.removeChild(superfluousParent);
