@@ -102,7 +102,7 @@ window._utils = (function () {
           [this.UNION, 'Combine'],
           [this.RECOMMENDATION_LIMIT, 'Prevent Re-Offers'],
           [this.SORT, 'Sort'],
-          [this.EXTERNAL_CONNECTION, 'Create External Connection']
+          [this.EXTERNAL_CONNECTION, 'External Connection']
         ];
       }
     }

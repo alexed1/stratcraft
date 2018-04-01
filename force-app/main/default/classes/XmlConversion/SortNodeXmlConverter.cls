@@ -6,12 +6,20 @@ public with sharing class SortNodeXmlConverter extends BaseNodeXmlConverter{
         if (result == null) {
             return null;
         }
+     
+        
         for (Dom.XMLNode child : node.getChildElements()) {
             String childName = child.getName();
-            if (childName == 'sortKey') {
+
+            if (childName == 'limit') {
+                result.myLimit = child.getText();
+            }
+
+            if (childName == 'field') {
                 SortKey sortKey = new SortKey();
-                sortKey.property = child.getChildElement('property', xmlNamespace).getText();
-                sortKey.direction = child.getChildElement('direction', xmlNamespace).getText();
+                sortKey.name = child.getChildElement('name', xmlNamespace).getText();
+                sortKey.nullsFirst = child.getChildElement('nullsFirst', xmlNamespace).getText();
+                sortKey.order = child.getChildElement('order', xmlNamespace).getText();
                 result.sortKeys.Add(sortKey);
             } 
         }        
@@ -23,11 +31,24 @@ public with sharing class SortNodeXmlConverter extends BaseNodeXmlConverter{
         if (result == null) {
             return null;
         }
+
+
         SortNode actualNode = (SortNode)node;
+
+        //defaults because the system can't handle it otherwise
+        if (actualNode.myLimit == ''){
+            actualNode.myLimit = '50';
+        }
+
+
+
+        result.addChildElement('limit', null, null).addTextNode(actualNode.myLimit);
+
         for (SortKey sortKey : actualNode.sortKeys) {
-            Dom.XmlNode sortNode = result.addChildElement('property', null, null);
-            sortNode.addChildElement('name', null, null).addTextNode(sortKey.property);
-            sortNode.addChildElement('order', null, null).addTextNode(sortKey.direction == null ? '' : sortkey.direction);
+            Dom.XmlNode sortNode = result.addChildElement('field', null, null);
+            sortNode.addChildElement('name', null, null).addTextNode(sortKey.name);
+            sortNode.addChildElement('nullsFirst', null, null).addTextNode(sortKey.nullsFirst);
+            sortNode.addChildElement('order', null, null).addTextNode(sortKey.order == null ? '' : sortkey.order);
         }
         return result;
     }

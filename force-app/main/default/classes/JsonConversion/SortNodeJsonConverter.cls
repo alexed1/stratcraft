@@ -11,12 +11,16 @@ public with sharing class SortNodeJsonConverter extends BaseNodeJsonConverter{
         if (result == null) {
             return null;
         }
+        result.myLimit = jsonNode.containsKey('limit') ? (String)jsonNode.get('limit') : '';
+    
+
         if (jsonNode.containsKey('sortKeys')) {
             for (Object childObj : (List<Object>)jsonNode.get('sortKeys')) {
                 Map<String, Object> child = (Map<String, Object>)childObj;
                 SortKey sortKey = new SortKey();
-                sortKey.property = (String)child.get('property');
-                sortKey.direction = (String)child.get('direction');
+                sortKey.name = (String)child.get('name');
+                sortKey.nullsFirst = String.valueOf(child.get('nullsFirst'));
+                sortKey.order = (String)child.get('order');
                 result.sortKeys.Add(sortKey);
             }
         }        

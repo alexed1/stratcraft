@@ -5,7 +5,14 @@
     },
 
     handleDirectionChange: function (component, event, helper) {
-    	 var direction = event.getParam('value');
-    	 component.set('v.currentItem.direction', direction);
+    	  
+    },
+
+    init: function(component, event, helper) {
+    	//if nullsFirst isn't initialized to a value, the server will reject it
+    	var currentNullsSetting = component.get('v.currentItem.nullsFirst');
+    	if (currentNullsSetting == '') {
+    		component.set('v.currentItem.nullsFirst', false);
+    	}
     }
 })

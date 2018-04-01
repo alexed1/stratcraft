@@ -218,18 +218,21 @@
           "callback": function (persistedStrategyXML) {
             if (!persistedStrategyXML || persistedStrategyXML == '') {
               _force.displayToast('Strategy Crafter', 'Strategy changes save failed', 'Error');
-              _cmpUi.spinnerOff(cmp, "spinner");
+              _cmpUi.spinnerOff(component, "spinner");
               return;
             }
 
             _force.displayToast('Strategy Crafter', 'Strategy changes saved');
             console.log(' returned from MetadataService: ' + result);
+            console.log('persistedStrategyXML: ' + persistedStrategyXML);
             var action = component.get('c.strategyXMLToObject');
             action.setParams({ xml: persistedStrategyXML });
             action.setCallback(this, function (response) {
               //converting xml that was retrieved back into strategy
               if (component.isValid() && state === 'SUCCESS') {
+
                 var result = response.getReturnValue();
+                console.log('result from sending persistedStrategyXML to strategyXMLToObject. this will be the new strategy: '+ result);
                 component.set('v.currentStrategy', result);
                 if (onSuccess) {
                   onSuccess();
@@ -771,6 +774,12 @@
         break;
       case _utils.NodeType.FILTER:
         specificNodeClass = 'filter-node';
+        break;
+      case _utils.NodeType.SORT:
+        specificNodeClass = 'sort-node';
+        break;
+      case _utils.NodeType.EXTERNAL_CONNECTION:
+        specificNodeClass = 'external-node';
         break;
     }
     visualNode.classList.add('node');

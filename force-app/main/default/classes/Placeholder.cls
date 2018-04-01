@@ -1,4 +1,4 @@
-public with sharing class Placeholder {
+global with sharing class Placeholder {
     public Placeholder() {
 
     }
@@ -6,4 +6,12 @@ public with sharing class Placeholder {
     @invocableMethod
     public static void Method (){ 
     }
+    
+    
+    global class Action {
+        @InvocableVariable
+    	global String placeholderVar;
+    }
+    
+
 }

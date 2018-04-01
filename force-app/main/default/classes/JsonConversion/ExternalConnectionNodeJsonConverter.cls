@@ -7,7 +7,7 @@ public with sharing class ExternalConnectionNodeJsonConverter extends BaseNodeJs
         if (result == null) {
             return null;
         }
-        result.body = jsonNode.containsKey('body') ? (String)jsonNode.get('body') : '';
+       
         result.type = jsonNode.containsKey('type') ? (String)jsonNode.get('type') : '';
         result.action = jsonNode.containsKey('action') ? (String)jsonNode.get('action') : '';
     

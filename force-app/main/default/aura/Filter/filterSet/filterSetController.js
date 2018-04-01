@@ -37,8 +37,9 @@
                 
                 sortKeys.push(
                 {
-                    property: '',
-                    direction: 'asc'
+                    name: '',
+                    nullsFirst: false,
+                    order: 'Desc'
                 });
                 component.set('v.currentNode.sortKeys', sortKeys);
             break;

@@ -1,7 +1,8 @@
 <aura:component>
 	<aura:attribute name="currentNode" type="Object" />
 
-    
+    <lightning:input aura:id="limit" label="Limit" required="false" 
+	value="{!v.currentNode.limit}"  />
 
     <c:filterSet aura:id="filterSet" currentNode="{!v.currentNode}" title="Sort Keys" emptySetMessage="No sort keys added yet" memberType="sort"/>
 </aura:component>	

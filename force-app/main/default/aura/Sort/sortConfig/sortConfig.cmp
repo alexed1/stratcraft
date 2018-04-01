@@ -4,8 +4,7 @@
     <aura:attribute name="currentItem" type="Object" /> 
     <aura:attribute name="selectableNodes" type="List" />
 
-    <aura:attribute name="sortField" type="String" />
-    <aura:attribute name="sortDirection" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
 
     <aura:registerEvent name="deleteRequested" type="c:filterDeleteRequestedEvent" />
 
@@ -14,7 +13,7 @@
             <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-top">
                 <div class="slds-col  slds-size_10-of-12">
                     
-                   <lightning:input aura:id="sortField"  name="sortField" label="Sort on which Proposition Field?" value="{!v.currentItem.property}" />
+                   <lightning:input aura:id="sortName"  name="sortName" label="Sort on which Proposition Field?" value="{!v.currentItem.name}" />
 
                    
 
@@ -25,17 +24,30 @@
                     </div>
                 </div>
             </div>
+
             <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-center">
                 <div class="slds-col  slds-size_1-of-1">
                     <div class="slds-p-vertical_xx-small">
-                       <lightning:select aura:id="sortDirection" name="sortDirection" label="Select a sort direction" onchange="{!c.handleDirectionChange}">
+                       <lightning:select aura:id="sortOrder" value="{!v.currentItem.order}" name="sortOrder" label="Select a sort direction" >
                         <option value="">choose one...</option>
-                        <option value="asc">ascending</option>
-                        <option value="desc">descending</option>
+                        <option value="Asc">ascending</option>
+                        <option value="Desc">descending</option>
                         </lightning:select>
                     </div>
                 </div>
             </div>
+
+            <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-top">
+                <div class="slds-col  slds-size_10-of-12">
+                    
+                 <!--  <lightning:input aura:id="sortNulls"  name="sortNulls" label="Null values sort to top?" value="{!v.currentItem.nullsFirst}" type="checkbox" checked="{!v.currentItem.nullsFirst}"/> -->
+
+                   
+
+                </div>
+                
+            </div>
+
             
         </div>
     </div>
