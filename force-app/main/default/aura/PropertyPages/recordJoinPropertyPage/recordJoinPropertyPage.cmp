@@ -1,0 +1,24 @@
+<aura:component>
+    <aura:attribute name="currentNode" type="Object" />
+
+    <lightning:input aura:id="field" label="Add which field to the Proposition Flow?" value="{!v.currentNode.field}" 
+                     messageWhenValueMissing="This field can't be empty" />
+
+	<lightning:input aura:id="incomingObject" label="Add field data to the Proposition Flow from which object?" value="{!v.currentNode.incomingObject}" 
+                     messageWhenValueMissing="This field can't be empty" />
+
+    <lightning:input aura:id="joinColumn" label="Use which column to join the two sets of data?" value="{!v.currentNode.joinColumn}" 
+     messageWhenValueMissing="This field can't be empty" />
+                     
+     <lightning:input aura:id="filterColumn" label="Use which column to filter the inbound rows?" value="{!v.currentNode.filterColumn}" 
+     messageWhenValueMissing="This field can't be empty" />
+
+     <lightning:input aura:id="filterValue" label="Include only rows where the filter column has this value:" value="{!v.currentNode.filterValue}" 
+     messageWhenValueMissing="This field can't be empty" />
+
+
+
+
+
+
+</aura:component>	

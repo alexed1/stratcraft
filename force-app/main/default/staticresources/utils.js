@@ -94,6 +94,7 @@ window._utils = (function () {
       RECOMMENDATION_LIMIT: 'recommendationLimit',
       SORT: 'sort',
       EXTERNAL_CONNECTION: 'actionContext',
+      RECORD_JOIN: 'recordJoin',
       getValueNamePairs: function () {
         return [
           [this.IF, 'Gate'],
@@ -102,7 +103,8 @@ window._utils = (function () {
           [this.UNION, 'Combine'],
           [this.RECOMMENDATION_LIMIT, 'Prevent Re-Offers'],
           [this.SORT, 'Sort'],
-          [this.EXTERNAL_CONNECTION, 'External Connection']
+          [this.EXTERNAL_CONNECTION, 'External Connection'],
+          [this.RECORD_JOIN, 'Record Join']
         ];
       }
     }

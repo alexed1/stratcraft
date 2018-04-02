@@ -40,6 +40,8 @@
         component.set('v._isRecommendationLimit', currentNode && currentNode.nodeType === _utils.NodeType.RECOMMENDATION_LIMIT);
         component.set('v._isSort', currentNode && currentNode.nodeType === _utils.NodeType.SORT);
         component.set('v._isExternalConnection', currentNode && currentNode.nodeType === _utils.NodeType.EXTERNAL_CONNECTION);
+        component.set('v._isRecordJoin', currentNode && currentNode.nodeType === _utils.NodeType.RECORD_JOIN);
+
     },
 
     //reset the page

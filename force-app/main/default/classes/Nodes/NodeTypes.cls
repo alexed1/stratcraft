@@ -13,4 +13,6 @@ public with sharing class NodeTypes {
     public static final String SORT_NODE = 'sort';
 
     public static final String EXTERNAL_CONNECTION = 'actionContext';
+
+    public static final String RECORD_JOIN = 'recordJoin';
 }

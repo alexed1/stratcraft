@@ -158,6 +158,10 @@
 	background-image: url(/resource/externalNode);
 }
 
+.THIS .record-join-node {
+	background-image: url(/resource/recordJoinNode);
+}
+
 .THIS .filter-node {
 	border-radius: 24px;
 	background-image: url(/resource/filterNode);

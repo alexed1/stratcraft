@@ -781,6 +781,9 @@
       case _utils.NodeType.EXTERNAL_CONNECTION:
         specificNodeClass = 'external-node';
         break;
+      case _utils.NodeType.Record_Join:
+        specificNodeClass = 'record-join-node';
+        break;
     }
     visualNode.classList.add('node');
     if (specificNodeClass) {
