@@ -781,7 +781,7 @@
       case _utils.NodeType.EXTERNAL_CONNECTION:
         specificNodeClass = 'external-node';
         break;
-      case _utils.NodeType.Record_Join:
+      case _utils.NodeType.RECORD_JOIN:
         specificNodeClass = 'record-join-node';
         break;
     }

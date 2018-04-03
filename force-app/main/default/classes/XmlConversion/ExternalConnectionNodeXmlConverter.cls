@@ -90,7 +90,7 @@ public with sharing class ExternalConnectionNodeXmlConverter extends BaseNodeXml
         System.debug('actualNode.argPairs.size() is: ' + actualNode.argPairs.size());
         result.addChildElement('action', null, null).addTextNode(actualNode.action);
         result.addChildElement('type', null, null).addTextNode(actualNode.type);
-        result.getChildElement('description',null).addTextNode(actualNode.description);
+        
   
         //the BaseNode adds a ParentNode element because when it was built, all nodes have one. But this node does not, so remove it
         Dom.XmlNode superfluousParent = result.getChildElement('parentNode',null);
