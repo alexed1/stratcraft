@@ -19,7 +19,7 @@
 
     <aura:attribute name="currentStrategy" type="Object" />
     <aura:attribute name="originalNode" type="Object" />
-    <aura:attribute name="isTreeView" type="String" default="false" />
+    <aura:attribute name="isTreeView" type="String" default="true" />
     <aura:attribute name="_isDiagramInitialized" type="Boolean" default="false" />
     <aura:attribute name="viewModes" type="List" default="[ {'label': 'Diagram', 'value': ''}, {'label': 'Tree', 'value': 'true' } ]"
     />
