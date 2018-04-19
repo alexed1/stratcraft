@@ -8,10 +8,15 @@
         componentEvent.fire();
     },
 
-    handleDeleteClick: function (component, event, helper) {
-        var componentEvent = $A.get('e.c:nodeDeletionRequestedEvent');
-        componentEvent.setParams({ 'node': component.get('v.currentNode') });
-        componentEvent.fire();
+    handleNodeActions: function (cmp, event) {
+        var selectedMenuItemValue = event.getParam('value');
+        switch (selectedMenuItemValue) {
+            case 'delete':
+                var componentEvent = $A.get('e.c:nodeDeletionRequestedEvent');
+                componentEvent.setParams({ 'node': cmp.get('v.currentNode') });
+                componentEvent.fire();
+                break;
+        }
     },
 
     handleStrategyChanged: function (component, event, helper) {

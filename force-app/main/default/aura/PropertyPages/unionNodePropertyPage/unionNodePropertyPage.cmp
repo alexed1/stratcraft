@@ -1,5 +1,9 @@
 <aura:component>
     <aura:attribute name="currentNode" type="Object" />
 
-    <lightning:input aura:id="removeDuplicates" type="checkbox" label="Remove Duplicates" checked="{!v.currentNode.removeDuplicates}" />
-</aura:component>	
+    <div class="slds-form-element">
+        <lightning:input aura:id="removeDuplicates" type="checkbox" label="Remove Duplicates" checked="{!v.currentNode.removeDuplicates}"
+        />
+    </div>
+
+</aura:component>

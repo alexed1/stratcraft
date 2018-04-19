@@ -1,8 +1,12 @@
 <aura:component>
     <aura:attribute name="currentNode" type="Object" />
 
-    <lightning:input aura:id="soql" label="SOQL" required="true" placeholder="SOQL should contain contain a Name, Description and ActionReference fields"
-                     value="{!v.currentNode.soql}" messageWhenValueMissing="SOQL can't be empty" />
-    <lightning:input aura:id="fieldNameRemapping" label="Field Name Remapping" value="{!v.currentNode.fieldNameRemapping}" 
-                     messageWhenValueMissing="SOQL can't be empty" />
-</aura:component>	
+    <div class="slds-form-element">
+        <lightning:input aura:id="soql" label="SOQL" required="true" placeholder="SOQL should contain contain a Name, Description and ActionReference fields"
+            value="{!v.currentNode.soql}" messageWhenValueMissing="SOQL can't be empty" />
+    </div>
+    <div class="slds-form-element">
+        <lightning:input aura:id="fieldNameRemapping" label="Field Name Remapping" value="{!v.currentNode.fieldNameRemapping}" messageWhenValueMissing="SOQL can't be empty"
+        />
+    </div>
+</aura:component>
