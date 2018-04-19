@@ -1,0 +1,24 @@
+<aura:component>
+    <ltng:require scripts="{!$Resource.force}" />
+    <ltng:require scripts="{!$Resource.strategy}" />
+    <ltng:require scripts="{!$Resource.utils}" />
+    <ltng:require scripts="{!$Resource.modalDialog}" />
+    <ltng:require scripts="{!$Resource.jsplumb}" afterScriptsLoaded="{!c.init}" />
+    <ltng:require scripts="{!$Resource.jsplumbWalker}" />
+    <ltng:require scripts="{!$Resource.cmpUi}" />
+    <ltng:require scripts="{!$Resource.dragula}" styles="{!$Resource.dragulacss}" />
+
+    <aura:attribute name="currentStrategy" type="Object" />
+    <aura:attribute name="_isInitialized" type="Boolean" default="false" access="private" />
+
+    <aura:registerEvent name="strategyChanged" type="c:strategyChangedEvent" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+    <aura:handler name="change" value="{!v.currentStrategy}" action="{!c.handleCurrentStrategyChanged}" />
+    
+    <aura:method name="forceRefresh" action="{!c.handleCurrentStrategyChanged}" />
+   
+    <div class="diagram-scroll-view full-height" aura:id="diagramView">
+        <div class="diagram-container" aura:id="diagramContainer" />
+    </div>
+</aura:component>	

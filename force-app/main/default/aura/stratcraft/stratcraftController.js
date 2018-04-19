@@ -106,20 +106,21 @@
     },
     /** Reacts to the selection of the new node in the tree */
     handleTreeNodeSelect: function (component, event, helper) {
-        var newSelectedNodeName = event.getParam('name');
-        var currentStrategy = component.get('v.currentStrategy');
-        var newSelectedNode = _strategy.getNode(currentStrategy, newSelectedNodeName);
-        var propertyPage = component.find('propertyPage');
-        var proceeedToSelect = function () {
-            propertyPage.set('v.currentNode', newSelectedNode);
-        }
-        if (propertyPage.isDirty()) {
-            //TODO: provide cancel callback that will switch the selected node back to the original (i.e. visually highlight it)
-            helper.showUnsavedChangesDialog(proceeedToSelect);
-        }
-        else {
-            proceeedToSelect();
-        }
+        //TODO: move to tree view
+        // var newSelectedNodeName = event.getParam('name');
+        // var currentStrategy = component.get('v.currentStrategy');
+        // var newSelectedNode = _strategy.getNode(currentStrategy, newSelectedNodeName);
+        // var propertyPage = component.find('propertyPage');
+        // var proceeedToSelect = function () {
+        //     propertyPage.set('v.currentNode', newSelectedNode);
+        // }
+        // if (propertyPage.isDirty()) {
+        //     //TODO: provide cancel callback that will switch the selected node back to the original (i.e. visually highlight it)
+        //     helper.showUnsavedChangesDialog(proceeedToSelect);
+        // }
+        // else {
+        //     proceeedToSelect();
+        // }
     },
 
     saveStrategy: function (component, event, helper) {
@@ -129,27 +130,31 @@
         helper.saveStrategy(component, originalNodeState, actualNodeState);
     },
 
-    handleViewChanged: function (component, event, helper) {
-        var isDiagramInitialized = component.get('v._isDiagramInitialized');
-        var isTreeView = component.get('v.isTreeView');
-        var strategy = component.get('v.currentStrategy');
-        var diagramContainer = component.find('diagramContainer');
-        var treeContainer = component.find('treeContainer');
-        var diagramScrollView = component.find('diagramView');
-        $A.util.toggleClass(diagramScrollView, 'slds-hide');
-        $A.util.toggleClass(treeContainer, 'slds-hide');
-        if (isDiagramInitialized) {
-            if (!isTreeView) {
-                window.setTimeout($A.getCallback(function () { helper.rebuildStrategyDiagram(component, strategy); }));
-            } else {
-                helper.clearDiagram();
-            }
-        } else {
-            window.setTimeout($A.getCallback(function () {
-                helper.initializeDiagram();
-                component.set('v._isDiagramInitialized', true);
-                helper.rebuildStrategyDiagram(component, strategy);
-            }));
-        }
+    // handleViewChanged: function (component, event, helper) {
+    //     var isDiagramInitialized = component.get('v._isDiagramInitialized');
+    //     var isTreeView = component.get('v.isTreeView');
+    //     var strategy = component.get('v.currentStrategy');
+    //     var diagramContainer = component.find('diagramContainer');
+    //     var treeContainer = component.find('treeContainer');
+    //     var diagramScrollView = component.find('diagramView');
+    //     $A.util.toggleClass(diagramScrollView, 'slds-hide');
+    //     $A.util.toggleClass(treeContainer, 'slds-hide');
+    //     if (isDiagramInitialized) {
+    //         if (!isTreeView) {
+    //             window.setTimeout($A.getCallback(function () { helper.rebuildStrategyDiagram(component, strategy); }));
+    //         } else {
+    //             helper.clearDiagram();
+    //         }
+    //     } else {
+    //         window.setTimeout($A.getCallback(function () {
+    //             helper.initializeDiagram();
+    //             component.set('v._isDiagramInitialized', true);
+    //             helper.rebuildStrategyDiagram(component, strategy);
+    //         }));
+    //     }
+    // },
+
+    handleStrategyChanged: function (component, event, helper) {
+        helper.saveStrategy(component, event.getParam('oldNode'), event.getParam('newNode'));
     }
 })

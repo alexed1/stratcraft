@@ -1,0 +1,6 @@
+<aura:event type="COMPONENT" 
+            description="Raised when strategy is changed. If oldNode is empty, the node was added. If newNode is empty the node was removed. Otherwise the existing node was changed">
+    <aura:attribute name="strategy" type="Object" />
+    <aura:attribute name="oldNode" type="Object" />
+    <aura:attribute name="newNode" type="Object" />
+</aura:event>

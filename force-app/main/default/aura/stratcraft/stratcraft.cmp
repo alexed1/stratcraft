@@ -68,18 +68,11 @@
             </div>
         </div>
         <hr class="slds-m-vertical_x-small" />
-        <div class="slds-grid tree-container full-height" aura:id="treeContainer">
-            <div class="slds-col slds-box slds-size_1-of-3  slds-scrollable_y">
-                <c:treeNode aura:id="tree" header="Strategy Elements" />
-            </div>
-            <div class="slds-col slds-box slds-m-left_x-small slds-scrollable_y">
-                <b>Properties</b>
-                {!v.body}
-                <c:basePropertyPage aura:id="propertyPage" currentStrategy="{!v.currentStrategy}" />
-            </div>
-        </div>
-        <div class="slds-hide diagram-scroll-view full-height" aura:id="diagramView">
-            <div class="diagram-container" aura:id="diagramContainer" />
-        </div>
+        <aura:if isTrue="{!v.isTreeView == 'true'}">
+            <c:treeView aura:id="treeView" currentStrategy="{!v.currentStrategy}" />
+            <aura:set attribute="else">
+                <c:diagramView aura:id="diagramView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}" />
+            </aura:set> 
+        </aura:if>
     </div>
 </aura:component>
