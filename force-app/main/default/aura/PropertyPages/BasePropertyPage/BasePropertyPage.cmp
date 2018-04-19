@@ -16,7 +16,7 @@
     <aura:attribute name="_isRecordJoin" type="Boolean" access="private" default="false" />
     <aura:attribute name="availableNodeTypes" type="List" />
     <aura:attribute name="availableParentNodes" type="List" />
-    
+
     <aura:handler name="change" value="{!v.currentStrategy}" action="{!c.handleStrategyChanged}" />
     <aura:handler name="change" value="{!v._currentNodeDirty.nodeType}" action="{!c.handleTypeChanged}" />
     <aura:handler name="change" value="{!v.currentNode}" action="{!c.handleCurrentNodeChanged}" />
@@ -26,86 +26,135 @@
     <aura:method name="clear" action="{!c.clear}" />
     <aura:method name="isDirty" action="{!c.isDirty}" />
 
-    <ui:inputText aura:id="name" label="Unique Name (no spaces)" class="field" value="{!v._currentNodeDirty.name}" disabled="{!v.currentNode == null}" />
-    <ui:inputText aura:id="description" label="Description" class="field" value="{!v._currentNodeDirty.description}" disabled="{!v.currentNode == null}" />
 
-    <lightning:select aura:id="parentNode" label="Parent Node" value="{!v._currentNodeDirty.parentNodeName}" class="select_box" disabled="{!v.currentNode == null}">
-        <aura:iteration items="{!v.availableParentNodes}" var="item">
-            <option value="{!item[0]}" text="{!item[1]}" selected="{!item[0] == v._currentNodeDirty.parentNodeName}" />
-        </aura:iteration>
-    </lightning:select>
+    <div class="slds-form slds-form_stacked">
 
-    <lightning:select aura:id="nodeType" label="Node Type" value="{!v._currentNodeDirty.nodeType}" class="select_box" required="true"
-                      messageWhenValueMissing="Please select node type" disabled="{!v.currentNode == null}">
-        <aura:iteration items="{!v.availableNodeTypes}" var="item">
-            <option value="{!item[0]}" text="{!item[1]}" selected="{!item[0] == v._currentNodeDirty.nodeType}" />
-        </aura:iteration>
-    </lightning:select>
-    
-    <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isIf}">
-        <c:ifNodePropertyPage aura:id="ifNode" currentNode="{!v._currentNodeDirty}" />
-        <aura:set attribute="else">
-            <div class="hidden" />
-        </aura:set>
-    </aura:if>
-    
-    <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isSoqlLoad}">
-        <c:soqlLoadNodePropertyPage aura:id="soqlLoadNode" currentNode="{!v._currentNodeDirty}" />
-        <aura:set attribute="else">
-            <div class="hidden" />
-        </aura:set>
-    </aura:if>
-    
-    <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isFilter}">
-        <c:filterNodePropertyPage aura:id="filterNode" currentNode="{!v._currentNodeDirty}" />
-        <aura:set attribute="else">
-            <div class="hidden" />
-        </aura:set>
-    </aura:if>
-    
-    <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isUnion}">
-        <c:unionNodePropertyPage aura:id="unionNode" currentNode="{!v._currentNodeDirty}" />
-        <aura:set attribute="else">
-            <div class="hidden" />
-        </aura:set>
-    </aura:if>
-    
-    <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isRecommendationLimit}">
-        <c:recommendationLimitNodePropertyPage aura:id="recommendationLimitNode" currentNode="{!v._currentNodeDirty}" />
-        <aura:set attribute="else">
-            <div class="hidden" />
-        </aura:set>
-    </aura:if>   
-
-    <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isSort}">
-        <c:sortPropertyPage aura:id="sortNode" currentNode="{!v._currentNodeDirty}" />
-        <aura:set attribute="else">
-            <div class="hidden" />
-        </aura:set>
-    </aura:if>  
-
-    <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isExternalConnection}">
-        <c:externalConnectionPropertyPage aura:id="externalConnectionNode" currentNode="{!v._currentNodeDirty}" />
-        <aura:set attribute="else">
-            <div class="hidden" />
-        </aura:set>
-    </aura:if> 
-
-     <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isRecordJoin}">
-        <c:recordJoinPropertyPage aura:id="recordJoinNode" currentNode="{!v._currentNodeDirty}" />
-        <aura:set attribute="else">
-            <div class="hidden" />
-        </aura:set>
-    </aura:if> 
-
-    <div class="slds-grid">
-        <div class="slds-col slds-size_6-of-12">
-             <lightning:button variant="destructive" label="Delete" onclick="{!c.handleDeleteClick}" disabled="{!v.currentNode == null}" />      
-        </div>
-        <div class="slds-col slds-size_6-of-12">
-            <div class="slds-float_right">
-               <lightning:button variant="brand" label="Save" onclick="{!c.handleSaveClick}" disabled="{!v.currentNode == null}" />
+        <!-- header -->
+        <div class="slds-grid">
+            <div class="slds-col slds-size_6-of-12">
+                <div class="slds-text-heading_medium">Properties</div>
+            </div>
+            <div class="slds-col slds-size_6-of-12">
+                <div class="slds-float_right">
+                    <lightning:buttonMenu menuAlignment="right" iconName="utility:settings" alternativeText="Node Manages" onselect="{!c.handleNodeActions}">
+                        <lightning:menuItem label="Delete Node" value="delete" disabled="{!v.currentNode == null}" />
+                    </lightning:buttonMenu>
+                </div>
             </div>
         </div>
-    </div>    
+
+        <!-- body -->
+        <div class="slds-form-element">
+            <ui:inputText aura:id="name" label="Unique Name (no spaces)" class="field" value="{!v._currentNodeDirty.name}" disabled="{!v.currentNode == null}"
+            />
+        </div>
+
+        <div class="slds-form-element">
+            <ui:inputText aura:id="description" label="Description" class="field" value="{!v._currentNodeDirty.description}" disabled="{!v.currentNode == null}"
+            />
+        </div>
+
+        <div class="slds-form-element">
+            <lightning:select aura:id="parentNode" label="Parent Node" value="{!v._currentNodeDirty.parentNodeName}" class="select_box"
+                disabled="{!v.currentNode == null}">
+                <aura:iteration items="{!v.availableParentNodes}" var="item">
+                    <option value="{!item[0]}" text="{!item[1]}" selected="{!item[0] == v._currentNodeDirty.parentNodeName}" />
+                </aura:iteration>
+            </lightning:select>
+        </div>
+
+        <div class="slds-form-element">
+            <lightning:select aura:id="nodeType" label="Node Type" value="{!v._currentNodeDirty.nodeType}" class="select_box" required="true"
+                messageWhenValueMissing="Please select node type" disabled="{!v.currentNode == null}">
+                <aura:iteration items="{!v.availableNodeTypes}" var="item">
+                    <option value="{!item[0]}" text="{!item[1]}" selected="{!item[0] == v._currentNodeDirty.nodeType}" />
+                </aura:iteration>
+            </lightning:select>
+        </div>
+
+        <div class="slds-form-element">
+            <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isIf}">
+                <c:ifNodePropertyPage aura:id="ifNode" currentNode="{!v._currentNodeDirty}" />
+                <aura:set attribute="else">
+                    <div class="hidden" />
+                </aura:set>
+            </aura:if>
+        </div>
+
+        <div class="slds-form-element">
+            <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isSoqlLoad}">
+                <c:soqlLoadNodePropertyPage aura:id="soqlLoadNode" currentNode="{!v._currentNodeDirty}" />
+                <aura:set attribute="else">
+                    <div class="hidden" />
+                </aura:set>
+            </aura:if>
+        </div>
+
+
+        <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isFilter}">
+            <div class="slds-form-element">
+                <c:filterNodePropertyPage aura:id="filterNode" currentNode="{!v._currentNodeDirty}" />
+                <aura:set attribute="else">
+                    <div class="hidden" />
+                </aura:set>
+            </div>
+        </aura:if>
+
+        <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isUnion}">
+            <div class="slds-form-element">
+                <c:unionNodePropertyPage aura:id="unionNode" currentNode="{!v._currentNodeDirty}" />
+                <aura:set attribute="else">
+                    <div class="hidden" />
+                </aura:set>
+            </div>
+        </aura:if>
+
+        <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isRecommendationLimit}">
+            <div class="slds-form-element">
+                <c:recommendationLimitNodePropertyPage aura:id="recommendationLimitNode" currentNode="{!v._currentNodeDirty}" />
+                <aura:set attribute="else">
+                    <div class="hidden" />
+                </aura:set>
+            </div>
+        </aura:if>
+
+        <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isSort}">
+            <div class="slds-form-element">
+                <c:sortPropertyPage aura:id="sortNode" currentNode="{!v._currentNodeDirty}" />
+                <aura:set attribute="else">
+                    <div class="hidden" />
+                </aura:set>
+            </div>
+        </aura:if>
+
+        <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isExternalConnection}">
+            <div class="slds-form-element">
+                <c:externalConnectionPropertyPage aura:id="externalConnectionNode" currentNode="{!v._currentNodeDirty}" />
+                <aura:set attribute="else">
+                    <div class="hidden" />
+                </aura:set>
+            </div>
+        </aura:if>
+
+        <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isRecordJoin}">
+            <div class="slds-form-element">
+                <c:recordJoinPropertyPage aura:id="recordJoinNode" currentNode="{!v._currentNodeDirty}" />
+                <aura:set attribute="else">
+                    <div class="hidden" />
+                </aura:set>
+            </div>
+        </aura:if>
+
+        <div class="slds-form-element">
+            <div class="slds-grid">
+                <div class="slds-col slds-size_6-of-12">
+                </div>
+                <div class="slds-col slds-size_6-of-12">
+                    <div class="slds-float_right">
+                        <lightning:button variant="brand" label="Save" onclick="{!c.handleSaveClick}" disabled="{!v.currentNode == null}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </aura:component>
