@@ -56,11 +56,17 @@
   loadStrategyNames: function (component) {
     var cmpEvent = $A.get("e.c:mdLoadStrategyNamesRequest");
     cmpEvent.setParams({
-      "callback": function (strategyNames) {
-        console.log(strategyNames);
-        if (strategyNames) {
-          strategyNames.splice(0, 0, '');
-          component.set("v.strategyNames", strategyNames);
+      "callback": function (result) {
+        console.log(result);
+        if (result.value && !result.error) {
+          var strategyNames = result.value;
+          if (strategyNames) {
+            strategyNames.splice(0, 0, '');
+            component.set("v.strategyNames", strategyNames);
+          }
+        }
+        else {
+          _force.displayToast('Strategy Crafter', 'Failed to load strategy names ' + result.error, 'Error', true);
         }
         _cmpUi.spinnerOff(component, "spinner");
       }
@@ -105,33 +111,24 @@
     var cmpEvent = $A.get("e.c:mdGetStrategyRequest");
     cmpEvent.setParams({
       "strategyName": component.get("v.selectedStrategyName"),
-      "callback": function (strategyXML) {
-
-        var action = component.get('c.strategyXMLToObject');
-        action.setParams({ xml: strategyXML });
-        action.setCallback(this, function (response) {
-          var state = response.getState();
-          if (state === 'SUCCESS') {
-            var strategy = response.getReturnValue();
-            component.set('v.currentStrategy', strategy);
-            component.find('tree').set('v.treeItems', [self.buildTreeFromStrategy(strategy)]);
-            var isTreeView = component.get('v.isTreeView');
-            if (isTreeView) {
-              self.clearDiagram();
-            }
-            else {
-              self.rebuildStrategyDiagram(component, strategy);
-            }
-            console.log('Retrieved strategy with Id ' + strategy.Id);
+      "callback": function (result) {
+        _cmpUi.spinnerOff(component, "spinner");
+        if (!result.error) {
+          var strategy = result.value;
+          component.set('v.currentStrategy', strategy);
+          component.find('tree').set('v.treeItems', [self.buildTreeFromStrategy(strategy)]);
+          var isTreeView = component.get('v.isTreeView');
+          if (isTreeView) {
+            self.clearDiagram();
           }
           else {
-            console.log('Failed to retrieve strategy with state: ' + state);
+            self.rebuildStrategyDiagram(component, strategy);
           }
-
-          _cmpUi.spinnerOff(component, "spinner");
-        });
-        $A.enqueueAction(action);
-
+          console.log('Retrieved strategy with name ' + strategy.name);
+        }
+        else {
+          _force.displayToast('Strategy Crafter', 'Strategy changes save failed ' + result.error, 'Error', true);
+        }
       }
     });
     cmpEvent.fire();
@@ -186,73 +183,30 @@
 
   //save the strategy 
   persistStrategy: function (component, onSuccess) {
-
-    console.log('requesting strategy XML')
-    //request xml from controller
-    var action = component.get('c.strategyJSONtoXML');
-
-    //the nodes have to be resorted to meet the requirements of the salesforce mdapi processor
-    //TODO: inefficient to do this every time this method is called.
-    var curStrat = component.get('v.currentStrategy');
-    var unsortedNodes = curStrat.nodes;
-    var sortAlgo = function (x, y) {
-      return ((x.nodeType == y.nodeType) ? 0 : ((x.nodeType > y.nodeType) ? 1 : -1));
-    }
-    var sortedNodes = unsortedNodes.sort(sortAlgo);
-    curStrat.nodes = sortedNodes;
-    var json = JSON.stringify(curStrat);
-
-    //need to resort the nodes of this json, or maybe earlier, in order to avoid blowing up mdapi
-    console.log('transmitting this json for conversion to XML: ' + json);
-    action.setParams({ strategyJson: json });
-    action.setCallback(this, function (response) {
-      var state = response.getState();
-      if (component.isValid() && state === 'SUCCESS') {
-        var result = response.getReturnValue();
-        console.log('Sending Strategy to Salesforce and persisting');
-        //send xml to metadataservice
-        var cmpEvent = $A.get("e.c:mdCreateOrUpdateStrategyRequest");
-        console.log('transmitting this xml for metadata persistence: ' + result);
-        cmpEvent.setParams({
-          "strategyXML": result,
-          "callback": function (persistedStrategyXML) {
-            if (!persistedStrategyXML || persistedStrategyXML == '') {
-              _force.displayToast('Strategy Crafter', 'Strategy changes save failed', 'Error');
-              _cmpUi.spinnerOff(component, "spinner");
-              return;
-            }
-
-            _force.displayToast('Strategy Crafter', 'Strategy changes saved');
-            console.log(' returned from MetadataService: ' + result);
-            console.log('persistedStrategyXML: ' + persistedStrategyXML);
-            var action = component.get('c.strategyXMLToObject');
-            action.setParams({ xml: persistedStrategyXML });
-            action.setCallback(this, function (response) {
-              //converting xml that was retrieved back into strategy
-              if (component.isValid() && state === 'SUCCESS') {
-
-                var result = response.getReturnValue();
-                console.log('result from sending persistedStrategyXML to strategyXMLToObject. this will be the new strategy: ' + result);
-                component.set('v.currentStrategy', result);
-                if (onSuccess) {
-                  onSuccess();
-                }
-              }
-            });
-            $A.enqueueAction(action);
-
+    console.log('Sending Strategy to Salesforce and persisting');
+    //send strategy to metadataservice
+    var curStrat = component.get("v.currentStrategy");
+    var cmpEvent = $A.get("e.c:mdCreateOrUpdateStrategyRequest");
+    cmpEvent.setParams({
+      "strategy": curStrat,
+      "callback": function (result) {
+        _cmpUi.spinnerOff(component, "spinner");
+        if (!result.error) {
+          var persistedStrategyXML = result.value;
+          _force.displayToast('Strategy Crafter', 'Strategy changes saved');
+          component.set('v.currentStrategy', result);
+          if (onSuccess) {
+            onSuccess();
           }
-        });
-        cmpEvent.fire();
+        }
+        else {
+          _force.displayToast('Strategy Crafter', 'Strategy changes save failed ' + result.error, 'Error', true);
+          return;
+        }
       }
-      else {
-        var error = response.getError();
-        console.log('Failed to save strategy: ' + JSON.stringify(error));
-        _force.displayToast('Strategy Crafter', 'Failed to save strategy. ' + error[0].message, 'Error');
-      }
-    });
 
-    $A.enqueueAction(action);
+    });
+    cmpEvent.fire();
   },
   /**Validates if changes to the node are valid and can be applied to the strategy
    * @param {object} strategy - Current strategy
@@ -368,41 +322,30 @@
       function (body) {
         //construct an object and send it to be converted to xml
         _cmpUi.spinnerOn(cmp, "spinner");
+
         var newStrategy = {};
         newStrategy.name = body.get("v.strategyName");
         newStrategy.description = body.get("v.strategyDescription");
         newStrategy.masterLabel = body.get("v.strategyMasterLabel");
         newStrategy.nodes = [{ "removeDuplicates": true, "description": "the root", "name": "RootNode", "nodeType": "union", "parentNodeName": "" }];
-        var action = cmp.get('c.strategyJSONtoXML');
-        action.setParams({ strategyJson: JSON.stringify(newStrategy) });
-        action.setCallback(this, function (response) {
-          if (response.getState() === 'SUCCESS') {
-            var xml = response.getReturnValue();
-            var cmpEvent = $A.get("e.c:mdCreateOrUpdateStrategyRequest");
-            cmpEvent.setParams({
-              "strategyXML": xml,
-              "callback": function (persistedStrategyXML) {
-                _cmpUi.spinnerOff(cmp, "spinner");
-                if (!persistedStrategyXML || persistedStrategyXML == '') {
-                  _force.displayToast('Strategy Crafter', 'Strategy creation failed', 'Error');
-                  return;
-                }
-                else {
-                  _force.displayToast('Strategy Crafter', 'Strategy created');
-                  self.loadStrategyNames(cmp);
-                  cmp.set("v.selectedStrategyName", newStrategy.name);
-                }
-              }
-            });
-            cmpEvent.fire();
-          }
-          else {
-            _force.displayToast('Strategy Crafter', 'Strategy creation failed', 'Error');
+
+        var cmpEvent = $A.get("e.c:mdCreateOrUpdateStrategyRequest");
+        cmpEvent.setParams({
+          "strategy": newStrategy,
+          "callback": function (result) {
             _cmpUi.spinnerOff(cmp, "spinner");
+            if (!result.value || result.error) {
+              _force.displayToast('Strategy Crafter', 'Strategy creation failed ' + result.error, 'Error', true);
+              return;
+            }
+            else {
+              _force.displayToast('Strategy Crafter', 'Strategy created');
+              self.loadStrategyNames(cmp);
+              cmp.set("v.selectedStrategyName", newStrategy.name);
+            }
           }
         });
-
-        $A.enqueueAction(action);
+        cmpEvent.fire();
       }, null, null, 'narrowpopoverclass');
   },
 
@@ -419,10 +362,10 @@
           var cmpEvent = $A.get("e.c:mdCreateOrUpdateStrategyRequest");
           cmpEvent.setParams({
             "strategyXML": xml,
-            "callback": function (persistedStrategyXML) {
+            "callback": function (result) {
               _cmpUi.spinnerOff(cmp, "spinner");
-              if (!persistedStrategyXML || persistedStrategyXML == '') {
-                _force.displayToast('Strategy Crafter', 'Strategy import failed', 'Error');
+              if (!result.value || result.error) {
+                _force.displayToast('Strategy Crafter', 'Strategy import failed ' + result.error, 'Error', true);
                 return;
               }
               else {
@@ -469,9 +412,9 @@
         cmpEvent.setParams({
           "strategyName": strategyName,
           "callback": function (response) {
-            if (!response || response == '') {
+            if (response.error) {
               _cmpUi.spinnerOff(cmp, "spinner");
-              _force.displayToast('Strategy Crafter', 'Failed to delete a strategy', 'Error');
+              _force.displayToast('Strategy Crafter', 'Failed to delete a strategy ' + response.error, 'Error', true);
               return;
             }
             else {
@@ -498,32 +441,40 @@
 
   copyStrategy: function (cmp) {
     var self = this;
+    var strategy = cmp.get("v.currentStrategy");
+    var newStrategyName = strategy.name + 'Copy';
     self.showCopyStrategyDialog(cmp, function (body) {
       var newName = body.get("v.input");
       _cmpUi.spinnerOn(cmp, "spinner");
-      self.strategyObjectToXML(cmp, function (strategyXml) {
-        var cmpEvent = $A.get("e.c:mdCopyStrategyRequest");
-        cmpEvent.setParams({
-          "strategyXML": strategyXml,
-          "newStrategyName": newName,
-          "callback": function () {
+
+      var cmpEvent = $A.get("e.c:mdCopyStrategyRequest");
+      cmpEvent.setParams({
+        "strategy": strategy,
+        "newStrategyName": newName,
+        "callback": function (result) {
+          if (!result.error) {
             _force.displayToast('Strategy Crafter', 'Strategy copied');
             self.loadStrategyNames(cmp);
           }
-        });
-
-        cmpEvent.fire();
+          else {
+            _cmpUi.spinnerOff(cmp, "spinner");
+            _force.displayToast('Strategy Crafter', 'Strategy copying failed ' + result.error, 'Error', true);
+          }
+        }
       });
-    });
+
+      cmpEvent.fire();
+    }, newStrategyName);
   },
 
 
-  showCopyStrategyDialog: function (component, okCallback) {
+  showCopyStrategyDialog: function (component, okCallback, newName) {
     var self = this;
     _modalDialog.show(
       'Copying strategy',
       ['c:modalWindowInputBody', function (body) {
         body.set('v.text', 'What would the name of the copy be?');
+        body.set('v.input', newName);
         body.set('v.iconName', _force.Icons.Action.Question);
       }],
       okCallback);
@@ -531,36 +482,36 @@
 
   showRenameStrategyDialog: function (cmp, okCallback) {
     var self = this;
+    var strategy = cmp.get("v.currentStrategy");
     var strategyName = cmp.get("v.selectedStrategyName");
     _modalDialog.show(
       'Renaming strategy',
       ['c:modalWindowInputBody', function (body) {
+        body.set("v.input", strategyName);
         body.set('v.text', 'What would the new name of the "' + strategyName + '" strategy be?');
         body.set('v.iconName', _force.Icons.Action.Question);
       }],
       function (body) {
         var newName = body.get("v.input");
         _cmpUi.spinnerOn(cmp, "spinner");
-        self.strategyObjectToXML(cmp, function (strategyXml) {
-          var cmpEvent = $A.get("e.c:mdRenameStrategyRequest");
-          cmpEvent.setParams({
-            "strategyXML": strategyXml,
-            "newStrategyName": newName,
-            "callback": function (response) {
-              if (response && response != '') {
-                _force.displayToast('Strategy Crafter', 'Strategy renamed');
-                cmp.set("v.selectedStrategyName", newName);
-                self.loadStrategyNames(cmp);
-              }
-              else {
-                _force.displayToast('Strategy Crafter', 'Strategy renaming failed', 'Error');
-                _cmpUi.spinnerOff(cmp, "spinner");
-              }
+        var cmpEvent = $A.get("e.c:mdRenameStrategyRequest");
+        cmpEvent.setParams({
+          "strategy": strategy,
+          "newStrategyName": newName,
+          "callback": function (response) {
+            if (!response.error) {
+              _force.displayToast('Strategy Crafter', 'Strategy renamed');
+              cmp.set("v.selectedStrategyName", newName);
+              self.loadStrategyNames(cmp);
             }
-          });
-
-          cmpEvent.fire();
+            else {
+              _force.displayToast('Strategy Crafter', 'Strategy renaming failed ' + response.error, 'Error', true);
+              _cmpUi.spinnerOff(cmp, "spinner");
+            }
+          }
         });
+
+        cmpEvent.fire();
       });
   },
 
@@ -802,16 +753,5 @@
     });
     visualNode.addEventListener('click', visualNode.clickHandler);
     return visualNode;
-  },
-
-  strategyObjectToXML: function (cmp, callback) {
-    var action = cmp.get('c.strategyJSONtoXML');
-    action.setParams({ strategyJson: JSON.stringify(cmp.get('v.currentStrategy')) });
-    action.setCallback(this, function (response) {
-      var state = response.getState();
-      callback(response.getReturnValue());
-    });
-    $A.enqueueAction(action);
   }
-
 })

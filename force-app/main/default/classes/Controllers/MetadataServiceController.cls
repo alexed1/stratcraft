@@ -2,9 +2,27 @@ public with sharing class MetadataServiceController {
 
 public static Integer API_VERSION = 43;
 
-@AuraEnabled
-public static String createOrUpdateStrategyRequest(String sessionId, String strategyXML){
+
+public static Strategy strategyXMLToObject(String xml) {
+	Strategy parsedStrategy = StrategyXmlConverter.convertXmlToStrategy(xml);
+	return parsedStrategy;
+}
+
+public static String strategyJSONtoXML(String strategyJSON){
+	Strategy strategy = strategyJSONConverter.convertJsonToStrategy(strategyJSON);
 	try {
+		System.debug('Started persisting strategy ' + strategy.name);
+		String strategyXml = StrategyXmlConverter.convertStrategyToXml(strategy);
+		return strategyXml;
+	}
+	catch(Exception exc) {
+		throw new AuraException('Couldn\'t convert strategy JSON object to XML');
+	}
+}
+
+@AuraEnabled
+public static String createOrUpdateStrategyFromXMLRequest(String sessionId, String strategyXML){
+	try{
 		XPath xp = new XPath(strategyXML);
 		String strategyName = xp.find('/RecommendationStrategy/recommendationStrategyName')[0].getText();
 		Zippex archive = new Zippex();
@@ -19,9 +37,24 @@ public static String createOrUpdateStrategyRequest(String sessionId, String stra
 		return deployPackage(sessionId, base64EncodedArchive);
 	}
 	catch(Exception exc) {
-		throw new AuraHandledException('Sorry but we couldn\'t update strategy content. Error: '
+		throw new AuraHandledException('MetadataServiceController: '
 		                               + exc);
 	}
+}
+
+
+@AuraEnabled
+public static String createOrUpdateStrategyRequest(String sessionId, String strategyJSON){
+
+	String strategyXML = '';
+	try {
+		strategyXML = strategyJSONtoXML(strategyJSON);
+	}
+	catch(Exception exc) {
+		throw new AuraHandledException('MetadataServiceController: '
+		                               + exc);
+	}
+	return createOrUpdateStrategyFromXMLRequest(sessionId, strategyXML);
 }
 
 @AuraEnabled
@@ -39,14 +72,15 @@ public static String deleteStrategyRequest(String sessionId, String strategyName
 		return deployPackage(sessionId, base64EncodedArchive);
 	}
 	catch(Exception exc) {
-		throw new AuraHandledException('Sorry but we couldn\'t update strategy content. Error: '
+		throw new AuraHandledException('MetadataServiceController: '
 		                               + exc);
 	}
 }
 
 @AuraEnabled
-public static String renameStrategyRequest(String sessionId, String strategyXML, String newStrategyName){
+public static String renameStrategyRequest(String sessionId, String strategyJSON, String newStrategyName){
 	try {
+		String strategyXML = strategyJSONtoXML(strategyJSON);
 		XPath xp = new XPath(strategyXML);
 		Dom.XmlNode[] nameNode = xp.find('/RecommendationStrategy/recommendationStrategyName');
 		String oldStrategyName = nameNode[0].getText();
@@ -67,15 +101,15 @@ public static String renameStrategyRequest(String sessionId, String strategyXML,
 		return deployPackage(sessionId, base64EncodedArchive);
 	}
 	catch(Exception exc) {
-		throw new AuraHandledException('Sorry but we couldn\'t rename strategy. Error: '
+		throw new AuraHandledException('MetadataServiceController: '
 		                               + exc);
 	}
 }
 
 @AuraEnabled
-public static String copyStrategyRequest(String sessionId, String strategyXML, String newStrategyName){
+public static String copyStrategyRequest(String sessionId, String strategyJSON, String newStrategyName){
 	try {
-
+		String strategyXML = strategyJSONtoXML(strategyJSON);
 		XPath xp = new XPath(strategyXML);
 		//replace name to a new one
 		Dom.XmlNode[] nameNode = xp.find('/RecommendationStrategy/recommendationStrategyName');
@@ -94,13 +128,13 @@ public static String copyStrategyRequest(String sessionId, String strategyXML, S
 		return deployPackage(sessionId, base64EncodedArchive);
 	}
 	catch(Exception exc) {
-		throw new AuraHandledException('Sorry but we couldn\'t copy strategy. Error: '
+		throw new AuraHandledException('MetadataServiceController: '
 		                               + exc);
 	}
 }
 
 @AuraEnabled
-public static String checkRetrievalStatusRequest(String sessionId, String id){
+public static Strategy checkRetrievalStatusRequest(String sessionId, String id){
 	try {
 		MetadataService.MetadataPort service = createClient(sessionId);
 		MetadataService.RetrieveResult retrieveResult = service.checkRetrieveStatus(id, true);
@@ -109,21 +143,22 @@ public static String checkRetrievalStatusRequest(String sessionId, String id){
 		{
 			if (retrieveResult.success)
 			{
-				return finStrategyInZipArchive(retrieveResult.zipFile);
+				String strategyXML = finStrategyInZipArchive(retrieveResult.zipFile);
+				return strategyXMLToObject(strategyXML);
 			}
 			else
 			{
-				throw new AuraHandledException('Sorry but we couldn\'t load strategy content. Error: '
+				throw new AuraHandledException('MetadataServiceController: '
 				                               + retrieveResult.errorMessage);
 			}
 		}
 		else
 		{
-			return 'deploying';
+			return null;
 		}
 	}
 	catch (Exception ex) {
-		throw new AuraHandledException('Sorry but we couldn\'t load strategy content. Error: '+ex.getMessage());
+		throw new AuraHandledException('MetadataServiceController: '+ex.getMessage());
 	}
 }
 
@@ -141,10 +176,11 @@ private static String finStrategyInZipArchive(String base64Archive){
 		}
 	}
 
-	throw new AuraException('Couldn\'t find strategy in retrieved zip archive');
+	throw new AuraException('MetadataServiceController: Couldn\'t find strategy in retrieved zip archive');
 }
 
 
+//returns deployment job ID
 @AuraEnabled
 public static String getStrategyRequest(String sessionId, String strategyName){
 	try{
@@ -154,7 +190,7 @@ public static String getStrategyRequest(String sessionId, String strategyName){
 	}
 	catch(Exception exc)
 	{
-		throw new AuraHandledException('Sorry but we couldn\'t load strategy content. Error: '
+		throw new AuraHandledException('MetadataServiceController: '
 		                               + exc.getMessage());
 	}
 }
@@ -181,14 +217,14 @@ public static List<String> loadStrategyNamesRequest(String sessionId){
 		return names;
 	}
 	catch (Exception exc) {
-		throw new AuraHandledException('Sorry but we couldn\'t load strategy names. Error: '
+		throw new AuraHandledException('MetadataServiceController: '
 		                               + exc.getMessage());
 	}
 }
 
 
 @AuraEnabled
-public static String checkDeployStatusRequest(String sessionId, String id, Boolean retrieveAffectedStrategy){
+public static Strategy checkDeployStatusRequest(String sessionId, String id, Boolean retrieveAffectedStrategy){
 
 	try {
 		MetadataService.MetadataPort service = createClient(sessionId);
@@ -205,33 +241,36 @@ public static String checkDeployStatusRequest(String sessionId, String id, Boole
 						errors += deployMessage.problem;
 
 				if (errors!='')
-					throw new AuraHandledException('Sorry but we couldn\'t check deploy status. Error:' + errors);
+					throw new AuraHandledException('MetadataServiceController: ' + errors);
 			}
 
 			if (retrieveAffectedStrategy != null && retrieveAffectedStrategy) {
 				if (deployResult.details.retrieveResult!=null && deployResult.details.retrieveResult.done)
 				{
 					if (deployResult.details.retrieveResult.zipFile!=null)
-						return finStrategyInZipArchive(deployResult.details.retrieveResult.zipFile);
+					{
+						String strategyXML= finStrategyInZipArchive(deployResult.details.retrieveResult.zipFile);
+						return strategyXMLToObject(strategyXML);
+					}
 					else
-						throw new AuraHandledException('Deploy was successfull but we couldn\'t retrieve back resulting strategy');
+						throw new AuraHandledException('MetadataServiceController: Deploy was successfull but we couldn\'t retrieve back resulting strategy');
 				}
-				else
-				{
-					return 'deploying';
-				}
+				// else
+				// {
+				//      return null;
+				// }
 			}
-			else
-				return '';
+			// else
+			//      return null;
 		}
-		else
-			return 'deploying';
+		// else
+		return null;
 	}
 	catch (AuraHandledException ex) {
 		throw ex;
 	}
 	catch (Exception ex) {
-		throw new AuraHandledException('Sorry but we couldn\'t check deploy status. Error: ' + ex.getMessage());
+		throw new AuraHandledException('MetadataServiceController: ' + ex.getMessage());
 	}
 }
 
