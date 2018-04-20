@@ -30,6 +30,8 @@
     <aura:handler name="change" value="{!v.isTreeView}" action="{!c.handleViewChanged}" />
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
 
+
+
     <aura:handler event="c:propertyPageSaveRequestEvent" action="{!c.saveStrategy}" />
     <aura:handler event="c:nodeDeletionRequestedEvent" action="{!c.handleNodeDeletionRequested}" />
     <aura:handler event="c:treeNodeSelectedEvent" action="{!c.handleTreeNodeSelect }" />
