@@ -160,33 +160,10 @@
     if (!isTreeView) {
       self.rebuildStrategyDiagram(component, component.get('v.currentStrategy'));
     }
-
-
-    //post the current strategy to the server
-    //save it by name overwriting as necessary
-    //return a status message
-    self.persistStrategy(component, function () {
-      //This is to close modal dialog with base property page if a save was triggered from it
-      _modalDialog.close();
-      //If we currently see a diagram, we need to rebuild it
-      var isTreeView = component.get('v.isTreeView');
-      if (!isTreeView) {
-        self.rebuildStrategyDiagram(component, component.get('v.currentStrategy'));
-      }
-      if (onSuccess) {
-        onSuccess();
-      }
-
-      _cmpUi.spinnerOff(component, "spinner");
-    });
-  },
-
-  //save the strategy 
-  persistStrategy: function (component, onSuccess) {
     console.log('Sending Strategy to Salesforce and persisting');
     //send strategy to metadataservice
     var curStrat = component.get("v.currentStrategy");
-    var cmpEvent = $A.get("e.c:mdCreateOrUpdateStrategyRequest");
+    var cmpEvent = $A.get('e.c:mdCreateOrUpdateStrategyRequest');
     cmpEvent.setParams({
       "strategy": curStrat,
       "callback": function (result) {
@@ -195,6 +172,15 @@
           var persistedStrategyXML = result.value;
           _force.displayToast('Strategy Crafter', 'Strategy changes saved');
           component.set('v.currentStrategy', result);
+          //This is to close modal dialog with base property page if a save was triggered from it
+          _modalDialog.close();
+
+          //If we currently see a diagram, we need to rebuild it
+          var isTreeView = component.get('v.isTreeView');
+          if (!isTreeView) {
+            self.rebuildStrategyDiagram(component, component.get('v.currentStrategy'));
+          }
+
           if (onSuccess) {
             onSuccess();
           }
@@ -208,6 +194,7 @@
     });
     cmpEvent.fire();
   },
+
   /**Validates if changes to the node are valid and can be applied to the strategy
    * @param {object} strategy - Current strategy
    * @param {object} originalNode - Original state of the node before change
