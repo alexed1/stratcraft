@@ -302,12 +302,13 @@
         body.set('v.iconName', _force.Icons.Action.Delete);
       }],
       function (bodyComponent) {
+        //This is to close 'delete' dialog
+        _modalDialog.close();
+        //This is to close 'property page' dialog
         _modalDialog.close();
         _strategy.deleteNode(strategy, node);
         self.saveStrategy(component, null, null, function () {
           component.find('propertyPage').set('v.currentNode', null);
-          //This is to close modal dialog with base property page if a save was triggered from it
-          _modalDialog.close();
         });
       }
     );
