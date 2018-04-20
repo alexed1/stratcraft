@@ -164,7 +164,7 @@
       self.rebuildStrategyDiagram(component, component.get('v.currentStrategy'));
     }
 
-    
+
     //post the current strategy to the server
     //save it by name overwriting as necessary
     //return a status message
@@ -195,8 +195,8 @@
     //TODO: inefficient to do this every time this method is called.
     var curStrat = component.get('v.currentStrategy');
     var unsortedNodes = curStrat.nodes;
-    var sortAlgo = function(x,y){
-        return ((x.nodeType == y.nodeType) ? 0 : ((x.nodeType > y.nodeType) ? 1 : -1 ));
+    var sortAlgo = function (x, y) {
+      return ((x.nodeType == y.nodeType) ? 0 : ((x.nodeType > y.nodeType) ? 1 : -1));
     }
     var sortedNodes = unsortedNodes.sort(sortAlgo);
     curStrat.nodes = sortedNodes;
@@ -232,7 +232,7 @@
               if (component.isValid() && state === 'SUCCESS') {
 
                 var result = response.getReturnValue();
-                console.log('result from sending persistedStrategyXML to strategyXMLToObject. this will be the new strategy: '+ result);
+                console.log('result from sending persistedStrategyXML to strategyXMLToObject. this will be the new strategy: ' + result);
                 component.set('v.currentStrategy', result);
                 if (onSuccess) {
                   onSuccess();
@@ -348,12 +348,13 @@
         body.set('v.iconName', _force.Icons.Action.Delete);
       }],
       function (bodyComponent) {
+        //This is to close 'delete' dialog
+        _modalDialog.close();
+        //This is to close 'property page' dialog
         _modalDialog.close();
         _strategy.deleteNode(strategy, node);
         self.saveStrategy(component, null, null, function () {
           component.find('propertyPage').set('v.currentNode', null);
-          //This is to close modal dialog with base property page if a save was triggered from it
-          _modalDialog.close();
         });
       }
     );

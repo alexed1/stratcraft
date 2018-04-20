@@ -1,6 +1,6 @@
 window._modalDialog = (function () {
     var overlay = null;
-    var overlayPanel = null;
+    var overlayPanels = [];
 
     var parseComponentConfiguration = function (configuration) {
         if (!configuration) {
@@ -99,24 +99,29 @@ window._modalDialog = (function () {
                             body: body,
                             footer: footer,
                             cssClass: cssClass,
+                            closeCallback: function () {
+                                overlayPanels.shift();
+                            },
                             //In this case if we provide cancellation callback, we don't allow user to just close the window, as we are interested in the councious choice 
                             showCloseButton: cancelCallback === null || cancelCallback === undefined
                         }).then(function (overlay) {
-                            overlayPanel = overlay;
+                            overlayPanels.unshift({ overlay: overlay, isOpen: true });
                         });
                     }
                 });
         },
 
         close: function () {
-            overlay.notifyClose();
-            if (overlayPanel) {
-                overlayPanel.close();
-                overlayPanel = null;
+            //This function will be called if we try to close the dialog window from the code
+            //We can be sure that the callback above will be called after this function finishes so we don't remove reference to the overlay panel here
+            for (var index = 0; index < overlayPanels.length; index++) {
+                var item = overlayPanels[index];
+                if (item.isOpen) {
+                    item.isOpen = false;
+                    item.overlay.close();
+                    break;
+                }
             }
-            //This is to close modal dialog with base property page if a save was triggered from it
-            //var popup = window.open(location, '_blank', '');
-            //popup.close();
         }
     }
 })()

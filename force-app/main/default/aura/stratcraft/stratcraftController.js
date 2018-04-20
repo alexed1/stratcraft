@@ -125,6 +125,7 @@
     saveStrategy: function (component, event, helper) {
         var originalNodeState = event.getParam('originalNodeState');
         var actualNodeState = event.getParam('newNodeState');
+        _modalDialog.close();
         helper.saveStrategy(component, originalNodeState, actualNodeState);
     },
 
