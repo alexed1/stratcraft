@@ -34,7 +34,7 @@
     handleCurrentStrategyChanged: function (cmp, event, helper) {
         //Since we are selecting a different strategy, we need to clear the property page
         var propertyPage = cmp.find('propertyPage');
-        propertyPage.currentNode = null;
+        propertyPage.set('v.currentNode', null);
         helper.rebuildTree(cmp);
     },
     /** Reacts to the selection of the new node in the tree */

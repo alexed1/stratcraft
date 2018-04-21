@@ -1,8 +1,8 @@
 ({
 
     // General approach here is to store callback, and then schedulle recurring call to one of controller methods: checkRetrieveStatus or checkDeployStatus
-    // If anything bad happens I try to display an error and still call callback
-    // Also no matter if a call was successfull or not - its important to deschedule recurring calls 
+    // No matter if a call was successfull or not - we call callback passing either result or error
+    // Also its important to deschedule recurring calls 
     // Controller methods are designed to either return valid value or to throw exception
 
     loadStrategyNames: function (cmp, event, helper) {
@@ -16,11 +16,10 @@
                 var state = response.getState();
                 if (cmp.isValid() && state === "SUCCESS") {
                     var result = response.getReturnValue();
-                    callback(result);
+                    callback({ value: result });
                 }
                 else {
-                    callback();
-                    _force.displayToast('Metadata Service', 'Failed to send a load strategy names request: ' + response.getError()[0].message, 'Error');
+                    callback({ error: response.getError()[0].message });
                 }
             });
             $A.enqueueAction(action);
@@ -47,8 +46,7 @@
                     cmp.set("v.pollingId", pollingId);
                 }
                 else {
-                    callback();
-                    _force.displayToast('Metadata Service', 'Failed to send a load strategy request: ' + response.getError()[0].message, 'Error');
+                    callback({ error: response.getError()[0].message });
                 }
             });
             $A.enqueueAction(action);
@@ -61,9 +59,22 @@
             var sessionId = cmp.get("v.sessionId");
             var callback = event.getParam('callback');
             cmp.set("v.callback", callback);
-            var strategyXML = event.getParam("strategyXML");
-            var action = cmp.get("c.createOrUpdateStrategyRequest");
-            action.setParams({ sessionId: sessionId, strategyXML: strategyXML });
+
+            var action = {};
+
+            //was it pure XML or a JSON object?
+            var strategy = event.getParam("strategy");
+            if (strategy) {
+                strategy = helper.sortNodes(strategy); //should we also sort nodes for XML?
+                action = cmp.get("c.createOrUpdateStrategyRequest");
+                action.setParams({ sessionId: sessionId, strategyJSON: JSON.stringify(strategy) });
+            }
+            else {
+                var strategyXML = event.getParam("strategyXML");
+                action = cmp.get("c.createOrUpdateStrategyFromXMLRequest");
+                action.setParams({ sessionId: sessionId, strategyXML: strategyXML });
+            }
+
             action.setCallback(this, function (response) {
                 if (cmp.isValid() && response.getState() === "SUCCESS") {
                     var id = response.getReturnValue();
@@ -75,8 +86,7 @@
                     cmp.set("v.pollingId", pollingId);
                 }
                 else {
-                    callback();
-                    _force.displayToast('Metadata Service', 'Failed to send a create/update strategy request: ' + response.getError()[0].message, 'Error');
+                    callback({ error: response.getError()[0].message });
                 }
             });
             $A.enqueueAction(action);
@@ -103,8 +113,7 @@
                     cmp.set("v.pollingId", pollingId);
                 }
                 else {
-                    callback();
-                    _force.displayToast('Metadata Service', 'Failed to send a delete strategy request: ' + response.getError()[0].message, 'Error');
+                    callback({ error: response.getError()[0].message });
                 }
             });
             $A.enqueueAction(action);
@@ -117,10 +126,10 @@
             var sessionId = cmp.get("v.sessionId");
             var callback = event.getParam('callback');
             cmp.set("v.callback", callback);
-            var strategyXML = event.getParam("strategyXML");
+            var strategy = event.getParam("strategy");
             var newStrategyName = event.getParam("newStrategyName");
             var action = cmp.get("c.renameStrategyRequest");
-            action.setParams({ sessionId: sessionId, newStrategyName: newStrategyName, strategyXML: strategyXML });
+            action.setParams({ sessionId: sessionId, newStrategyName: newStrategyName, strategyJSON: JSON.stringify(strategy) });
             action.setCallback(this, function (response) {
                 if (cmp.isValid() && response.getState() === "SUCCESS") {
                     var id = response.getReturnValue();
@@ -132,8 +141,7 @@
                     cmp.set("v.pollingId", pollingId);
                 }
                 else {
-                    callback();
-                    _force.displayToast('Metadata Service', 'Failed to send a rename strategy request: ' + response.getError()[0].message, 'Error');
+                    callback({ error: response.getError()[0].message });
                 }
             });
             $A.enqueueAction(action);
@@ -146,10 +154,10 @@
             var sessionId = cmp.get("v.sessionId");
             var callback = event.getParam('callback');
             cmp.set("v.callback", callback);
-            var strategyXML = event.getParam("strategyXML");
+            var strategy = event.getParam("strategy");
             var newStrategyName = event.getParam("newStrategyName");
             var action = cmp.get("c.copyStrategyRequest");
-            action.setParams({ sessionId: sessionId, newStrategyName: newStrategyName, strategyXML: strategyXML });
+            action.setParams({ sessionId: sessionId, newStrategyName: newStrategyName, strategyJSON: JSON.stringify(strategy) });
             action.setCallback(this, function (response) {
                 if (cmp.isValid() && response.getState() === "SUCCESS") {
                     var id = response.getReturnValue();
@@ -161,9 +169,7 @@
                     cmp.set("v.pollingId", pollingId);
                 }
                 else {
-
-                    callback();
-                    _force.displayToast('Metadata Service', 'Failed to send a copy strategy request: ' + response.getError()[0].message, 'Error');
+                    callback({ error: response.getError()[0].message });
                 }
             });
             $A.enqueueAction(action);
@@ -182,22 +188,21 @@
         action.setCallback(this, function (response) {
             if (response.getState() === "SUCCESS") {
                 var retVal = response.getReturnValue();
-                if (retVal != "deploying") {
+                if (retVal) {
                     cmp.set("v.message", retVal);
                     window.clearInterval(pollingId);
-                    callback(retVal);
+                    callback({ value: retVal });
                 }
                 else {
-                    //the message says "deploying", so we play the waiting game
+                    //if the return value is null then it is still deploying
                 }
             }
             else {
                 //race conditions leads to this error, we can ignore it
                 if (!response.getError()[0].message.includes('Retrieve result has been deleted')) {
                     window.clearInterval(pollingId);
-                    _force.displayToast('Metadata Service', 'Failed a retrieve strategy content operation: ' + response.getError()[0].message, 'Error');
                     _cmpUi.spinnerOff(cmp, "spinner");
-                    callback();
+                    callback({ error: response.getError()[0].message });
                 }
             }
         });
@@ -214,20 +219,19 @@
         action.setCallback(this, function (response) {
             if (response.getState() === "SUCCESS") {
                 var retVal = response.getReturnValue();
-                if (retVal != "deploying") {
+                if (retVal || !retrieveAffectedStrategy) {
                     cmp.set("v.message", retVal);
                     window.clearInterval(pollingId);
-                    if (retrieveAffectedStrategy)
-                        callback(retVal);
-                    else
-                        callback('success');
+                    callback({ value: retVal });
+                }
+                else {
+                    //if the return value is null then it is still retrieving
                 }
             }
             else {
                 window.clearInterval(pollingId);
-                _force.displayToast('Metadata Service', 'Failed a deploy operation: ' + response.getError()[0].message, 'Error');
                 _cmpUi.spinnerOff(cmp, "spinner");
-                callback();
+                callback({ error: response.getError()[0].message });
             }
 
         });
@@ -247,5 +251,17 @@
                     self.ensureSessionIdIsLoaded(cmp, onRetrieved);
                 }), 250
             );
+    },
+
+    sortNodes: function (curStrat) {
+        //the nodes have to be resorted to meet the requirements of the salesforce mdapi processor
+        //TODO: inefficient to do this every time createOrUpdate is called
+        var unsortedNodes = curStrat.nodes;
+        var sortAlgo = function (x, y) {
+            return ((x.nodeType == y.nodeType) ? 0 : ((x.nodeType > y.nodeType) ? 1 : -1));
+        }
+        var sortedNodes = unsortedNodes.sort(sortAlgo);
+        curStrat.nodes = sortedNodes;
+        return curStrat;
     }
 })
