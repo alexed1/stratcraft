@@ -17,6 +17,11 @@
     <aura:attribute name="availableNodeTypes" type="List" />
     <aura:attribute name="availableParentNodes" type="List" />
 
+    <!-- branches of if nodes -->
+    <aura:attribute name="_isBranchOfIfNode" type="Boolean" access="private" default="false" />
+    <aura:attribute name="_isFirstBranch" type="Boolean" access="private" default="false" />
+    <aura:attribute name="_isLastBranch" type="Boolean" access="private" default="false" />
+
     <aura:handler name="change" value="{!v.currentStrategy}" action="{!c.handleStrategyChanged}" />
     <aura:handler name="change" value="{!v._currentNodeDirty.nodeType}" action="{!c.handleTypeChanged}" />
     <aura:handler name="change" value="{!v.currentNode}" action="{!c.handleCurrentNodeChanged}" />
@@ -36,9 +41,25 @@
             </div>
             <div class="slds-col slds-size_6-of-12">
                 <div class="slds-float_right">
-                    <lightning:buttonMenu menuAlignment="right" iconName="utility:settings" alternativeText="Node Manages" onselect="{!c.handleNodeActions}">
-                        <lightning:menuItem label="Delete Node" value="delete" disabled="{!v.currentNode == null}" />
-                    </lightning:buttonMenu>
+                    <div class="slds-grid">
+                        <aura:if isTrue="{!v._isBranchOfIfNode}">
+                            <div class="slds-col slds-p-right_xxx-small">
+                                <lightning:buttonIcon alternativeText="Branch priority up" title="Branch priority up" iconName="utility:arrowup" name="up"
+                                    disabled="{!v._isFirstBranch}" onclick="{!c.handleBranchPriorityChange}" />
+                            </div>
+                        </aura:if>
+                        <aura:if isTrue="{!v._isBranchOfIfNode}">
+                            <div class="slds-col slds-p-right_xxx-small">
+                                <lightning:buttonIcon alternativeText="Branch priority down" title="Branch priority down" iconName="utility:arrowdown" name="down"
+                                    disabled="{!v._isLastBranch}" onclick="{!c.handleBranchPriorityChange}" />
+                            </div>
+                        </aura:if>
+                        <div class="slds-col">
+                            <lightning:buttonMenu menuAlignment="right" iconName="utility:settings" alternativeText="Node Manages" onselect="{!c.handleNodeActions}">
+                                <lightning:menuItem label="Delete Node" value="delete" disabled="{!v.currentNode == null}" />
+                            </lightning:buttonMenu>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

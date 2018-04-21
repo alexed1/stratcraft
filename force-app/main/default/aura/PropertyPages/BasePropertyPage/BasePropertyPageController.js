@@ -30,6 +30,7 @@
         if (currentNode) {
             helper.removeEmptyNodeType(cmp);
             helper.loadParentNodes(cmp);
+            helper.reevaluateBranchesFlags(cmp, currentNode);
         } else {
             helper.loadNodeTypes(cmp);
             cmp.set('v.availableParentNodes', []);
@@ -47,6 +48,40 @@
         cmp.set('v._isExternalConnection', currentNode && currentNode.nodeType === _utils.NodeType.EXTERNAL_CONNECTION);
         cmp.set('v._isRecordJoin', currentNode && currentNode.nodeType === _utils.NodeType.RECORD_JOIN);
 
+    },
+
+    handleBranchPriorityChange: function (cmp, event, helper) {
+        //here we swap places of 2 branch nodes in strategy.nodes array 
+        var option = event.getSource().get("v.name");
+        var isUp = false;
+        if (option === 'up') {
+            isUp = true;
+        }
+        else if (option != 'down') {
+            throw new Error("Can't recognize in what way to change the branch priority");
+        }
+
+        //searching for which node to swap with
+        var currentStrategy = cmp.get("v.currentStrategy");
+        var currentNode = cmp.get("v.currentNode");
+        var indexOfNodeGlobal = currentStrategy.nodes.findIndex(x => x.name == currentNode.name);
+        var ifNodeBranchesNodes = currentStrategy.nodes.filter(x => x.parentNodeName == currentNode.parentNodeName);
+        var indexOfNodeLocal = ifNodeBranchesNodes.findIndex(x => x.name === currentNode.name);
+        var indexOfNodeToSwapWithGlobal = -1;
+        var nodeToSwapWith = {};
+        if (isUp) {
+            nodeToSwapWith = ifNodeBranchesNodes[indexOfNodeLocal - 1];
+        }
+        else
+            nodeToSwapWith = ifNodeBranchesNodes[indexOfNodeLocal + 1];
+
+        indexOfNodeToSwapWithGlobal = currentStrategy.nodes.findIndex(x => x.name === nodeToSwapWith.name);
+
+        //swapping
+        currentStrategy.nodes[indexOfNodeGlobal] = nodeToSwapWith;
+        currentStrategy.nodes[indexOfNodeToSwapWithGlobal] = currentNode;
+
+        cmp.set("v.currentStrategy", currentStrategy);
     },
 
     //reset the page
