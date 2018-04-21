@@ -1,11 +1,15 @@
 ({
-    initializeJsPlumb: function (component) {
-        if (component.get('v._isInitialized')) {
+    initializeJsPlumb: function (cmp) {
+        if (cmp.get('v._isInitialized')) {
+            var self = this;
             var container = document.getElementsByClassName('diagram-container')[0];
             jsPlumb.setContainer(container);
-            this.rebuildStrategyDiagram(component, component.get('v.currentStrategy'));
+            window.setTimeout($A.getCallback(function () {
+                self.rebuildStrategyDiagram(cmp, cmp.get('v.currentStrategy'));
+            }))
+
         } else {
-            component.set('v._isInitialized', true);
+            cmp.set('v._isInitialized', true);
         }
     },
     /** Removes all the diagram elements from the diagram container */
@@ -41,7 +45,7 @@
         ]);
     },
     /** Clears the current diagram and rebuild a new one from the given strategy */
-    rebuildStrategyDiagram: function (component, strategy) {
+    rebuildStrategyDiagram: function (cmp, strategy) {
         var self = this;
         this.clearDiagram();
         var container = document.getElementsByClassName('diagram-container')[0];
@@ -52,16 +56,10 @@
             //(and adjust the size of the container if it is less than the width of the tree)
             container.style.width = treeLayout.width + 'px';
             container.style.height = treeLayout.height + 'px';
-            if (containerScrollView.clientHeight > treeLayout.height) {
-                container.style.marginTop = container.style.marginBottom = (containerScrollView.clientHeight - treeLayout.height - containerScrollView.style.padding) / 2 - 21 + 'px';
-            }
-            else {
-                container.style.marginTop = container.style.marginBottom = 'inherit';
-            }
             var queue = [];
             queue.push({
                 layoutNode: treeLayout.root,
-                visualNode: self.createNode(container, strategy, treeLayout.root)
+                visualNode: self.createNode(cmp, container, strategy, treeLayout.root)
             });
             jsPlumb.batch(function () {
                 var parentIsRoot = true;
@@ -70,7 +68,7 @@
                     parentNodePair.layoutNode.children.forEach(function (item) {
                         var childNodePair = {
                             layoutNode: item,
-                            visualNode: self.createNode(container, strategy, item)
+                            visualNode: self.createNode(cmp, container, strategy, item)
                         };
                         var connection = jsPlumb.connect({
                             source: childNodePair.visualNode,
@@ -156,7 +154,7 @@
                 newNode.parentNodeName = newParentName;
                 //This is to allow dragula to clean up first, so we rebuild our diagram after it
                 window.setTimeout($A.getCallback(function () {
-                    self.raiseStrategyChangedEvent(component, strategy, oldNode, newNode);
+                    self.raiseStrategyChangedEvent(cmp, strategy, oldNode, newNode);
                 }));
             });
             drake.on('dragend', function (element) {
@@ -175,8 +173,8 @@
         }
     },
 
-    raiseStrategyChangedEvent: function (component, strategy, oldNode, newNode) {
-        var event = component.getEvent('strategyChanged');
+    raiseStrategyChangedEvent: function (cmp, strategy, oldNode, newNode) {
+        var event = cmp.getEvent('strategyChanged');
         event.setParams({
             'strategy': strategy,
             'oldNode': oldNode,
@@ -185,7 +183,7 @@
         event.fire();
     },
 
-    createNode: function (container, strategy, treeLayoutNode) {
+    createNode: function (cmp, container, strategy, treeLayoutNode) {
         var self = this;
         var visualNode = document.createElement('div');
         visualNode.dataset.nodeName = treeLayoutNode.strategyNode.name;
@@ -224,18 +222,27 @@
         visualNode.style.top = treeLayoutNode.y + 'px';
         container.appendChild(visualNode);
         visualNode.clickHandler = $A.getCallback(function () {
-            self.showNodePropertiesDialog(strategy, treeLayoutNode.strategyNode);
+            self.showNodePropertiesDialog(cmp, strategy, treeLayoutNode.strategyNode);
         });
         visualNode.addEventListener('click', visualNode.clickHandler);
         return visualNode;
     },
 
-    showNodePropertiesDialog: function (strategy, strategyNode) {
+    showNodePropertiesDialog: function (cmp, strategy, strategyNode) {
+        var self = this;
         _modalDialog.show(
             'Node Properties',
             ['c:basePropertyPage', function (body) {
                 body.set('v.currentStrategy', strategy);
                 body.set('v.currentNode', strategyNode);
+                body.addEventHandler('propertyPageSaveRequest', function (event) {
+                    _modalDialog.close();
+                    var currentStrategy = cmp.get('v.currentStrategy');
+                    var newNode = event.getParam('newNodeState');
+                    var oldNode = event.getParam('originalNodeState');
+                    self.raiseStrategyChangedEvent(cmp, currentStrategy, oldNode, newNode);
+                });
+
             }]);
     },
 })

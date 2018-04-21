@@ -7,15 +7,29 @@
     <ltng:require styles="{!$Resource.modalStyles}" />
 
     <aura:attribute name="currentStrategy" type="Object" />
+    <aura:attribute name="tree" type="Object" />
+
+    <aura:registerEvent name="strategyChanged" type="c:strategyChangedEvent" />
+
+    <aura:handler name="change" value="{!v.currentStrategy}" action="{!c.handleCurrentStrategyChanged}" />
+    
+    <aura:method name="forceRefresh" action="{!c.handleRefresh}" />
+    <aura:method name="canSelectNewStrategy" action="{!c.canSelectNewStrategy}">
+        <aura:attribute name="commitCallback" type="Object" />
+        <aura:attribute name="reverseCallback" type="Object" />
+    </aura:method>
+    <aura:method name="selectNode" action="{!c.selectNode}">
+        <aura:attribute name="name" type="String" />
+    </aura:method>
 
     <div class="slds-grid tree-container full-height" aura:id="treeContainer">
         <div class="slds-col slds-box slds-size_1-of-3  slds-scrollable_y">
-            <c:treeNode aura:id="tree" header="Strategy Elements" />
+            <c:treeNode aura:id="tree" header="Strategy Elements" treeItems="{!v.tree}" nodeSelected="{!c.handleTreeNodeSelect}" />
         </div>
         <div class="slds-col slds-box slds-m-left_x-small slds-scrollable_y">
             <b>Properties</b>
             {!v.body}
-            <c:basePropertyPage aura:id="propertyPage" currentStrategy="{!v.currentStrategy}" />
+            <c:basePropertyPage aura:id="propertyPage" currentStrategy="{!v.currentStrategy}" propertyPageSaveRequest="{!c.handlePropertyPageSaveRequest}" />
         </div>
     </div>
 </aura:component>	

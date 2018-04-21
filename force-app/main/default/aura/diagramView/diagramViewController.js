@@ -1,9 +1,14 @@
 ({
-    init: function (component, event, helper) {
-        helper.initializeJsPlumb(component);
+    init: function (cmp, event, helper) {
+        helper.initializeJsPlumb(cmp);
     },
 
-    handleCurrentStrategyChanged: function (component, event, helper) {
-        helper.rebuildStrategyDiagram(component, component.get('v.currentStrategy'));
+    handleCurrentStrategyChanged: function (cmp, event, helper) {
+        helper.rebuildStrategyDiagram(cmp, cmp.get('v.currentStrategy'));
+    },
+
+    canSelectNewStrategy: function (cmp, event, helper) {
+        var args = event.getParam('arguments');
+        args.commitCallback();
     }
 })

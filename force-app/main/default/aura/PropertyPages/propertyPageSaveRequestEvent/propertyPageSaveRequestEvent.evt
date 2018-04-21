@@ -1,4 +1,4 @@
-<aura:event type="APPLICATION" description="Event that is fired when strategy node is changed">
+<aura:event type="COMPONENT" description="Event that is fired when strategy node is changed">
     <aura:attribute name="newNodeState" type="Object"/>
     <aura:attribute name="originalNodeState" type="Object"/>
 </aura:event>

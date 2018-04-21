@@ -3,4 +3,5 @@
     <aura:attribute name="strategy" type="Object" />
     <aura:attribute name="oldNode" type="Object" />
     <aura:attribute name="newNode" type="Object" />
+    <aura:attribute name="confirmCallback" type="Object" />
 </aura:event>

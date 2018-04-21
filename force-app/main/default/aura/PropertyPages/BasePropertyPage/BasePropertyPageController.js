@@ -1,63 +1,63 @@
 ({
-    handleSaveClick: function (component, event, helper) {
-        var componentEvent = $A.get('e.c:propertyPageSaveRequestEvent');
+    handleSaveClick: function (cmp, event, helper) {
+        var componentEvent = cmp.getEvent('propertyPageSaveRequest');
         componentEvent.setParams({
-            'newNodeState': component.get('v._currentNodeDirty'),
-            'originalNodeState': component.get('v.currentNode')
+            'newNodeState': cmp.get('v._currentNodeDirty'),
+            'originalNodeState': cmp.get('v.currentNode')
         });
         componentEvent.fire();
     },
 
-    handleDeleteClick: function (component, event, helper) {
+    handleDeleteClick: function (cmp, event, helper) {
         var componentEvent = $A.get('e.c:nodeDeletionRequestedEvent');
-        componentEvent.setParams({ 'node': component.get('v.currentNode') });
+        componentEvent.setParams({ 'node': cmp.get('v.currentNode') });
         componentEvent.fire();
     },
 
-    handleStrategyChanged: function (component, event, helper) {
-        helper.loadNodeTypes(component);
-        component.set('v.availableParentNodes', []);
+    handleStrategyChanged: function (cmp, event, helper) {
+        helper.loadNodeTypes(cmp);
+        cmp.set('v.availableParentNodes', []);
     },
 
-    handleCurrentNodeChanged: function (component, event, helper) {
-        var currentNode = component.get('v.currentNode');
-        component.set('v._currentNodeDirty', currentNode ? _utils.clone(currentNode, true) : null);
+    handleCurrentNodeChanged: function (cmp, event, helper) {
+        var currentNode = event.getParam('value');
+        cmp.set('v._currentNodeDirty', currentNode ? _utils.clone(currentNode, true) : null);
         if (currentNode) {
-            helper.removeEmptyNodeType(component);
-            helper.loadParentNodes(component);
+            helper.removeEmptyNodeType(cmp);
+            helper.loadParentNodes(cmp);
         } else {
-            helper.loadNodeTypes(component);
-            component.set('v.availableParentNodes', []);
+            helper.loadNodeTypes(cmp);
+            cmp.set('v.availableParentNodes', []);
         }
     },
 
-    handleTypeChanged: function (component, event, helper) {
-        var currentNode = component.get('v._currentNodeDirty');
-        component.set('v._isIf', currentNode && currentNode.nodeType === _utils.NodeType.IF);
-        component.set('v._isSoqlLoad', currentNode && currentNode.nodeType === _utils.NodeType.SOQL_LOAD);
-        component.set('v._isFilter', currentNode && currentNode.nodeType === _utils.NodeType.FILTER);
-        component.set('v._isUnion', currentNode && currentNode.nodeType === _utils.NodeType.UNION);
-        component.set('v._isRecommendationLimit', currentNode && currentNode.nodeType === _utils.NodeType.RECOMMENDATION_LIMIT);
-        component.set('v._isSort', currentNode && currentNode.nodeType === _utils.NodeType.SORT);
-        component.set('v._isExternalConnection', currentNode && currentNode.nodeType === _utils.NodeType.EXTERNAL_CONNECTION);
-        component.set('v._isRecordJoin', currentNode && currentNode.nodeType === _utils.NodeType.RECORD_JOIN);
+    handleTypeChanged: function (cmp, event, helper) {
+        var currentNode = cmp.get('v._currentNodeDirty');
+        cmp.set('v._isIf', currentNode && currentNode.nodeType === _utils.NodeType.IF);
+        cmp.set('v._isSoqlLoad', currentNode && currentNode.nodeType === _utils.NodeType.SOQL_LOAD);
+        cmp.set('v._isFilter', currentNode && currentNode.nodeType === _utils.NodeType.FILTER);
+        cmp.set('v._isUnion', currentNode && currentNode.nodeType === _utils.NodeType.UNION);
+        cmp.set('v._isRecommendationLimit', currentNode && currentNode.nodeType === _utils.NodeType.RECOMMENDATION_LIMIT);
+        cmp.set('v._isSort', currentNode && currentNode.nodeType === _utils.NodeType.SORT);
+        cmp.set('v._isExternalConnection', currentNode && currentNode.nodeType === _utils.NodeType.EXTERNAL_CONNECTION);
+        cmp.set('v._isRecordJoin', currentNode && currentNode.nodeType === _utils.NodeType.RECORD_JOIN);
 
     },
 
     //reset the page
-    resetPage: function (component, event, helper) {
-        component.set('v.currentNode', component.get('v._currentNodeDirty'));
+    resetPage: function (cmp, event, helper) {
+        cmp.set('v.currentNode', cmp.get('v._currentNodeDirty'));
     },
 
     //Clears everything related to current node and strategy
-    clear: function (component, event, helper) {
-        component.set('v.currentNode', null);
-        component.set('v.currentStrategy', null);
+    clear: function (cmp, event, helper) {
+        cmp.set('v.currentNode', null);
+        cmp.set('v.currentStrategy', null);
     },
 
-    isDirty: function (component, event, helper) {
-        var originalState = component.get('v.currentNode');
-        var actualState = component.get('v._currentNodeDirty');
+    isDirty: function (cmp, event, helper) {
+        var originalState = cmp.get('v.currentNode');
+        var actualState = cmp.get('v._currentNodeDirty');
         //It means that no node has been selected yet
         if (!originalState && !actualState) {
             return false;

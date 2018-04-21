@@ -10,13 +10,6 @@
     <ltng:require scripts="{!$Resource.dragula}" styles="{!$Resource.dragulacss}" />
     <ltng:require styles="{!$Resource.modalStyles}" />
 
-    <!-- 
-    <ltng:require scripts="{!$Resource.hopscotch}" afterScriptsLoaded="{!c.hopscotchLoaded}" />
-    <ltng:require scripts="{!$Resource.hopscotchcss}" />
-    <ltng:require scripts="{!$Resource.hopscotchspritegreen}" />
-    <ltng:require scripts="{!$Resource.hopscotchspriteorange}" />
-    -->
-
     <aura:attribute name="currentStrategy" type="Object" />
     <aura:attribute name="originalNode" type="Object" />
     <aura:attribute name="isTreeView" type="String" default="true" />
@@ -28,11 +21,10 @@
 
     <aura:handler name="change" value="{!v.selectedStrategyName}" action="{!c.handleStrategySelection}" />
     <aura:handler name="change" value="{!v.isTreeView}" action="{!c.handleViewChanged}" />
+    <aura:handler name="change" value="{!v.currentStrategy}" action="{!c.handleCurrentStrategyChanged}" />
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
-
-    <aura:handler event="c:propertyPageSaveRequestEvent" action="{!c.saveStrategy}" />
+    
     <aura:handler event="c:nodeDeletionRequestedEvent" action="{!c.handleNodeDeletionRequested}" />
-    <aura:handler event="c:treeNodeSelectedEvent" action="{!c.handleTreeNodeSelect }" />
     <aura:handler event="c:nodeDataRequestEvent" action="{!c.handleNodeDataRequest}" />
     <aura:handler event="c:newNodeCreationRequestedEvent" action="{!c.handleNewNodeCreationRequested}" />
 
@@ -68,11 +60,13 @@
             </div>
         </div>
         <hr class="slds-m-vertical_x-small" />
-        <aura:if isTrue="{!v.isTreeView == 'true'}">
+        <c:treeView aura:id="treeView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}" />
+        <c:diagramView aura:id="diagramView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}" />
+        <!-- <aura:if isTrue="{!v.isTreeView == 'true'}">
             <c:treeView aura:id="treeView" currentStrategy="{!v.currentStrategy}" />
             <aura:set attribute="else">
                 <c:diagramView aura:id="diagramView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}" />
             </aura:set> 
-        </aura:if>
+        </aura:if> -->
     </div>
 </aura:component>

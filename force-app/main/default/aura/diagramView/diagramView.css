@@ -1,12 +1,13 @@
-.THIS .full-height {
+.THIS.full-height {
 	flex-grow: 1;
 }
 
-.THIS .diagram-scroll-view {
+.THIS.diagram-scroll-view {
 	width: 100%;
 	padding: 10px;
 	overflow: auto;
 	border: solid 1px black;	
+	display: flex;
 	/*background-image: url(/resource/graphBackground);
 	background-attachment: local;*/
 }
