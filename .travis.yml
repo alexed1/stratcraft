@@ -1,27 +1,32 @@
 sudo: true
-dist: trusty
+os: trusty
 cache: false
+
 env:
 - URL=https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
+
 before_install:
 - openssl aes-256-cbc -K $encrypted_70fd139d4f56_key -iv $encrypted_70fd139d4f56_iv
   -in server.key.enc -out server.key -d
-- export SFDX_AUTOUPDATE_DISABLE=true
+- export SFDX_AUTOUPDATE_DISABLE=false
 - export SFDX_USE_GENERIC_UNIX_KEYCHAIN=true
 - export SFDX_DOMAIN_RETRY=300
-- wget -qO- $URL | tar xJf -
+- export SFDX_DISABLE_APP_HUB=true
+- export SFDX_LOG_LEVEL=DEBUG
+- mkdir sfdx
+- wget -qO- $URL | tar xJ -C sfdx --strip-components 1
 - "./sfdx/install"
 - export PATH=./sfdx/$(pwd):$PATH
-- sfdx update
 - sfdx --version
 - sfdx plugins --core
-- sfdx force:auth:jwt:grant --clientid $CONSUMERKEY --jwtkeyfile server.key
-  --username $USERNAME --setdefaultdevhubusername -a HubOrg
+- sfdx force:auth:jwt:grant --clientid $CONSUMERKEY --jwtkeyfile server.key --username $USERNAME --setdefaultdevhubusername -a HubOrg
+
 script:
-#- sfdx force:org:create -v HubOrg -s -f config/project-scratch-def.json -a ciorg --json --loglevel debug -w 2
-- sfdx force:org:list --all
-#- sfdx force:lightning:test:install -u ciorg
-#- sfdx force:source:push -u ciorg 
-#- sfdx force:apex:test:run -u ciorg -c -r human
-#- sfdx force:lightning:test:run -f config/lts-config.json -a jasmineTests.app
-#- sfdx force:org:delete -u ciorg -p
+- sfdx force:org:create -v HubOrg -s -f config/project-scratch-def.json -a ciorg --wait 2
+- sfdx force:source:push -u ciorg
+- sfdx force:apex:test:run -u ciorg --wait 10
+- sfdx force:org:delete -u ciorg -p
+
+#- sfdx force:source:convert --outputdir mdapi_output_dir --packagename testPackage; sfdx force:mdapi:deploy --deploydir mdapi_output_dir -u $USERNAME -w 5
+
+# - sfdx force:org:display -u ciorg
