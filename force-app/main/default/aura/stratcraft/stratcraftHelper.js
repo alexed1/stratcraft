@@ -100,28 +100,34 @@
     cmpEvent.fire();
   },
 
-  saveStrategy: function (cmp, originalNodeState, actualNodeState, onSuccess) {
-    _cmpUi.spinnerOn(cmp, "spinner");
+  saveStrategy: function (cmp, oldNode, newNode, onSuccess) {
+    //If both old and new nodes as empty, it means that this save is a result of undo/redo operation
+    var isUndoRedo = !oldNode && !newNode;
     var self = this;
     console.log('in save strategy in parent controller');
     var strategy = cmp.get('v.currentStrategy');
-    var validationResult = this.validateNodeChange(strategy, originalNodeState, actualNodeState);
+    var validationResult = isUndoRedo ? null : this.validateNodeChange(strategy, oldNode, newNode);
     if (validationResult) {
-      _cmpUi.spinnerOff(cmp, "spinner");
       _force.displayToast('Error', validationResult, 'error');
       return;
     }
-    this.applyChangesToStrategy(cmp, strategy, originalNodeState, actualNodeState);
+    _cmpUi.spinnerOn(cmp, 'spinner');
+    //If this save is a result of undo/redo operation, then the changes are already applied
+    if (!isUndoRedo) {
+      this.applyChangesToStrategy(cmp, strategy, oldNode, newNode);
+    }
     var activeView = this.getActiveView(cmp);
     activeView.forceRefresh();
     console.log('Sending Strategy to Salesforce and persisting');
     //send strategy to metadataservice
-    var curStrat = cmp.get("v.currentStrategy");
+    var curStrat = cmp.get('v.currentStrategy');
     var cmpEvent = $A.get('e.c:mdCreateOrUpdateStrategyRequest');
     cmpEvent.setParams({
-      "strategy": curStrat,
-      "callback": function (result) {
-        _cmpUi.spinnerOff(cmp, "spinner");
+      'strategy': curStrat,
+      'callback': function (result) {
+        cmp.set('v.canUndo', _undoManager.canUndo());
+        cmp.set('v.canRedo', _undoManager.canRedo());
+        _cmpUi.spinnerOff(cmp, 'spinner');
         if (!result.error) {
           var persistedStrategyXML = result.value;
           _force.displayToast('Strategy Crafter', 'Strategy changes saved');
@@ -129,7 +135,7 @@
           if (onSuccess) {
             onSuccess();
           }
-          _cmpUi.spinnerOff(cmp, "spinner");
+          _cmpUi.spinnerOff(cmp, 'spinner');
         }
         else {
           _force.displayToast('Strategy Crafter', 'Strategy changes save failed ' + result.error, 'Error', true);
@@ -199,12 +205,18 @@
   applyChangesToStrategy: function (cmp, strategy, oldNode, newNode) {
     //It means that we are removing node
     if (!newNode) {
-      _strategy.deleteNode(strategy, oldNode);
+      _undoManager.beginBatchOperations();
+      var allChildren = _strategy.getAllChildrenNodes(strategy, oldNode).reverse();
+      allChildren.forEach(function (item) {
+        _undoManager.markNodeRemoved(item);
+      });
+      _undoManager.markNodeRemoved(strategy, oldNode);
+      _undoManager.endBatchOperations();
       return;
     }
     //It means that we are adding node
     if (!oldNode) {
-      strategy.nodes.push(newNode);
+      _undoManager.markNodeAdded(strategy, newNode);
       return;
     }
     var self = this;

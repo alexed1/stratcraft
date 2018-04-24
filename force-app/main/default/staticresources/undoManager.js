@@ -8,11 +8,11 @@ window._undoManager = (function () {
         }
     };
     var removeNode = function (strategy, node) {
-        var index = strategy.nodes.findIndex(function (item) { item.name === node.name });
+        var index = strategy.nodes.findIndex(function (item) { return item.name === node.name });
         if (index !== -1) {
             strategy.nodes.splice(index, 1);
         }
-        return -1;
+        return index;
     };
     var replaceNode = function (strategy, oldNode, newNode) {
         var index = removeNode(strategy, oldNode);
@@ -71,6 +71,7 @@ window._undoManager = (function () {
         },
         /** Registers adding node as an undoable operation */
         markNodeAdded: function (strategy, node) {
+            addNode(strategy, node, -1);
             addOperation(
                 function () {
                     addNode(strategy, node, -1);
@@ -81,7 +82,8 @@ window._undoManager = (function () {
         },
         /** Registers removing node as an undoable operation */
         markNodeRemoved: function (strategy, node) {
-            var index = strategy.nodes.findIndex(function (item) { node.name === item.name; });
+            var index = strategy.nodes.findIndex(function (item) { return node.name === item.name; });
+            removeNode(strategy, node);
             addOperation(
                 function () {
                     removeNode(strategy, node);
@@ -92,21 +94,22 @@ window._undoManager = (function () {
         },
         /** Registers changing of the node properties as an undoable operation */
         markNodeChanged: function (strategy, oldNode, newNode) {
-            var index = strategy.nodes.findIndex(function (item) { oldNode.name === item.name; });
+            replaceNode(strategy, oldNode, newNode);
+            var index = strategy.nodes.findIndex(function (item) { return oldNode.name === item.name; });
             addOperation(
                 function () { replaceNode(strategy, oldNode, newNode); },
                 function () { replaceNode(strategy, newNode, oldNode); }
             );
         },
-
+        /** Returns true if there is at least one operation in the current queue that can be undone */
         canUndo: function () {
             return undoQueue.some(function (item) { return item.isDone; });
         },
-
+        /** Returns true if there is at least one operation in the current queue that can be redone */
         canRedo: function () {
             return undoQueue.some(function (item) { return !item.isDone; });
         },
-
+        /** Undoes the last undoable operation */
         undo: function () {
             if (!this.canUndo()) {
                 return;
@@ -116,7 +119,7 @@ window._undoManager = (function () {
             undoableOperation.undoCallback();
             undoableOperation.isDone = false;
         },
-
+        /** Redoes the first redoable operation */
         redo: function () {
             if (!this.canRedo()) {
                 return;
@@ -125,6 +128,12 @@ window._undoManager = (function () {
             var redoableOperation = undoQueue[index];
             redoableOperation.redoCallback();
             redoableOperation.isDone = true;
+        },
+        /** Clears the undo queue */
+        clear: function () {
+            undoQueue = [];
+            currentOperationBatch = [];
+            isBatchingOperations = false;
         }
     }
 })()

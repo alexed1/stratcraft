@@ -24,3 +24,8 @@
 	min-height: 63px;
 }
 
+.THIS .undo-redo-button {
+	padding-left: 6px;
+	padding-right: 0px;
+}
+

@@ -118,5 +118,17 @@
 
     handleStrategyChanged: function (cmp, event, helper) {
         helper.saveStrategy(cmp, event.getParam('oldNode'), event.getParam('newNode'), event.getParam('confirmCallback'));
+    },
+
+    handleUndo: function (cmp, event, helper) {
+        _undoManager.undo();
+        cmp.set('v.canUndo', _undoManager.canUndo());
+        cmp.set('v.canRedo', _undoManager.canRedo());
+    },
+
+    handleRedo: function (cmp, event, helper) {
+        _undoManager.redo();
+        cmp.set('v.canUndo', _undoManager.canUndo());
+        cmp.set('v.canRedo', _undoManager.canRedo());
     }
 })
