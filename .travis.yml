@@ -26,7 +26,3 @@ script:
 - sfdx force:source:push -u ciorg
 - sfdx force:apex:test:run -u ciorg --wait 10
 - sfdx force:org:delete -u ciorg -p
-
-#- sfdx force:source:convert --outputdir mdapi_output_dir --packagename testPackage; sfdx force:mdapi:deploy --deploydir mdapi_output_dir -u $USERNAME -w 5
-
-# - sfdx force:org:display -u ciorg

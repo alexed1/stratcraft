@@ -25,6 +25,10 @@ window._force = (function () {
       Action: {
         Question: 'action:question_post_action',
         Delete: 'action:delete'
+      },
+      Utility: {
+        Undo: 'utility:undo',
+        Redo: 'utility:redo'
       }
     }
   }

@@ -2,6 +2,7 @@
 
     <ltng:require scripts="{!$Resource.force}" />
     <ltng:require scripts="{!$Resource.strategy}" />
+    <ltng:require scripts="{!$Resource.undoManager}" />
     <ltng:require scripts="{!$Resource.utils}" />
     <ltng:require scripts="{!$Resource.modalDialog}" afterScriptsLoaded="{!c.modalDialogLoaded}" />
     <ltng:require scripts="{!$Resource.jsplumb}" />
@@ -13,18 +14,16 @@
     <aura:attribute name="currentStrategy" type="Object" />
     <aura:attribute name="originalNode" type="Object" />
     <aura:attribute name="isTreeView" type="String" default="true" />
-    <aura:attribute name="_isDiagramInitialized" type="Boolean" default="false" />
-    <aura:attribute name="viewModes" type="List" default="[ {'label': 'Diagram', 'value': ''}, {'label': 'Tree', 'value': 'true' } ]"
-    />
+    <aura:attribute name="viewModes" type="List" default="[ {'label': 'Diagram', 'value': ''}, {'label': 'Tree', 'value': 'true' } ]" />
     <aura:attribute name="strategyNames" type="List" />
     <aura:attribute name="selectedStrategyName" type="String" default="" />
+    <aura:attribute name="canUndo" type="Boolean" default="False" />
+    <aura:attribute name="canRedo" type="Boolean" default="False" />
 
     <aura:handler name="change" value="{!v.selectedStrategyName}" action="{!c.handleStrategySelection}" />
     <aura:handler name="change" value="{!v.isTreeView}" action="{!c.handleViewChanged}" />
     <aura:handler name="change" value="{!v.currentStrategy}" action="{!c.handleCurrentStrategyChanged}" />
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
-    
-
 
     <aura:handler event="c:nodeDeletionRequestedEvent" action="{!c.handleNodeDeletionRequested}" />
     <aura:handler event="c:nodeDataRequestEvent" action="{!c.handleNodeDataRequest}" />
@@ -57,16 +56,14 @@
                     </aura:iteration>
                 </lightning:select>
             </div>
-            <div class="slds-grid-col">
+            <lightning:button class="slds-m-horizontal_xx-small undo-redo-button slds-m-top_x-small" iconName="utility:undo" onclick="{!c.handleUndo}" disabled="{!not(v.canUndo)}"/>
+            <lightning:button class="slds-m-horizontal_xx-small undo-redo-button slds-m-top_x-small" iconName="utility:redo" onclick="{!c.handleRedo}" disabled="{!not(v.canRedo)}"/>
+            <div class="slds-grid-col slds-m-horizontal_small">
                 <lightning:radioGroup name="viewRadioGroup" label="Display Mode" options="{!v.viewModes}" value="{!v.isTreeView}" />
             </div>
         </div>
         <hr class="slds-m-vertical_x-small" />
         <c:treeView aura:id="treeView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}" />
         <c:diagramView aura:id="diagramView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}" />
-        <!-- <aura:if isTrue="{!v.isTreeView == 'true'}">
-            <c:treeView aura:id="treeView" currentStrategy="{!v.currentStrategy}" />
-            <aura:set attribute="else">
-        </aura:if> -->
     </div>
 </aura:component>
