@@ -4,10 +4,35 @@
 
     <aura:attribute name="currentItem" type="Object" />
     <aura:attribute name="selectableNodes" type="List" />
+    <aura:attribute name="index" type="Integer" />
 
     <aura:registerEvent name="deleteRequested" type="c:filterDeleteRequestedEvent" />
+    <aura:registerEvent name="priorityChangeRequested" type="c:filterPriorityChangeRequestEvent" />
+
 
     <div class="slds-has-top-magnet slds-box">
+
+        <div class="slds-float_right">
+            <div class="slds-col">
+                <lightning:buttonIcon iconName="utility:delete" variant="border" onclick="{!c.handleDeleteRequest}" alternativeText="Delete filter"
+                />
+            </div>
+
+            <aura:if isTrue="{!v.currentItem.isSortable}">
+                <div>
+                    <div class="slds-col slds-m-top_medium">
+                        <lightning:buttonIcon alternativeText="Branch priority up" title="Branch priority up" iconName="utility:arrowup" name="up"
+                            disabled="{!v.currentItem.isFirstBranch}" onclick="{!c.handleBranchPriorityChange}" />
+                    </div>
+                    <div class="slds-col ">
+                        <lightning:buttonIcon alternativeText="Branch priority down" title="Branch priority down" iconName="utility:arrowdown" name="down"
+                            disabled="{!v.currentItem.isLastBranch}" onclick="{!c.handleBranchPriorityChange}" />
+                    </div>
+                </div>
+            </aura:if>
+        </div>
+
+
         <div class="slds-grid slds-wrap">
             <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-top">
                 <div class="slds-col  slds-size_10-of-12">
@@ -17,11 +42,7 @@
                         </aura:iteration>
                     </lightning:select>
                 </div>
-                <div class="slds-col  slds-size_2-of-12">
-                    <div class="slds-float_right">
-                        <lightning:buttonIcon iconName="utility:delete" variant="border" onclick="{!c.handleDeleteRequest}" alternativeText="Delete filter" />
-                    </div>
-                </div>
+
             </div>
             <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-center">
                 <div class="slds-col  slds-size_1-of-1">

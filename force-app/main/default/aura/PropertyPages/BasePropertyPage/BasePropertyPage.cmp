@@ -17,11 +17,6 @@
     <aura:attribute name="availableNodeTypes" type="List" />
     <aura:attribute name="availableParentNodes" type="List" />
 
-    <!-- branches of if nodes -->
-    <aura:attribute name="_isBranchOfIfNode" type="Boolean" access="private" default="false" />
-    <aura:attribute name="_isFirstBranch" type="Boolean" access="private" default="false" />
-    <aura:attribute name="_isLastBranch" type="Boolean" access="private" default="false" />
-
     <aura:handler name="change" value="{!v.currentStrategy}" action="{!c.handleStrategyChanged}" />
     <aura:handler name="change" value="{!v._currentNodeDirty.nodeType}" action="{!c.handleTypeChanged}" />
     <aura:handler name="change" value="{!v.currentNode}" action="{!c.handleCurrentNodeChanged}" />
