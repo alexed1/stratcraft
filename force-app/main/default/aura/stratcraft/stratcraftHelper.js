@@ -205,55 +205,15 @@
   applyChangesToStrategy: function (cmp, strategy, oldNode, newNode) {
     //It means that we are removing node
     if (!newNode) {
-      _undoManager.beginBatchOperations();
-      var allChildren = _strategy.getAllChildrenNodes(strategy, oldNode).reverse();
-      allChildren.forEach(function (item) {
-        _undoManager.markNodeRemoved(item);
-      });
-      _undoManager.markNodeRemoved(strategy, oldNode);
-      _undoManager.endBatchOperations();
+      _undoManager.removeNode(strategy, oldNode);
       return;
     }
     //It means that we are adding node
     if (!oldNode) {
-      _undoManager.markNodeAdded(strategy, newNode);
+      _undoManager.addNode(strategy, newNode);
       return;
     }
-    var self = this;
-    var isNameChanged = oldNode.name != newNode.name;
-    var isParentChanged = oldNode.parentNodeName != newNode.parentNodeName;
-    var originalParent = _strategy.getParentNode(strategy, oldNode);
-    var originalChildren = _strategy.getDirectChildrenNodes(strategy, oldNode);
-    //Update parent of original children
-    if (isNameChanged) {
-      originalChildren.forEach(function (item) {
-        item.parentNodeName = newNode.name;
-      });
-      //If parent node refers the current one in one of its branches, we should update this branch
-      //If original parent is empty then we are renaming the root node
-      if (originalParent && originalParent.nodeType == _utils.NodeType.IF) {
-        if (originalParent.branches) {
-          originalParent.branches.forEach(function (item) {
-            if (item.child == oldNode.name) {
-              item.child = newNode.name;
-            }
-          });
-        }
-      }
-    }
-    //Update children
-    if (isParentChanged) {
-      //TODO: process the case where empty node is selected as a new parent
-      var isMovingToOwnChild = _strategy.isParentOf(strategy, oldNode.name, newNode.parentNodeName);
-      if (isMovingToOwnChild) {
-        originalChildren.forEach(function (item) {
-          item.parentNodeName = originalParent ? originalParent.name : '';
-        });
-      }
-      //There is no 'else' as in this case changedNode will already have changes and will be injected into strategy
-    }
-    var index = strategy.nodes.findIndex(function (item) { return item.name == oldNode.name; });
-    strategy.nodes[index] = newNode;
+    _undoManager.changeNode(strategy, oldNode, newNode);
   },
 
   showDeleteNodeDialog: function (strategy, node, cmp) {
