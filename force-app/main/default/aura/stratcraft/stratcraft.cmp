@@ -53,7 +53,7 @@
             <div class="slds-grid-col slds-m-horizontal_small">
                 <lightning:select name="strategySelect" label="Select a strategy:" aura:id="mySelect" value="{!v.selectedStrategyName}" class="select_box">
                     <aura:iteration items="{!v.strategyNames}" var="item">
-                        <option text="{!item}" value="{!item}" />
+                        <option text="{!item}" value="{!item}" selected="{!item==v.selectedStrategyName}" />
                     </aura:iteration>
                 </lightning:select>
             </div>
