@@ -23,7 +23,7 @@
     <aura:handler name="change" value="{!v.isTreeView}" action="{!c.handleViewChanged}" />
     <aura:handler name="change" value="{!v.currentStrategy}" action="{!c.handleCurrentStrategyChanged}" />
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
-    
+
 
 
     <aura:handler event="c:nodeDeletionRequestedEvent" action="{!c.handleNodeDeletionRequested}" />
@@ -63,7 +63,8 @@
         </div>
         <hr class="slds-m-vertical_x-small" />
         <c:treeView aura:id="treeView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}" />
-        <c:diagramView aura:id="diagramView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}" />
+        <c:diagramView aura:id="diagramView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}"
+        />
         <!-- <aura:if isTrue="{!v.isTreeView == 'true'}">
             <c:treeView aura:id="treeView" currentStrategy="{!v.currentStrategy}" />
             <aura:set attribute="else">
