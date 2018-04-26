@@ -334,8 +334,9 @@
               }
               else {
                 _force.displayToast('Strategy Crafter', 'Strategy imported');
-                cmp.set("v.currentStrategy", result.value);
                 cmp.set("v.selectedStrategyName", result.value.name);
+                if (!cmp.get("v.currentStrategy"))
+                  cmp.set("v.currentStrategy", result.value);
                 self.loadStrategyNames(cmp);
               }
             }
@@ -391,8 +392,10 @@
                 var strategyNames = cmp.get("v.strategyNames");
                 var deletedStrategyIndex = strategyNames.indexOf(strategyName);
                 strategyNames.splice(deletedStrategyIndex, 1);
+                if (strategyNames.indexOf('') == -1)
+                  strategyNames.splice(0, 0, '');
                 cmp.set("v.strategyNames", strategyNames);
-                cmp.set("v.selectedStrategyName", "");
+                cmp.set("v.selectedStrategyName", '');
               });
             }
           }
