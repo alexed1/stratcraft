@@ -57,7 +57,7 @@
     activeView.canSelectNewStrategy(proceedCallback, cancelCallback);
   },
   //Populates the select strategy drop down
-  loadStrategyNames: function (cmp) {
+  loadStrategyNames: function (cmp, onSuccess) {
     var cmpEvent = $A.get('e.c:mdLoadStrategyNamesRequest');
     cmpEvent.setParams({
       'callback': function (result) {
@@ -68,6 +68,8 @@
             strategyNames.splice(0, 0, '');
             cmp.set('v.strategyNames', strategyNames);
           }
+          if (onSuccess)
+            onSuccess();
         }
         else {
           _force.displayToast('Strategy Crafter', 'Failed to load strategy names ' + result.error, 'Error', true);
@@ -325,13 +327,15 @@
           cmpEvent.setParams({
             "strategyXML": xml,
             "callback": function (result) {
-              _cmpUi.spinnerOff(cmp, "spinner");
               if (!result.value || result.error) {
+                _cmpUi.spinnerOff(cmp, "spinner");
                 _force.displayToast('Strategy Crafter', 'Strategy import failed ' + result.error, 'Error', true);
                 return;
               }
               else {
                 _force.displayToast('Strategy Crafter', 'Strategy imported');
+                cmp.set("v.currentStrategy", result.value);
+                cmp.set("v.selectedStrategyName", result.value.name);
                 self.loadStrategyNames(cmp);
               }
             }
@@ -381,7 +385,15 @@
             }
             else {
               _force.displayToast('Strategy Crafter', 'Strategy was deleted');
-              self.loadStrategyNames(cmp);
+              self.loadStrategyNames(cmp, function onSuccess() {
+                //there seems to be race condition and listing strategies might still return a deleted one,
+                // so we make sure that we exclude it
+                var strategyNames = cmp.get("v.strategyNames");
+                var deletedStrategyIndex = strategyNames.indexOf(strategyName);
+                strategyNames.splice(deletedStrategyIndex, 1);
+                cmp.set("v.strategyNames", strategyNames);
+                cmp.set("v.selectedStrategyName", "");
+              });
             }
           }
         });
