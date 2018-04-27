@@ -13,7 +13,7 @@
 
     <aura:handler name="change" value="{!v.currentStrategy}" action="{!c.handleCurrentStrategyChanged}" />
     
-    <aura:method name="forceRefresh" action="{!c.handleRefresh}" />
+    <aura:method name="refresh" action="{!c.handleRefresh}" />
     <aura:method name="canSelectNewStrategy" action="{!c.canSelectNewStrategy}">
         <aura:attribute name="commitCallback" type="Object" />
         <aura:attribute name="reverseCallback" type="Object" />

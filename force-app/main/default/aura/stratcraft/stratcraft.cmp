@@ -2,14 +2,21 @@
 
     <ltng:require scripts="{!$Resource.force}" />
     <ltng:require scripts="{!$Resource.strategy}" />
-    <ltng:require scripts="{!$Resource.undoManager}" />
-    <ltng:require scripts="{!$Resource.utils}" />
+    <ltng:require scripts="{!join(',', $Resource.utils,
+                                       $Resource.undoManager)}" afterScriptsLoaded="{!c.init}"/>
+
     <ltng:require scripts="{!$Resource.modalDialog}" afterScriptsLoaded="{!c.modalDialogLoaded}" />
     <ltng:require scripts="{!$Resource.jsplumb}" />
     <ltng:require scripts="{!$Resource.jsplumbWalker}" />
     <ltng:require scripts="{!$Resource.cmpUi}" />
     <ltng:require scripts="{!$Resource.dragula}" styles="{!$Resource.dragulacss}" />
     <ltng:require styles="{!$Resource.modalStyles}" />
+    <!--This attribute is added because the order in which 'afterScriptsLoaded' and 'init' events occur is undeterministic e.g. whenever 'init' event occurs
+        there is no way to be sure that it occured after all scripts are loaded. So the idea here is the following:
+        The attribute is initially set to the number of subscribers who would like to run the initializion code. Every time one of the is triggered
+        it checks the current value of the counter and decrements it. If the counter've reched zero, then the actual initialization can be performed safely.
+    -->
+    <aura:attribute name="_initializeCounter" type="Integer" default="2" access="private" />
 
     <aura:attribute name="currentStrategy" type="Object" />
     <aura:attribute name="originalNode" type="Object" />

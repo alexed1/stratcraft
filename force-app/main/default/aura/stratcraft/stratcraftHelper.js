@@ -86,6 +86,7 @@
     cmpEvent.setParams({
       'strategyName': cmp.get('v.selectedStrategyName'),
       'callback': function (result) {
+        _undoManager.clear();
         _cmpUi.spinnerOff(cmp, 'spinner');
         if (!result.error) {
           var strategy = result.value;
@@ -117,7 +118,7 @@
       this.applyChangesToStrategy(cmp, strategy, oldNode, newNode);
     }
     var activeView = this.getActiveView(cmp);
-    activeView.forceRefresh();
+    activeView.refresh();
     console.log('Sending Strategy to Salesforce and persisting');
     //send strategy to metadataservice
     var curStrat = cmp.get('v.currentStrategy');
@@ -125,8 +126,6 @@
     cmpEvent.setParams({
       'strategy': curStrat,
       'callback': function (result) {
-        cmp.set('v.canUndo', _undoManager.canUndo());
-        cmp.set('v.canRedo', _undoManager.canRedo());
         _cmpUi.spinnerOff(cmp, 'spinner');
         if (!result.error) {
           var persistedStrategyXML = result.value;

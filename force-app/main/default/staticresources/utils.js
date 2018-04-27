@@ -107,6 +107,42 @@ window._utils = (function () {
           [this.RECORD_JOIN, 'Record Join']
         ];
       }
+    },
+    //Generates C# or Java-like property that allow to get and set values and subscribe to change notifications
+    getProperty: function (defaultValue) {
+      var _value = defaultValue;
+      var _changeHandlers = [];
+      var result = function () { return _value; };
+      result.get = function () { return _value; };
+      result.set = function (value) {
+        if (value !== _value) {
+          _value = value;
+          _changeHandlers.forEach(function (item) { item(value); });
+        }
+      };
+      result.addChangeHandler = function (handler) {
+        if (handler) {
+          _changeHandlers.push(handler);
+        }
+        return handler;
+      };
+      result.removeChangeHandler = function (handler) {
+        var index = _changeHandlers.indexOf(handler);
+        if (index == -1) {
+          return undefined;
+        }
+        _changeHandlers.splice(index, 1);
+        return handler;
+      };
+      return result;
+    },
+    //Generates C# or Java-like property with no setter from another property
+    getNoSetterProperty: function (property) {
+      var result = function () { return property(); }
+      result.get = property.get();
+      result.addChangeHandler = property.addChangeHandler;
+      result.removeChangeHandler = property.removeChangeHandler;
+      return result;
     }
   }
 })()
