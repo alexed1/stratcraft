@@ -108,18 +108,26 @@ window._utils = (function () {
         ];
       }
     },
-    //Generates C# or Java-like property that allow to get and set values and subscribe to change notifications
-    getProperty: function (defaultValue) {
+    //Creates C# or Java-like property that allow to get and set values and subscribe to change notifications
+    createProperty: function (defaultValue) {
       var _value = defaultValue;
       var _changeHandlers = [];
-      var result = function () { return _value; };
-      result.get = function () { return _value; };
-      result.set = function (value) {
+      var get = function () { return _value; };
+      var set = function (value) {
         if (value !== _value) {
           _value = value;
           _changeHandlers.forEach(function (item) { item(value); });
         }
+      }
+      var result = function (newValue) {
+        if (arguments.length == 0) {
+          return get();
+        } else {
+          set(newValue);
+        }
       };
+      result.get = get;
+      result.set = set;
       result.addChangeHandler = function (handler) {
         if (handler) {
           _changeHandlers.push(handler);
@@ -136,8 +144,8 @@ window._utils = (function () {
       };
       return result;
     },
-    //Generates C# or Java-like property with no setter from another property
-    getNoSetterProperty: function (property) {
+    //Creates C# or Java-like property with no setter from another property
+    createNoSetterProperty: function (property) {
       var result = function () { return property(); }
       result.get = property.get();
       result.addChangeHandler = property.addChangeHandler;

@@ -5,8 +5,8 @@ window._undoManager = (function () {
     var _isBatchingOperations = false;
     var _currentOperationBatch = [];
     var _undoQueue = [];
-    var _canUndoProperty = _utils.getProperty(false);
-    var _canRedoProperty = _utils.getProperty(false);
+    var _canUndoProperty = _utils.createProperty(false);
+    var _canRedoProperty = _utils.createProperty(false);
     //Private methods
     var _canUndo = function () { return _undoQueue.length > 0 && _undoQueue.some(function (item) { return item.isDone; }); };
 
@@ -137,7 +137,7 @@ window._undoManager = (function () {
             _beginBatchOperations();
             var allChildren = _strategy.getAllChildrenNodes(strategy, node).reverse();
             allChildren.forEach(function (item) {
-                _markNodeRemoved(item);
+                _markNodeRemoved(strategy, item);
             });
             _markNodeRemoved(strategy, node);
             _endBatchOperations();
@@ -183,9 +183,9 @@ window._undoManager = (function () {
             _endBatchOperations();
         },
         /** Returns true if there is at least one operation in the current queue that can be undone */
-        canUndo: _utils.getNoSetterProperty(_canUndoProperty),
+        canUndo: _utils.createNoSetterProperty(_canUndoProperty),
         /** Returns true if there is at least one operation in the current queue that can be redone */
-        canRedo: _utils.getNoSetterProperty(_canRedoProperty),
+        canRedo: _utils.createNoSetterProperty(_canRedoProperty),
         /** Undoes the last undoable operation */
         undo: function () {
             if (!this.canUndo()) {

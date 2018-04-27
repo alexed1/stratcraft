@@ -36,9 +36,25 @@
             </div>
             <div class="slds-col slds-size_6-of-12">
                 <div class="slds-float_right">
-                    <lightning:buttonMenu menuAlignment="right" iconName="utility:settings" alternativeText="Node Manages" onselect="{!c.handleNodeActions}">
-                        <lightning:menuItem label="Delete Node" value="delete" disabled="{!v.currentNode == null}" />
-                    </lightning:buttonMenu>
+                    <div class="slds-grid">
+                        <aura:if isTrue="{!v._isBranchOfIfNode}">
+                            <div class="slds-col slds-p-right_xxx-small">
+                                <lightning:buttonIcon alternativeText="Branch priority up" title="Branch priority up" iconName="utility:arrowup" name="up"
+                                    disabled="{!v._isFirstBranch}" onclick="{!c.handleBranchPriorityChange}" />
+                            </div>
+                        </aura:if>
+                        <aura:if isTrue="{!v._isBranchOfIfNode}">
+                            <div class="slds-col slds-p-right_xxx-small">
+                                <lightning:buttonIcon alternativeText="Branch priority down" title="Branch priority down" iconName="utility:arrowdown" name="down"
+                                    disabled="{!v._isLastBranch}" onclick="{!c.handleBranchPriorityChange}" />
+                            </div>
+                        </aura:if>
+                        <div class="slds-col">
+                            <lightning:buttonMenu menuAlignment="right" iconName="utility:settings" alternativeText="Node Manages" onselect="{!c.handleNodeActions}">
+                                <lightning:menuItem label="Delete Node" value="delete" disabled="{!v.currentNode == null}" />
+                            </lightning:buttonMenu>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

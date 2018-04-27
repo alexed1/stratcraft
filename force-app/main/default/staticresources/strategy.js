@@ -33,11 +33,23 @@ window._strategy = (function () {
             if (index == -1) {
                 return false;
             }
+
+            //updating parent IF branch
+            var parentNode = this.getParentNode(strategy, node);
+            if (parentNode && parentNode.nodeType == _utils.NodeType.IF) {
+                if (parentNode.branches) {
+                    var branchIndex = parentNode.branches.findIndex(x => x.child == node.name);
+                    if (branchIndex >= 0)
+                        parentNode.branches.splice(branchIndex, 1);
+                }
+            }
+
             var children = this.getDirectChildrenNodes(strategy, node);
             strategy.nodes.splice(index, 1);
             children.forEach(function (item) {
                 self.deleteNode(strategy, item);
             })
+
             return true;
         },
         /** Returns all direct and indirect children nodes of the specified nodes. Returns empty array if specified node is a leaf node.
