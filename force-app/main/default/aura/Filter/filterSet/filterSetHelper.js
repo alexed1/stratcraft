@@ -26,14 +26,16 @@
             return;
 
         var filters = cmp.find("filter");
-        for (var i = 0; i < filters.length; i++) {
-            var item = filters[i].get('v.currentItem')
-            var index = filters[i].get("v.index");
-            if (item) {
-                item['isSortable'] = true;
-                item['isFirstBranch'] = index == 0;
-                item['isLastBranch'] = index == (curNode.branches.length - 1);
-                filters[i].set("v.curentItem", item);
+        if (filters) {
+            for (var i = 0; i < filters.length; i++) {
+                var item = filters[i].get('v.currentItem')
+                var index = filters[i].get("v.index");
+                if (item) {
+                    item['isSortable'] = true;
+                    item['isFirstBranch'] = index == 0;
+                    item['isLastBranch'] = index == (curNode.branches.length - 1);
+                    filters[i].set("v.curentItem", item);
+                }
             }
         }
 

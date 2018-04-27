@@ -52,6 +52,29 @@ window._strategy = (function () {
 
             return true;
         },
+        /** Returns all direct and indirect children nodes of the specified nodes. Returns empty array if specified node is a leaf node.
+         * Nodes are returned in BFS order
+         * @param {object} strategy - Strategy object
+         * @param {object/string} node - Node object that belongs to the strategy or node name
+         */
+        getAllChildrenNodes: function (strategy, node) {
+            node = this.convertToNode(strategy, node);
+            var result = [];
+            if (!node) {
+                return result;
+            }
+            var queue = [];
+            queue.push(node);
+            while (queue.length > 0) {
+                var parent = queue.pop();
+                var directChildren = this.getDirectChildrenNodes(strategy, parent);
+                directChildren.forEach(function (item) {
+                    queue.push(item);
+                    result.push(item);
+                });
+            }
+            return result;
+        },
         /**Returns all direct children nodes of the specified node. Returns empty array if specified node is a leaf node 
          * @param {object} strategy - Strategy object
          * @param {object/string} node - Node object that belongs to the strategy or node name

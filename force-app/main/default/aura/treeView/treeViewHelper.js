@@ -19,6 +19,9 @@
         } else {
             cmp.set('v.tree', []);
         }
+        if (!strategy || !currentNode || !strategy.nodes.some(function (item) { return item.name === currentNode.name; })) {
+            propertyPage.set('v.currentNode', null);
+        }
     },
 
     convertNodeToTreeItem: function (baseNode) {
