@@ -12,27 +12,6 @@ window._undoManager = (function () {
 
     var _canRedo = function () { return _undoQueue.length > 0 && _undoQueue.some(function (item) { return !item.isDone; }); };
 
-    var _addNode = function (strategy, node, index) {
-        if (index == -1) {
-            strategy.nodes.push(node);
-        } else {
-            strategy.nodes.splice(index, 0, node);
-        }
-    };
-
-    var _removeNode = function (strategy, node) {
-        var index = strategy.nodes.findIndex(function (item) { return item.name === node.name });
-        if (index !== -1) {
-            strategy.nodes.splice(index, 1);
-        }
-        return index;
-    };
-
-    var _replaceNode = function (strategy, oldNode, newNode) {
-        var index = _removeNode(strategy, oldNode);
-        _addNode(strategy, newNode, index);
-    };
-
     var _addOperationToUndoQueue = function (operation) {
         var insertOperationsAt = _undoQueue.findIndex(function (item) { return !item.isDone; });
         //It means that no operation was undone at the moment so we just add new operation to the end of the queue
@@ -62,28 +41,28 @@ window._undoManager = (function () {
         }
     };
 
-    var _markNodeAdded = function (strategy, node) {
+    var _addItem = function (array, item) {
         _addAndRunOperation(
-            function () { _addNode(strategy, node, -1); },
-            function () { _removeNode(strategy, node); });
+            function () { array.push(item); },
+            function () { array.splice(array.length - 1, 1); });
     };
 
-    var _markNodeRemoved = function (strategy, node) {
-        var index = strategy.nodes.findIndex(function (item) { return node.name === item.name; });
+    var _removeItem = function (array, item) {
+        var index = array.indexOf(item);
         _addAndRunOperation(
-            function () { _removeNode(strategy, node); },
-            function () { _addNode(strategy, node, index); });
+            function () { array.splice(index, 1); },
+            function () { array.splice(index, 0, item); });
     };
 
-    var _markNodeChanged = function (strategy, oldNode, newNode) {
-        var index = strategy.nodes.findIndex(function (item) { return oldNode.name === item.name; });
+    var _replaceItem = function (array, oldItem, newItem) {
+        var index = array.indexOf(oldItem);
         _addAndRunOperation(
-            function () { _replaceNode(strategy, oldNode, newNode); },
-            function () { _replaceNode(strategy, newNode, oldNode); }
+            function () { array.splice(index, 1, newItem); },
+            function () { array.splice(index, 1, oldItem); }
         );
     };
 
-    var _markPropertyValueChanged = function (item, propertyName, newValue) {
+    var _changePropertyValue = function (item, propertyName, newValue) {
         var oldValue = item[propertyName];
         _addAndRunOperation(
             function () { item[propertyName] = newValue; },
@@ -130,16 +109,16 @@ window._undoManager = (function () {
     return {
         /** Adds new node to the strategy and enables undo/redo for this operation */
         addNode: function (strategy, node) {
-            _markNodeAdded(strategy, node);
+            _addItem(strategy.nodes, node);
         },
         /** Removes existing node from the strategy and enables undo/redo for this operation */
         removeNode: function (strategy, node) {
             _beginBatchOperations();
             var allChildren = _strategy.getAllChildrenNodes(strategy, node).reverse();
             allChildren.forEach(function (item) {
-                _markNodeRemoved(strategy, item);
+                _removeItem(strategy.nodes, item);
             });
-            _markNodeRemoved(strategy, node);
+            _removeItem(strategy.nodes, node);
             _endBatchOperations();
         },
         /** Updates properties of the strategy node and enables undo/redo for this operation */
@@ -152,7 +131,7 @@ window._undoManager = (function () {
             //Update parent of original children
             if (isNameChanged) {
                 originalChildren.forEach(function (item) {
-                    _markPropertyValueChanged(item, 'name', newNode.name);
+                    _changePropertyValue(item, 'name', newNode.name);
                 });
                 //If parent node refers the current one in one of its branches, we should update this branch
                 //If original parent is empty then we are renaming the root node
@@ -160,7 +139,7 @@ window._undoManager = (function () {
                     if (originalParent.branches) {
                         originalParent.branches.forEach(function (item) {
                             if (item.child == oldNode.name) {
-                                _markPropertyValueChanged(item, 'child', newNode.name);
+                                _changePropertyValue(item, 'child', newNode.name);
                             }
                         });
                     }
@@ -173,13 +152,13 @@ window._undoManager = (function () {
                 if (isMovingToOwnChild) {
                     originalChildren.forEach(function (item) {
                         var newParentName = originalParent ? originalParent.name : '';
-                        _markPropertyValueChanged(item, 'parentNodeName', newParentName);
+                        _changePropertyValue(item, 'parentNodeName', newParentName);
                     });
                 }
                 //There is no 'else' as in this case changedNode will already have changes and will be injected into strategy
             }
             var index = strategy.nodes.findIndex(function (item) { return item.name == oldNode.name; });
-            _markNodeChanged(strategy, strategy.nodes[index], newNode);
+            _replaceItem(strategy.nodes, strategy.nodes[index], newNode);
             _endBatchOperations();
         },
         /** Returns true if there is at least one operation in the current queue that can be undone */
