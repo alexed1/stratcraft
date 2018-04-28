@@ -109,8 +109,10 @@
                 var directParent = _strategy.getParentNode(strategy, draggedNodeName);
                 nodes.forEach(function (item) {
                     //Dragged node and its direct parent (if any) shouldn't be highlighted
+                    //External Connection nodes also shouldn't be highlighted
                     if (item.dataset.nodeName === element.dataset.nodeName
-                        || (directParent && directParent.name === item.dataset.nodeName)) {
+                        || (directParent && directParent.name === item.dataset.nodeName)
+                        || item.dataset.nodeType === _utils.NodeType.EXTERNAL_CONNECTION) {
                         return;
                     }
                     item.classList.add('drop-target');
@@ -187,6 +189,7 @@
         var self = this;
         var visualNode = document.createElement('div');
         visualNode.dataset.nodeName = treeLayoutNode.strategyNode.name;
+        visualNode.dataset.nodeType = treeLayoutNode.strategyNode.nodeType;
         var specificNodeClass = '';
         switch (treeLayoutNode.strategyNode.nodeType) {
             case _utils.NodeType.IF:
