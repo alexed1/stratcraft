@@ -3,7 +3,7 @@
     <ltng:require scripts="{!$Resource.force}" />
     <ltng:require scripts="{!$Resource.strategy}" />
     <ltng:require scripts="{!join(',', $Resource.utils,
-                                       $Resource.undoManager)}" afterScriptsLoaded="{!c.init}"/>
+                                       $Resource.undoManager)}" afterScriptsLoaded="{!c.init}" />
 
     <ltng:require scripts="{!$Resource.modalDialog}" afterScriptsLoaded="{!c.modalDialogLoaded}" />
     <ltng:require scripts="{!$Resource.jsplumb}" />
@@ -20,8 +20,9 @@
 
     <aura:attribute name="currentStrategy" type="Object" />
     <aura:attribute name="originalNode" type="Object" />
-    <aura:attribute name="isTreeView" type="String" default="true" />
-    <aura:attribute name="viewModes" type="List" default="[ {'label': 'Diagram', 'value': ''}, {'label': 'Tree', 'value': 'true' } ]" />
+    <aura:attribute name="isTreeView" type="String" default='' />
+    <aura:attribute name="viewModes" type="List" default="[ {'label': 'Diagram', 'value': ''}, {'label': 'Tree', 'value': 'true' } ]"
+    />
     <aura:attribute name="strategyNames" type="List" />
     <aura:attribute name="selectedStrategyName" type="String" default="" />
     <aura:attribute name="canUndo" type="Boolean" default="False" />
@@ -63,14 +64,17 @@
                     </aura:iteration>
                 </lightning:select>
             </div>
-            <lightning:button class="slds-m-horizontal_xx-small undo-redo-button slds-m-top_x-small" iconName="utility:undo" onclick="{!c.handleUndo}" disabled="{!not(v.canUndo)}"/>
-            <lightning:button class="slds-m-horizontal_xx-small undo-redo-button slds-m-top_x-small" iconName="utility:redo" onclick="{!c.handleRedo}" disabled="{!not(v.canRedo)}"/>
+            <lightning:button class="slds-m-horizontal_xx-small undo-redo-button slds-m-top_x-small" iconName="utility:undo" onclick="{!c.handleUndo}"
+                disabled="{!not(v.canUndo)}" />
+            <lightning:button class="slds-m-horizontal_xx-small undo-redo-button slds-m-top_x-small" iconName="utility:redo" onclick="{!c.handleRedo}"
+                disabled="{!not(v.canRedo)}" />
             <div class="slds-grid-col slds-m-horizontal_small">
                 <lightning:radioGroup name="viewRadioGroup" label="Display Mode" options="{!v.viewModes}" value="{!v.isTreeView}" />
             </div>
         </div>
         <hr class="slds-m-vertical_x-small" />
         <c:treeView aura:id="treeView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}" />
-        <c:diagramView aura:id="diagramView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}" />
+        <c:diagramView aura:id="diagramView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}"
+        />
     </div>
 </aura:component>

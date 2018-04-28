@@ -13,19 +13,12 @@
     },
 
     handleViewChanged: function (cmp, event, helper) {
-        //ar activeView = helper.getActiveView(cmp);
-        var treeContainer = cmp.find('treeView').find('treeContainer');
-        var diagramContainer = cmp.find('diagramView').find('diagramView');
-        $A.util.toggleClass(diagramContainer, 'slds-hide');
-        $A.util.toggleClass(treeContainer, 'slds-hide');
-        var isTreeView = cmp.get('v.isTreeView') == 'true';
-        if (!isTreeView) {
-            var activeView = helper.getActiveView(cmp);
-            window.setTimeout($A.getCallback(function () { activeView.refresh(); }));
-        }
+        helper.toggleView(cmp);
     },
 
     handleCurrentStrategyChanged: function (cmp, event, helper) {
+        var currentStrategy = cmp.get("v.currentStrategy");
+
         var inactiveView = helper.getInactiveView(cmp);
         inactiveView.refresh();
     },
