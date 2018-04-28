@@ -40,6 +40,13 @@
     if (currentStrategy && currentStrategy.name === newStrategyName) {
       return;
     }
+
+    if (!currentStrategy) //if no strategy is selected by default load diagram view
+    {
+      cmp.set("v.isTreeView", '');
+      self.toggleView(cmp);
+    }
+
     //Here we should check with active view whether we can change selected strategy
     //Diagram view will always allow to select new strategy while tree view allows it only if there are no unsaved changes or user choses to save them
     var activeView = this.getActiveView(cmp);
@@ -448,6 +455,20 @@
 
         cmpEvent.fire();
       });
+  },
+
+  toggleView: function (cmp) {
+    var self = this;
+    //ar activeView = helper.getActiveView(cmp);
+    var treeContainer = cmp.find('treeView').find('treeContainer');
+    var diagramContainer = cmp.find('diagramView').find('diagramView');
+    $A.util.toggleClass(diagramContainer, 'slds-hide');
+    $A.util.toggleClass(treeContainer, 'slds-hide');
+    var isTreeView = cmp.get('v.isTreeView') == 'true';
+    if (!isTreeView) {
+      var activeView = self.getActiveView(cmp);
+      window.setTimeout($A.getCallback(function () { activeView.refresh(); }));
+    }
   },
 
   /**Makes sure that an empty option in the strategy selection list is removed
