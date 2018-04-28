@@ -15,7 +15,9 @@
         if (!currentStrategy || !currentNode) {
             component.set('v.availableParentNodes', []);
         } else {
-            var allNodes = currentStrategy.nodes.filter(function (item) { return item.name !== currentNode.name; });
+            var allNodes = currentStrategy.nodes.filter(function (item) {
+                return item.name !== currentNode.name && item.nodeType !== _utils.NodeType.EXTERNAL_CONNECTION;
+            });
             allNodes = allNodes.sort(function (x, y) { return x.name.localeCompare(y.name); })
                 .map(function (item) { return [item.name, item.name] });
             allNodes.unshift(['', '']);

@@ -5,7 +5,12 @@
             'nodeRelationship': _utils.NodeRequestType.ALL,
             'callback': function (strategyNodes) {
                 var result = [];
-                strategyNodes.forEach(function (item) { result.push(item.name); });
+                //We don't allow External Connection node to be a potential parent
+                strategyNodes.forEach(function (item) {
+                    if (item.nodeType !== _utils.NodeType.EXTERNAL_CONNECTION) {
+                        result.push(item.name);
+                    }
+                });
                 component.set('v.availableParentNodeNames', result);
             }
         });
