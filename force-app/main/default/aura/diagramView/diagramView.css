@@ -1,5 +1,7 @@
 .THIS.full-height {
-	flex-grow: 1;
+	-webkit-box-flex: 1;
+	    -ms-flex-positive: 1;
+	        flex-grow: 1;
 }
 
 .THIS.diagram-scroll-view {
@@ -7,7 +9,10 @@
 	padding: 10px;
 	overflow: auto;
 	border: solid 1px black;	
+	display: -webkit-box;	
+	display: -ms-flexbox;	
 	display: flex;
+	position: relative;
 	/*background-image: url(/resource/graphBackground);
 	background-attachment: local;*/
 }
@@ -58,8 +63,10 @@
 	border-radius: 5px;
 	position: absolute;
 	z-index: 1;
+	-webkit-transition: opacity 0.5s;
 	transition: opacity 0.5s;
-	transition-delay: .5s;
+	-webkit-transition-delay: .5s;
+	        transition-delay: .5s;
 }
 
 .THIS .node-label-tooltip:hover .node-label-tooltiptext {
@@ -82,13 +89,17 @@
 }
 
 .THIS .node.drop-target {
-	box-shadow: 0px 0px 5px 3px gray
+	-webkit-box-shadow: 0px 0px 5px 3px gray;
+	        box-shadow: 0px 0px 5px 3px gray
 }
 
 .THIS .node.active-drop-target {
-	box-shadow: 0px 0px 5px 4px gold;
-	transform-origin: center;
-	transform: scale(1.1);
+	-webkit-box-shadow: 0px 0px 5px 4px gold;
+	        box-shadow: 0px 0px 5px 4px gold;
+	-webkit-transform-origin: center;
+	        transform-origin: center;
+	-webkit-transform: scale(1.1);
+	        transform: scale(1.1);
 	z-index: 100;
 }
 
@@ -102,10 +113,10 @@
 	text-align: center;
 	/* This is to make text undraggable */
 	-moz-user-select: -moz-none;
-    -khtml-user-select: none;
     -webkit-user-select: none;
     -o-user-select: none;
-    user-select: none;
+    -ms-user-select: none;
+	    user-select: none;
 }
 
 .THIS .if-node {
@@ -140,4 +151,31 @@
 .THIS .filter-node {
 	border-radius: 24px;
 	background-image: url(/resource/filterNode);
+}
+
+.THIS .context-menu {
+	display: none;
+	position: absolute;
+	z-index: 1;
+	width: 120px;
+	-webkit-box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.2);
+	        box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.2);
+}
+
+.THIS .context-menu-options {
+	list-style: none;
+	z-index: 1;
+	padding-left: 10px;
+}
+
+.THIS .context-menu-item {
+	font-weight: 500;
+	z-index: 1;
+    font-size: 14px;
+    padding: 10px 40px 10px 20px;
+	cursor: pointer;	
+}
+
+.THIS .context-menu-item:hover {
+	background: rgba(0, 0, 0, 0.2);
 }

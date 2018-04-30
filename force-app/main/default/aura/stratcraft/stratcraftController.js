@@ -85,6 +85,9 @@
         var nodeType = event.getParam('nodeType');
         var parentNodeName = event.getParam('parentNodeName');
         var strategy = cmp.get('v.currentStrategy');
+        if (!nodeName) {
+            return;
+        }
         var newNode = {
             name: nodeName,
             parentNodeName: parentNodeName,

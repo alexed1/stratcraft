@@ -1,16 +1,86 @@
 ({
-    initializeJsPlumb: function (cmp) {
+    initialize: function (cmp) {
         if (cmp.get('v._isInitialized')) {
-            var self = this;
-            var container = document.getElementsByClassName('diagram-container')[0];
-            jsPlumb.setContainer(container);
-            window.setTimeout($A.getCallback(function () {
-                self.rebuildStrategyDiagram(cmp, cmp.get('v.currentStrategy'));
-            }))
-
+            this.initializeJsPlumb(cmp);
+            this.initializeContextMenu(cmp);
         } else {
             cmp.set('v._isInitialized', true);
         }
+    },
+
+    getContextMenu: function () {
+        return document.getElementsByClassName('context-menu')[0];
+    },
+
+    showHideContextMenu: function (position) {
+        var contextMenu = getContextMenu();
+        if (position) {
+            contextMenu.style.top = position.top + 'px';
+            contextMenu.style.left = position.left + 'px';
+            contextMenu.style.display = 'block';
+            contextMenu._isDisplayed = true;
+        } else {
+            contextMenu.style.display = 'none';
+            contextMenu._isDisplayed = false;
+            delete contextMenu.dataset.nodeName;
+        }
+        return contextMenu;
+    },
+
+    initializeContextMenu: function (cmp) {
+        var self = this;
+        var host = document.getElementsByClassName('diagram-scroll-view')[0];
+        host.addEventListener('contextmenu', function (event) {
+            var elements = Array.from(document.elementsFromPoint(e.clientX, e.clientY));
+            var currentNode = elements.find(function (item) { return item.classList.contains('node'); });
+            //We clicked on a node - showing custom context menu
+            if (currentNode) {
+                event.preventDefault();
+                var contextMenu = self.showHideContextMenu({ top: event.pageY, left: event.pageX })
+                contextMenu.dataset.nodeName = currentNode.dataset.nodeName;
+            }
+            //Otherwise we clicked somewhere else - let browser handle this click
+        });
+        window.addEventListener('click', function (event) {
+            if (self._isContextMenuDisplayed) {
+                var elements = Array.from(document.elementsFromPoint(e.clientX, e.clientY));
+                var menuItem = elements.find(function (item) { return item.classList.contains('context-menu-item'); });
+                //We clicked on one of the menu items
+                if (menuItem) {
+                    var action = menuItem.dataset.action;
+                    var nodeName = getContextMenu().dataset.nodeName;
+                    switch (action) {
+                        case 'add-child':
+                            $A.getCallback(function () {
+                                var cmpEvent = cmp.getEvent('childNodeCreationRequested');
+                                cmpEvent.setParams({ 'parentNodeName': nodeName });
+                                cmpEvent.fire();
+                            })();
+                            break;
+                        case 'delete':
+                            $A.getCallback(function () {
+                                var cmpEvent = $A.get('e.c:nodeDeletionRequestedEvent');
+                                cmpEvent.setParams({ 'node': _strategy.convertToNode(cmp.get('v.currentStrategy'), nodeName) });
+                                cmpEvent.fire();
+                            })();
+                            break;
+                        default:
+                            console.log('WARN: unknow action in node context menu - ' + action);
+                            break;
+                    }
+                }
+                self.showHideContextMenu();
+            }
+        });
+    },
+
+    initializeJsPlumb: function (cmp) {
+        var self = this;
+        var container = document.getElementsByClassName('diagram-container')[0];
+        jsPlumb.setContainer(container);
+        window.setTimeout($A.getCallback(function () {
+            self.rebuildStrategyDiagram(cmp, cmp.get('v.currentStrategy'));
+        }));
     },
     /** Removes all the diagram elements from the diagram container */
     clearDiagram: function () {
