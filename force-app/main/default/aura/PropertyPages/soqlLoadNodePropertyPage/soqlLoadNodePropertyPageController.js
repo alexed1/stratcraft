@@ -15,7 +15,7 @@
                 body.load();
             }],
             function (body) {
-                var expression = body.resolveSoqlExpression();
+                var expression = body.resolveExpression();
                 cmp.set('v.currentNode.soql', expression);
                 if (expression) {
                     cmp.set("v.shortenedSoql", expression.split('WHERE')[1].trim());

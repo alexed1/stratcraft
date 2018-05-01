@@ -27,12 +27,11 @@
     },
 
     resolveExpression: function (cmp, event, helper) {
-        self = this;
         var isBuilderMode = cmp.get('v.isBuilderMode');
 
         if (cmp.get("v.mode") == 'soql') {
             if (isBuilderMode)
-                return self.resolveSoqlExpression(cmp, event, helper);
+                return helper.resolveSoqlExpressionToCriteria(cmp);
             else
                 return cmp.get("v.soqlExpression");
         }
@@ -54,25 +53,6 @@
             return expression;
         } else {
             return cmp.get('v.expression');
-        }
-    },
-
-    resolveSoqlExpression: function (cmp, event, helper) {
-        var criteria = cmp.get('v.criteria');
-        if (!criteria || criteria.length === 0)
-            return null;
-        else {
-            var expression = 'SELECT Name, Description, ActionReference FROM Proposition WHERE ';
-            var whereStatement = criteria.map(function (item) {
-                if (item.objectName === '' || item.fieldName === '' || item.selectedOp === '' || item.value === '') {
-                    return null;
-                }
-                var operator = helper.unifyOperators(item.selectedOp);
-                return item.fieldName + ' ' + operator + ' ' + item.value;
-            }).filter(function (item) { return item; })
-                .join(' OR ');
-
-            return expression + whereStatement;
         }
     },
 

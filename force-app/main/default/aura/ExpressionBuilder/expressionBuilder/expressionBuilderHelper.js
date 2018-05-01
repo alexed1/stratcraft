@@ -62,11 +62,14 @@
         return result;
     },
 
-    convertOperatorToSoql: function () {
+    convertOperatorToSoql: function (cmp, op) {
         if (cmp.get("v.mode") == 'soql')
-            if (result == '==') //I guess all othere operators for soql are the same
-                result = '='
+            if (op == '==') //I guess all othere operators for soql are the same
+                op = '='
+
+        return op;
     },
+
     /**Converts a single subexpression into a criteria. Returns null of subexpression can't be converted */
     convertSubexpressionToCriteria: function (subexpression) {
         self = this;
@@ -112,7 +115,7 @@
         var isFailed = false;
 
         if (isSoqlMode)
-            result = self.buildCriteriaFromSoql(expression);
+            return self.buildCriteriaFromSoql(expression);
 
 
         var subexpressions = self.splitExpressionIntoSubexpressions(expression);
@@ -258,5 +261,25 @@
         cmp.set('v.availableObjects', allObjects);
         cmp.set('v.criteria', criteria);
         cmp.set('v.isLoading', false);
+    },
+
+    resolveSoqlExpressionToCriteria: function (cmp) {
+        var self = this;
+        var criteria = cmp.get('v.criteria');
+        if (!criteria || criteria.length === 0)
+            return null;
+        else {
+            var expression = 'SELECT Name, Description, ActionReference FROM Proposition WHERE ';
+            var whereStatement = criteria.map(function (item) {
+                if (item.objectName === '' || item.fieldName === '' || item.selectedOp === '' || item.value === '') {
+                    return null;
+                }
+                var operator = self.convertOperatorToSoql(cmp, self.unifyOperators(item.selectedOp));
+                return item.fieldName + ' ' + operator + ' ' + item.value;
+            }).filter(function (item) { return item; })
+                .join(' OR ');
+
+            return expression + whereStatement;
+        }
     }
 })
