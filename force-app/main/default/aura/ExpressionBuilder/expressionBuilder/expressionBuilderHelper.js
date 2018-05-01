@@ -25,41 +25,34 @@
 
     unifyOperators: function (op) {
         var trimmedOp = op.replace('&', '').replace(';', '').trim();
-        var result = '';
         switch (trimmedOp) {
             case 'eq':
             case '==':
             case '=':
-                result = '==';
-                break;
+                return '==';
+
             case 'nq':
             case '!=':
-                result = '!=';
-                break;
+                return '!=';
+
             case 'lt':
             case '<':
-                result = '<';
-                break;
+                return '<';
+
             case 'gt':
             case '>':
-                result = '>';
-                break;
+                return '>';
             case 'lte':
             case '=<':
-                result = '=<';
-                break;
+                return '=<';
             case 'gte':
             case '>=':
-                result = '>=';
-                break;
+                return '>=';
             case 'like':
-                result = 'like';
-                break;
+                return 'like';
             default:
                 throw new Error('Can\'t parse operator: ' + op);
         }
-
-        return result;
     },
 
     convertOperatorToSoql: function (cmp, op) {
