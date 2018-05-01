@@ -251,15 +251,15 @@
     );
   },
 
-  showNewNodeDialog: function (cmp, strategy, strategyNode) {
+  showNewNodeDialog: function (cmp, strategy, strategyNode, allowParentSelection) {
     var self = this;
     _modalDialog.show(
       'New Node Properties',
       ['c:basePropertyPage', function (body) {
         body.set('v.currentStrategy', strategy);
         body.set('v.currentNode', strategyNode);
-        body.set('v.showParent', false);
-        body.set('v.showNodeActions', false);
+        body.set('v.showParent', allowParentSelection);
+        body.set('v.showNodeActions', strategyNode.nodeName ? true : false);
         body.addEventHandler('propertyPageSaveRequest', function (event) {
           _modalDialog.close();
           var newNode = event.getParam('newNodeState');

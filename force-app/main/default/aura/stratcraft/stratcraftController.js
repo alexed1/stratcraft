@@ -47,7 +47,7 @@
                 helper.saveStrategy(cmp, originalNodeState, actualNodeState);
                 break;
             case 'addElement':
-                helper.showNewNodeDialog(cmp, cmp.get('v.currentStrategy'), { nodeType: _utils.NodeType.IF, description: '' });
+                helper.showNewNodeDialog(cmp, cmp.get('v.currentStrategy'), { nodeType: _utils.NodeType.IF, description: '' }, true);
                 break;
             case 'renameStrategy':
                 helper.showRenameStrategyDialog(cmp);
