@@ -11,7 +11,10 @@
         nodes = strategy.nodes;
         break;
       case _utils.NodeRequestType.IMMEDIATE_DESCENDANTS:
-        nodes = _strategy.getDirectChildrenNodes(strategy, nodeName);
+        //If node has no name it typically means that node doesn't exist yet, thus it won't have any descendants
+        if (nodeName) {
+          nodes = _strategy.getDirectChildrenNodes(strategy, nodeName);
+        }
         break;
       default:
         throw new Error('Node relationship type ' + nodeRelationship + ' is not yet supported');
@@ -40,13 +43,6 @@
     if (currentStrategy && currentStrategy.name === newStrategyName) {
       return;
     }
-
-    if (!currentStrategy) //if no strategy is selected by default load diagram view
-    {
-      cmp.set("v.isTreeView", '');
-      self.toggleView(cmp);
-    }
-
     //Here we should check with active view whether we can change selected strategy
     //Diagram view will always allow to select new strategy while tree view allows it only if there are no unsaved changes or user choses to save them
     var activeView = this.getActiveView(cmp);
@@ -234,7 +230,6 @@
     else {
       question = question + '?';
     }
-    question = question + ' This can\'t be undone';
     _modalDialog.show(
       'Confirm Node Deletion',
       ['c:modalWindowGenericBody', function (body) {
@@ -254,6 +249,29 @@
         });
       }
     );
+  },
+
+  showNewNodeDialog: function (cmp, strategy, strategyNode) {
+    var self = this;
+    _modalDialog.show(
+      'New Node Properties',
+      ['c:basePropertyPage', function (body) {
+        body.set('v.currentStrategy', strategy);
+        body.set('v.currentNode', strategyNode);
+        body.set('v.showParent', false);
+        body.set('v.showNodeActions', false);
+        body.addEventHandler('propertyPageSaveRequest', function (event) {
+          _modalDialog.close();
+          var newNode = event.getParam('newNodeState');
+          //We don't provide the old node because we intend to save the current one as a new
+          self.saveStrategy(cmp, null, newNode, function () {
+            var activeView = self.getActiveView(cmp);
+            if (activeView.selectNode) {
+              activeView.selectNode(newNode);
+            }
+          });
+        });
+      }]);
   },
 
   showNewStrategyDialog: function (cmp) {
@@ -323,22 +341,6 @@
 
         };
       });
-  },
-
-  showNewNodeDialog: function () {
-    _modalDialog.show(
-      'New Node',
-      'c:modalNewNodeBody',
-      function (bodyComponent) {
-        var newNodeEvent = $A.get('e.c:newNodeCreationRequestedEvent');
-        newNodeEvent.setParams({
-          'name': bodyComponent.get('v.name').trim(),
-          'nodeType': bodyComponent.get('v.selectedNodeType'),
-          'parentNodeName': bodyComponent.get('v.selectedParentNodeName')
-        });
-        newNodeEvent.fire();
-      },
-      function (bodyComponent) { return bodyComponent.validate(); });
   },
 
   showDeleteStrategyDialog: function (cmp) {

@@ -75,6 +75,6 @@
         <hr class="slds-m-vertical_x-small" />
         <c:treeView aura:id="treeView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}" />
         <c:diagramView aura:id="diagramView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}" 
-                       childNodeCreationRequested="{!c.handleNodeCreationRequested}" />
+                       childNodeCreationRequested="{!c.handleNewNodeCreationRequested}" nodeDeletionRequested="{!c.handleNodeDeletionRequested}" />
     </div>
 </aura:component>

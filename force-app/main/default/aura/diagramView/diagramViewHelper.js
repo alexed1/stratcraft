@@ -13,7 +13,7 @@
     },
 
     showHideContextMenu: function (position) {
-        var contextMenu = getContextMenu();
+        var contextMenu = this.getContextMenu();
         if (position) {
             contextMenu.style.top = position.top + 'px';
             contextMenu.style.left = position.left + 'px';
@@ -21,7 +21,7 @@
             contextMenu._isDisplayed = true;
         } else {
             contextMenu.style.display = 'none';
-            contextMenu._isDisplayed = false;
+            delete contextMenu._isDisplayed;
             delete contextMenu.dataset.nodeName;
         }
         return contextMenu;
@@ -31,24 +31,48 @@
         var self = this;
         var host = document.getElementsByClassName('diagram-scroll-view')[0];
         host.addEventListener('contextmenu', function (event) {
-            var elements = Array.from(document.elementsFromPoint(e.clientX, e.clientY));
+            var elements = Array.from(document.elementsFromPoint(event.clientX, event.clientY));
+            var diagramRect = document.getElementsByClassName('diagram-scroll-view')[0].getBoundingClientRect();
             var currentNode = elements.find(function (item) { return item.classList.contains('node'); });
             //We clicked on a node - showing custom context menu
             if (currentNode) {
                 event.preventDefault();
-                var contextMenu = self.showHideContextMenu({ top: event.pageY, left: event.pageX })
+                var menuItems = Array.from(host.getElementsByClassName('context-menu-item'));
+                //We need to enable/disable menu items depending on the node
+                //1. We can't delete root node
+                //2. 
+                menuItems.forEach(function (item) {
+                    //We can't add child to external connection node
+                    switch (item.dataset.action) {
+                        case 'add-child':
+                            item.classList.toggle('enabled', currentNode.dataset.nodeType !== _utils.NodeType.EXTERNAL_CONNECTION);
+                            break;
+                        case 'delete':
+                            item.classList.toggle('enabled', !currentNode.dataset.isRoot);
+                            break;
+                    }
+                });
+                var contextMenu = self.showHideContextMenu({ top: event.clientY - diagramRect.y, left: event.clientX - diagramRect.x })
                 contextMenu.dataset.nodeName = currentNode.dataset.nodeName;
             }
             //Otherwise we clicked somewhere else - let browser handle this click
+            else {
+                self.showHideContextMenu();
+            }
         });
         window.addEventListener('click', function (event) {
-            if (self._isContextMenuDisplayed) {
-                var elements = Array.from(document.elementsFromPoint(e.clientX, e.clientY));
+            var contextMenu = self.getContextMenu();
+            if (contextMenu._isDisplayed) {
+                var elements = Array.from(document.elementsFromPoint(event.clientX, event.clientY));
                 var menuItem = elements.find(function (item) { return item.classList.contains('context-menu-item'); });
                 //We clicked on one of the menu items
                 if (menuItem) {
+                    //If the menu item is not enabled, we ignore this click
+                    if (!menuItem.classList.contains('enabled')) {
+                        return;
+                    }
                     var action = menuItem.dataset.action;
-                    var nodeName = getContextMenu().dataset.nodeName;
+                    var nodeName = contextMenu.dataset.nodeName;
                     switch (action) {
                         case 'add-child':
                             $A.getCallback(function () {
@@ -59,13 +83,13 @@
                             break;
                         case 'delete':
                             $A.getCallback(function () {
-                                var cmpEvent = $A.get('e.c:nodeDeletionRequestedEvent');
+                                var cmpEvent = cmp.getEvent('nodeDeletionRequested');
                                 cmpEvent.setParams({ 'node': _strategy.convertToNode(cmp.get('v.currentStrategy'), nodeName) });
                                 cmpEvent.fire();
                             })();
                             break;
                         default:
-                            console.log('WARN: unknow action in node context menu - ' + action);
+                            console.log('WARN: unknown action in node context menu - ' + action);
                             break;
                     }
                 }
@@ -260,6 +284,7 @@
         var visualNode = document.createElement('div');
         visualNode.dataset.nodeName = treeLayoutNode.strategyNode.name;
         visualNode.dataset.nodeType = treeLayoutNode.strategyNode.nodeType;
+        visualNode.dataset.isRoot = treeLayoutNode.strategyNode.parentNodeName ? '' : 'true';
         var specificNodeClass = '';
         switch (treeLayoutNode.strategyNode.nodeType) {
             case _utils.NodeType.IF:

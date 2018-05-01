@@ -47,7 +47,7 @@
                 helper.saveStrategy(cmp, originalNodeState, actualNodeState);
                 break;
             case 'addElement':
-                helper.showNewNodeDialog();
+                helper.showNewNodeDialog(cmp, cmp.get('v.currentStrategy'), { nodeType: _utils.NodeType.IF, description: '' });
                 break;
             case 'renameStrategy':
                 helper.showRenameStrategyDialog(cmp);
@@ -74,31 +74,10 @@
     },
     /** Handles request for creation of a new node */
     handleNewNodeCreationRequested: function (cmp, event, helper) {
-        self = this;
-        //When user confirms creation of the new node the below flow occurs:
-        //1. newNodeCreationRequestedEvent is raised by the modal dialog
-        //2. stratcraft handles it and adds new node to the current strategy
-        //3. stratcraft then raise strategyChangedEvent
-        //4. tree component handles it and adds a new node to itself
-        //5. tree control raises a node selection event
-        var nodeName = event.getParam('name');
-        var nodeType = event.getParam('nodeType');
-        var parentNodeName = event.getParam('parentNodeName');
-        var strategy = cmp.get('v.currentStrategy');
-        if (!nodeName) {
-            return;
-        }
-        var newNode = {
-            name: nodeName,
-            parentNodeName: parentNodeName,
-            nodeType: nodeType,
+        helper.showNewNodeDialog(cmp, cmp.get('v.currentStrategy'), {
+            parentNodeName: event.getParam('parentNodeName'),
+            nodeType: event.getParam('nodeType') || _utils.NodeType.IF,
             description: ''
-        };
-        helper.saveStrategy(cmp, null, newNode, function () {
-            var activeView = helper.getActiveView(cmp);
-            if (activeView.selectNode) {
-                activeView.selectNode(nodeName);
-            }
         });
     },
     /** Handles request for related nodes, calculates the related nodes and pass it to the callback */

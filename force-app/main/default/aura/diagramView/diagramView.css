@@ -156,26 +156,28 @@
 .THIS .context-menu {
 	display: none;
 	position: absolute;
-	z-index: 1;
-	width: 120px;
+	background: white;
+	z-index: 10;
+	min-width: 140px;
 	-webkit-box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.2);
 	        box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.2);
 }
 
 .THIS .context-menu-options {
 	list-style: none;
-	z-index: 1;
-	padding-left: 10px;
 }
 
-.THIS .context-menu-item {
-	font-weight: 500;
-	z-index: 1;
-    font-size: 14px;
-    padding: 10px 40px 10px 20px;
+.THIS .context-menu-item {	
+	padding: 10px 40px 10px 20px;
+	color: gray;
 	cursor: pointer;	
 }
 
-.THIS .context-menu-item:hover {
+.THIS .context-menu-item.enabled {	
+	color: black;
+	font-weight: 500;
+}
+
+.THIS .context-menu-item.enabled:hover {
 	background: rgba(0, 0, 0, 0.2);
 }

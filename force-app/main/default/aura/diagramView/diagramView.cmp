@@ -13,6 +13,7 @@
 
     <aura:registerEvent name="strategyChanged" type="c:strategyChangedEvent" />
     <aura:registerEvent name="childNodeCreationRequested" type="c:newNodeCreationRequestedEvent" />
+    <aura:registerEvent name="nodeDeletionRequested" type="c:nodeDeletionRequestedEvent" />
 
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
     <aura:handler name="change" value="{!v.currentStrategy}" action="{!c.handleCurrentStrategyChanged}" />
@@ -23,13 +24,13 @@
         <aura:attribute name="reverseCallback" type="Object" />
     </aura:method>
    
-    <div class="diagram-scroll-view full-height slds-hide" aura:id="diagramView">
+    <div class="diagram-scroll-view full-height" aura:id="diagramView">
         <div class="diagram-container" aura:id="diagramContainer" />
         <div class="context-menu">
             <ul class="context-menu-options">
                 <li class="context-menu-item" data-action="add-child">Add Child Node</li>
                 <li class="context-menu-item" data-action="delete">Delete Node</li>
-            </ul>>
+            </ul>
         </div>
     </div>
 </aura:component>	
