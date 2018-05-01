@@ -15,9 +15,20 @@
     showHideContextMenu: function (position) {
         var contextMenu = this.getContextMenu();
         if (position) {
-            contextMenu.style.top = position.top + 'px';
-            contextMenu.style.left = position.left + 'px';
             contextMenu.style.display = 'block';
+            var host = document.getElementsByClassName('diagram-scroll-view')[0];
+            //Context menu will overflow to the right - move it to the left
+            if (contextMenu.clientWidth + position.left - host.scrollLeft >= host.clientWidth) {
+                contextMenu.style.left = (position.left - contextMenu.clientWidth) + 'px';
+            } else {
+                contextMenu.style.left = position.left + 'px';
+            }
+            //Context menu will overflow to the bottom - move it up
+            if (contextMenu.clientHeight + position.top - host.scrollTop >= host.clientHeight) {
+                contextMenu.style.top = (position.top - contextMenu.clientHeight) + 'px';
+            } else {
+                contextMenu.style.top = position.top + 'px';
+            }
             contextMenu._isDisplayed = true;
         } else {
             contextMenu.style.display = 'none';
@@ -32,7 +43,7 @@
         var host = document.getElementsByClassName('diagram-scroll-view')[0];
         host.addEventListener('contextmenu', function (event) {
             var elements = Array.from(document.elementsFromPoint(event.clientX, event.clientY));
-            var diagramRect = document.getElementsByClassName('diagram-scroll-view')[0].getBoundingClientRect();
+            var diagramRect = host.getBoundingClientRect();
             var currentNode = elements.find(function (item) { return item.classList.contains('node'); });
             //We clicked on a node - showing custom context menu
             if (currentNode) {
@@ -52,7 +63,7 @@
                             break;
                     }
                 });
-                var contextMenu = self.showHideContextMenu({ top: event.clientY - diagramRect.y, left: event.clientX - diagramRect.x })
+                var contextMenu = self.showHideContextMenu({ top: event.clientY - diagramRect.y + host.scrollTop, left: event.clientX - diagramRect.x + host.scrollLeft })
                 contextMenu.dataset.nodeName = currentNode.dataset.nodeName;
             }
             //Otherwise we clicked somewhere else - let browser handle this click
