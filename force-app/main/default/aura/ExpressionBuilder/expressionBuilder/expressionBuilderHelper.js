@@ -279,7 +279,10 @@
             }).filter(function (item) { return item; })
                 .join(' OR ');
 
-            return expression + whereStatement;
+            if (whereStatement && whereStatement.length > 0)
+                return expression + whereStatement;
+            else
+                return '';
         }
     }
 })
