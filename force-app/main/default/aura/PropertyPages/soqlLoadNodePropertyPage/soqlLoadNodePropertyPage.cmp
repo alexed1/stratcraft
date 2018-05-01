@@ -1,8 +1,10 @@
 <aura:component>
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}" />
     <aura:attribute name="currentNode" type="Object" />
-
+    <aura:attribute name="shortenedSoql" type="String" default="Configure" />
     <div class="slds-form-element">
-        <lightning:input aura:id="soql" label="SOQL" required="true" placeholder="SOQL should contain contain a Name, Description and ActionReference fields"
-            value="{!v.currentNode.soql}" messageWhenValueMissing="SOQL can't be empty" />
+        <lightning:button onclick="{!c.openExpressionBuilder}">
+            {!v.shortenedSoql}
+        </lightning:button>
     </div>
 </aura:component>

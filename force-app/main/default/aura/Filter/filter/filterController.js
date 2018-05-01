@@ -9,6 +9,7 @@
             'Expression Builder',
             ['c:expressionBuilder', function (body) {
                 body.set('v.expression', cmp.get('v.currentItem.expression'));
+                body.load();
             }],
             function (body) {
                 var expression = body.resolveExpression();

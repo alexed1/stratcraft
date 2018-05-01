@@ -1,5 +1,11 @@
 <aura:component controller="CriterionController">
+
+    <!-- either criteria or soqlexpression -->
+    <aura:attribute name="mode" type="String" default="expression" />
+
+
     <aura:attribute name="expression" type="String" />
+    <aura:attribute name="soqlExpression" type="String" />
     <aura:attribute name="criteria" type="List" />
     <aura:attribute name="isBuilderMode" type="Boolean" default="true" />
     <aura:attribute name="isLoading" type="Boolean" default="true" />
@@ -10,7 +16,11 @@
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
+
+
+    <aura:method name="load" action="{!c.load}" />
     <aura:method name="resolveExpression" action="{!c.resolveExpression}" />
+
     <aura:if isTrue="{!v.isLoading}">
         <p>Loading availabe objects and parsing expression...</p>
     </aura:if>
@@ -18,7 +28,8 @@
         <div class="criteria-list-container slds-p-horizontal_small ">
             <aura:iteration items="{!v.criteria}" var="item" indexVar="index">
                 <div class="slds-p-vertical_medium">
-                    <c:criterion index="{!index}" availableObjects="{!v.availableObjects}" value="{!item}" canRemove="{!v.criteria.length != 1}" />
+                    <c:criterion objectSelectable="{!v.mode != 'soql'}" index="{!index}" availableObjects="{!v.availableObjects}" value="{!item}"
+                        canRemove="{!v.criteria.length != 1}" />
                 </div>
             </aura:iteration>
         </div>
