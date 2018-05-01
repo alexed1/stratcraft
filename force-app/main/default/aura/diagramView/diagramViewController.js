@@ -1,6 +1,6 @@
 ({
     init: function (cmp, event, helper) {
-        helper.initializeJsPlumb(cmp);
+        helper.initialize(cmp);
     },
 
     handleCurrentStrategyChanged: function (cmp, event, helper) {

@@ -16,6 +16,8 @@
     <aura:attribute name="_isRecordJoin" type="Boolean" access="private" default="false" />
     <aura:attribute name="availableNodeTypes" type="List" />
     <aura:attribute name="availableParentNodes" type="List" />
+    <aura:attribute name="showParent" type="Boolean" default="True" />
+    <aura:attribute name="showNodeActions" type="Boolean" default="True" />
 
     <aura:handler name="change" value="{!v.currentStrategy}" action="{!c.handleStrategyChanged}" />
     <aura:handler name="change" value="{!v._currentNodeDirty.nodeType}" action="{!c.handleTypeChanged}" />
@@ -49,11 +51,13 @@
                                     disabled="{!v._isLastBranch}" onclick="{!c.handleBranchPriorityChange}" />
                             </div>
                         </aura:if>
-                        <div class="slds-col">
-                            <lightning:buttonMenu menuAlignment="right" iconName="utility:settings" alternativeText="Node Manages" onselect="{!c.handleNodeActions}">
-                                <lightning:menuItem label="Delete Node" value="delete" disabled="{!v.currentNode == null}" />
-                            </lightning:buttonMenu>
-                        </div>
+                        <aura:if isTrue="{!v.showNodeActions}">
+                            <div class="slds-col">
+                                <lightning:buttonMenu menuAlignment="right" iconName="utility:settings" alternativeText="Node Manages" onselect="{!c.handleNodeActions}">
+                                    <lightning:menuItem label="Delete Node" value="delete" disabled="{!v.currentNode == null}" />
+                                </lightning:buttonMenu>
+                            </div>
+                        </aura:if>
                     </div>
                 </div>
             </div>
@@ -69,15 +73,16 @@
             <ui:inputText aura:id="description" label="Description" class="field" value="{!v._currentNodeDirty.description}" disabled="{!v.currentNode == null}"
             />
         </div>
-
-        <div class="slds-form-element">
-            <lightning:select aura:id="parentNode" label="Parent Node" value="{!v._currentNodeDirty.parentNodeName}" class="select_box"
-                disabled="{!v.currentNode == null}">
-                <aura:iteration items="{!v.availableParentNodes}" var="item">
-                    <option value="{!item[0]}" text="{!item[1]}" selected="{!item[0] == v._currentNodeDirty.parentNodeName}" />
-                </aura:iteration>
-            </lightning:select>
-        </div>
+        <aura:if isTrue="{!v.showParent}">
+            <div class="slds-form-element">
+                <lightning:select aura:id="parentNode" label="Parent Node" value="{!v._currentNodeDirty.parentNodeName}" class="select_box"
+                    disabled="{!v.currentNode == null}">
+                    <aura:iteration items="{!v.availableParentNodes}" var="item">
+                        <option value="{!item[0]}" text="{!item[1]}" selected="{!item[0] == v._currentNodeDirty.parentNodeName}" />
+                    </aura:iteration>
+                </lightning:select>
+            </div>
+        </aura:if>
 
         <div class="slds-form-element">
             <lightning:select aura:id="nodeType" label="Node Type" value="{!v._currentNodeDirty.nodeType}" class="select_box" required="true"
