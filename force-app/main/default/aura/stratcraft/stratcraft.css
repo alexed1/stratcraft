@@ -12,6 +12,14 @@
 	font-size: 200%;
 }
 
+.THIS .m-vertical-align {
+	margin-bottom: 2px;
+}
+
+.THIS .m-top-align {
+	margin-top: -0.55rem;
+}
+
 .THIS.root {
 	height: 75vh;
 	display: -webkit-box;
