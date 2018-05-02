@@ -181,8 +181,17 @@
                             anchors: ['Right', 'Left'],
                             endpoint: ['Rectangle', { width: 48, height: 48, cssClass: 'hidden-overlay' }],
                             connector: 'Flowchart',
-                            paintStyle: { stroke: 'black', strokeWidth: 2 },
-                            overlays: [['Arrow', { width: 8, length: 8, location: 1, foldback: 1 }]]
+                            paintStyle: { stroke: '#919297', strokeWidth: 2 },
+                            overlays: [['Arrow', {
+                                width: 8,
+                                length: 8,
+                                location: 1,
+                                foldback: 1,
+                                paintStyle: {
+                                    stroke: '#919297',
+                                    fill: '#919297'
+                                }
+                            }]]
                         });
                         queue.push(childNodePair);
                         //We add label overlay to the source (child) endpoint

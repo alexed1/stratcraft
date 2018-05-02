@@ -41,7 +41,7 @@
         <c:metadataService/>
         <lightning:spinner aura:id="spinner" size="large" />
         <lightning:overlayLibrary aura:id="modalDialog" />
-        <div class="tool-bar">
+        <div class="tool-bar slds-m-bottom_xx-small">
             <div class="slds-grid-col slds-m-top_x-small">
                 <lightning:buttonMenu iconName="utility:settings" alternativeText="Settings" onselect="{!c.handleMenuSelect}">
                     <lightning:menuItem label="New Strategy" value="newStrategy" />
@@ -57,22 +57,21 @@
                     </aura:if>
                 </lightning:buttonMenu>
             </div>
-            <div class="slds-grid-col slds-m-horizontal_small">
+            <div class="slds-grid-col slds-m-left_x-small m-vertical-align">
                 <lightning:select name="strategySelect" label="Select a strategy:" aura:id="mySelect" value="{!v.selectedStrategyName}" class="select_box">
                     <aura:iteration items="{!v.strategyNames}" var="item">
                         <option text="{!item}" value="{!item}" selected="{!item==v.selectedStrategyName}" />
                     </aura:iteration>
                 </lightning:select>
             </div>
-            <lightning:button class="slds-m-horizontal_xx-small undo-redo-button slds-m-top_x-small" iconName="utility:undo" onclick="{!c.handleUndo}"
+            <lightning:button class="slds-m-left_x-small slds-m-right_xx-small undo-redo-button slds-m-top_x-small" iconName="utility:undo" onclick="{!c.handleUndo}"
                 disabled="{!not(v.canUndo)}" />
-            <lightning:button class="slds-m-horizontal_xx-small undo-redo-button slds-m-top_x-small" iconName="utility:redo" onclick="{!c.handleRedo}"
+            <lightning:button class="slds-m-left_x-small undo-redo-button slds-m-top_x-small" iconName="utility:redo" onclick="{!c.handleRedo}"
                 disabled="{!not(v.canRedo)}" />
-            <div class="slds-grid-col slds-m-horizontal_small">
+            <div class="slds-grid-col slds-m-left_x-small m-top-align">
                 <lightning:radioGroup name="viewRadioGroup" label="Display Mode" options="{!v.viewModes}" value="{!v.isTreeView}" />
             </div>
         </div>
-        <hr class="slds-m-vertical_x-small" />
         <c:treeView aura:id="treeView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}" />
         <c:diagramView aura:id="diagramView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}" 
                        childNodeCreationRequested="{!c.handleNewNodeCreationRequested}" nodeDeletionRequested="{!c.handleNodeDeletionRequested}" />

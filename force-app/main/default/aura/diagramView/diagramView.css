@@ -8,11 +8,12 @@
 	width: 100%;
 	padding: 10px;
 	overflow: auto;
-	border: solid 1px black;	
+	border: solid 1px lightgray;	
 	display: -webkit-box;	
 	display: -ms-flexbox;	
 	display: flex;
 	position: relative;
+	border-radius: 4px;
 	/*background-image: url(/resource/graphBackground);
 	background-attachment: local;*/
 }
@@ -29,10 +30,9 @@
 .THIS .node {
 	width: 48px;
 	height: 48px;
-	border-radius: 5px;
+	border-radius: 12px;
 	display: table;
 	position: absolute;
-	border: solid 1px dimgray;
 	cursor: pointer;
 }
 
@@ -89,13 +89,13 @@
 }
 
 .THIS .node.drop-target {
-	-webkit-box-shadow: 0px 0px 5px 3px gray;
-	        box-shadow: 0px 0px 5px 3px gray
+	-webkit-box-shadow: 0 0 0 2px white, 0 0 0 4px #FF9A3C;
+			box-shadow: 0 0 0 2px white, 0 0 0 4px #FF9A3C;
 }
 
 .THIS .node.active-drop-target {
-	-webkit-box-shadow: 0px 0px 5px 4px gold;
-	        box-shadow: 0px 0px 5px 4px gold;
+	-webkit-box-shadow: 0 0 0 2px white, 0 0 0 3px #0070D2, 0 0 6px 3px #0070D2;
+	        box-shadow: 0 0 0 2px white, 0 0 0 3px #0070D2, 0 0 6px 3px #0070D2;
 	-webkit-transform-origin: center;
 	        transform-origin: center;
 	-webkit-transform: scale(1.1);
@@ -120,36 +120,42 @@
 }
 
 .THIS .if-node {
+	background-color: orange;
 	background-image: url(/resource/ifNode);
 }
 
 .THIS .union-node {
+	background-color: orangered;
 	background-image: url(/resource/unionNode);
 }
 
 .THIS .soql-load-node {
+	background-color: pink;
 	background-image: url(/resource/loadSoqlNode);
 }
 
 .THIS .recommendation-limit-node {
+	background-color: green;
 	background-image: url(/resource/recommendationLimitNode);
 }
 
 .THIS .sort-node {
-	border-radius: 24px;
+	background-color: #fab9a5;
 	background-image: url(/resource/sortNode);
 }
 
 .THIS .external-node {
+	background-color: dodgerblue;
 	background-image: url(/resource/externalNode);
 }
 
 .THIS .record-join-node {
+	background-color: lightblue;
 	background-image: url(/resource/recordJoinNode);
 }
 
 .THIS .filter-node {
-	border-radius: 24px;
+	background-color: blue;
 	background-image: url(/resource/filterNode);
 }
 
