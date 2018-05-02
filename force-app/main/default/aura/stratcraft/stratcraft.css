@@ -12,158 +12,37 @@
 	font-size: 200%;
 }
 
+.THIS .m-vertical-align {
+	margin-bottom: 2px;
+}
+
+.THIS .m-top-align {
+	margin-top: -0.55rem;
+}
+
 .THIS.root {
 	height: 75vh;
+	display: -webkit-box;
+	display: -ms-flexbox;
 	display: flex;
-	flex-direction: column;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	    -ms-flex-direction: column;
+	        flex-direction: column;
 }
 
 .THIS .tool-bar {
+	display: -webkit-box;
+	display: -ms-flexbox;
 	display: flex;
-	align-items: center;
+	-webkit-box-align: center;
+	    -ms-flex-align: center;
+	        align-items: center;
 	min-height: 63px;
 }
 
-.THIS .full-height {
-	flex-grow: 1;
-}
-
-.THIS .diagram-scroll-view {
-	width: 100%;
-	padding: 10px;
-	overflow: auto;
-	border: solid 1px black;	
-	/*background-image: url(/resource/graphBackground);
-	background-attachment: local;*/
-}
-
-.THIS .diagram-container {
-	position: relative;
-	margin: auto;
-}
-
-.THIS .node-header {
-	border-bottom: solid 1px black;
-}
-
-.THIS .node {
-	width: 48px;
-	height: 48px;
-	border-radius: 5px;
-	display: table;
-	position: absolute;
-	border: solid 1px dimgray;
-	cursor: pointer;
-}
-
-.THIS .hidden-overlay {
-	opacity: 0;
-	z-index: -1;
-}
-
-.THIS .node-label {
-	opacity: 0.9;
-	width: 144px;
-	padding: 5px 10px;
-}
-
-.THIS .node-label-part {
-	height: 20px;
-}
-
-.THIS .node-label-tooltip {
-	position: relative;
-}
-
-.THIS .node-label-tooltip .node-label-tooltiptext {
-	opacity: 0;
-	background-color: black;
-	color: white;
-	padding: 5px;
-	border-radius: 5px;
-	position: absolute;
-	z-index: 1;
-	transition: opacity 0.5s;
-	transition-delay: .5s;
-}
-
-.THIS .node-label-tooltip:hover .node-label-tooltiptext {
-	opacity: 1;
-}
-
-.THIS .node-label-header {
-	font-weight: 600;
-}
-
-.THIS .node-label-body {
-	font-size: 0.9em
-}
-
-.THIS .node-label-part p {
-	text-align: center;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-}
-
-.THIS .node.drop-target {
-	box-shadow: 0px 0px 5px 3px gray
-}
-
-.THIS .node.active-drop-target {
-	box-shadow: 0px 0px 5px 4px gold;
-	transform-origin: center;
-	transform: scale(1.1);
-	z-index: 100;
-}
-
-.THIS .node-text {
-	display: table-cell;
-	font-size: 10px;
-	vertical-align: middle;
-	overflow-wrap: break-word;
-	word-wrap: break-word;
-	word-break: break-all;
-	text-align: center;
-	/* This is to make text undraggable */
-	-moz-user-select: -moz-none;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
-    -o-user-select: none;
-    user-select: none;
-}
-
-.THIS .if-node {
-	background-image: url(/resource/ifNode);
-}
-
-.THIS .union-node {
-	background-image: url(/resource/unionNode);
-}
-
-.THIS .soql-load-node {
-	background-image: url(/resource/loadSoqlNode);
-}
-
-.THIS .recommendation-limit-node {
-	background-image: url(/resource/recommendationLimitNode);
-}
-
-.THIS .sort-node {
-	border-radius: 24px;
-	background-image: url(/resource/sortNode);
-}
-
-.THIS .external-node {
-	background-image: url(/resource/externalNode);
-}
-
-.THIS .record-join-node {
-	background-image: url(/resource/recordJoinNode);
-}
-
-.THIS .filter-node {
-	border-radius: 24px;
-	background-image: url(/resource/filterNode);
+.THIS .undo-redo-button {
+	padding-left: 6px;
+	padding-right: 0px;
 }
 

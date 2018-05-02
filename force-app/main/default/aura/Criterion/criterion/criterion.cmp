@@ -4,6 +4,7 @@
     <aura:attribute name="index" type="Integer" />
     <aura:attribute name="canRemove" type="Boolean" />
     <aura:attribute name="availableObjects" type="List" />
+    <aura:attribute name="objectSelectable" type="Boolean" />
     <!--private-->
     <aura:attribute name="availableFields" type="List" />
 
@@ -16,39 +17,45 @@
     <aura:registerEvent name="addCriterion" type="c:criterionAddRequestEvent" />
 
     <div class="slds-grid slds-wrap slds-gutters">
-        <div class="slds-col slds-size_4-of-12">
-            <lightning:select label="Object" value="{!v.value.objectName}" onchange="{!c.handleObjectChange}">
-                    <aura:iteration items="{!v.availableObjects}" var="object">
-                        <option value="{!object.name}">{!object.label}</option>
-                    </aura:iteration>
-            </lightning:select>
-        </div>
+        <div class="slds-grid slds-col slds-size_12-of-12 slds-grid_vertical-align-center">
 
-        <div class="slds-col slds-size_8-of-12 slds-grid_vertical-align-center">
-            <div class="slds-float_right">
-                <div class="slds-grid">
-                    <div class="slds-col">
-                        <lightning:buttonIcon iconName="utility:add" alternativeText="Add" value="Add" onclick="{!c.handleAddSelect}" />
-                    </div>
-                    <aura:if isTrue="{!v.canRemove}">
-                        <div class="slds-col">
-                            <lightning:buttonIcon iconName="utility:delete" variant="border" onclick="{!c.handleDelete}" alternativeText="Delete value" />
-                        </div>
-                    </aura:if>
+
+
+            <div class="slds-col slds-size_8-of-12 slds-grow-none">
+                <aura:if isTrue='{!v.objectSelectable}'>
+                    <lightning:select label="Object" value="{!v.value.objectName}" onchange="{!c.handleObjectChange}">
+                        <aura:iteration items="{!v.availableObjects}" var="object">
+                            <option value="{!object.name}">{!object.label}</option>
+                        </aura:iteration>
+                    </lightning:select>
+                </aura:if>
+            </div>
+
+            <div class="slds-col slds-grid slds-size_4-of-12 slds-grid_align-end">
+                <div class="slds-m-horizontal_xx-small">
+                    <lightning:buttonIcon iconName="utility:add" alternativeText="Add" value="Add" onclick="{!c.handleAddSelect}" />
                 </div>
+                <aura:if isTrue="{!v.canRemove}">
+                    <div>
+                        <lightning:buttonIcon iconName="utility:delete" variant="border" onclick="{!c.handleDelete}" alternativeText="Delete value"
+                        />
+                    </div>
+                </aura:if>
             </div>
         </div>
 
         <div class="slds-col slds-grid slds-size_12-of-12">
             <div class="slds-col  slds-size_4-of-12">
-                <lightning:select aura:id="fieldSelect" value="{!v.value.fieldName}" disabled="{!v.value.objectName == ''}" label="Field" onchange="{!c.handleFieldChange}">
+                <lightning:select aura:id="fieldSelect" value="{!v.value.fieldName}" disabled="{!v.value.objectName == ''}" label="Field"
+                    onchange="{!c.handleFieldChange}">
                     <aura:iteration items="{!v.availableFields}" var="field">
                         <option value="{!field.name}">{!field.label}</option>
                     </aura:iteration>
                 </lightning:select>
             </div>
             <div class="slds-col  slds-size_4-of-12">
-                <lightning:select aura:id="opSelect" value="{!v.value.selectedOp}" label="Operator" disabled="{!v.value.fieldName == ''}" onchange="{!c.handleOperatorChange}">
+                <lightning:select aura:id="opSelect" value="{!v.value.selectedOp}" label="Operator" disabled="{!v.value.fieldName == ''}"
+                    onchange="{!c.handleOperatorChange}">
                     <aura:if isTrue="{!v.value.fieldName != ''}">
                         <option value="==">equals</option>
                         <option value="!=">not equal to</option>

@@ -33,12 +33,47 @@ window._strategy = (function () {
             if (index == -1) {
                 return false;
             }
+
+            //updating parent IF branch
+            var parentNode = this.getParentNode(strategy, node);
+            if (parentNode && parentNode.nodeType == _utils.NodeType.IF) {
+                if (parentNode.branches) {
+                    var branchIndex = parentNode.branches.findIndex(x => x.child == node.name);
+                    if (branchIndex >= 0)
+                        parentNode.branches.splice(branchIndex, 1);
+                }
+            }
+
             var children = this.getDirectChildrenNodes(strategy, node);
             strategy.nodes.splice(index, 1);
             children.forEach(function (item) {
                 self.deleteNode(strategy, item);
             })
+
             return true;
+        },
+        /** Returns all direct and indirect children nodes of the specified nodes. Returns empty array if specified node is a leaf node.
+         * Nodes are returned in BFS order
+         * @param {object} strategy - Strategy object
+         * @param {object/string} node - Node object that belongs to the strategy or node name
+         */
+        getAllChildrenNodes: function (strategy, node) {
+            node = this.convertToNode(strategy, node);
+            var result = [];
+            if (!node) {
+                return result;
+            }
+            var queue = [];
+            queue.push(node);
+            while (queue.length > 0) {
+                var parent = queue.pop();
+                var directChildren = this.getDirectChildrenNodes(strategy, parent);
+                directChildren.forEach(function (item) {
+                    queue.push(item);
+                    result.push(item);
+                });
+            }
+            return result;
         },
         /**Returns all direct children nodes of the specified node. Returns empty array if specified node is a leaf node 
          * @param {object} strategy - Strategy object
@@ -97,7 +132,7 @@ window._strategy = (function () {
             if (!strategy) {
                 throw new Error('Strategy can\'t be empty');
             }
-            console.log ("strategy.nodes is: " + strategy.nodes);
+            console.log("strategy.nodes is: " + strategy.nodes);
             var rootNode = strategy.nodes.filter(function (item) { return !item.parentNodeName; });
             if (rootNode.length == 0) {
                 throw new Error('Strategy doesn\'t contain a root node');

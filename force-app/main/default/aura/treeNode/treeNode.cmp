@@ -4,7 +4,10 @@
     <aura:attribute name="treeItems" type="List" />
 	<aura:attribute name="header" type="String" />
 
-    <lightning:tree items="{!v.treeItems}" header="{!v.header}" onselect="{!c.handleTreeSelect}"/>
+	<aura:registerEvent name="nodeSelected" type="c:treeNodeSelectedEvent" />
+
+	<lightning:tree items="{!v.treeItems}" header="{!v.header}" onselect="{!c.handleTreeSelect}"/>
+	
 
 	<aura:method name="renameNode" action="{!c.renameNode}" > 
 	    <aura:attribute name="curNode" type="Object" /> 

@@ -1,0 +1,189 @@
+.THIS.full-height {
+	-webkit-box-flex: 1;
+	    -ms-flex-positive: 1;
+	        flex-grow: 1;
+}
+
+.THIS.diagram-scroll-view {
+	width: 100%;
+	padding: 10px;
+	overflow: auto;
+	border: solid 1px lightgray;	
+	display: -webkit-box;	
+	display: -ms-flexbox;	
+	display: flex;
+	position: relative;
+	border-radius: 4px;
+	/*background-image: url(/resource/graphBackground);
+	background-attachment: local;*/
+}
+
+.THIS .diagram-container {
+	position: relative;
+	margin: auto;
+}
+
+.THIS .node-header {
+	border-bottom: solid 1px black;
+}
+
+.THIS .node {
+	width: 48px;
+	height: 48px;
+	border-radius: 12px;
+	display: table;
+	position: absolute;
+	cursor: pointer;
+}
+
+.THIS .hidden-overlay {
+	opacity: 0;
+	z-index: -1;
+}
+
+.THIS .node-label {
+	opacity: 0.9;
+	width: 144px;
+	padding: 5px 10px;
+}
+
+.THIS .node-label-part {
+	height: 20px;
+}
+
+.THIS .node-label-tooltip {
+	position: relative;
+}
+
+.THIS .node-label-tooltip .node-label-tooltiptext {
+	opacity: 0;
+	background-color: black;
+	color: white;
+	padding: 5px;
+	border-radius: 5px;
+	position: absolute;
+	z-index: 1;
+	-webkit-transition: opacity 0.5s;
+	transition: opacity 0.5s;
+	-webkit-transition-delay: .5s;
+	        transition-delay: .5s;
+}
+
+.THIS .node-label-tooltip:hover .node-label-tooltiptext {
+	opacity: 1;
+}
+
+.THIS .node-label-header {
+	font-weight: 600;
+}
+
+.THIS .node-label-body {
+	font-size: 0.9em
+}
+
+.THIS .node-label-part p {
+	text-align: center;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.THIS .node.drop-target {
+	-webkit-box-shadow: 0 0 0 2px white, 0 0 0 4px #FF9A3C;
+			box-shadow: 0 0 0 2px white, 0 0 0 4px #FF9A3C;
+}
+
+.THIS .node.active-drop-target {
+	-webkit-box-shadow: 0 0 0 2px white, 0 0 0 3px #0070D2, 0 0 6px 3px #0070D2;
+	        box-shadow: 0 0 0 2px white, 0 0 0 3px #0070D2, 0 0 6px 3px #0070D2;
+	-webkit-transform-origin: center;
+	        transform-origin: center;
+	-webkit-transform: scale(1.1);
+	        transform: scale(1.1);
+	z-index: 100;
+}
+
+.THIS .node-text {
+	display: table-cell;
+	font-size: 10px;
+	vertical-align: middle;
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+	word-break: break-all;
+	text-align: center;
+	/* This is to make text undraggable */
+	-moz-user-select: -moz-none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    -ms-user-select: none;
+	    user-select: none;
+}
+
+.THIS .if-node {
+	background-color: orange;
+	background-image: url(/resource/ifNode);
+}
+
+.THIS .union-node {
+	background-color: orangered;
+	background-image: url(/resource/unionNode);
+}
+
+.THIS .soql-load-node {
+	background-color: pink;
+	background-image: url(/resource/loadSoqlNode);
+}
+
+.THIS .recommendation-limit-node {
+	background-color: green;
+	background-image: url(/resource/recommendationLimitNode);
+}
+
+.THIS .sort-node {
+	background-color: #fab9a5;
+	background-image: url(/resource/sortNode);
+}
+
+.THIS .external-node {
+	background-color: dodgerblue;
+	background-image: url(/resource/externalNode);
+}
+
+.THIS .record-join-node {
+	background-color: lightblue;
+	background-image: url(/resource/recordJoinNode);
+}
+
+.THIS .filter-node {
+	background-color: blue;
+	background-image: url(/resource/filterNode);
+}
+
+.THIS .context-menu {
+	display: none;
+	position: absolute;
+	background: white;
+	z-index: 10;
+	min-width: 140px;
+	-webkit-box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.2);
+	        box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.2);
+}
+
+.THIS .context-menu-options {
+	list-style: none;
+}
+
+.THIS .context-menu-item {	
+	padding: 10px 20px;
+	color: gray;
+	cursor: pointer;	
+}
+
+.THIS .context-menu-item.enabled {	
+	color: black;
+	font-weight: 500;
+}
+
+.THIS .context-menu-item.enabled:hover {
+	background: rgba(0, 0, 0, 0.2);
+}

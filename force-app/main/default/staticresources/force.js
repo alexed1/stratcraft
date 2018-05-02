@@ -1,6 +1,6 @@
 window._force = (function () {
   return {
-    displayToast: function (title, message, type, timeout) {
+    displayToast: function (title, message, type, isSticky, timeout) {
       var toast = $A.get('e.force:showToast');
       // For lightning1 show the toast
       if (toast) {
@@ -9,7 +9,8 @@ window._force = (function () {
           'title': title,
           'message': message,
           'type': type || 'other',
-          'duration': timeout || 8000
+          'duration': timeout || 8000,
+          'mode': isSticky ? 'sticky' : 'dismissible'
         });
 
         toast.fire();
@@ -24,6 +25,10 @@ window._force = (function () {
       Action: {
         Question: 'action:question_post_action',
         Delete: 'action:delete'
+      },
+      Utility: {
+        Undo: 'utility:undo',
+        Redo: 'utility:redo'
       }
     }
   }

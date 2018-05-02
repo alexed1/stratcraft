@@ -1,13 +1,17 @@
 <aura:component>
-    <aura:attribute name="currentNode" type="Object" />
+	<aura:attribute name="currentNode" type="Object" />
 
- 	<lightning:input aura:id="type" label="type" required="false" 
-                     value="{!v.currentNode.type}"  />
+	<div class="slds-form-element">
+		<lightning:input aura:id="type" label="type" required="false" value="{!v.currentNode.type}" />
+	</div>
 
-	<lightning:input aura:id="action" label="Action Name" required="false" 
-	value="{!v.currentNode.action}"  />
+	<div class="slds-form-element">
+		<lightning:input aura:id="action" label="Action Name" required="false" value="{!v.currentNode.action}" />
+	</div>
 
- 	 <c:filterSet aura:id="filterSet" currentNode="{!v.currentNode}" title="ArgumentPairs" emptySetMessage="No argument pairs added yet" memberType="externalConnection"/>
+	<div class="slds-form-element">
+		<c:filterSet aura:id="filterSet" currentNode="{!v.currentNode}" title="ArgumentPairs" emptySetMessage="No argument pairs added yet"
+		 memberType="externalConnection" />
+	</div>
 
-
-</aura:component>	
+</aura:component>

@@ -1,26 +1,11 @@
 ({
-    handleTreeSelect: function (component, event, helper) {
-        var cmpEvent = $A.get("e.c:treeNodeSelectedEvent");
-        cmpEvent.setParams({
-            "name": event.getParam('name')
+    handleTreeSelect: function (cmp, event, helper) {
+        var nodeName = event.getParam('name');
+        var nodeSelectedEvent = cmp.getEvent('nodeSelected');
+        nodeSelectedEvent.setParams({
+            'name': nodeName
         });
-        cmpEvent.fire();
-    },
-
-    initializeTree: function (cmp, evt) {
-        console.log('initializing tree ');
-
-        var strategyXMLString = evt.getParam('arguments').strategyXMLString;
-        var action = cmp.get("c.generateTreeData");
-        action.setParams({ xml: strategyXMLString });
-        action.setCallback(this, function (response) {
-            var state = response.getState();
-            if (cmp.isValid() && state === "SUCCESS") {
-                var result = response.getReturnValue();
-                cmp.set("v.treeItems", JSON.parse(result));
-            }
-        });
-        $A.enqueueAction(action);
+        nodeSelectedEvent.fire();
     },
 
     renameNode: function (cmp, evt, helper) {
