@@ -8,10 +8,11 @@ public static Strategy strategyXMLToObject(String xml) {
 	return parsedStrategy;
 }
 
+@AuraEnabled
 public static String strategyJSONtoXML(String strategyJSON){
 	Strategy strategy = strategyJSONConverter.convertJsonToStrategy(strategyJSON);
 	try {
-		System.debug('Started persisting strategy ' + strategy.name);
+		System.debug('Started converting strategy ' + strategy.name + ' to XML');
 		String strategyXml = StrategyXmlConverter.convertStrategyToXml(strategy);
 		return strategyXml;
 	}

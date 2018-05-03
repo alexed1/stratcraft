@@ -37,6 +37,9 @@
             case 'importStrategy':
                 helper.showImportXMLDialog(cmp);
                 break;
+            case 'exportStrategy':
+                helper.exportStrategyXML(cmp);
+                break;
             case 'newStrategy':
                 helper.showNewStrategyDialog(cmp);
                 break;

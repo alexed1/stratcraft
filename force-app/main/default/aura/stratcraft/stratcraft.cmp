@@ -54,6 +54,7 @@
                         <lightning:menuItem label="Rename Strategy" value="renameStrategy" />
                         <lightning:menuItem label="Duplicate Strategy" value="copyStrategy" />
                         <lightning:menuItem label="Delete Strategy" value="deleteStrategy" />
+                        <lightning:menuItem label="Export Strategy to XML" value="exportStrategy" />
                     </aura:if>
                 </lightning:buttonMenu>
             </div>
