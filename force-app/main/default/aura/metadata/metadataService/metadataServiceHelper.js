@@ -73,41 +73,65 @@
     createOrUpdateStrategy: function (cmp, event, helper) {
         var self = this;
         self.ensureSessionIdIsLoaded(cmp, function () {
+            cmp.set("v.savingStatus", "saving changes...");
             var sessionId = cmp.get("v.sessionId");
             var callback = event.getParam('callback');
+            var isAsync = event.getParam('isAsync');
             cmp.set("v.callback", callback);
 
-            var action = {};
-
-            //was it pure XML or a JSON object?
             var strategy = event.getParam("strategy");
-            if (strategy) {
-                strategy = helper.sortNodes(strategy); //should we also sort nodes for XML?
-                action = cmp.get("c.createOrUpdateStrategyRequest");
-                action.setParams({ sessionId: sessionId, strategyJSON: JSON.stringify(strategy) });
-            }
-            else {
-                var strategyXML = event.getParam("strategyXML");
-                action = cmp.get("c.createOrUpdateStrategyFromXMLRequest");
-                action.setParams({ sessionId: sessionId, strategyXML: strategyXML });
-            }
+            var strategyXML = event.getParam("strategyXML");
 
-            action.setCallback(this, function (response) {
-                if (cmp.isValid() && response.getState() === "SUCCESS") {
-                    var id = response.getReturnValue();
-                    cmp.set("v.id", id);
-                    var pollingId = window.setInterval(
-                        $A.getCallback(function (callback) {
-                            helper.callDeployStatus(cmp, helper, true);
-                        }), 2000);
-                    cmp.set("v.pollingId", pollingId);
+            if (isAsync) {
+                var isSaveRunning = cmp.get("v.isSaveRunning");
+                if (isSaveRunning) {
+                    cmp.set("v.strategyForSaving", strategy);
+                    //this strategy saving will be called when previous saving has ended in callDeployStatus method 
                 }
                 else {
-                    callback({ error: response.getError()[0].message });
+                    cmp.set("v.isSaveRunning", true);
+                    helper.sendCreateOrUpdateRequest(cmp, helper, strategy, strategyXML, sessionId, callback, isAsync);
                 }
-            });
-            $A.enqueueAction(action);
+            }
+            else
+                helper.sendCreateOrUpdateRequest(cmp, helper, strategy, strategyXML, sessionId, callback, isAsync);
         });
+    },
+
+
+    sendCreateOrUpdateRequest: function (cmp, helper, strategy, strategyXML, sessionId, callback, isAsync) {
+        var action = {};
+
+        //was it a JSON object or a XML string?
+        if (strategy) {
+            strategy = helper.sortNodes(strategy);
+            action = cmp.get("c.createOrUpdateStrategyRequest");
+            action.setParams({ sessionId: sessionId, strategyJSON: JSON.stringify(strategy) });
+        }
+        else {
+            action = cmp.get("c.createOrUpdateStrategyFromXMLRequest");
+            action.setParams({ sessionId: sessionId, strategyXML: strategyXML });
+        }
+
+        action.setCallback(this, function (response) {
+            if (cmp.isValid() && response.getState() === "SUCCESS") {
+                var id = response.getReturnValue();
+                cmp.set("v.id", id);
+                var pollingId = window.setInterval(
+                    $A.getCallback(function (callback) {
+                        helper.callDeployStatus(cmp, helper, true, isAsync);
+                    }), 2000);
+                cmp.set("v.pollingId", pollingId);
+            }
+            else {
+                callback({ error: response.getError()[0].message });
+            }
+        });
+
+        $A.enqueueAction(action);
+
+        if (isAsync)
+            callback({});
     },
 
     deleteStrategy: function (cmp, event, helper) {
@@ -226,7 +250,7 @@
         $A.enqueueAction(action);
     },
 
-    callDeployStatus: function (cmp, helper, retrieveAffectedStrategy) {
+    callDeployStatus: function (cmp, helper, retrieveAffectedStrategy, isAsync) {
         var action = cmp.get("c.checkDeployStatusRequest");
         var id = cmp.get("v.id");
         var sessionId = cmp.get("v.sessionId");
@@ -237,9 +261,30 @@
             if (response.getState() === "SUCCESS") {
                 var retVal = response.getReturnValue();
                 if (retVal || !retrieveAffectedStrategy) {
-                    cmp.set("v.message", retVal);
                     window.clearInterval(pollingId);
-                    callback({ value: retVal });
+
+                    cmp.set("v.message", retVal);
+
+                    if (!isAsync)
+                        callback({ value: retVal });
+                    else {
+                        cmp.set("v.savingStatus", 'up-to-date');
+                        var pendingStrategy = cmp.get("v.strategyForSaving");
+                        if (pendingStrategy) {
+                            cmp.set("v.strategyForSaving", null);
+                            helper.sendCreateOrUpdateRequest(cmp, helper, pendingStrategy, null, sessionId, callback, isAsync);
+                        }
+                        else {
+                            cmp.set("v.isSaveRunning", false);
+                            //I think here might be a race condition, so let's check once again
+                            var pendingStrategy = cmp.get("v.strategyForSaving");
+                            if (pendingStrategy) {
+                                cmp.set("v.strategyForSaving", null);
+                                helper.sendCreateOrUpdateRequest(cmp, helper, pendingStrategy, null, sessionId, callback, isAsync);
+                            }
+
+                        }
+                    }
                 }
                 else {
                     //if the return value is null then it is still retrieving
@@ -248,7 +293,11 @@
             else {
                 window.clearInterval(pollingId);
                 _cmpUi.spinnerOff(cmp, "spinner");
-                callback({ error: response.getError()[0].message });
+                if (!isAsync)
+                    callback({ error: response.getError()[0].message });
+                else {
+                    //todo: inform of roll back
+                }
             }
 
         });
