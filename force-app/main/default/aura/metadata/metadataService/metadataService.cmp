@@ -14,6 +14,7 @@
     <aura:handler event="c:mdDeleteStrategyRequest" action="{!c.deleteStrategy}" />
     <aura:handler event="c:mdRenameStrategyRequest" action="{!c.renameStrategy}" />
     <aura:handler event="c:mdCopyStrategyRequest" action="{!c.copyStrategy}" />
+    <aura:handler event="c:mdConvertToXmlRequest" action="{!c.convertJsonToXml}" />
 
 
     <div>

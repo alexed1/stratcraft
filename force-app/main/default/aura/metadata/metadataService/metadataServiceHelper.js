@@ -26,6 +26,23 @@
         });
     },
 
+    convertJsonToXml: function (cmp, strategyJson, callback) {
+        var action = cmp.get('c.strategyJSONtoXML');
+        action.setParams({ strategyJSON: strategyJson });
+        action.setCallback(this, function (response) {
+            var isSuccess = true;
+            var result = '';
+            if (response.getState() === 'SUCCESS') {
+                result = response.getReturnValue();
+            } else {
+                isSuccess = false;
+                result = response.getError()[0].message
+            }
+            callback(isSuccess, result);
+        });
+        $A.enqueueAction(action);
+    },
+
     getStrategy: function (cmp, event, helper) {
         var self = this;
         self.ensureSessionIdIsLoaded(cmp, function () {

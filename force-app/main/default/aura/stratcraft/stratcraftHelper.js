@@ -309,6 +309,28 @@
       }, null, null, 'narrowpopoverclass');
   },
 
+  exportStrategyXML: function (cmp) {
+    var cmpEvent = $A.get('e.c:mdConvertToXmlRequest');
+    var currentStrategy = cmp.get('v.currentStrategy');
+    cmpEvent.setParams({
+      'strategyJson': JSON.stringify(currentStrategy),
+      'callback': function (isSuccess, text) {
+        if (isSuccess) {
+          var element = document.createElement('a');
+          element.setAttribute('href', 'data:text/xml;charset=utf-8,' + encodeURIComponent(text));
+          element.setAttribute('download', currentStrategy.name + '.xml');
+          element.style.display = 'none';
+          document.body.appendChild(element);
+          element.click();
+          document.body.removeChild(element);
+        } else {
+          _force.displayToast('Strategy Crafter', 'Strategy export failed ' + text, 'Error', true);
+        }
+      }
+    });
+    cmpEvent.fire();
+  },
+
   showImportXMLDialog: function (cmp) {
     var self = this;
     _modalDialog.show(
