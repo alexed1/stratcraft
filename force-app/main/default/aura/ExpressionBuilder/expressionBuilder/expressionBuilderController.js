@@ -3,7 +3,7 @@
         //actual loading is moved to aura:method, so it can be called externally after all attributes are set
     },
 
-    swithModes: function (cmp, event, helper) {
+    switchModes: function (cmp, event, helper) {
         var isBuilderMode = cmp.get('v.isBuilderMode');
         if (isBuilderMode) {
             var expression = helper.resolveExpression(cmp);
