@@ -3,6 +3,31 @@
         //actual loading is moved to aura:method, so it can be called externally after all attributes are set
     },
 
+    swithModes: function (cmp, event, helper) {
+        var isBuilderMode = cmp.get('v.isBuilderMode');
+        if (isBuilderMode) {
+            var expression = helper.resolveExpression(cmp);
+            cmp.set('v.expression', expression);
+            cmp.set('v.isBuilderMode', false);
+        } else {
+            var criteria = helper.initExpressionBuilder(cmp, cmp.get('v.availableObjects'));
+            if (criteria) {
+                cmp.set('v.isBuilderMode', true);
+            } else {
+                var overlay = cmp.find('popover');
+                overlay.showCustomPopover({
+                    body: 'The expression can\'t be parsed. Please fix the errors and try again',
+                    referenceSelector: '.popover-host',
+                    cssClass: "slds-popover,slds-p-around_x-small"
+                }).then(function (overlay) {
+                    setTimeout(function () {
+                        overlay.close();
+                    }, 1500);
+                });
+            }
+        }
+    },
+
     load: function (cmp, event, helper) {
         if (cmp.get("v.mode") == 'soql') {
             //probably due to special permissions Proposition object is not present in objects that you can retrieve 
@@ -27,33 +52,7 @@
     },
 
     resolveExpression: function (cmp, event, helper) {
-        var isBuilderMode = cmp.get('v.isBuilderMode');
-
-        if (cmp.get("v.mode") == 'soql') {
-            if (isBuilderMode)
-                return helper.resolveSoqlExpressionToCriteria(cmp);
-            else
-                return cmp.get("v.soqlExpression");
-        }
-
-        if (isBuilderMode) {
-            var criteria = cmp.get('v.criteria');
-            if (!criteria || criteria.length === 0) {
-                return 'true';
-            }
-            var expression = criteria.map(function (item) {
-                if (item.objectName === '' || item.fieldName === '' || item.selectedOp === '' || item.value === '') {
-                    return null;
-                }
-                var operator = helper.unifyOperators(item.selectedOp);
-                return '$Record.' + item.objectName + '.' + item.fieldName + ' ' + operator + ' ' + item.value;
-            }).filter(function (item) { return item; })
-                .join(' && ');
-
-            return expression;
-        } else {
-            return cmp.get('v.expression');
-        }
+        return helper.resolveExpression(cmp);
     },
 
     handleCriterionDelete: function (cmp, event, helper) {
@@ -61,7 +60,6 @@
         var index = event.getParam('index');
         criteria.splice(index, 1);
         cmp.set('v.criteria', criteria);
-        helper.updateExpression(cmp, event, helper);
     },
 
     //inserts empty criterion object at specified index

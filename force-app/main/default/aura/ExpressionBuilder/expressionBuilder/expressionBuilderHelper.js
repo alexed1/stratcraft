@@ -157,13 +157,6 @@
         return result;
     },
 
-    //called when one of criterion value changes
-    updateExpression: function (cmp, event, helper) {
-        var criteria = cmp.get('v.criteria');
-        var result = criteria.map(function (item) { item.criterionValue; }).join(' ');
-        cmp.set('v.expression', result);
-    },
-
     insertMissingFieldsAndObjects: function (criteria, allObjects) {
         criteria.forEach(function (criteriaItem) {
             var existingObject = allObjects.filter(function (item) {
@@ -199,24 +192,16 @@
         var helper = this;
 
         var isSoqlMode = cmp.get('v.mode') == 'soql';
-        if (isSoqlMode)
-            var expression = cmp.get('v.soqlExpression');
-        else
-            var expression = cmp.get('v.expression');
+        var expression = cmp.get('v.expression');
 
         var criteria = [];
         if (expression) {
             criteria = helper.rebuildCriteriaFromExpression(expression, isSoqlMode);
             //If expression can't be parse then criteria will be null
             if (!criteria) {
-
-                //this is really bad. We have an expression, but can't parse it.
-                //I think we should throw an error
-                throw Error('We couldn\'t parse an expression');
-
                 cmp.set('v.isBuilderMode', false);
                 cmp.set('v.isLoading', false);
-                return;
+                return null;
             }
 
             //This is to make sure, that if criteria object or its field don't exist in current org, then we add them to the list
@@ -236,6 +221,10 @@
         //sort all objects by name ascending and add empty object
         var emptySelectionObject = { name: '', label: '--None--' };
         allObjects.forEach(function (item) {
+            //This is to handle '--None--' item
+            if (!item.fields) {
+                return;
+            }
             item.fields.sort(function (x, y) {
                 return x.label.localeCompare(y.label);
             });
@@ -244,19 +233,39 @@
         allObjects.sort(function (x, y) {
             return x.label.localeCompare(y.label);
         });
-        allObjects.splice(0, 0, emptySelectionObject);
+        if (allObjects.length === 0 || allObjects[0].name !== '') {
+            allObjects.splice(0, 0, emptySelectionObject);
+        }
 
         //preselect selectedObject to be Proposition if we are talking about soql expression
-        if (cmp.get("v.mode") == 'soql') {
+        if (cmp.get('v.mode') == 'soql') {
             criteria[0].objectName = 'Proposition';
         }
 
         cmp.set('v.availableObjects', allObjects);
         cmp.set('v.criteria', criteria);
         cmp.set('v.isLoading', false);
+        return criteria;
     },
 
-    resolveSoqlExpressionToCriteria: function (cmp) {
+    resolveBuilderExpression: function (cmp) {
+        var self = this;
+        var criteria = cmp.get('v.criteria');
+        if (!criteria || criteria.length === 0) {
+            return 'true';
+        }
+        var expression = criteria.map(function (item) {
+            if (item.objectName === '' || item.fieldName === '' || item.selectedOp === '' || item.value === '') {
+                return null;
+            }
+            var operator = self.unifyOperators(item.selectedOp);
+            return '$Record.' + item.objectName + '.' + item.fieldName + ' ' + operator + ' ' + item.value;
+        }).filter(function (item) { return item; })
+            .join(' && ');
+        return expression;
+    },
+
+    resolveSoqlExpression: function (cmp) {
         var self = this;
         var criteria = cmp.get('v.criteria');
         if (!criteria || criteria.length === 0)
@@ -276,6 +285,18 @@
                 return expression + whereStatement;
             else
                 return '';
+        }
+    },
+
+    resolveExpression: function (cmp) {
+        var isBuilderMode = cmp.get('v.isBuilderMode');
+        if (isBuilderMode) {
+            if (cmp.get('v.mode') == 'soql') {
+                return this.resolveSoqlExpression(cmp);
+            }
+            return this.resolveBuilderExpression(cmp);
+        } else {
+            return cmp.get('v.expression');
         }
     }
 })
