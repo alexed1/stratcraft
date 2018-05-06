@@ -10,24 +10,23 @@ public with sharing class RecordJoinNodeXmlConverter extends BaseNodeXmlConverte
 
         for (Dom.XMLNode child : node.getChildElements()) {
             String childName = child.getName();
-
-
+            String value = child.getText();
+            value = String.isBlank(value) ? '' : value.unescapeXml();
             if (childName == 'field') {
-                result.field = child.getText();
+                result.field = value;
             } else 
             if (childName == 'object') {
-                result.incomingObject = child.getText();
+                result.incomingObject = value;
             } else
             if (childName == 'filterColumn') {
-                result.filterColumn = child.getText();
+                result.filterColumn = value;
             } else
             if (childName == 'filterValue') {
-                result.filterValue = child.getText();
+                result.filterValue = value;
             } else
             if (childName == 'joinColumn') {
-                result.joinColumn = child.getText();
-            } 
-
+                result.joinColumn = value;
+            }
         }     
         return result;
     }
@@ -42,11 +41,11 @@ public with sharing class RecordJoinNodeXmlConverter extends BaseNodeXmlConverte
 
         RecordJoinNode actualNode = (RecordJoinNode)node;
 
-        result.addChildElement('field', null, null).addTextNode(actualNode.field == null ? '' : actualNode.field);
-		result.addChildElement('object', null, null).addTextNode(actualNode.incomingObject == null ? '' : actualNode.incomingObject);
-		result.addChildElement('filterValue', null, null).addTextNode(actualNode.filterValue == null ? '' : actualNode.filterValue);
-		result.addChildElement('filterColumn', null, null).addTextNode(actualNode.filterColumn == null ? '' : actualNode.filterColumn);
-		result.addChildElement('joinColumn', null, null).addTextNode(actualNode.joinColumn == null ? '' : actualNode.joinColumn);
+        result.addChildElement('field', null, null).addTextNode(actualNode.field == null ? '' : actualNode.field.escapeXml());
+		result.addChildElement('object', null, null).addTextNode(actualNode.incomingObject == null ? '' : actualNode.incomingObject.escapeXml());
+		result.addChildElement('filterValue', null, null).addTextNode(actualNode.filterValue == null ? '' : actualNode.filterValue.escapeXml());
+		result.addChildElement('filterColumn', null, null).addTextNode(actualNode.filterColumn == null ? '' : actualNode.filterColumn.escapeXml());
+		result.addChildElement('joinColumn', null, null).addTextNode(actualNode.joinColumn == null ? '' : actualNode.joinColumn.escapeXml());
 
         return result;
     }

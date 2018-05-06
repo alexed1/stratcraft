@@ -13,21 +13,21 @@ public with sharing class ExternalConnectionNodeXmlConverter extends BaseNodeXml
 
             if (childName == 'argument') {
                 ArgumentPair argPair = new ArgumentPair();
-                argPair.name = child.getChildElement('name', xmlNamespace).getText();
-                argPair.value = child.getChildElement('value', xmlNamespace).getText();
+                argPair.name = child.getChildElement('name', xmlNamespace).getText().unescapeXml();
+                String argValueText = child.getChildElement('value', xmlNamespace).getText(); 
+                argPair.value = argValueText == null ? '' : argValueText.unescapeXml();
                 result.argPairs.Add(argPair);
             }
 
             if (childName == 'type') {
-                result.type = child.getText();
+                String type = child.getText();
+                result.type = type == null ? '' : type.unescapeXml();
             }
             if (childName == 'action') {
-                result.action = child.getText();
+                String action = child.getText();
+                result.action = action == null ? '' : action.unescapeXml();
             }
-           
-
-
-           System.debug('in ExternalConnectionNodeXmlConverter child loop result is:' + result);
+            System.debug('in ExternalConnectionNodeXmlConverter child loop result is:' + result);
 
         }     
 
@@ -79,18 +79,15 @@ public with sharing class ExternalConnectionNodeXmlConverter extends BaseNodeXml
         } else {
            for (ArgumentPair argPair : actualNode.argPairs) {
             Dom.XmlNode argumentNode = result.addChildElement('argument', null, null);
-            argumentNode.addChildElement('name', null, null).addTextNode(argPair.name);
-            argumentNode.addChildElement('value', null, null).addTextNode(argPair.value == null ? '' : argPair.value);
+            argumentNode.addChildElement('name', null, null).addTextNode(argPair.name == null ? '' : argPair.name.escapeXml());
+            argumentNode.addChildElement('value', null, null).addTextNode(argPair.value == null ? '' : argPair.value.escapeXml());
            }
-        }
-
-        
+        }        
         
         System.debug('actualNode.argPairs is: ' + actualNode.argPairs);
         System.debug('actualNode.argPairs.size() is: ' + actualNode.argPairs.size());
-        result.addChildElement('action', null, null).addTextNode(actualNode.action);
-        result.addChildElement('type', null, null).addTextNode(actualNode.type);
-        
+        result.addChildElement('action', null, null).addTextNode(actualNode.action == null ? '' : actualNode.action.escapeXml());
+        result.addChildElement('type', null, null).addTextNode(actualNode.type == null ? '' : actualNode.type.escapeXml());        
   
         //the BaseNode adds a ParentNode element because when it was built, all nodes have one. But this node does not, so remove it
         Dom.XmlNode superfluousParent = result.getChildElement('parentNode',null);

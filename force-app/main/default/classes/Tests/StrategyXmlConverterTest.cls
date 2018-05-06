@@ -1,5 +1,6 @@
 @isTest
 public class StrategyXmlConverterTest {
+    //XML-to-Strategy
     @isTest
     public static void convertXmlToStrategy_WhenXmlIsInvalid_Fails() {
         Strategy strategy = StrategyXmlConverter.convertXmlToStrategy(FixturesXml.InvalidStrategyXml);
@@ -78,6 +79,32 @@ public class StrategyXmlConverterTest {
         System.assertEquals(1, strategy.nodes.size(), 'Strategy must contain one node');
         UnionNode node = (UnionNode)strategy.nodes[0];
         System.assert(node.removeDuplicates, '"Remove duplicates" field value mismatches');
+    }
+
+    @isTest
+    public static void convertXmlToStrategy_Always_UnescapesXmlSymbols() {
+        Strategy strategy = StrategyXmlConverter.convertXmlToStrategy(FixturesXml.SpecialSymbolsStrategyXml);
+        System.assertEquals('<>&"\'', strategy.name);
+        System.assertEquals('<>&"\'', strategy.masterLabel);
+        System.assertEquals('<>&"\'', strategy.description);
+    }
+
+    //Strategy-to-XML
+
+    @isTest
+    public static void convertStrategyToXml_Always_EscapesXmlSymbols() {
+        String xml = StrategyXmlConverter.convertStrategyToXml(FixturesStrategy.SpecialSymbolsStrategy());
+        Dom.Document document = new Dom.Document();
+        document.load(xml);
+        Dom.XmlNode root = document.getRootElement();
+        String xmlNamespace = 'http://soap.sforce.com/2006/04/metadata';
+        Dom.XmlNode name = root.getChildElement('recommendationStrategyName', xmlNamespace);
+        System.assertEquals('&lt;&gt;&amp;&quot;&apos;', name.getText(), 'Name of the strategy mismatches');
+        Dom.XmlNode description = root.getChildElement('description', xmlNamespace);
+        System.assertEquals('&lt;&gt;&amp;&quot;&apos;', description.getText(), 'Description of the strategy mismatches');
+        Dom.XmlNode masterLabel = root.getChildElement('masterLabel', xmlNamespace);
+        System.assertEquals('&lt;&gt;&amp;&quot;&apos;', masterLabel.getText(), 'Master Label of the strategy mismatches');
+
     }
 
     @isTest
