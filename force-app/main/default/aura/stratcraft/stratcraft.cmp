@@ -37,6 +37,9 @@
     <aura:handler event="c:nodeDataRequestEvent" action="{!c.handleNodeDataRequest}" />
     <aura:handler event="c:newNodeCreationRequestedEvent" action="{!c.handleNewNodeCreationRequested}" />
 
+    <aura:handler name="mdStrategyRollbackRequest" event="c:mdStrategyRollbackRequest" action="{!c.handleStrategyRollbackRequest}"
+    />
+
     <div class="slds-card slds-p-around_small root">
         <lightning:spinner aura:id="spinner" size="large" />
         <lightning:overlayLibrary aura:id="modalDialog" />

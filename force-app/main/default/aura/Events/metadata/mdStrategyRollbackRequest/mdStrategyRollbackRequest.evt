@@ -1,3 +1,4 @@
-<aura:event type="APPLICATION" description="Event template">
-    <aura:attribute name="strategy" type="Object" />
+<aura:event type="COMPONENT" description="event fired by metadata service to stratecraft component ">
+    <aura:attribute name="strategyName" type="String" />
+    <aura:attribute name="error" type="String" />
 </aura:event>

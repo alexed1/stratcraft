@@ -48,19 +48,16 @@
         self.ensureSessionIdIsLoaded(cmp, function () {
             var sessionId = cmp.get("v.sessionId");
             var callback = event.getParam('callback');
-            cmp.set("v.callback", callback);
             var strategyName = event.getParam("strategyName");
             var action = cmp.get("c.getStrategyRequest");
             action.setParams({ sessionId: sessionId, strategyName: strategyName });
             action.setCallback(this, function (response) {
                 if (cmp.isValid() && response.getState() === "SUCCESS") {
                     var id = response.getReturnValue();
-                    cmp.set("v.id", id);
                     var pollingId = window.setInterval(
-                        $A.getCallback(function (callback) {
-                            helper.callRetrievalStatus(cmp, helper);
+                        $A.getCallback(function () {
+                            helper.callRetrievalStatus(cmp, helper, sessionId, id, callback, pollingId);
                         }), 2000);
-                    cmp.set("v.pollingId", pollingId);
                 }
                 else {
                     callback({ error: response.getError()[0].message });
@@ -77,7 +74,6 @@
             var sessionId = cmp.get("v.sessionId");
             var callback = event.getParam('callback');
             var isAsync = event.getParam('isAsync');
-            cmp.set("v.callback", callback);
 
             var strategy = event.getParam("strategy");
             var strategyXML = event.getParam("strategyXML");
@@ -85,7 +81,7 @@
             if (isAsync) {
                 var isSaveRunning = cmp.get("v.isSaveRunning");
                 if (isSaveRunning) {
-                    cmp.set("v.strategyForSaving", strategy);
+                    helper.setStrategyInQueueForSaving(cmp, strategy.name, strategy);
                     //this strategy saving will be called when previous saving has ended in callDeployStatus method 
                 }
                 else {
@@ -116,12 +112,11 @@
         action.setCallback(this, function (response) {
             if (cmp.isValid() && response.getState() === "SUCCESS") {
                 var id = response.getReturnValue();
-                cmp.set("v.id", id);
                 var pollingId = window.setInterval(
-                    $A.getCallback(function (callback) {
-                        helper.callDeployStatus(cmp, helper, true, isAsync);
+                    $A.getCallback(function () {
+                        var strategyName = strategy ? strategy.name : null;
+                        helper.callDeployStatus(cmp, helper, true, isAsync, sessionId, id, callback, pollingId, strategyName);
                     }), 2000);
-                cmp.set("v.pollingId", pollingId);
             }
             else {
                 callback({ error: response.getError()[0].message });
@@ -139,19 +134,16 @@
         self.ensureSessionIdIsLoaded(cmp, function () {
             var sessionId = cmp.get("v.sessionId");
             var callback = event.getParam('callback');
-            cmp.set("v.callback", callback);
             var strategyName = event.getParam("strategyName");
             var action = cmp.get("c.deleteStrategyRequest");
             action.setParams({ sessionId: sessionId, strategyName: strategyName });
             action.setCallback(this, function (response) {
                 if (cmp.isValid() && response.getState() === "SUCCESS") {
                     var id = response.getReturnValue();
-                    cmp.set("v.id", id);
                     var pollingId = window.setInterval(
-                        $A.getCallback(function (callback) {
-                            helper.callDeployStatus(cmp, helper, false);
+                        $A.getCallback(function () {
+                            helper.callDeployStatus(cmp, helper, false, false, sessionId, id, callback, pollingId);
                         }), 2000);
-                    cmp.set("v.pollingId", pollingId);
                 }
                 else {
                     callback({ error: response.getError()[0].message });
@@ -166,7 +158,6 @@
         self.ensureSessionIdIsLoaded(cmp, function () {
             var sessionId = cmp.get("v.sessionId");
             var callback = event.getParam('callback');
-            cmp.set("v.callback", callback);
             var strategy = event.getParam("strategy");
             var newStrategyName = event.getParam("newStrategyName");
             var action = cmp.get("c.renameStrategyRequest");
@@ -174,12 +165,10 @@
             action.setCallback(this, function (response) {
                 if (cmp.isValid() && response.getState() === "SUCCESS") {
                     var id = response.getReturnValue();
-                    cmp.set("v.id", id);
                     var pollingId = window.setInterval(
-                        $A.getCallback(function (callback) {
-                            helper.callDeployStatus(cmp, helper, true);
+                        $A.getCallback(function () {
+                            helper.callDeployStatus(cmp, helper, true, false, sessionId, id, callback, pollingId);
                         }), 2000);
-                    cmp.set("v.pollingId", pollingId);
                 }
                 else {
                     callback({ error: response.getError()[0].message });
@@ -194,7 +183,6 @@
         self.ensureSessionIdIsLoaded(cmp, function () {
             var sessionId = cmp.get("v.sessionId");
             var callback = event.getParam('callback');
-            cmp.set("v.callback", callback);
             var strategy = event.getParam("strategy");
             var newStrategyName = event.getParam("newStrategyName");
             var action = cmp.get("c.copyStrategyRequest");
@@ -202,12 +190,10 @@
             action.setCallback(this, function (response) {
                 if (cmp.isValid() && response.getState() === "SUCCESS") {
                     var id = response.getReturnValue();
-                    cmp.set("v.id", id);
                     var pollingId = window.setInterval(
-                        $A.getCallback(function (callback) {
-                            helper.callDeployStatus(cmp, helper, true);
+                        $A.getCallback(function () {
+                            helper.callDeployStatus(cmp, helper, true, false, sessionId, id, callback, pollingId);
                         }), 2000);
-                    cmp.set("v.pollingId", pollingId);
                 }
                 else {
                     callback({ error: response.getError()[0].message });
@@ -219,18 +205,13 @@
 
     //################################
 
-    callRetrievalStatus: function (cmp, helper) {
+    callRetrievalStatus: function (cmp, helper, sessionId, id, callback, pollingId) {
         var action = cmp.get("c.checkRetrievalStatusRequest");
-        var id = cmp.get("v.id");
-        var sessionId = cmp.get("v.sessionId");
-        var pollingId = cmp.get("v.pollingId");
-        var callback = cmp.get("v.callback");
         action.setParams({ sessionId: sessionId, id: id });
         action.setCallback(this, function (response) {
             if (response.getState() === "SUCCESS") {
                 var retVal = response.getReturnValue();
                 if (retVal) {
-                    cmp.set("v.message", retVal);
                     window.clearInterval(pollingId);
                     callback({ value: retVal });
                 }
@@ -250,12 +231,22 @@
         $A.enqueueAction(action);
     },
 
-    callDeployStatus: function (cmp, helper, retrieveAffectedStrategy, isAsync) {
+    /** Clones object and returns a new copy
+    * @param {bool} retrieveAffectedStrategy - flag that indicates if api call should return affected strategy. Usefull when calling update, 
+    * so you get updated strategy without additional calls
+    * @param {bool} isAsync - flag that indicates if any code is awaiting for the result. If True - callback should be called
+    * @param {String} sessionId - auth token which is retrieved via VisualForce page hack. Required for any api call
+    * @param {String} id - when deploy or retrieve api method is called we get back a JobId, which we can use to check deploy or retrieve status accordingly
+    * @param {function} callback - a callback, which is originally passed with event. An object should be passed in callback, looking like this:
+    * {
+    *   error: '...'
+    *   value: '....'
+    * }
+    * @param {String} pollingId - id returned from calling _window.setInterval. Used for removing recurring calls
+    * @param {String} strategyNameAsync - strategy name, only used for async savinig. Required for keeping track of different strategies pending for saving
+    */
+    callDeployStatus: function (cmp, helper, retrieveAffectedStrategy, isAsync, sessionId, id, callback, pollingId, strategyNameAsync) {
         var action = cmp.get("c.checkDeployStatusRequest");
-        var id = cmp.get("v.id");
-        var sessionId = cmp.get("v.sessionId");
-        var pollingId = cmp.get("v.pollingId");
-        var callback = cmp.get("v.callback");
         action.setParams({ sessionId: sessionId, id: id, retrieveAffectedStrategy: retrieveAffectedStrategy });
         action.setCallback(this, function (response) {
             if (response.getState() === "SUCCESS") {
@@ -263,31 +254,29 @@
                 if (retVal || !retrieveAffectedStrategy) {
                     window.clearInterval(pollingId);
 
-                    cmp.set("v.message", retVal);
-
                     if (!isAsync)
                         callback({ value: retVal });
                     else {
                         cmp.set("v.savingStatus", 'up-to-date');
-                        var pendingStrategy = cmp.get("v.strategyForSaving");
+                        var pendingStrategy = helper.getQueuedStrategyForSaving(cmp, strategyNameAsync)
                         if (pendingStrategy) {
-                            cmp.set("v.strategyForSaving", null);
+                            helper.setStrategyInQueueForSaving(cmp, strategyNameAsync, null);
                             helper.sendCreateOrUpdateRequest(cmp, helper, pendingStrategy, null, sessionId, callback, isAsync);
                         }
                         else {
                             cmp.set("v.isSaveRunning", false);
                             //I think here might be a race condition, so let's check once again
-                            var pendingStrategy = cmp.get("v.strategyForSaving");
+                            var pendingStrategy = helper.getQueuedStrategyForSaving(cmp, strategyNameAsync)
                             if (pendingStrategy) {
-                                cmp.set("v.strategyForSaving", null);
+                                helper.setStrategyInQueueForSaving(cmp, strategyNameAsync, null);
                                 helper.sendCreateOrUpdateRequest(cmp, helper, pendingStrategy, null, sessionId, callback, isAsync);
                             }
-
                         }
                     }
                 }
                 else {
                     //if the return value is null then it is still retrieving
+
                 }
             }
             else {
@@ -296,7 +285,15 @@
                 if (!isAsync)
                     callback({ error: response.getError()[0].message });
                 else {
-                    //todo: inform of roll back
+
+                    // inform to roll back
+                    var cmpEvent = cmp.getEvent('mdStrategyRollbackRequest');
+                    cmpEvent.setParams({ strategyName: strategyNameAsync, error: response.getError()[0].message });
+                    cmpEvent.fire();
+
+                    // deschedule pending savings
+                    helper.setStrategyInQueueForSaving(cmp, strategyNameAsync, null);
+                    cmp.set("v.isSaveRunning", false);
                 }
             }
 
@@ -329,5 +326,20 @@
         var sortedNodes = unsortedNodes.sort(sortAlgo);
         curStrat.nodes = sortedNodes;
         return curStrat;
+    },
+
+    getQueuedStrategyForSaving: function (cmp, strategyName) {
+        if (!strategyName)
+            return null;
+        else {
+            var result = cmp.get("v.strategiesForSaving." + strategyName);
+            if (!result)
+                result = null;
+            return result;
+        }
+    },
+
+    setStrategyInQueueForSaving: function (cmp, strategyName, strategy) {
+        cmp.set("v.strategiesForSaving." + strategyName, strategy);
     }
 })
