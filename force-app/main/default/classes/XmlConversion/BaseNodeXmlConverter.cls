@@ -5,15 +5,15 @@ public with sharing abstract class BaseNodeXmlConverter implements INodeXmlConve
             return null;
         }
         BaseNode result = createNewNode();
-        result.name = node.getChildElement('name', xmlNamespace).getText();
-        result.description = node.getChildElement('description', xmlNamespace).getText();
+        result.name = node.getChildElement('name', xmlNamespace).getText().unescapeXml();
+        result.description = node.getChildElement('description', xmlNamespace).getText().unescapeXml();
 
         Dom.XmlNode parentNode = node.getChildElement('parentNode', xmlNamespace);
         if (parentNode != null) {
-            result.parentNodeName = parentNode.getText();
+            result.parentNodeName = parentNode.getText().unescapeXml();
         } else {
             //if it doesn't return a parent node, assign it to root. this is done mainly for actionContexts
-            result.parentNodeName = 'RootNode';
+            result.parentNodeName = '';
         }
         
         return result;
@@ -25,9 +25,9 @@ public with sharing abstract class BaseNodeXmlConverter implements INodeXmlConve
         }
         Dom.Document document = new Dom.Document();
         Dom.XmlNode result = document.createRootElement(node.nodeType, null, null);
-        result.addChildElement('name', null, null).addTextNode(node.name);
-        result.addChildElement('description', null, null).addTextNode(node.description == null ? '' : node.description);
-        result.addChildElement('parentNode', null, null).addTextNode(node.parentNodeName == null ? '' : node.parentNodeName);
+        result.addChildElement('name', null, null).addTextNode(node.name.escapeXml());
+        result.addChildElement('description', null, null).addTextNode(node.description == null ? '' : node.description.escapeXml());
+        result.addChildElement('parentNode', null, null).addTextNode(node.parentNodeName == null ? '' : node.parentNodeName.escapeXml());
         return result;
     }
 

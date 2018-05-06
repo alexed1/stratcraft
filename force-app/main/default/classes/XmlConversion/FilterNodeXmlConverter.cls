@@ -12,7 +12,8 @@ public with sharing class FilterNodeXmlConverter extends BaseNodeXmlConverter {
             if (childName == 'removeDuplicates') {
                 result.removeDuplicates = Boolean.valueOf(child.getText());
             } else if (childName == 'expression') {
-                result.expression = child.getText();
+                String expression = child.getText();
+                result.expression = expression == null ? '' : expression.unescapeXml();
             }
         }
         return result;
@@ -27,7 +28,7 @@ public with sharing class FilterNodeXmlConverter extends BaseNodeXmlConverter {
         }
         FilterNode actualNode = (FilterNode)node;
         result.addChildElement('removeDuplicates', null, null).addTextNode(String.valueOf(actualNode.removeDuplicates));
-        result.addChildElement('expression', null, null).addTextNode(actualNode.expression == null ? '' : actualNode.expression);
+        result.addChildElement('expression', null, null).addTextNode(actualNode.expression == null ? '' : actualNode.expression.escapeXml());
         return result;
     }
 

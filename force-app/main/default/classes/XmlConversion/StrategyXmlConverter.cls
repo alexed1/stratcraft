@@ -7,9 +7,12 @@ public with sharing class StrategyXmlConverter {
         Dom.Document document = new Dom.Document();
         String xmlNamespace = 'http://soap.sforce.com/2006/04/metadata';
         Dom.XmlNode rootNode = document.createRootElement('recommendationStrategy',xmlNamespace,'');
-        Dom.XmlNode name = rootNode.addChildElement('recommendationStrategyName', null,null).addTextNode(strategy.name);
-        Dom.XmlNode description = rootNode.addChildElement('description', null, null).addTextNode(strategy.description == null ? '' : strategy.description);
-        Dom.XmlNode masterLabel = rootNode.addChildElement('masterLabel', null, null).addTextNode(strategy.masterLabel == null ? '' : strategy.masterLabel);
+        Dom.XmlNode name = rootNode.addChildElement('recommendationStrategyName', null,null)
+            .addTextNode((strategy.name == null ? '' : strategy.name).escapeXml());
+        Dom.XmlNode description = rootNode.addChildElement('description', null, null)
+            .addTextNode((strategy.description == null ? '' : strategy.description).escapeXml());
+        Dom.XmlNode masterLabel = rootNode.addChildElement('masterLabel', null, null)
+            .addTextNode((strategy.masterLabel == null ? '' : strategy.masterLabel).escapeXml());
         for (BaseNode childNode : strategy.nodes) {
             Dom.XmlNode xmlChildNode = nodeXmlConverter.convertNodeToXml(childNode);
             if (xmlChildNode == null) {
@@ -27,7 +30,6 @@ public with sharing class StrategyXmlConverter {
         Strategy result = new Strategy();
         try {
             System.debug('Started parsing strategy XML...');
-            xml = xml.replaceAll(' < ', ' &lt; ').replaceAll(' <= ', ' &lt;= ');
             document.load(xml);
             System.debug('XML document loaded');
             String xmlNamespace = 'http://soap.sforce.com/2006/04/metadata';
@@ -35,13 +37,13 @@ public with sharing class StrategyXmlConverter {
             for(Dom.XMLNode child : strategyNode.getChildElements()) {
                 String childName = child.getName();
                 if (childName == 'recommendationStrategyName') {
-                    result.name = child.getText();
+                    result.name = child.getText().unescapeXml();
                 }
                 else if (childName == 'description') {
-                    result.description = child.getText();
+                    result.description = child.getText().unescapeXml();
                 }
                 else if (childName == 'masterLabel') {
-                    result.masterLabel = child.getText();
+                    result.masterLabel = child.getText().unescapeXml();
                 }
                 else if (nodeXmlConverter.canConvertXmlToNode(child, xmlNamespace)) {
                     result.nodes.add(nodeXmlConverter.convertXmlToNode(child, xmlNamespace));

@@ -1,4 +1,15 @@
 window._utils = (function () {
+  // List of HTML entities for escaping.
+  var htmlEscapes = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+    '/': '&#x2F;'
+  };
+  // Regex containing the keys listed immediately above.
+  var htmlEscaper = /[&<>"'\/]/g;
   return {
     /** Clones object and returns a new copy
      * @param {object} obj - object to clone
@@ -65,6 +76,13 @@ window._utils = (function () {
         return item.trim().toLowerCase() === str;
       });
       return strIndex !== -1;
+    },
+
+    escapeHtml: function (str) {
+      // Escape a string for HTML interpolation
+      return ('' + str).replace(htmlEscaper, function (match) {
+        return htmlEscapes[match];
+      });
     },
 
     NodeRequestType: {
