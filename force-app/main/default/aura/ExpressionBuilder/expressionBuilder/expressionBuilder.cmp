@@ -22,7 +22,7 @@
     <aura:method name="resolveExpression" action="{!c.resolveExpression}" />
 
     <aura:if isTrue="{!v.isLoading}">
-        <p>Loading availabe objects and parsing expression...</p>
+        <p>Loading available objects and parsing expression...</p>
     </aura:if>
     <aura:if isTrue="{!v.isBuilderMode}">
         <div class="criteria-list-container slds-p-horizontal_small ">
