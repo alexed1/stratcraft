@@ -7,6 +7,13 @@
     </div>
 
     <div class="slds-form-element">
-        <lightning:input aura:id="expression" label="Expression" value="{!v.currentNode.expression}" />
+        <lightning:button onclick="{!c.openExpressionBuilder}">
+            <aura:if isTrue="{!v.currentNode.expression}">
+                {!v.currentNode.expression}
+                <aura:set attribute="else">
+                    Configure
+                </aura:set>
+            </aura:if>
+        </lightning:button>
     </div>
 </aura:component>

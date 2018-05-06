@@ -9,5 +9,7 @@
 
     renameStrategy: function (cmp, event, helper) { helper.renameStrategy(cmp, event, helper); },
 
-    copyStrategy: function (cmp, event, helper) { helper.copyStrategy(cmp, event, helper); }
+    copyStrategy: function (cmp, event, helper) { helper.copyStrategy(cmp, event, helper); },
+
+    convertJsonToXml: function (cmp, event, helper) { helper.convertJsonToXml(cmp, event.getParam('strategyJson'), event.getParam('callback')); }
 })
