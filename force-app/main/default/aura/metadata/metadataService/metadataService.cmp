@@ -3,10 +3,13 @@
     <ltng:require scripts="{!$Resource.force}" />
 
     <aura:attribute type="String" name="sessionId" />
-    <aura:attribute type="String" name="message" />
-    <aura:attribute type="String" name="id" />
-    <aura:attribute type="String" name="pollingId" />
-    <aura:attribute type="Object" name="callback" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!-- async saving -->
+    <aura:attribute type="String" name="savingStatus" />
+    <aura:attribute type="Boolean" name="isSaveRunning" />
+    <!-- stores dictionary of strategies to save -->
+    <aura:attribute type="Object" name="strategiesForSaving" />
 
     <aura:handler event="c:mdLoadStrategyNamesRequest" action="{!c.loadStrategyNames}" />
     <aura:handler event="c:mdGetStrategyRequest" action="{!c.getStrategy}" />
@@ -16,8 +19,11 @@
     <aura:handler event="c:mdCopyStrategyRequest" action="{!c.copyStrategy}" />
     <aura:handler event="c:mdConvertToXmlRequest" action="{!c.convertJsonToXml}" />
 
+    <aura:registerEvent name="mdStrategyRollbackRequest" type="c:mdStrategyRollbackRequest" />
+
 
     <div>
+        <div class="slds-text-align_right slds-p-right_x-small">{!v.savingStatus}</div>
         <!-- below is ui for debugging -->
         <!-- <div> Id: {!v.id }</div>
         <div> Response: {!v.message }</div>

@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="event fired by metadata service to stratecraft component ">
+    <aura:attribute name="strategyName" type="String" />
+    <aura:attribute name="error" type="String" />
+</aura:event>

@@ -37,44 +37,59 @@
     <aura:handler event="c:nodeDataRequestEvent" action="{!c.handleNodeDataRequest}" />
     <aura:handler event="c:newNodeCreationRequestedEvent" action="{!c.handleNewNodeCreationRequested}" />
 
+    <aura:handler name="mdStrategyRollbackRequest" event="c:mdStrategyRollbackRequest" action="{!c.handleStrategyRollbackRequest}"
+    />
+
     <div class="slds-card slds-p-around_small root">
-        <c:metadataService/>
         <lightning:spinner aura:id="spinner" size="large" />
         <lightning:overlayLibrary aura:id="modalDialog" />
         <div class="tool-bar slds-m-bottom_xx-small">
-            <div class="slds-grid-col slds-m-top_x-small">
-                <lightning:buttonMenu iconName="utility:settings" alternativeText="Settings" onselect="{!c.handleMenuSelect}">
-                    <lightning:menuItem label="New Strategy" value="newStrategy" />
-                    <lightning:menuItem label="Import Strategy from XML" value="importStrategy" />
-                    <aura:if isTrue="{!v.selectedStrategyName != ''}">
-                        <hr class="slds-m-vertical_xx-small" />
-                        <lightning:menuItem label="New Node" value="addElement" />
-                        <lightning:menuItem label="Save Strategy" value="saveStrategy" />
-                        <hr class="slds-m-vertical_xx-small" />
-                        <lightning:menuItem label="Rename Strategy" value="renameStrategy" />
-                        <lightning:menuItem label="Duplicate Strategy" value="copyStrategy" />
-                        <lightning:menuItem label="Delete Strategy" value="deleteStrategy" />
-                        <lightning:menuItem label="Export Strategy to XML" value="exportStrategy" />
-                    </aura:if>
-                </lightning:buttonMenu>
-            </div>
-            <div class="slds-grid-col slds-m-left_x-small m-vertical-align">
-                <lightning:select name="strategySelect" label="Select a strategy:" aura:id="mySelect" value="{!v.selectedStrategyName}" class="select_box">
-                    <aura:iteration items="{!v.strategyNames}" var="item">
-                        <option text="{!item}" value="{!item}" selected="{!item==v.selectedStrategyName}" />
-                    </aura:iteration>
-                </lightning:select>
-            </div>
-            <lightning:button class="slds-m-left_x-small slds-m-right_xx-small undo-redo-button slds-m-top_x-small" iconName="utility:undo" onclick="{!c.handleUndo}"
-                disabled="{!not(v.canUndo)}" />
-            <lightning:button class="slds-m-left_x-small undo-redo-button slds-m-top_x-small" iconName="utility:redo" onclick="{!c.handleRedo}"
-                disabled="{!not(v.canRedo)}" />
-            <div class="slds-grid-col slds-m-left_x-small m-top-align">
-                <lightning:radioGroup name="viewRadioGroup" label="Display Mode" options="{!v.viewModes}" value="{!v.isTreeView}" />
+            <div class="slds-grid slds-size_1-of-1">
+
+                <div class="slds-grid-col slds-grid slds-grid_vertical-align-center slds-size_9-of-12">
+                    <div class="slds-grid-col slds-m-top_x-small">
+                        <lightning:buttonMenu iconName="utility:settings" alternativeText="Settings" onselect="{!c.handleMenuSelect}">
+                            <lightning:menuItem label="New Strategy" value="newStrategy" />
+                            <lightning:menuItem label="Import Strategy from XML" value="importStrategy" />
+                            <aura:if isTrue="{!v.selectedStrategyName != ''}">
+                                <hr class="slds-m-vertical_xx-small" />
+                                <lightning:menuItem label="New Node" value="addElement" />
+                                <lightning:menuItem label="Save Strategy" value="saveStrategy" />
+                                <hr class="slds-m-vertical_xx-small" />
+                                <lightning:menuItem label="Rename Strategy" value="renameStrategy" />
+                                <lightning:menuItem label="Duplicate Strategy" value="copyStrategy" />
+                                <lightning:menuItem label="Delete Strategy" value="deleteStrategy" />
+                                <lightning:menuItem label="Export Strategy to XML" value="exportStrategy" />
+                            </aura:if>
+                        </lightning:buttonMenu>
+                    </div>
+                    <div class="slds-grid-col slds-m-left_x-small m-vertical-align">
+                        <lightning:select name="strategySelect" label="Select a strategy:" aura:id="mySelect" value="{!v.selectedStrategyName}" class="select_box">
+                            <aura:iteration items="{!v.strategyNames}" var="item">
+                                <option text="{!item}" value="{!item}" selected="{!item==v.selectedStrategyName}" />
+                            </aura:iteration>
+                        </lightning:select>
+                    </div>
+                    <div class="slds-grid-col">
+                        <lightning:button class="slds-m-left_x-small slds-m-right_xx-small undo-redo-button slds-m-top_x-small" iconName="utility:undo"
+                            onclick="{!c.handleUndo}" disabled="{!not(v.canUndo)}" />
+                    </div>
+                    <div class="slds-grid-col">
+                        <lightning:button class="slds-m-left_x-small undo-redo-button slds-m-top_x-small" iconName="utility:redo" onclick="{!c.handleRedo}"
+                            disabled="{!not(v.canRedo)}" />
+                    </div>
+                    <div class="slds-grid-col slds-m-left_x-small m-top-align">
+                        <lightning:radioGroup name="viewRadioGroup" label="Display Mode" options="{!v.viewModes}" value="{!v.isTreeView}" />
+                    </div>
+                </div>
+                <div class="slds-grid-col slds-grid slds-size_3-of-12 slds-grid_vertical-align-end slds-grid_align-end slds-m-bottom_x-small slds-m-end_xx-small">
+                    <c:metadataService/>
+                </div>
             </div>
         </div>
         <c:treeView aura:id="treeView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}" />
-        <c:diagramView aura:id="diagramView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}" 
-                       childNodeCreationRequested="{!c.handleNewNodeCreationRequested}" nodeDeletionRequested="{!c.handleNodeDeletionRequested}" />
+        <c:diagramView aura:id="diagramView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}"
+            childNodeCreationRequested="{!c.handleNewNodeCreationRequested}" nodeDeletionRequested="{!c.handleNodeDeletionRequested}"
+        />
     </div>
 </aura:component>

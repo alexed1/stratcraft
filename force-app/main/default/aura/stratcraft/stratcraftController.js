@@ -121,5 +121,24 @@
         var activeView = helper.getActiveView(cmp);
         activeView.refresh();
         helper.saveStrategy(cmp);
+    },
+
+    handleStrategyRollbackRequest: function (cmp, event, helper) {
+        var strategyName = event.getParam("strategyName");
+        var errorMessage = event.getParam("error");
+        _modalDialog.show(
+            'Failed to save changes',
+            ['c:modalWindowGenericBody', function (body) {
+                body.set('v.text', 'Failed to save changes to ' + strategyName + ' strategy: ' + errorMessage
+                    + '\r\nReload ' + strategyName + ' strategy?');
+            }],
+            function okCallback() {
+                if (cmp.get("v.selectedStrategyName") == strategyName) {
+                    cmp.set("v.currentStrategy", null);
+                }
+
+                cmp.set("v.selectedStrategyName", strategyName);
+                helper.handleStrategySelection(cmp);
+            });
     }
 })

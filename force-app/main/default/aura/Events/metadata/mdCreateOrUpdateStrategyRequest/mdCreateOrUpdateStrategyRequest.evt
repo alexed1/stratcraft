@@ -3,6 +3,6 @@
     <aura:attribute name="strategy" type="Object" />
     <!-- pure xml, only used in importing strategy -->
     <aura:attribute name="strategyXML" type="String" />
-
+    <aura:attribute name="isAsync" type="Boolean" default="False" />
     <aura:attribute name="callback" type="Object" />
 </aura:event>

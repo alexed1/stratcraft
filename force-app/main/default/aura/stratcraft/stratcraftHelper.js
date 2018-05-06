@@ -117,7 +117,6 @@
       _force.displayToast('Error', validationResult, 'error');
       return;
     }
-    _cmpUi.spinnerOn(cmp, 'spinner');
     //If this save is a result of undo/redo operation, then the changes are already applied
     if (!isUndoRedo) {
       this.applyChangesToStrategy(cmp, strategy, oldNode, newNode);
@@ -130,23 +129,18 @@
     var cmpEvent = $A.get('e.c:mdCreateOrUpdateStrategyRequest');
     cmpEvent.setParams({
       'strategy': curStrat,
+      'isAsync': true,
       'callback': function (result) {
-        _cmpUi.spinnerOff(cmp, 'spinner');
         if (!result.error) {
-          var persistedStrategyXML = result.value;
-          _force.displayToast('Strategy Crafter', 'Strategy changes saved');
-          //cmp.set('v.currentStrategy', result);
           if (onSuccess) {
             onSuccess();
           }
-          _cmpUi.spinnerOff(cmp, 'spinner');
         }
         else {
           _force.displayToast('Strategy Crafter', 'Strategy changes save failed ' + result.error, 'Error', true);
           return;
         }
       }
-
     });
     cmpEvent.fire();
   },

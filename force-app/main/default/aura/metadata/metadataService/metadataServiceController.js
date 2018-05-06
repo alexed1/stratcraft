@@ -1,4 +1,6 @@
 ({
+    doInit: function (cmp, event, helper) { cmp.set("v.strategiesForSaving", {}) },
+
     loadStrategyNames: function (cmp, event, helper) { helper.loadStrategyNames(cmp, event, helper); },
 
     getStrategy: function (cmp, event, helper) { helper.getStrategy(cmp, event, helper); },
