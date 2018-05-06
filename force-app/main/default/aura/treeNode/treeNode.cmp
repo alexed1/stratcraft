@@ -1,4 +1,4 @@
-<aura:component controller="TreeNodeController">
+<aura:component>
 	<ltng:require scripts="{!$Resource.utils}" />
 
     <aura:attribute name="treeItems" type="List" />

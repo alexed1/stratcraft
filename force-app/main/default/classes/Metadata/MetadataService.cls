@@ -11311,6 +11311,12 @@ public class MetadataService {
         private String CallOptions_hns = 'CallOptions=http://soap.sforce.com/2006/04/metadata';
         private String AllOrNoneHeader_hns = 'AllOrNoneHeader=http://soap.sforce.com/2006/04/metadata';
         private String[] ns_map_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata', 'MetadataService'};
+        private IWebServiceCallout webServiceCallout;
+
+        public MetadataPort(IWebServiceCallout webServiceCallout) {
+            this.webServiceCallout = webServiceCallout;
+        }
+
         public MetadataService.DeleteResult[] deleteMetadata(String type_x,String[] fullNames) {
             MetadataService.deleteMetadata_element request_x = new MetadataService.deleteMetadata_element();
             request_x.type_x = type_x;
@@ -11318,7 +11324,7 @@ public class MetadataService {
             MetadataService.deleteMetadataResponse_element response_x;
             Map<String, MetadataService.deleteMetadataResponse_element> response_map_x = new Map<String, MetadataService.deleteMetadataResponse_element>();
             response_map_x.put('response_x', response_x);
-            WebServiceCallout.invoke(
+            this.webServiceCallout.invoke(
               this,
               request_x,
               response_map_x,
@@ -11341,7 +11347,7 @@ public class MetadataService {
             MetadataService.renameMetadataResponse_element response_x;
             Map<String, MetadataService.renameMetadataResponse_element> response_map_x = new Map<String, MetadataService.renameMetadataResponse_element>();
             response_map_x.put('response_x', response_x);
-            WebServiceCallout.invoke(
+            this.webServiceCallout.invoke(
               this,
               request_x,
               response_map_x,
@@ -11362,7 +11368,7 @@ public class MetadataService {
             MetadataService.updateMetadataResponse_element response_x;
             Map<String, MetadataService.updateMetadataResponse_element> response_map_x = new Map<String, MetadataService.updateMetadataResponse_element>();
             response_map_x.put('response_x', response_x);
-            WebServiceCallout.invoke(
+            this.webServiceCallout.invoke(
               this,
               request_x,
               response_map_x,
@@ -11383,7 +11389,7 @@ public class MetadataService {
             MetadataService.describeMetadataResponse_element response_x;
             Map<String, MetadataService.describeMetadataResponse_element> response_map_x = new Map<String, MetadataService.describeMetadataResponse_element>();
             response_map_x.put('response_x', response_x);
-            WebServiceCallout.invoke(
+            this.webServiceCallout.invoke(
               this,
               request_x,
               response_map_x,
@@ -11405,7 +11411,7 @@ public class MetadataService {
             MetadataService.checkDeployStatusResponse_element response_x;
             Map<String, MetadataService.checkDeployStatusResponse_element> response_map_x = new Map<String, MetadataService.checkDeployStatusResponse_element>();
             response_map_x.put('response_x', response_x);
-            WebServiceCallout.invoke(
+            this.webServiceCallout.invoke(
               this,
               request_x,
               response_map_x,
@@ -11427,7 +11433,7 @@ public class MetadataService {
             MetadataService.checkRetrieveStatusResponse_element response_x;
             Map<String, MetadataService.checkRetrieveStatusResponse_element> response_map_x = new Map<String, MetadataService.checkRetrieveStatusResponse_element>();
             response_map_x.put('response_x', response_x);
-            WebServiceCallout.invoke(
+            this.webServiceCallout.invoke(
               this,
               request_x,
               response_map_x,
@@ -11449,7 +11455,7 @@ public class MetadataService {
             Map<String, MetadataService.retrieveResponse_element> response_map_x = new Map<String, MetadataService.retrieveResponse_element>();
             response_map_x.put('response_x', response_x);
             system.debug(JSON.serialize(request_x));
-            WebServiceCallout.invoke(
+            this.webServiceCallout.invoke(
               this,
               request_x,
               response_map_x,
@@ -11470,7 +11476,7 @@ public class MetadataService {
             MetadataService.cancelDeployResponse_element response_x;
             Map<String, MetadataService.cancelDeployResponse_element> response_map_x = new Map<String, MetadataService.cancelDeployResponse_element>();
             response_map_x.put('response_x', response_x);
-            WebServiceCallout.invoke(
+            this.webServiceCallout.invoke(
               this,
               request_x,
               response_map_x,
@@ -11491,7 +11497,7 @@ public class MetadataService {
             MetadataService.deployRecentValidationResponse_element response_x;
             Map<String, MetadataService.deployRecentValidationResponse_element> response_map_x = new Map<String, MetadataService.deployRecentValidationResponse_element>();
             response_map_x.put('response_x', response_x);
-            WebServiceCallout.invoke(
+            this.webServiceCallout.invoke(
               this,
               request_x,
               response_map_x,
@@ -11512,7 +11518,7 @@ public class MetadataService {
             MetadataService.describeValueTypeResponse_element response_x;
             Map<String, MetadataService.describeValueTypeResponse_element> response_map_x = new Map<String, MetadataService.describeValueTypeResponse_element>();
             response_map_x.put('response_x', response_x);
-            WebServiceCallout.invoke(
+            this.webServiceCallout.invoke(
               this,
               request_x,
               response_map_x,
@@ -11533,7 +11539,7 @@ public class MetadataService {
             MetadataService.createMetadataResponse_element response_x;
             Map<String, MetadataService.createMetadataResponse_element> response_map_x = new Map<String, MetadataService.createMetadataResponse_element>();
             response_map_x.put('response_x', response_x);
-            WebServiceCallout.invoke(
+            this.webServiceCallout.invoke(
               this,
               request_x,
               response_map_x,
@@ -11555,7 +11561,7 @@ public class MetadataService {
             MetadataService.deployResponse_element response_x;
             Map<String, MetadataService.deployResponse_element> response_map_x = new Map<String, MetadataService.deployResponse_element>();
             response_map_x.put('response_x', response_x);
-            WebServiceCallout.invoke(
+            this.webServiceCallout.invoke(
               this,
               request_x,
               response_map_x,
@@ -11577,7 +11583,7 @@ public class MetadataService {
             MetadataService.IReadResponseElement response_x;
             Map<String, MetadataService.IReadResponseElement> response_map_x = new Map<String, MetadataService.IReadResponseElement>();
             response_map_x.put('response_x', response_x);
-            WebServiceCallout.invoke(
+            this.webServiceCallout.invoke(
               this,
               request_x,
               response_map_x,
@@ -11598,7 +11604,7 @@ public class MetadataService {
             MetadataService.upsertMetadataResponse_element response_x;
             Map<String, MetadataService.upsertMetadataResponse_element> response_map_x = new Map<String, MetadataService.upsertMetadataResponse_element>();
             response_map_x.put('response_x', response_x);
-            WebServiceCallout.invoke(
+            this.webServiceCallout.invoke(
               this,
               request_x,
               response_map_x,
@@ -11620,7 +11626,7 @@ public class MetadataService {
             MetadataService.listMetadataResponse_element response_x;
             Map<String, MetadataService.listMetadataResponse_element> response_map_x = new Map<String, MetadataService.listMetadataResponse_element>();
             response_map_x.put('response_x', response_x);
-            WebServiceCallout.invoke(
+            this.webServiceCallout.invoke(
               this,
               request_x,
               response_map_x,

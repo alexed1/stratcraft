@@ -1,28 +1,93 @@
 public with sharing class MetadataServiceController {
+	//This class contains two sets of methods: instance and static and it is done for unit testing purposes.
+	//The actual work is performed in the instance methods and the static ones just use the default single instance of the class.
+	//The main reason for doing this is that test methods can't contain web service calls
+	private static MetadataServiceController DefaultInstance;
+
+	public static MetadataServiceController getDefaultInstance() {
+		if (DefaultInstance == null) {
+			DefaultInstance = new MetadataServiceController();
+		} 
+		return DefaultInstance;
+	}
+
+	private IWebServiceCallout webServiceCallout;
+
+	public MetadataServiceController() {
+		this.webServiceCallout = new WebServiceCalloutWrapper();
+	}
+
+	public MetadataServiceController(IWebServiceCallout webServiceCallout) {
+		this.webServiceCallout = webServiceCallout;
+	}
 
 	public static Integer API_VERSION = 43;
 
-
-	public static Strategy strategyXMLToObject(String xml) {
-		Strategy parsedStrategy = StrategyXmlConverter.convertXmlToStrategy(xml);
-		return parsedStrategy;
+	private String formXML(string strategyName){
+		return
+				'<?xml version="1.0" encoding="UTF-8"?>'+
+				'<Package xmlns="http://soap.sforce.com/2006/04/metadata">'+
+				'    <types>'+
+				'        <members>' + strategyName.escapeXml() + '</members>' +
+				'        <name>RecommendationStrategy</name>'+
+				'    </types>'+
+				'    <version>'+ API_VERSION + '.0</version>'+
+				'</Package>';
 	}
 
-	@AuraEnabled
-	public static String strategyJSONtoXML(String strategyJSON){
-		Strategy strategy = strategyJSONConverter.convertJsonToStrategy(strategyJSON);
-		try {
-			System.debug('Started converting strategy ' + strategy.name + ' to XML');
-			String strategyXml = StrategyXmlConverter.convertStrategyToXml(strategy);
-			return strategyXml;
-		}
-		catch(Exception exc) {
-			throw new AuraException('Couldn\'t convert strategy JSON object to XML');
-		}
+	private MetadataService.MetadataPort createClient(String sessionId){
+
+		// fix for refresh token from this article https://www.gscloudsolutions.com/blogpost/Using-Named-Credentials-with-the-Apex-Wrapper-Salesforce-Metadata-API-apex-mdapi?blogpost=true&utm_source=twitter&utm_medium=social&utm_campaign=named_credentials
+		// needed only if we user named credentials
+		// String restUrl = 'callout:StratcraftMDAPI/services/data/v'+API_VERSION+'.0/limits';
+		// Http h = new Http();
+		// HttpRequest req = new HttpRequest();
+		// req.setEndpoint(restUrl);
+		// req.setMethod('GET');
+		// HttpResponse res = h.send(req);
+
+		MetadataService.MetadataPort service = new MetadataService.MetadataPort(webServiceCallout);
+		service.SessionHeader = new MetadataService.SessionHeader_element();
+		//service.SessionHeader.sessionId = '{!$Credential.OAuthToken}'; <---- Named credentials stuff
+		service.SessionHeader.sessionId = sessionId;
+		return service;
+	}
+
+	private String deployPackage(String sessionId, String base64EncodedArchive){
+		MetadataService.MetadataPort service = createClient(sessionId);
+		MetadataService.DeployOptions deployOptions = new MetadataService.DeployOptions();
+		deployOptions.allowMissingFiles = false;
+		deployOptions.autoUpdatePackage = false;
+		deployOptions.checkOnly = false;
+		deployOptions.ignoreWarnings = false;
+		deployOptions.performRetrieve = true;
+		deployOptions.purgeOnDelete = false;
+		deployOptions.rollbackOnError = false;
+		deployOptions.singlePackage = true;
+		deployOptions.testLevel = 'NoTestRun';
+		MetadataService.AsyncResult AsyncResult = service.deploy(base64EncodedArchive, DeployOptions);
+		return AsyncResult.Id;
+	}
+
+	private String retrievePackage(String sessionId, String strategyName){
+		MetadataService.MetadataPort service = createClient(sessionId);
+		MetadataService.RetrieveRequest request = new MetadataService.RetrieveRequest();
+		request.apiVersion = API_VERSION;
+		request.singlePackage = true;
+
+		MetadataService.Package_x manifest = new MetadataService.Package_x();
+		manifest.types = new List<MetadataService.PackageTypeMembers>();
+		manifest.types.Add(new MetadataService.PackageTypeMembers());
+		manifest.types[0].name='RecommendationStrategy';
+		manifest.types[0].members = new List<String>();
+		manifest.types[0].members.add(strategyName);
+		request.unpackaged = manifest;
+
+		return service.retrieve(request).id;
 	}
 	//This is the actual implementation hidden from the client and we assume here that XML is valid because it was sanitized
 	//by either 'createOrUpdateStrategyFromXMLRequest' or 'createOrUpdateStrategyRequest'
-	private static String createOrUpdateStrategyImpl(String sessionId, String strategyXML) {
+	private String createOrUpdateStrategyImpl(String sessionId, String strategyXML) {
 		try{
 			XPath xp = new XPath(strategyXML);
 			String strategyName = xp.find('/RecommendationStrategy/recommendationStrategyName')[0].getText().unescapeXml();
@@ -42,21 +107,47 @@ public with sharing class MetadataServiceController {
 		}
 	}
 
-	@AuraEnabled
-	public static String createOrUpdateStrategyFromXMLRequest(String sessionId, String strategyXML){
-		Strategy strategy = strategyXMLToObject(strategyXML);
+	private String finStrategyInZipArchive(String base64Archive){
+		Zippex archive = new Zippex(EncodingUtil.base64Decode(base64Archive));
+		Set <String> fileNames = archive.getFileNames();
+
+		for (String fileName : fileNames)
+		{
+			if (fileName.startsWith('recommendationStrategies'))
+			{
+				Blob file = archive.getFile(fileName);
+				String xml = file.toString();
+				return xml;
+			}
+		}
+
+		throw new AuraException('MetadataServiceController: Couldn\'t find strategy in retrieved zip archive');
+	}
+
+	public String instanceStrategyJSONtoXML(String strategyJSON){
+		Strategy strategy = strategyJSONConverter.convertJsonToStrategy(strategyJSON);
+		try {
+			System.debug('Started converting strategy ' + strategy.name + ' to XML');
+			String strategyXml = StrategyXmlConverter.convertStrategyToXml(strategy);
+			return strategyXml;
+		}
+		catch(Exception exc) {
+			throw new AuraException('Couldn\'t convert strategy JSON object to XML');
+		}
+	}
+
+	public String instanceCreateOrUpdateStrategyFromXMLRequest(String sessionId, String strategyXML){
+		Strategy strategy = StrategyXmlConverter.convertXmlToStrategy(strategyXML);
 		if (strategy.notification.hasErrors()) {
 			throw new AuraHandledException('MetadataServiceController: XML is not valid. ' + strategy.notification.errors[0]);
 		}
 		return createOrUpdateStrategyImpl(sessionId, strategyXML);
 	}
-
-
-	@AuraEnabled
-	public static String createOrUpdateStrategyRequest(String sessionId, String strategyJSON){
+	
+	public String instanceCreateOrUpdateStrategyRequest(String sessionId, String strategyJSON){
 		String strategyXML = '';
 		try {
-			strategyXML = strategyJSONtoXML(strategyJSON);
+			strategyXML = instanceStrategyJSONtoXML(strategyJSON);
 		}
 		catch(Exception exc) {
 			throw new AuraHandledException('MetadataServiceController: ' + exc);
@@ -64,8 +155,7 @@ public with sharing class MetadataServiceController {
 		return createOrUpdateStrategyImpl(sessionId, strategyXML);
 	}
 
-	@AuraEnabled
-	public static String deleteStrategyRequest(String sessionId, String strategyName){
+	public String instanceDeleteStrategyRequest(String sessionId, String strategyName){
 		try {
 			Zippex archive = new Zippex();
 			//package.xml is still needed when you apply destructive changes
@@ -83,10 +173,9 @@ public with sharing class MetadataServiceController {
 		}
 	}
 
-	@AuraEnabled
-	public static String renameStrategyRequest(String sessionId, String strategyJSON, String newStrategyName){
+	public String instanceRenameStrategyRequest(String sessionId, String strategyJSON, String newStrategyName){
 		try {
-			String strategyXML = strategyJSONtoXML(strategyJSON);
+			String strategyXML = instanceStrategyJSONtoXML(strategyJSON);
 			XPath xp = new XPath(strategyXML);
 			Dom.XmlNode[] nameNode = xp.find('/RecommendationStrategy/recommendationStrategyName');
 			String oldStrategyName = nameNode[0].getText().unescapeXml();
@@ -111,10 +200,9 @@ public with sharing class MetadataServiceController {
 		}
 	}
 
-	@AuraEnabled
-	public static String copyStrategyRequest(String sessionId, String strategyJSON, String newStrategyName){
+	public String instanceCopyStrategyRequest(String sessionId, String strategyJSON, String newStrategyName){
 		try {
-			String strategyXML = strategyJSONtoXML(strategyJSON);
+			String strategyXML = instanceStrategyJSONtoXML(strategyJSON);
 			XPath xp = new XPath(strategyXML);
 			//replace name to a new one
 			Dom.XmlNode[] nameNode = xp.find('/RecommendationStrategy/recommendationStrategyName');
@@ -137,8 +225,7 @@ public with sharing class MetadataServiceController {
 		}
 	}
 
-	@AuraEnabled
-	public static Strategy checkRetrievalStatusRequest(String sessionId, String id){
+	public Strategy instanceCheckRetrievalStatusRequest(String sessionId, String id){
 		try {
 			MetadataService.MetadataPort service = createClient(sessionId);
 			MetadataService.RetrieveResult retrieveResult = service.checkRetrieveStatus(id, true);
@@ -148,7 +235,7 @@ public with sharing class MetadataServiceController {
 				if (retrieveResult.success)
 				{
 					String strategyXML = finStrategyInZipArchive(retrieveResult.zipFile);
-					return strategyXMLToObject(strategyXML);
+					return StrategyXmlConverter.convertXmlToStrategy(strategyXML);
 				}
 				else
 				{
@@ -165,27 +252,7 @@ public with sharing class MetadataServiceController {
 		}
 	}
 
-	private static String finStrategyInZipArchive(String base64Archive){
-		Zippex archive = new Zippex(EncodingUtil.base64Decode(base64Archive));
-		Set <String> fileNames = archive.getFileNames();
-
-		for (String fileName : fileNames)
-		{
-			if (fileName.startsWith('recommendationStrategies'))
-			{
-				Blob file = archive.getFile(fileName);
-				String xml = file.toString();
-				return xml;
-			}
-		}
-
-		throw new AuraException('MetadataServiceController: Couldn\'t find strategy in retrieved zip archive');
-	}
-
-
-	//returns deployment job ID
-	@AuraEnabled
-	public static String getStrategyRequest(String sessionId, String strategyName){
+	public String instanceGetStrategyRequest(String sessionId, String strategyName){
 		try{
 			if (strategyName == null || strategyName == '')
 				throw new AuraHandledException('Strategy name wasn\'t provided');
@@ -196,9 +263,8 @@ public with sharing class MetadataServiceController {
 			throw new AuraHandledException('MetadataServiceController: ' + exc.getMessage());
 		}
 	}
-
-	@AuraEnabled
-	public static List<String> loadStrategyNamesRequest(String sessionId){
+	
+	public List<String> instanceLoadStrategyNamesRequest(String sessionId){
 		try{
 			MetadataService.MetadataPort service = createClient(sessionId);
 
@@ -219,13 +285,12 @@ public with sharing class MetadataServiceController {
 			return names;
 		}
 		catch (Exception exc) {
+			System.debug(System.LoggingLevel.ERROR, 'loadStrategyNamesRequest: ' + exc.getMessage());
 			throw new AuraHandledException('MetadataServiceController: ' + exc.getMessage());
 		}
 	}
 
-	@AuraEnabled
-	public static Strategy checkDeployStatusRequest(String sessionId, String id, Boolean retrieveAffectedStrategy){
-
+	public Strategy instanceCheckDeployStatusRequest(String sessionId, String id, Boolean retrieveAffectedStrategy){
 		try {
 			MetadataService.MetadataPort service = createClient(sessionId);
 			MetadataService.DeployResult deployResult = service.checkDeployStatus(id, true);
@@ -250,7 +315,7 @@ public with sharing class MetadataServiceController {
 						if (deployResult.details.retrieveResult.zipFile!=null)
 						{
 							String strategyXML= finStrategyInZipArchive(deployResult.details.retrieveResult.zipFile);
-							return strategyXMLToObject(strategyXML);
+							return StrategyXmlConverter.convertXmlToStrategy(strategyXML);
 						}
 						else
 							throw new AuraHandledException('MetadataServiceController: Deploy was successfull but we couldn\'t retrieve back resulting strategy');
@@ -267,69 +332,54 @@ public with sharing class MetadataServiceController {
 		}
 	}
 
-	private static String formXML(string strategyName){
-		return
-				'<?xml version="1.0" encoding="UTF-8"?>'+
-				'<Package xmlns="http://soap.sforce.com/2006/04/metadata">'+
-				'    <types>'+
-				'        <members>' + strategyName.escapeXml() + '</members>' +
-				'        <name>RecommendationStrategy</name>'+
-				'    </types>'+
-				'    <version>'+ API_VERSION + '.0</version>'+
-				'</Package>';
+	@AuraEnabled
+	public static String strategyJSONtoXML(String strategyJSON){
+		return getDefaultInstance().instanceStrategyJSONtoXML(strategyJSON);
 	}
 
-	private static MetadataService.MetadataPort createClient(String sessionId){
-
-		// fix for refresh token from this article https://www.gscloudsolutions.com/blogpost/Using-Named-Credentials-with-the-Apex-Wrapper-Salesforce-Metadata-API-apex-mdapi?blogpost=true&utm_source=twitter&utm_medium=social&utm_campaign=named_credentials
-		// needed only if we user named credentials
-		// String restUrl = 'callout:StratcraftMDAPI/services/data/v'+API_VERSION+'.0/limits';
-		// Http h = new Http();
-		// HttpRequest req = new HttpRequest();
-		// req.setEndpoint(restUrl);
-		// req.setMethod('GET');
-		// HttpResponse res = h.send(req);
-
-		MetadataService.MetadataPort service = new MetadataService.MetadataPort();
-		service.SessionHeader = new MetadataService.SessionHeader_element();
-		//service.SessionHeader.sessionId = '{!$Credential.OAuthToken}'; <---- Named credentials stuff
-		service.SessionHeader.sessionId = sessionId;
-		return service;
+	@AuraEnabled
+	public static String createOrUpdateStrategyFromXMLRequest(String sessionId, String strategyXML){
+		return getDefaultInstance().instanceCreateOrUpdateStrategyFromXMLRequest(sessionId, strategyXML);
 	}
 
-	private static String deployPackage(String sessionId, String base64EncodedArchive){
-		MetadataService.MetadataPort service = createClient(sessionId);
-		MetadataService.DeployOptions deployOptions = new MetadataService.DeployOptions();
-		deployOptions.allowMissingFiles = false;
-		deployOptions.autoUpdatePackage = false;
-		deployOptions.checkOnly = false;
-		deployOptions.ignoreWarnings = false;
-		deployOptions.performRetrieve = true;
-		deployOptions.purgeOnDelete = false;
-		deployOptions.rollbackOnError = false;
-		deployOptions.singlePackage = true;
-		deployOptions.testLevel = 'NoTestRun';
-		MetadataService.AsyncResult AsyncResult = service.deploy(base64EncodedArchive, DeployOptions);
-		return AsyncResult.Id;
+	@AuraEnabled
+	public static String createOrUpdateStrategyRequest(String sessionId, String strategyJSON){
+		return getDefaultInstance().instanceCreateOrUpdateStrategyRequest(sessionId, strategyJSON);
 	}
 
-	private static String retrievePackage(String sessionId, String strategyName){
-		MetadataService.MetadataPort service = createClient(sessionId);
-		MetadataService.RetrieveRequest request = new MetadataService.RetrieveRequest();
-		request.apiVersion = API_VERSION;
-		request.singlePackage = true;
-
-		MetadataService.Package_x manifest = new MetadataService.Package_x();
-		manifest.types = new List<MetadataService.PackageTypeMembers>();
-		manifest.types.Add(new MetadataService.PackageTypeMembers());
-		manifest.types[0].name='RecommendationStrategy';
-		manifest.types[0].members = new List<String>();
-		manifest.types[0].members.add(strategyName);
-		request.unpackaged = manifest;
-
-		return service.retrieve(request).id;
+	@AuraEnabled
+	public static String deleteStrategyRequest(String sessionId, String strategyName){
+		return getDefaultInstance().instanceDeleteStrategyRequest(sessionId, strategyName);
 	}
 
+	@AuraEnabled
+	public static String renameStrategyRequest(String sessionId, String strategyJSON, String newStrategyName){
+		return getDefaultInstance().instanceRenameStrategyRequest(sessionId, strategyJSON, newStrategyName);
+	}
+
+	@AuraEnabled
+	public static String copyStrategyRequest(String sessionId, String strategyJSON, String newStrategyName){
+		return getDefaultInstance().instanceCopyStrategyRequest(sessionId, strategyJSON, newStrategyName);
+	}
+
+	@AuraEnabled
+	public static Strategy checkRetrievalStatusRequest(String sessionId, String id){
+		return getDefaultInstance().instanceCheckRetrievalStatusRequest(sessionId, id);
+	}
+
+	//returns deployment job ID
+	@AuraEnabled
+	public static String getStrategyRequest(String sessionId, String strategyName){
+		return getDefaultInstance().instanceGetStrategyRequest(sessionId, strategyName);
+	}
+
+	@AuraEnabled
+	public static List<String> loadStrategyNamesRequest(String sessionId){
+		return getDefaultInstance().instanceLoadStrategyNamesRequest(sessionId);
+	}
+
+	@AuraEnabled
+	public static Strategy checkDeployStatusRequest(String sessionId, String id, Boolean retrieveAffectedStrategy){
+		return getDefaultInstance().instanceCheckDeployStatusRequest(sessionId, id, retrieveAffectedStrategy);
+	}
 }
-
-
