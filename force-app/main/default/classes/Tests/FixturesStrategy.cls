@@ -7,6 +7,14 @@ public with sharing class FixturesStrategy {
         return result;
     }
 
+    public static Strategy SpecialSymbolsStrategy() {
+        Strategy result = new Strategy();
+        result.name = '<>&"\'';
+        result.description = '<>&"\'';
+        result.masterLabel = '<>&"\'';
+        return result;
+    }
+
     public static Strategy UnionNodeStrategy() {
         Strategy result = NoNodesStrategy();
         UnionNode node = new UnionNode();

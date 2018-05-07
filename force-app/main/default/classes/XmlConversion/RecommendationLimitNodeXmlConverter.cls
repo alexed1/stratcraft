@@ -10,16 +10,19 @@ public with sharing class RecommendationLimitNodeXmlConverter extends BaseNodeXm
         for (Dom.XMLNode child : node.getChildElements()) {
             String childName = child.getName();
             if (childName == 'filterMode') {
-                result.filterModes.Add(child.getText());
+                String filterMode = child.getText();
+                result.filterModes.Add(filterMode == null ? '' : filterMode.unescapeXml());
             }
             else if (childName == 'removeDuplicates') {
                 result.removeDuplicates = Boolean.valueOf(child.getText());
             }
             else if (childName == 'maxRecommendationCount') {
-                result.maxRecommendationCount = Integer.valueOf(child.getText());
+                String maxCount = child.getText();
+                result.maxRecommendationCount = String.isBlank(maxCount) ? 0 : Integer.valueOf(maxCount);
             }
             else if (childName == 'lookbackDuration') {
-                result.lookbackDuration = Integer.valueOf(child.getText());
+                String lookback = child.getText();
+                result.lookbackDuration = String.isBlank(lookback) ? 0 : Integer.valueOf(lookback);
             }
         }
         return result;
@@ -38,7 +41,10 @@ public with sharing class RecommendationLimitNodeXmlConverter extends BaseNodeXm
         result.addChildElement('lookbackDuration', null, null).addTextNode(String.valueOf(actualNode.lookbackDuration));
         if (actualNode.filterModes != null) {
             for (String filterMode : actualNode.filterModes) {
-                result.addChildElement('filterMode', null, null).addTextNode(filterMode);
+                if (String.isBlank(filterMode)) {
+                    continue;
+                }
+                result.addChildElement('filterMode', null, null).addTextNode(filterMode.escapeXml());
             }
         }
         return result;

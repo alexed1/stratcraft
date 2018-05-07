@@ -11,7 +11,7 @@
             'Expression Builder',
             ['c:expressionBuilder', function (body) {
                 body.set('v.mode', 'soql');
-                body.set('v.soqlExpression', cmp.get('v.currentNode.soql'));
+                body.set('v.expression', cmp.get('v.currentNode.soql'));
                 body.load();
             }],
             function (body) {

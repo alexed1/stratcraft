@@ -9,10 +9,12 @@ public with sharing class SoqlLoadNodeXmlConverter extends BaseNodeXmlConverter 
         }
         for (Dom.XMLNode child : node.getChildElements()) {
             String childName = child.getName();
+            String value = child.getText();
+            value = String.isBlank(value) ? '' : value.unescapeXml();
             if (childName == 'soql') {
-                result.soql = child.getText();
+                result.soql = value;
             } else if (childName == 'fieldNameRemapping') {
-                result.fieldNameRemapping = child.getText();
+                result.fieldNameRemapping = value;
             }
         }     
         return result;
@@ -26,9 +28,9 @@ public with sharing class SoqlLoadNodeXmlConverter extends BaseNodeXmlConverter 
             return null;
         }
         SoqlLoadNode actualNode = (SoqlLoadNode)node;
-        result.addChildElement('soql', null, null).addTextNode(actualNode.Soql == null ? '' : actualNode.Soql);
+        result.addChildElement('soql', null, null).addTextNode(actualNode.Soql == null ? '' : actualNode.Soql.escapeXml());
         if (!String.isBlank(actualNode.fieldNameRemapping)) {
-            result.addChildElement('fieldNameRemapping', null, null).addTextNode(actualNode.fieldNameRemapping);
+            result.addChildElement('fieldNameRemapping', null, null).addTextNode(actualNode.fieldNameRemapping.escapeXml());
         }
         return result;
     }

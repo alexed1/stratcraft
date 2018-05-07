@@ -8,6 +8,13 @@ public with sharing class FixturesXml {
         + '<masterLabel>MasterLabel</masterLabel>'
         + '<recommendationStrategyName>Name</recommendationStrategyName>'
         + '</RecommendationStrategy>';
+        
+    public static String SpecialSymbolsStrategyXml =
+        '<RecommendationStrategy xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'
+        + '<description>&lt;&gt;&amp;&quot;&apos;</description>'
+        + '<masterLabel>&lt;&gt;&amp;&quot;&apos;</masterLabel>'
+        + '<recommendationStrategyName>&lt;&gt;&amp;&quot;&apos;</recommendationStrategyName>'
+        + '</RecommendationStrategy>';
 
     public static String UnionNodeStrategyXml = 
         '<RecommendationStrategy xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'
