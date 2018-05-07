@@ -236,8 +236,13 @@ public with sharing class MetadataServiceController {
 						if(deployMessage.problem != null)
 							errors += deployMessage.problem;
 
-					if (errors!='')
-						throw new AuraHandledException('MetadataServiceController: ' + errors);
+					if (errors!='') {
+						//This is done for error message to be retrievable in Apex code
+						String errorMessage = 'MetadataServiceController: ' + errors;
+						AuraHandledException e = new AuraHandledException(errorMessage);
+        				e.setMessage(errorMessage);
+						throw e;
+					}
 				}
 
 				if (retrieveAffectedStrategy != null && retrieveAffectedStrategy) {
@@ -259,7 +264,10 @@ public with sharing class MetadataServiceController {
 			throw ex;
 		}
 		catch (Exception ex) {
-			throw new AuraHandledException('MetadataServiceController: ' + ex.getMessage());
+			String errorMessage = 'MetadataServiceController: ' + ex.getMessage();
+			AuraHandledException aex = new AuraHandledException(errorMessage);
+			aex.setMessage(errorMessage);
+			throw aex;
 		}
 	}
 

@@ -62,43 +62,6 @@ public class MetadataService {
         private String[] field_order_type_info = new String[]{'changed','columnNumber','componentType','created','createdDate','deleted','fileName','fullName','id','lineNumber','problem','problemType','success'};
     }
 
-    public class upsertMetadataResponse_element {
-        public MetadataService.UpsertResult[] result;
-        private String[] result_type_info = new String[]{'result','http://soap.sforce.com/2006/04/metadata',null,'0','-1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'result'};
-    }
-
-    public class UpsertResult {
-        public Boolean created;
-        public MetadataService.Error[] errors;
-        public String fullName;
-        public Boolean success;
-        private String[] created_type_info = new String[]{'created','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] errors_type_info = new String[]{'errors','http://soap.sforce.com/2006/04/metadata',null,'0','-1','false'};
-        private String[] fullName_type_info = new String[]{'fullName','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] success_type_info = new String[]{'success','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'created','errors','fullName','success'};
-    }
-
-    public class readMetadata_element {
-        public String type_x;
-        public String[] fullNames;
-        private String[] type_x_type_info = new String[]{'type','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] fullNames_type_info = new String[]{'fullNames','http://soap.sforce.com/2006/04/metadata',null,'0','-1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'type_x','fullNames'};
-    }
-
-    public interface IReadResult {
-        MetadataService.Metadata[] getRecords();
-    }
-
-    public interface IReadResponseElement {
-        IReadResult getResult();
-    }
-
     public class deployResponse_element {
         public MetadataService.AsyncResult result;
         private String[] result_type_info = new String[]{'result','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
@@ -138,126 +101,6 @@ public class MetadataService {
         private String[] testLevel_type_info = new String[]{'testLevel','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
         private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
         private String[] field_order_type_info = new String[]{'allowMissingFiles','autoUpdatePackage','checkOnly','ignoreWarnings','performRetrieve','purgeOnDelete','rollbackOnError','runTests','singlePackage','testLevel'};
-    }
-
-    public class createMetadataResponse_element {
-        public MetadataService.SaveResult[] result;
-        private String[] result_type_info = new String[]{'result','http://soap.sforce.com/2006/04/metadata',null,'0','-1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'result'};
-    }
-
-    public class createMetadata_element {
-        public MetadataService.Metadata[] metadata;
-        private String[] metadata_type_info = new String[]{'metadata','http://soap.sforce.com/2006/04/metadata',null,'0','-1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'metadata'};
-    }
-
-    public class describeValueTypeResponse_element {
-        public MetadataService.DescribeValueTypeResult result;
-        private String[] result_type_info = new String[]{'result','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'result'};
-    }
-
-    public class describeValueType_element {
-        public String type_x;
-        private String[] type_x_type_info = new String[]{'type','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'type_x'};
-    }
-
-    public class PicklistEntry {
-        public Boolean active;
-        public Boolean defaultValue;
-        public String label;
-        public String validFor;
-        public String value;
-        private String[] active_type_info = new String[]{'active','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] defaultValue_type_info = new String[]{'defaultValue','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] label_type_info = new String[]{'label','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] validFor_type_info = new String[]{'validFor','http://soap.sforce.com/2006/04/metadata',null,'0','1','false'};
-        private String[] value_type_info = new String[]{'value','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'active','defaultValue','label','validFor','value'};
-    }
-
-    public class ValueTypeField {
-        public MetadataService.ValueTypeField[] fields;
-        public String[] foreignKeyDomain;
-        public Boolean isForeignKey;
-        public Boolean isNameField;
-        public Integer minOccurs;
-        public String name;
-        public MetadataService.PicklistEntry[] picklistValues;
-        public String soapType;
-        public Boolean valueRequired;
-        private String[] fields_type_info = new String[]{'fields','http://soap.sforce.com/2006/04/metadata',null,'0','-1','false'};
-        private String[] foreignKeyDomain_type_info = new String[]{'foreignKeyDomain','http://soap.sforce.com/2006/04/metadata',null,'0','-1','false'};
-        private String[] isForeignKey_type_info = new String[]{'isForeignKey','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] isNameField_type_info = new String[]{'isNameField','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] minOccurs_type_info = new String[]{'minOccurs','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] name_type_info = new String[]{'name','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] picklistValues_type_info = new String[]{'picklistValues','http://soap.sforce.com/2006/04/metadata',null,'0','-1','false'};
-        private String[] soapType_type_info = new String[]{'soapType','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] valueRequired_type_info = new String[]{'valueRequired','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'fields','foreignKeyDomain','isForeignKey','isNameField','minOccurs','name','picklistValues','soapType','valueRequired'};
-    }
-
-    public class DescribeValueTypeResult {
-        public Boolean apiCreatable;
-        public Boolean apiDeletable;
-        public Boolean apiReadable;
-        public Boolean apiUpdatable;
-        public MetadataService.ValueTypeField parentField;
-        public MetadataService.ValueTypeField[] valueTypeFields;
-        private String[] apiCreatable_type_info = new String[]{'apiCreatable','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] apiDeletable_type_info = new String[]{'apiDeletable','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] apiReadable_type_info = new String[]{'apiReadable','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] apiUpdatable_type_info = new String[]{'apiUpdatable','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] parentField_type_info = new String[]{'parentField','http://soap.sforce.com/2006/04/metadata',null,'0','1','false'};
-        private String[] valueTypeFields_type_info = new String[]{'valueTypeFields','http://soap.sforce.com/2006/04/metadata',null,'0','-1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'apiCreatable','apiDeletable','apiReadable','apiUpdatable','parentField','valueTypeFields'};
-    }
-
-    public class deployRecentValidationResponse_element {
-        public String result;
-        private String[] result_type_info = new String[]{'result','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'result'};
-    }
-
-    public class deployRecentValidation_element {
-        public String validationId;
-        private String[] validationId_type_info = new String[]{'validationId','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'validationId'};
-    }
-
-    public class cancelDeployResponse_element {
-        public MetadataService.CancelDeployResult result;
-        private String[] result_type_info = new String[]{'result','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'result'};
-    }
-
-    public class cancelDeploy_element {
-        public String String_x;
-        private String[] String_x_type_info = new String[]{'String','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'String_x'};
-    }
-
-    public class CancelDeployResult {
-        public Boolean done;
-        public String id;
-        private String[] done_type_info = new String[]{'done','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] id_type_info = new String[]{'id','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'done','id'};
     }
 
     public class retrieveResponse_element {
@@ -611,140 +454,6 @@ public class MetadataService {
         private String[] field_order_type_info = new String[]{'canceledBy','canceledByName','checkOnly','completedDate','createdBy','createdByName','createdDate','details','done','errorMessage','errorStatusCode','id','ignoreWarnings','lastModifiedDate','numberComponentErrors','numberComponentsDeployed','numberComponentsTotal','numberTestErrors','numberTestsCompleted','numberTestsTotal','rollbackOnError','runTestsEnabled','startDate','stateDetail','status','success'};
     }
 
-    public class describeMetadataResponse_element {
-        public MetadataService.DescribeMetadataResult result;
-        private String[] result_type_info = new String[]{'result','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'result'};
-    }
-
-    public class describeMetadata_element {
-        public Double asOfVersion;
-        private String[] asOfVersion_type_info = new String[]{'asOfVersion','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'asOfVersion'};
-    }
-
-    public class DescribeMetadataObject {
-        public String[] childXmlNames;
-        public String directoryName;
-        public Boolean inFolder;
-        public Boolean metaFile;
-        public String suffix;
-        public String xmlName;
-        private String[] childXmlNames_type_info = new String[]{'childXmlNames','http://soap.sforce.com/2006/04/metadata',null,'0','-1','false'};
-        private String[] directoryName_type_info = new String[]{'directoryName','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] inFolder_type_info = new String[]{'inFolder','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] metaFile_type_info = new String[]{'metaFile','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] suffix_type_info = new String[]{'suffix','http://soap.sforce.com/2006/04/metadata',null,'0','1','false'};
-        private String[] xmlName_type_info = new String[]{'xmlName','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'childXmlNames','directoryName','inFolder','metaFile','suffix','xmlName'};
-    }
-
-    public class DescribeMetadataResult {
-        public MetadataService.DescribeMetadataObject[] metadataObjects;
-        public String organizationNamespace;
-        public Boolean partialSaveAllowed;
-        public Boolean testRequired;
-        private String[] metadataObjects_type_info = new String[]{'metadataObjects','http://soap.sforce.com/2006/04/metadata',null,'0','-1','false'};
-        private String[] organizationNamespace_type_info = new String[]{'organizationNamespace','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] partialSaveAllowed_type_info = new String[]{'partialSaveAllowed','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] testRequired_type_info = new String[]{'testRequired','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'metadataObjects','organizationNamespace','partialSaveAllowed','testRequired'};
-    }
-
-    public class updateMetadataResponse_element {
-        public MetadataService.SaveResult[] result;
-        private String[] result_type_info = new String[]{'result','http://soap.sforce.com/2006/04/metadata',null,'0','-1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'result'};
-    }
-
-    public class updateMetadata_element {
-        public MetadataService.Metadata[] metadata;
-        private String[] metadata_type_info = new String[]{'metadata','http://soap.sforce.com/2006/04/metadata',null,'0','-1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'metadata'};
-    }
-
-    public class renameMetadataResponse_element {
-        public MetadataService.SaveResult result;
-        private String[] result_type_info = new String[]{'result','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'result'};
-    }
-
-    public class renameMetadata_element {
-        public String type_x;
-        public String oldFullName;
-        public String newFullName;
-        private String[] type_x_type_info = new String[]{'type','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] oldFullName_type_info = new String[]{'oldFullName','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] newFullName_type_info = new String[]{'newFullName','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'type_x','oldFullName','newFullName'};
-    }
-
-    public class SaveResult {
-        public MetadataService.Error[] errors;
-        public String fullName;
-        public Boolean success;
-        private String[] errors_type_info = new String[]{'errors','http://soap.sforce.com/2006/04/metadata',null,'0','-1','false'};
-        private String[] fullName_type_info = new String[]{'fullName','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] success_type_info = new String[]{'success','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'errors','fullName','success'};
-    }
-
-    public class deleteMetadataResponse_element {
-        public MetadataService.DeleteResult[] result;
-        private String[] result_type_info = new String[]{'result','http://soap.sforce.com/2006/04/metadata',null,'0','-1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'result'};
-    }
-
-    public class deleteMetadata_element {
-        public String type_x;
-        public String[] fullNames;
-        private String[] type_x_type_info = new String[]{'type','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] fullNames_type_info = new String[]{'fullNames','http://soap.sforce.com/2006/04/metadata',null,'0','-1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'type_x','fullNames'};
-    }
-
-    public class ExtendedErrorDetails {
-        public String extendedErrorCode;
-        private String[] extendedErrorCode_type_info = new String[]{'extendedErrorCode','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'extendedErrorCode'};
-    }
-
-    public class Error {
-        public MetadataService.ExtendedErrorDetails[] extendedErrorDetails;
-        public String[] fields;
-        public String message;
-        public String statusCode;
-        private String[] extendedErrorDetails_type_info = new String[]{'extendedErrorDetails','http://soap.sforce.com/2006/04/metadata',null,'0','-1','false'};
-        private String[] fields_type_info = new String[]{'fields','http://soap.sforce.com/2006/04/metadata',null,'0','-1','false'};
-        private String[] message_type_info = new String[]{'message','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] statusCode_type_info = new String[]{'statusCode','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'extendedErrorDetails','fields','message','statusCode'};
-    }
-
-    public class DeleteResult {
-        public MetadataService.Error[] errors;
-        public String fullName;
-        public Boolean success;
-        private String[] errors_type_info = new String[]{'errors','http://soap.sforce.com/2006/04/metadata',null,'0','-1','false'};
-        private String[] fullName_type_info = new String[]{'fullName','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] success_type_info = new String[]{'success','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'errors','fullName','success'};
-    }
-
     public class AllOrNoneHeader_element {
         public Boolean allOrNone;
         private String[] allOrNone_type_info = new String[]{'allOrNone','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
@@ -795,13 +504,6 @@ public class MetadataService {
         public String fullName;
     }
 
-    public class upsertMetadata_element {
-        public MetadataService.Metadata[] metadata;
-        private String[] metadata_type_info = new String[]{'metadata','http://soap.sforce.com/2006/04/metadata',null,'0','-1','false'};
-        private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
-        private String[] field_order_type_info = new String[]{'metadata'};
-    }
-
     public class ListMetadataQuery {
         public String folder;
         public String type_x;
@@ -838,6 +540,14 @@ public class MetadataService {
         private String[] type_x_type_info = new String[]{'type','http://soap.sforce.com/2006/04/metadata',null,'1','1','false'};
         private String[] apex_schema_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata','true','false'};
         private String[] field_order_type_info = new String[]{'createdById','createdByName','createdDate','fileName','fullName','id','lastModifiedById','lastModifiedByName','lastModifiedDate','manageableState','namespacePrefix','type_x'};
+
+        public FileProperties() {
+
+        }
+
+        public FileProperties(string fullName) {
+            this.fullName = fullName;
+        }
     }
 
     public class listMetadata_element {
@@ -876,97 +586,6 @@ public class MetadataService {
         private String CallOptions_hns = 'CallOptions=http://soap.sforce.com/2006/04/metadata';
         private String AllOrNoneHeader_hns = 'AllOrNoneHeader=http://soap.sforce.com/2006/04/metadata';
         private String[] ns_map_type_info = new String[]{'http://soap.sforce.com/2006/04/metadata', 'MetadataService'};
-
-        public MetadataService.DeleteResult[] deleteMetadata(String type_x,String[] fullNames) {
-            MetadataService.deleteMetadata_element request_x = new MetadataService.deleteMetadata_element();
-            request_x.type_x = type_x;
-            request_x.fullNames = fullNames;
-            MetadataService.deleteMetadataResponse_element response_x;
-            Map<String, MetadataService.deleteMetadataResponse_element> response_map_x = new Map<String, MetadataService.deleteMetadataResponse_element>();
-            response_map_x.put('response_x', response_x);
-            WebServiceCallout.invoke(
-              this,
-              request_x,
-              response_map_x,
-              new String[]{endpoint_x,
-              '',
-              'http://soap.sforce.com/2006/04/metadata',
-              'deleteMetadata',
-              'http://soap.sforce.com/2006/04/metadata',
-              'deleteMetadataResponse',
-              'MetadataService.deleteMetadataResponse_element'}
-            );
-            response_x = response_map_x.get('response_x');
-            return response_x.result;
-        }
-
-        public MetadataService.SaveResult renameMetadata(String type_x,String oldFullName,String newFullName) {
-            MetadataService.renameMetadata_element request_x = new MetadataService.renameMetadata_element();
-            request_x.type_x = type_x;
-            request_x.oldFullName = oldFullName;
-            request_x.newFullName = newFullName;
-            MetadataService.renameMetadataResponse_element response_x;
-            Map<String, MetadataService.renameMetadataResponse_element> response_map_x = new Map<String, MetadataService.renameMetadataResponse_element>();
-            response_map_x.put('response_x', response_x);
-            WebServiceCallout.invoke(
-              this,
-              request_x,
-              response_map_x,
-              new String[]{endpoint_x,
-              '',
-              'http://soap.sforce.com/2006/04/metadata',
-              'renameMetadata',
-              'http://soap.sforce.com/2006/04/metadata',
-              'renameMetadataResponse',
-              'MetadataService.renameMetadataResponse_element'}
-            );
-            response_x = response_map_x.get('response_x');
-            return response_x.result;
-        }
-
-        public MetadataService.SaveResult[] updateMetadata(MetadataService.Metadata[] metadata) {
-            MetadataService.updateMetadata_element request_x = new MetadataService.updateMetadata_element();
-            request_x.metadata = metadata;
-            MetadataService.updateMetadataResponse_element response_x;
-            Map<String, MetadataService.updateMetadataResponse_element> response_map_x = new Map<String, MetadataService.updateMetadataResponse_element>();
-            response_map_x.put('response_x', response_x);
-            WebServiceCallout.invoke(
-              this,
-              request_x,
-              response_map_x,
-              new String[]{endpoint_x,
-              '',
-              'http://soap.sforce.com/2006/04/metadata',
-              'updateMetadata',
-              'http://soap.sforce.com/2006/04/metadata',
-              'updateMetadataResponse',
-              'MetadataService.updateMetadataResponse_element'}
-            );
-            response_x = response_map_x.get('response_x');
-            return response_x.result;
-        }
-
-        public MetadataService.DescribeMetadataResult describeMetadata(Double asOfVersion) {
-            MetadataService.describeMetadata_element request_x = new MetadataService.describeMetadata_element();
-            request_x.asOfVersion = asOfVersion;
-            MetadataService.describeMetadataResponse_element response_x;
-            Map<String, MetadataService.describeMetadataResponse_element> response_map_x = new Map<String, MetadataService.describeMetadataResponse_element>();
-            response_map_x.put('response_x', response_x);
-            WebServiceCallout.invoke(
-              this,
-              request_x,
-              response_map_x,
-              new String[]{endpoint_x,
-              '',
-              'http://soap.sforce.com/2006/04/metadata',
-              'describeMetadata',
-              'http://soap.sforce.com/2006/04/metadata',
-              'describeMetadataResponse',
-              'MetadataService.describeMetadataResponse_element'}
-            );
-            response_x = response_map_x.get('response_x');
-            return response_x.result;
-        }
 
         public MetadataService.DeployResult checkDeployStatus(String asyncProcessId,Boolean includeDetails) {
             MetadataService.checkDeployStatus_element request_x = new MetadataService.checkDeployStatus_element();
@@ -1037,94 +656,6 @@ public class MetadataService {
             return response_x.result;
         }
 
-        public MetadataService.CancelDeployResult cancelDeploy(String String_x) {
-            MetadataService.cancelDeploy_element request_x = new MetadataService.cancelDeploy_element();
-            request_x.String_x = String_x;
-            MetadataService.cancelDeployResponse_element response_x;
-            Map<String, MetadataService.cancelDeployResponse_element> response_map_x = new Map<String, MetadataService.cancelDeployResponse_element>();
-            response_map_x.put('response_x', response_x);
-            WebServiceCallout.invoke(
-              this,
-              request_x,
-              response_map_x,
-              new String[]{endpoint_x,
-              '',
-              'http://soap.sforce.com/2006/04/metadata',
-              'cancelDeploy',
-              'http://soap.sforce.com/2006/04/metadata',
-              'cancelDeployResponse',
-              'MetadataService.cancelDeployResponse_element'}
-            );
-            response_x = response_map_x.get('response_x');
-            return response_x.result;
-        }
-
-        public String deployRecentValidation(String validationId) {
-            MetadataService.deployRecentValidation_element request_x = new MetadataService.deployRecentValidation_element();
-            request_x.validationId = validationId;
-            MetadataService.deployRecentValidationResponse_element response_x;
-            Map<String, MetadataService.deployRecentValidationResponse_element> response_map_x = new Map<String, MetadataService.deployRecentValidationResponse_element>();
-            response_map_x.put('response_x', response_x);
-            WebServiceCallout.invoke(
-              this,
-              request_x,
-              response_map_x,
-              new String[]{endpoint_x,
-              '',
-              'http://soap.sforce.com/2006/04/metadata',
-              'deployRecentValidation',
-              'http://soap.sforce.com/2006/04/metadata',
-              'deployRecentValidationResponse',
-              'MetadataService.deployRecentValidationResponse_element'}
-            );
-            response_x = response_map_x.get('response_x');
-            return response_x.result;
-        }
-
-        public MetadataService.DescribeValueTypeResult describeValueType(String type_x) {
-            MetadataService.describeValueType_element request_x = new MetadataService.describeValueType_element();
-            request_x.type_x = type_x;
-            MetadataService.describeValueTypeResponse_element response_x;
-            Map<String, MetadataService.describeValueTypeResponse_element> response_map_x = new Map<String, MetadataService.describeValueTypeResponse_element>();
-            response_map_x.put('response_x', response_x);
-            WebServiceCallout.invoke(
-              this,
-              request_x,
-              response_map_x,
-              new String[]{endpoint_x,
-              '',
-              'http://soap.sforce.com/2006/04/metadata',
-              'describeValueType',
-              'http://soap.sforce.com/2006/04/metadata',
-              'describeValueTypeResponse',
-              'MetadataService.describeValueTypeResponse_element'}
-            );
-            response_x = response_map_x.get('response_x');
-            return response_x.result;
-        }
-
-        public MetadataService.SaveResult[] createMetadata(MetadataService.Metadata[] metadata) {
-            MetadataService.createMetadata_element request_x = new MetadataService.createMetadata_element();
-            request_x.metadata = metadata;
-            MetadataService.createMetadataResponse_element response_x;
-            Map<String, MetadataService.createMetadataResponse_element> response_map_x = new Map<String, MetadataService.createMetadataResponse_element>();
-            response_map_x.put('response_x', response_x);
-            WebServiceCallout.invoke(
-              this,
-              request_x,
-              response_map_x,
-              new String[]{endpoint_x,
-              '',
-              'http://soap.sforce.com/2006/04/metadata',
-              'createMetadata',
-              'http://soap.sforce.com/2006/04/metadata',
-              'createMetadataResponse',
-              'MetadataService.createMetadataResponse_element'}
-            );
-            response_x = response_map_x.get('response_x');
-            return response_x.result;
-        }
-
         public MetadataService.AsyncResult deploy(String ZipFile,MetadataService.DeployOptions DeployOptions) {
             MetadataService.deploy_element request_x = new MetadataService.deploy_element();
             request_x.ZipFile = ZipFile;
@@ -1143,51 +674,6 @@ public class MetadataService {
               'http://soap.sforce.com/2006/04/metadata',
               'deployResponse',
               'MetadataService.deployResponse_element'}
-            );
-            response_x = response_map_x.get('response_x');
-            return response_x.result;
-        }
-
-        // public MetadataService.IReadResult readMetadata(String type_x,String[] fullNames) {
-        //     MetadataService.readMetadata_element request_x = new MetadataService.readMetadata_element();
-        //     request_x.type_x = type_x;
-        //     request_x.fullNames = fullNames;
-        //     MetadataService.IReadResponseElement response_x;
-        //     Map<String, MetadataService.IReadResponseElement> response_map_x = new Map<String, MetadataService.IReadResponseElement>();
-        //     response_map_x.put('response_x', response_x);
-        //     WebServiceCallout.invoke(
-        //       this,
-        //       request_x,
-        //       response_map_x,
-        //       new String[]{endpoint_x,
-        //       '',
-        //       'http://soap.sforce.com/2006/04/metadata',
-        //       'readMetadata',
-        //       'http://soap.sforce.com/2006/04/metadata',
-        //       'readMetadataResponse',
-        //       'MetadataService.read' + type_x + 'Response_element'}
-        //     );
-        //     response_x = response_map_x.get('response_x');
-        //     return response_x.getResult();
-        // }
-
-        public MetadataService.UpsertResult[] upsertMetadata(MetadataService.Metadata[] metadata) {
-            MetadataService.upsertMetadata_element request_x = new MetadataService.upsertMetadata_element();
-            request_x.metadata = metadata;
-            MetadataService.upsertMetadataResponse_element response_x;
-            Map<String, MetadataService.upsertMetadataResponse_element> response_map_x = new Map<String, MetadataService.upsertMetadataResponse_element>();
-            response_map_x.put('response_x', response_x);
-            WebServiceCallout.invoke(
-              this,
-              request_x,
-              response_map_x,
-              new String[]{endpoint_x,
-              '',
-              'http://soap.sforce.com/2006/04/metadata',
-              'upsertMetadata',
-              'http://soap.sforce.com/2006/04/metadata',
-              'upsertMetadataResponse',
-              'MetadataService.upsertMetadataResponse_element'}
             );
             response_x = response_map_x.get('response_x');
             return response_x.result;
