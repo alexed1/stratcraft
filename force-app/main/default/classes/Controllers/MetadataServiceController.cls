@@ -2,7 +2,6 @@ public with sharing class MetadataServiceController {
 
 	public static Integer API_VERSION = 43;
 
-
 	public static Strategy strategyXMLToObject(String xml) {
 		Strategy parsedStrategy = StrategyXmlConverter.convertXmlToStrategy(xml);
 		return parsedStrategy;
@@ -50,7 +49,6 @@ public with sharing class MetadataServiceController {
 		}
 		return createOrUpdateStrategyImpl(sessionId, strategyXML);
 	}
-
 
 	@AuraEnabled
 	public static String createOrUpdateStrategyRequest(String sessionId, String strategyJSON){
@@ -181,8 +179,6 @@ public with sharing class MetadataServiceController {
 
 		throw new AuraException('MetadataServiceController: Couldn\'t find strategy in retrieved zip archive');
 	}
-
-
 	//returns deployment job ID
 	@AuraEnabled
 	public static String getStrategyRequest(String sessionId, String strategyName){
@@ -240,8 +236,13 @@ public with sharing class MetadataServiceController {
 						if(deployMessage.problem != null)
 							errors += deployMessage.problem;
 
-					if (errors!='')
-						throw new AuraHandledException('MetadataServiceController: ' + errors);
+					if (errors!='') {
+						//This is done for error message to be retrievable in Apex code
+						String errorMessage = 'MetadataServiceController: ' + errors;
+						AuraHandledException e = new AuraHandledException(errorMessage);
+        				e.setMessage(errorMessage);
+						throw e;
+					}
 				}
 
 				if (retrieveAffectedStrategy != null && retrieveAffectedStrategy) {
@@ -263,7 +264,10 @@ public with sharing class MetadataServiceController {
 			throw ex;
 		}
 		catch (Exception ex) {
-			throw new AuraHandledException('MetadataServiceController: ' + ex.getMessage());
+			String errorMessage = 'MetadataServiceController: ' + ex.getMessage();
+			AuraHandledException aex = new AuraHandledException(errorMessage);
+			aex.setMessage(errorMessage);
+			throw aex;
 		}
 	}
 
@@ -280,19 +284,8 @@ public with sharing class MetadataServiceController {
 	}
 
 	private static MetadataService.MetadataPort createClient(String sessionId){
-
-		// fix for refresh token from this article https://www.gscloudsolutions.com/blogpost/Using-Named-Credentials-with-the-Apex-Wrapper-Salesforce-Metadata-API-apex-mdapi?blogpost=true&utm_source=twitter&utm_medium=social&utm_campaign=named_credentials
-		// needed only if we user named credentials
-		// String restUrl = 'callout:StratcraftMDAPI/services/data/v'+API_VERSION+'.0/limits';
-		// Http h = new Http();
-		// HttpRequest req = new HttpRequest();
-		// req.setEndpoint(restUrl);
-		// req.setMethod('GET');
-		// HttpResponse res = h.send(req);
-
 		MetadataService.MetadataPort service = new MetadataService.MetadataPort();
 		service.SessionHeader = new MetadataService.SessionHeader_element();
-		//service.SessionHeader.sessionId = '{!$Credential.OAuthToken}'; <---- Named credentials stuff
 		service.SessionHeader.sessionId = sessionId;
 		return service;
 	}
@@ -329,7 +322,4 @@ public with sharing class MetadataServiceController {
 
 		return service.retrieve(request).id;
 	}
-
 }
-
-
