@@ -6,7 +6,7 @@
         //for example
         //https://andreic1-dev-ed.lightning.force.com/one/one.app#/n/andreic__Strategy_Crafter
         var splitedUrl = currentUrl.split('/');
-        var lastPart = currentUrl[splitedUrl.length - 1];
+        var lastPart = splitedUrl[splitedUrl.length - 1];
 
         var prefixSeparatorIndex = lastPart.lastIndexOf('__');
         var organizationPrefix = '';
