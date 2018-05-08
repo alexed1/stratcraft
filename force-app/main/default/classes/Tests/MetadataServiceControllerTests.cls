@@ -23,8 +23,10 @@ public with sharing class MetadataServiceControllerTests {
 
     @isTest
     public static void loadStrategyNamesRequest_Always_ReturnsListOfNames() {
+        Test.startTest();
         Test.setMock(WebServiceMock.class, new LoadStrategyNamesWebServiceMock());
         List<string> strategyNames = MetadataServiceController.loadStrategyNamesRequest('id');
+        Test.stopTest();
         System.assertEquals('Abc1', strategyNames[0]);
         System.assertEquals('Abc2', strategyNames[1]);
     }
@@ -49,8 +51,10 @@ public with sharing class MetadataServiceControllerTests {
 
     @isTest
     public static void getStrategyRequest_Always_ReturnsRequestId() {
+        Test.startTest();
         Test.setMock(WebServiceMock.class, new RetrieveResponseWebServiceMock());
         String requestId = MetadataServiceController.getStrategyRequest('sessionId', 'Strategy Name');
+        Test.stopTest();
         System.assertEquals('123', requestId);
     }
 
@@ -74,29 +78,37 @@ public with sharing class MetadataServiceControllerTests {
 
     @isTest
     public static void createOrUpdateStrategyRequest_Always_ReturnsRequestId() {
+        Test.startTest();
         Test.setMock(WebServiceMock.class, new DeployResponseWebServiceMock());
         String requestId = MetadataServiceController.createOrUpdateStrategyRequest('sessionId', FixturesJson.UnionNodeStrategyJson);
+        Test.stopTest();
         System.assertEquals('123', requestId);
     }
 
     @isTest
     public static void deleteStrategyRequest_Always_ReturnsRequestId() {
+        Test.startTest();
         Test.setMock(WebServiceMock.class, new DeployResponseWebServiceMock());
         String requestId = MetadataServiceController.deleteStrategyRequest('sessionId', 'Strategy');
+        Test.stopTest();
         System.assertEquals('123', requestId);
     }
 
     @isTest
     public static void renameStrategyRequest_Always_ReturnsRequestId() {
+        Test.startTest();
         Test.setMock(WebServiceMock.class, new DeployResponseWebServiceMock());
         String requestId = MetadataServiceController.renameStrategyRequest('sessionId', FixturesJson.UnionNodeStrategyJson, 'NewStrategy');
+        Test.stopTest();
         System.assertEquals('123', requestId);
     }
 
     @isTest
     public static void copyStrategyRequest_Always_ReturnsRequestId() {
+        Test.startTest();
         Test.setMock(WebServiceMock.class, new DeployResponseWebServiceMock());
         String requestId = MetadataServiceController.copyStrategyRequest('sessionId', FixturesJson.UnionNodeStrategyJson, 'NewStrategy');
+        Test.stopTest();
         System.assertEquals('123', requestId);
     }
 
@@ -122,8 +134,10 @@ public with sharing class MetadataServiceControllerTests {
 
     @isTest
     public static void checkRetrievalStatusRequest_WhenRequestIsSuccessful_ReturnsStrategy() {
+        Test.startTest();
         Test.setMock(WebServiceMock.class, new CheckRetrieveStatusResponseWebServiceMock());
         Strategy strategy = MetadataServiceController.checkRetrievalStatusRequest('123', '123');
+        Test.stopTest();
         System.assertEquals('UniqueName1', strategy.masterLabel);
     }
 
@@ -165,8 +179,10 @@ public with sharing class MetadataServiceControllerTests {
 
     @isTest
     public static void checkDeployStatusRequest_WhenRequestIsSuccessful_ReturnsStrategy() {
+        Test.startTest();
         Test.setMock(WebServiceMock.class, new CheckDeployStatusResponseSuccessWebServiceMock());
         Strategy strategy = MetadataServiceController.checkDeployStatusRequest('123', '123', true);
+        Test.stopTest();
         System.assertEquals('UniqueName1', strategy.masterLabel);
     }
 
@@ -195,6 +211,7 @@ public with sharing class MetadataServiceControllerTests {
     
     @isTest
     public static void checkDeployStatusRequest_WhenRequestFails_ThrowsException() {
+        Test.startTest();
         Test.setMock(WebServiceMock.class, new CheckDeployStatusResponseFailureWebServiceMock());
         String errorMessage = '';
         try {
@@ -203,6 +220,7 @@ public with sharing class MetadataServiceControllerTests {
         catch (AuraHandledException ex) {
             errorMessage = ex.getMessage();
         }
+        Test.stopTest();
         System.assertEquals('MetadataServiceController: Bad error', errorMessage);
     }
 }
