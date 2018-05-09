@@ -120,22 +120,22 @@
 }
 
 .THIS .if-node {
-	background-color: orange;
+	background-color: #6d9de3;
 	background-image: url(/resource/ifNode);
 }
 
 .THIS .union-node {
-	background-color: orangered;
+	background-color: #FF6A00;
 	background-image: url(/resource/unionNode);
 }
 
 .THIS .soql-load-node {
-	background-color: pink;
+	background-color: #ffd800;
 	background-image: url(/resource/loadSoqlNode);
 }
 
 .THIS .recommendation-limit-node {
-	background-color: green;
+	background-color: #267F00;
 	background-image: url(/resource/recommendationLimitNode);
 }
 
@@ -155,7 +155,7 @@
 }
 
 .THIS .filter-node {
-	background-color: blue;
+	background-color: #Fd90b5;
 	background-image: url(/resource/filterNode);
 }
 
