@@ -166,6 +166,7 @@
                 layoutNode: treeLayout.root,
                 visualNode: self.createNode(cmp, container, strategy, treeLayout.root)
             });
+            var rootVisualNode = queue[0].visualNode;
             jsPlumb.batch(function () {
                 var parentIsRoot = true;
                 while (queue.length > 0) {
@@ -205,12 +206,25 @@
                         }
                     });
                 }
+                //This is for the case when there is only root node in the strategy
+                if (parentIsRoot && (!treeLayout.root.strategyNode.children || treeLayout.root.strategyNode.children.length == 0)) {
+                    var endpoint = jsPlumb.addEndpoint(rootVisualNode, {
+                        anchor: 'Left',
+                        isTarget: true,
+                        endpoint: 'Blank'
+                    });
+                    self.addLabelOverlay(endpoint, treeLayout.root.strategyNode.name, treeLayout.root.strategyNode.description, false);
+                }
             });
             var overlays = Array.from(container.getElementsByClassName('jtk-overlay'));
             //For some reason jsPlumb adds strange translate transform. The next line return the labels back to their origins
             overlays.forEach(function (item) {
                 item.style.transform = 'none';
             });
+            if (overlays.length === 1) {
+                overlays[0].style.left = -48 + 'px';
+                overlays[0].style.top = 48 + 'px';
+            }
             var drake = dragula([container], {
                 moves: function (parent, container, handle) {
                     return parent.classList.contains('node');

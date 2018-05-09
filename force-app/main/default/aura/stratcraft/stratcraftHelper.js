@@ -214,35 +214,14 @@
     _undoManager.changeNode(strategy, oldNode, newNode);
   },
 
-  showDeleteNodeDialog: function (strategy, node, cmp) {
+  deleteNodeAndSaveStrategy: function (strategy, node, cmp) {
     var self = this;
-    var hasChildren = _strategy.hasChildrenNodes(strategy, node);
-    var question = 'Are you sure you want to delete this node';
-    if (hasChildren) {
-      question = question + ' and all its children?';
-    }
-    else {
-      question = question + '?';
-    }
-    _modalDialog.show(
-      'Confirm Node Deletion',
-      ['c:modalWindowGenericBody', function (body) {
-        body.set('v.text', question);
-        body.set('v.iconName', _force.Icons.Action.Delete);
-      }],
-      function (bodyComponent) {
-        //This is to close 'delete' dialog
-        _modalDialog.close();
-        //This is to close 'property page' dialog
-        _modalDialog.close();
-        self.saveStrategy(cmp, node, null, function () {
-          var activeView = self.getActiveView(cmp);
-          if (activeView.selectNode) {
-            activeView.selectNode(null);
-          }
-        });
+    self.saveStrategy(cmp, node, null, function () {
+      var activeView = self.getActiveView(cmp);
+      if (activeView.selectNode) {
+        activeView.selectNode(null);
       }
-    );
+    });
   },
 
   showNewNodeDialog: function (cmp, strategy, strategyNode, allowParentSelection) {
