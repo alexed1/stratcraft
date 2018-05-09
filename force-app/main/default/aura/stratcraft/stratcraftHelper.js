@@ -281,7 +281,7 @@
         newStrategy.name = body.get("v.strategyName");
         newStrategy.description = body.get("v.strategyDescription");
         newStrategy.masterLabel = body.get("v.strategyMasterLabel");
-        newStrategy.nodes = [{ "removeDuplicates": true, "description": "the root", "name": "RootNode", "nodeType": "union", "parentNodeName": "" }];
+        newStrategy.nodes = [{ "removeDuplicates": true, "description": "The root", "name": "WinningPropositions", "nodeType": "union", "parentNodeName": "" }];
 
         var cmpEvent = $A.get("e.c:mdCreateOrUpdateStrategyRequest");
         cmpEvent.setParams({

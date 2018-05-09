@@ -17,7 +17,7 @@
     },
 
     handleCurrentStrategyChanged: function (cmp, event, helper) {
-        var currentStrategy = cmp.get("v.currentStrategy");
+        var currentStrategy = cmp.get('v.currentStrategy');
 
         var inactiveView = helper.getInactiveView(cmp);
         inactiveView.refresh();
