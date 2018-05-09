@@ -131,7 +131,7 @@ window._undoManager = (function () {
             //Update parent of original children
             if (isNameChanged) {
                 originalChildren.forEach(function (item) {
-                    _changePropertyValue(item, 'name', newNode.name);
+                    _changePropertyValue(item, 'parentNodeName', newNode.name);
                 });
                 //If parent node refers the current one in one of its branches, we should update this branch
                 //If original parent is empty then we are renaming the root node
