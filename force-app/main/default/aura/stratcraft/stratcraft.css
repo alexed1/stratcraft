@@ -3,6 +3,10 @@
 	width:15%;
 }
 
+.THIS .error-text {
+	color: rgb(194, 57, 52);
+}
+
 .THIS .select_box {
 	width: 250px;
 	margin: 0 0 10px;

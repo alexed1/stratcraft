@@ -257,7 +257,7 @@
         _cmpUi.spinnerOn(cmp, "spinner");
 
         var newStrategy = {};
-        newStrategy.name = body.get("v.strategyName");
+        newStrategy.name = body.get("v.strategyName").trim();
         newStrategy.description = body.get("v.strategyDescription");
         newStrategy.masterLabel = body.get("v.strategyMasterLabel");
         newStrategy.nodes = [{ "removeDuplicates": true, "description": "The root", "name": "WinningPropositions", "nodeType": "union", "parentNodeName": "" }];
@@ -279,7 +279,10 @@
           }
         });
         cmpEvent.fire();
-      }, null, null, 'narrowpopoverclass');
+      },
+      function (body) {
+        return body.validate();
+      }, null, 'narrowpopoverclass');
   },
 
   exportStrategyXML: function (cmp) {
