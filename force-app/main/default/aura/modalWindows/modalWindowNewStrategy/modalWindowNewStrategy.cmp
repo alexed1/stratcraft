@@ -2,7 +2,6 @@
     <aura:attribute name="strategyName" type="String" />
     <aura:attribute name="strategyDescription" type="String" />
     <aura:attribute name="strategyMasterLabel" type="String" />
-    <!-- <aura:attribute name="_validationIsActive" type="Boolean" default="False" access="private" /> -->
 
     <aura:method name="validate" action="{!c.validate}" />
 
