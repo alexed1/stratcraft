@@ -310,24 +310,8 @@
   showImportXMLDialog: function (cmp) {
     var self = this;
     _modalDialog.show(
-      'Importing Strategy XML',     
-       [ _utils.getPackagePrefix() + ':modalWindowImportStrategyXMLBody', function (body) {
-        var validateCallback = function (text) {
-          var result = true;
-          if ((text || '').trim().match(/^\s*$/)) {
-            result = false;
-            body.set('v.errorMessage', 'XML can\'t be empty or contain only whitespaces');
-          }
-          var xmlValidationError = _utils.validateXML(text);
-          if (xmlValidationError) {
-            result = false;
-            body.set('v.errorMessage', xmlValidationError);
-          }
-          return result;
-        };
-        body.set('v.validateCallback', validateCallback);
-      }],
-
+      'Importing Strategy XML',
+      [_utils.getPackagePrefix() + ':modalWindowImportStrategyXMLBody', function (body) {
         var validateCallback = function (text) {
           var result = true;
           if ((text || '').trim().match(/^\s*$/)) {
