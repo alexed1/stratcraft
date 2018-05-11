@@ -14,7 +14,7 @@ window._modalDialog = (function () {
         }
         else {
             result.name = configuration;
-            result.isComponent = configuration.startsWith('c:');
+            result.isComponent = configuration.split(':').length > 1;
         }
         return result;
     };
@@ -49,7 +49,8 @@ window._modalDialog = (function () {
             var bodyConfiguration = parseComponentConfiguration(body);
             var componentsToCreate = [];
             if (okCallback) {
-                componentsToCreate.unshift(['c:modalWindowFooter', {}]);
+                var packagePrefix = _utils.getPackagePrefix();
+                componentsToCreate.unshift([packagePrefix + ':modalWindowFooter', {}]);
             }
             if (bodyConfiguration.isComponent) {
                 componentsToCreate.unshift([bodyConfiguration.name, {}]);

@@ -117,6 +117,19 @@ window._utils = (function () {
       });
     },
 
+    getPackagePrefix: function () {
+      //Url will be like https://myorg.lightning.force.com/lightning/n/prefix__Strategy_Crafter
+      //              or https://myorg.lightning.force.com/lightning/n/Strategy_Crafter
+      var packagePart = window.location.href.split('/');
+      packagePart = packagePart[packagePart.length - 1];
+      packagePart = packagePart.split('__');
+      if (packagePart.length == 1) {
+        //We are in the org where no prefix is set up for our package - return default namespace
+        return 'c';
+      }
+      return packagePart[0];
+    },
+
     NodeRequestType: {
       ALL: 'ALL',
       ALL_EXCEPT_CURRENT: 'ALL_EXCEPT_CURRENT',
