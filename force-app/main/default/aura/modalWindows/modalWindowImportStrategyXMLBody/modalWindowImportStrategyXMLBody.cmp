@@ -1,10 +1,12 @@
 <aura:component>
-    <aura:attribute name="iconName" type="String" />
-    <aura:attribute name="text" type="String" />
     <aura:attribute name="input" type="String" default="" />
+    <aura:attribute name="validateCallback" type="Object" />
+    <aura:attribute name="errorMessage" type="String" />
 
-    <div class="slds-text-align_center">
-        <lightning:icon class="slds-m-right_x-small" iconName="{!v.iconName}" alternativeText="{!v.iconName}" /> {!v.text}
-        <lightning:textarea value="{!v.input}" required="true" label="Strategy XML" />
+    <aura:method name="validate" action="{!c.validate}" />
+
+    <div class="slds-text-align_left">
+        <lightning:textarea aura:id="text" value="{!v.input}" required="true" label="Strategy XML" messageWhenValueMissing=" " />
+        <div aura:id="textError" class="error-text slds-form-element__help slds-m-left_xx-small slds-hide">{!v.errorMessage}</div>
     </div>
 </aura:component>

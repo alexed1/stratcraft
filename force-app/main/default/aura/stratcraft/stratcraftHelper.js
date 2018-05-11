@@ -95,6 +95,7 @@
         _cmpUi.spinnerOff(cmp, 'spinner');
         if (!result.error) {
           var strategy = result.value;
+          self.fillMissingValues(strategy);
           cmp.set('v.currentStrategy', strategy);
           console.log('Retrieved strategy with name ' + strategy.name);
         }
@@ -212,6 +213,28 @@
       return;
     }
     _undoManager.changeNode(strategy, oldNode, newNode);
+    this.fillMissingValues(strategy);
+  },
+
+  fillMissingValues: function (strategy) {
+    if (!strategy.nodes) {
+      return;
+    }
+    strategy.nodes.forEach(function (item) {
+      if (item.nodeType === _utils.NodeType.RECOMMENDATION_LIMIT) {
+        if (!item.maxRecommendationCount) {
+          item.maxRecommendationCount = '0';
+        }
+        if (!item.lookbackDuration) {
+          item.lookbackDuration = '0';
+        }
+      }
+      if (item.nodeType === _utils.NodeType.SORT) {
+        if (!item.limit) {
+          item.limit = '0';
+        }
+      }
+    });
   },
 
   deleteNodeAndSaveStrategy: function (strategy, node, cmp) {
@@ -257,7 +280,7 @@
         _cmpUi.spinnerOn(cmp, "spinner");
 
         var newStrategy = {};
-        newStrategy.name = body.get("v.strategyName");
+        newStrategy.name = body.get("v.strategyName").trim();
         newStrategy.description = body.get("v.strategyDescription");
         newStrategy.masterLabel = body.get("v.strategyMasterLabel");
         newStrategy.nodes = [{ "removeDuplicates": true, "description": "The root", "name": "WinningPropositions", "nodeType": "union", "parentNodeName": "" }];
@@ -279,7 +302,10 @@
           }
         });
         cmpEvent.fire();
-      }, null, null, 'narrowpopoverclass');
+      },
+      function (body) {
+        return body.validate();
+      }, null, 'narrowpopoverclass');
   },
 
   exportStrategyXML: function (cmp) {
@@ -308,7 +334,22 @@
     var self = this;
     _modalDialog.show(
       'Importing Strategy XML',
-      _utils.getPackagePrefix() + ':modalWindowImportStrategyXMLBody',
+      [_utils.getPackagePrefix() + ':modalWindowImportStrategyXMLBody', function (body) {
+        var validateCallback = function (text) {
+          var result = true;
+          if ((text || '').trim().match(/^\s*$/)) {
+            result = false;
+            body.set('v.errorMessage', 'XML can\'t be empty or contain only whitespaces');
+          }
+          var xmlValidationError = _utils.validateXML(text);
+          if (xmlValidationError) {
+            result = false;
+            body.set('v.errorMessage', xmlValidationError);
+          }
+          return result;
+        };
+        body.set('v.validateCallback', validateCallback);
+      }],
       //on "Ok" clicked
       function (bodyComponent) {
         {
@@ -333,8 +374,10 @@
             }
           });
           cmpEvent.fire();
-
         };
+      },
+      function (bodyComponent) {
+        return bodyComponent.validate();
       });
   },
 
@@ -415,8 +458,22 @@
         body.set('v.text', 'What would the name of the copy be?');
         body.set('v.input', newName);
         body.set('v.iconName', _force.Icons.Action.Question);
+        body.set('v.textHeader', 'New Name');
+        var validateCallback = function (text) {
+          var result = true;
+          text = (text || '').trim();
+          if (!_strategy.isNameValid(text)) {
+            result = false;
+            body.set('v.errorMessage', 'Name can\'t be empty, can only contain underscores and alphanumeric characters, must begin with a letter, not include spaces, not end with an underscore, and not contain two consecutive underscores')
+          }
+          return result;
+        };
+        body.set('v.validateCallback', validateCallback);
       }],
-      okCallback);
+      okCallback,
+      function (body) {
+        return body.validate();
+      });
   },
 
   showRenameStrategyDialog: function (cmp, okCallback) {
@@ -426,9 +483,20 @@
     _modalDialog.show(
       'Renaming strategy',
       [_utils.getPackagePrefix() + ':modalWindowInputBody', function (body) {
-        body.set("v.input", strategyName);
+        body.set('v.input', strategyName);
         body.set('v.text', 'What would the new name of the "' + strategyName + '" strategy be?');
         body.set('v.iconName', _force.Icons.Action.Question);
+        body.set('v.textHeader', 'New Name');
+        var validateCallback = function (text) {
+          var result = true;
+          text = (text || '').trim();
+          if (!_strategy.isNameValid(text)) {
+            result = false;
+            body.set('v.errorMessage', 'Name can\'t be empty, can only contain underscores and alphanumeric characters, must begin with a letter, not include spaces, not end with an underscore, and not contain two consecutive underscores')
+          }
+          return result;
+        };
+        body.set('v.validateCallback', validateCallback);
       }],
       function (body) {
         var newName = body.get("v.input");
@@ -449,8 +517,10 @@
             }
           }
         });
-
         cmpEvent.fire();
+      },
+      function (body) {
+        return body.validate();
       });
   },
 

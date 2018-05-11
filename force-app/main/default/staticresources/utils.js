@@ -78,6 +78,38 @@ window._utils = (function () {
       return strIndex !== -1;
     },
 
+    validateXML: function (xml) {
+      const startsWith = 'This page contains the following errors:';
+      const endsWith = 'Below is a rendering of the page up to the first error.';
+      try {
+        if (document.implementation.createDocument) {
+          var parser = new DOMParser();
+          var myDocument = parser.parseFromString(xml, "text/xml");
+          if (myDocument.documentElement.firstChild.localName === 'parsererror') {
+            var result = myDocument.documentElement.firstChild.innerText;
+            if (result.startsWith(startsWith)) {
+              result = result.substr(startsWith.length);
+              result = result.charAt(0).toUpperCase() + result.slice(1);
+            }
+            if (result.endsWith(endsWith)) {
+              result = result.substr(0, result.length - endsWith.length);
+            }
+            return result;
+          }
+        } else if (window.ActiveXObject) {
+          var myDocument = new ActiveXObject("Microsoft.XMLDOM")
+          myDocument.async = false
+          var nret = myDocument.loadXML(xml);
+          if (!nret) {
+            return 'XML is invalid';
+          }
+        }
+      } catch (e) {
+        return '';    //maybe the user-agent does not support both, then it should be submitted and let server-side validation does the job
+      }
+      return '';
+    },
+
     escapeHtml: function (str) {
       // Escape a string for HTML interpolation
       return ('' + str).replace(htmlEscaper, function (match) {

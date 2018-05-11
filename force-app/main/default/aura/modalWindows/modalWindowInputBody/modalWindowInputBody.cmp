@@ -2,9 +2,17 @@
     <aura:attribute name="iconName" type="String" />
     <aura:attribute name="text" type="String" />
     <aura:attribute name="input" type="String" />
+    <aura:attribute name="validateCallback" type="Object" />
+    <aura:attribute name="errorMessage" type="String" />
+    <aura:attribute name="textHeader" type="String" />
 
-    <div class="slds-text-align_center">
+    <aura:method name="validate" action="{!c.validate}" />
+
+    <div class="slds-text-align_center">        
         <lightning:icon class="slds-m-right_x-small" iconName="{!v.iconName}" alternativeText="{!v.iconName}" /> {!v.text}
-        <lightning:input required="true" label="Required value" value="{!v.input}" />
+    </div>
+    <div class="slds-text-align_left">
+        <lightning:input aura:id="text" required="true" label="{!v.textHeader}" value="{!v.input}" messageWhenValueMissing=" " />
+        <div aura:id="textError" class="error-text slds-form-element__help slds-m-left_xx-small slds-hide">{!v.errorMessage}</div>
     </div>
 </aura:component>

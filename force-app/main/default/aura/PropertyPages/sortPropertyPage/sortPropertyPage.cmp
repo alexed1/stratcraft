@@ -1,12 +1,14 @@
 <aura:component>
     <aura:attribute name="currentNode" type="Object" />
 
-    <div class="slds-form-element">
-        <lightning:input aura:id="limit" label="Limit" required="false" value="{!v.currentNode.limit}" />
-    </div>
+    <aura:method name="validate" action="{!c.validate}" />
+    <aura:method name="clearValidation" action="{!c.clearValidation}" />
 
     <div class="slds-form-element">
-        <c:filterSet aura:id="filterSet" currentNode="{!v.currentNode}" title="Sort Keys" emptySetMessage="No sort keys added yet"
-            memberType="sort" />
+        <lightning:input aura:id="limit" type="number" label="Limit" step="1" min="0" value="{!v.currentNode.limit}" />
     </div>
+    <div class="slds-form-element">
+        <c:filterSet aura:id="filterSet" currentNode="{!v.currentNode}" title="Sort Keys" emptySetMessage="No sort keys added yet" memberType="sort" />
+    </div>
+    <div aura:id="filterSetError" class="error-text slds-form-element__help slds-m-left_xx-small slds-hide">At least one sort key must be added</div>
 </aura:component>
