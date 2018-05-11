@@ -129,7 +129,7 @@
         var errorMessage = event.getParam("error");
         _modalDialog.show(
             'Failed to save changes',
-            ['c:modalWindowGenericBody', function (body) {
+            [_utils.getPackagePrefix() + ':modalWindowGenericBody', function (body) {
                 body.set('v.text', 'Failed to save changes to ' + strategyName + ' strategy: ' + errorMessage
                     + '\r\nReload ' + strategyName + ' strategy?');
             }],

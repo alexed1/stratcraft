@@ -228,7 +228,7 @@
     var self = this;
     _modalDialog.show(
       'New Node Properties',
-      ['c:basePropertyPage', function (body) {
+      [_utils.getPackagePrefix() + ':basePropertyPage', function (body) {
         body.set('v.currentStrategy', strategy);
         body.set('v.currentNode', strategyNode);
         body.set('v.showParent', allowParentSelection);
@@ -251,7 +251,7 @@
     var self = this;
     _modalDialog.show(
       'Creating a Strategy',
-      ['c:modalWindowNewStrategy'],
+      [_utils.getPackagePrefix() + ':modalWindowNewStrategy'],
       function (body) {
         //construct an object and send it to be converted to xml
         _cmpUi.spinnerOn(cmp, "spinner");
@@ -308,7 +308,7 @@
     var self = this;
     _modalDialog.show(
       'Importing Strategy XML',
-      'c:modalWindowImportStrategyXMLBody',
+      _utils.getPackagePrefix() + ':modalWindowImportStrategyXMLBody',
       //on "Ok" clicked
       function (bodyComponent) {
         {
@@ -343,7 +343,7 @@
     var strategyName = cmp.get("v.selectedStrategyName");
     _modalDialog.show(
       'Deleting Strategy',
-      ['c:modalWindowGenericBody', function (body) {
+      [_utils.getPackagePrefix() + ':modalWindowGenericBody', function (body) {
         body.set('v.text', 'Are you sure you want to delete the strategy named "' + strategyName + '"?');
         body.set('v.iconName', _force.Icons.Action.Delete);
       }],
@@ -411,7 +411,7 @@
     var self = this;
     _modalDialog.show(
       'Copying strategy',
-      ['c:modalWindowInputBody', function (body) {
+      [_utils.getPackagePrefix() + ':modalWindowInputBody', function (body) {
         body.set('v.text', 'What would the name of the copy be?');
         body.set('v.input', newName);
         body.set('v.iconName', _force.Icons.Action.Question);
@@ -425,7 +425,7 @@
     var strategyName = cmp.get("v.selectedStrategyName");
     _modalDialog.show(
       'Renaming strategy',
-      ['c:modalWindowInputBody', function (body) {
+      [_utils.getPackagePrefix() + ':modalWindowInputBody', function (body) {
         body.set("v.input", strategyName);
         body.set('v.text', 'What would the new name of the "' + strategyName + '" strategy be?');
         body.set('v.iconName', _force.Icons.Action.Question);
