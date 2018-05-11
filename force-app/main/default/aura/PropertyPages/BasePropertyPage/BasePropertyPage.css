@@ -4,3 +4,7 @@
 .THIS .hidden {
     display: none
 }
+
+.THIS .error-text {
+	color: rgb(194, 57, 52);
+}

@@ -171,11 +171,12 @@ window._strategy = (function () {
         },
 
         isNameValid: function (name) {
-            if (!name || !name.trim()) {
+            name = (name || '').trim();
+            if (!name) {
                 return false;
             }
             //Name can only contain underscores and alphanumeric characters, begin with a letter, not include spaces, not end with an underscore
-            if (!name.match(/[a-z]{1}[a-z,0-9,_]*[^_]$/i)) {
+            if (!name.match(/^[a-z]{1}[a-z,0-9,_]*[^_]$/i)) {
                 return false;
             }
             //...and not contain two consecutive underscored

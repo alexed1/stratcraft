@@ -19,6 +19,16 @@ window._cmpUi = (function () {
             else {
                 console.log('Failed to find spinner with Id ' + spinnerIdResolved)
             }
-        }
+        },
+
+        toggleError: function (valueCmp, errorLabelCmp, isValid) {
+            if (isValid) {
+                $A.util.removeClass(valueCmp, 'slds-has-error');
+                $A.util.addClass(errorLabelCmp, 'slds-hide');
+            } else {
+                $A.util.addClass(valueCmp, 'slds-has-error');
+                $A.util.removeClass(errorLabelCmp, 'slds-hide');
+            }
+        },
     }
 })()
