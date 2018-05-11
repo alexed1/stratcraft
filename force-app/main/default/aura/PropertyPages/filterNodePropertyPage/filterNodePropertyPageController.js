@@ -2,7 +2,7 @@
     openExpressionBuilder: function (cmp, event, helper) {
         _modalDialog.show(
             'Expression Builder',
-            ['c:expressionBuilder', function (body) {
+            [_utils.getPackagePrefix() + ':expressionBuilder', function (body) {
                 body.set('v.expression', cmp.get('v.currentNode.expression'));
                 body.load();
             }],
