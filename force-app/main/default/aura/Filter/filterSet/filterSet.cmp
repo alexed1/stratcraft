@@ -9,6 +9,9 @@
     <aura:attribute name="emptySetMessage" type="String" />
     <aura:attribute name="memberType" type="String" default="filter" />
 
+    <aura:method name="validate" action="{!c.validate}" />
+    <aura:method name="clearValidation" action="{!c.clearValidation}" />
+
     <lightning:card>
         <aura:set attribute="title">
             {!v.title}
@@ -44,7 +47,6 @@
 
             <aura:iteration items="{!v.currentNode.argPairs}" var="item">
                 <div class="slds-m-top_x-small">
-
                     <c:argumentPair aura:id="argumentPair" currentItem="{!item}" deleteRequested="{!c.handleMemberDelete}" />
                 </div>
             </aura:iteration>
@@ -64,7 +66,5 @@
                 </div>
             </aura:iteration>
         </aura:if>
-
-
     </lightning:card>
 </aura:component>

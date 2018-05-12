@@ -112,7 +112,6 @@
             </aura:if>
         </div>
 
-
         <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isFilter}">
             <div class="slds-form-element">
                 <c:filterNodePropertyPage aura:id="filterNode" currentNode="{!v._currentNodeDirty}" />

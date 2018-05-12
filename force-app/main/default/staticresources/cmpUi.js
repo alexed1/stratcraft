@@ -23,11 +23,19 @@ window._cmpUi = (function () {
 
         toggleError: function (valueCmp, errorLabelCmp, isValid) {
             if (isValid) {
-                $A.util.removeClass(valueCmp, 'slds-has-error');
-                $A.util.addClass(errorLabelCmp, 'slds-hide');
+                if (valueCmp) {
+                    $A.util.removeClass(valueCmp, 'slds-has-error');
+                }
+                if (errorLabelCmp) {
+                    $A.util.addClass(errorLabelCmp, 'slds-hide');
+                }
             } else {
-                $A.util.addClass(valueCmp, 'slds-has-error');
-                $A.util.removeClass(errorLabelCmp, 'slds-hide');
+                if (valueCmp) {
+                    $A.util.addClass(valueCmp, 'slds-has-error');
+                }
+                if (errorLabelCmp) {
+                    $A.util.removeClass(errorLabelCmp, 'slds-hide');
+                }
             }
         },
     }

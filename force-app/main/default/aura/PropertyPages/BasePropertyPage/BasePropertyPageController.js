@@ -57,6 +57,15 @@
         cmp.set('v._isExternalConnection', currentNode && currentNode.nodeType === _utils.NodeType.EXTERNAL_CONNECTION);
         cmp.set('v._isRecordJoin', currentNode && currentNode.nodeType === _utils.NodeType.RECORD_JOIN);
 
+        if (currentNode
+            && currentNode.nodeType === _utils.NodeType.SORT
+            && (!currentNode.sortKeys || currentNode.sortKeys.length == 0)) {
+            cmp.set('v._currentNodeDirty.sortKeys',
+                [{
+                    name: 'Name',
+                    order: 'Asc'
+                }]);
+        }
         helper.clearValidation(cmp);
     },
 
