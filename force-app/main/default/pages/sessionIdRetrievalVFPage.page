@@ -10,6 +10,6 @@
         console.log(url);
         var origin = decodeURIComponent(url);
         var sessionId = document.getElementById('{!$Component.sessionId}').innerHTML;
-        parent.postMessage(sessionId, origin);
+        parent.postMessage({ sessionId: sessionId }, origin);
     </script>
 </apex:page>

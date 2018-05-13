@@ -21,10 +21,12 @@
 
         var listenerFunction = function (event) {
             //xss vulnerability?
-            var sessionId = event.data;
-            component.set("v.showVFPage", false);
-            component.set("v.sessionId", sessionId);
-            window.removeEventListener("message", listenerFunction);
+            var sessionId = event.data.sessionId;
+            if (sessionId) {
+                component.set("v.showVFPage", false);
+                component.set("v.sessionId", sessionId);
+                window.removeEventListener("message", listenerFunction);
+            }
         };
 
 
