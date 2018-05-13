@@ -168,6 +168,22 @@ window._strategy = (function () {
                 return true;
             }
             return this.isParentOf(strategy, expectedParent, expectedChild.parentNodeName);
+        },
+
+        isNameValid: function (name) {
+            name = (name || '').trim();
+            if (!name) {
+                return false;
+            }
+            //Name can only contain underscores and alphanumeric characters, begin with a letter, not include spaces, not end with an underscore
+            if (!name.match(/^[a-z]{1}[a-z,0-9,_]*[^_]$/i)) {
+                return false;
+            }
+            //...and not contain two consecutive underscored
+            if (name.match(/_{2,}/)) {
+                return false;
+            }
+            return true;
         }
     }
 })()

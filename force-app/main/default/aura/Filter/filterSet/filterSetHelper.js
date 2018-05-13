@@ -1,4 +1,32 @@
 ({
+    getChildComponents: function (cmp) {
+        return [
+            cmp.find('filter'),
+            cmp.find('argumentPair'),
+            cmp.find('sortConfig')
+        ];
+    },
+
+    validate: function (cmp) {
+        var result = true;
+        var childCmpList = this.getChildComponents(cmp);
+        childCmpList.forEach(function (item) {
+            if (item && item.validate && !item.validate()) {
+                result = false;
+            }
+        });
+        return result;
+    },
+
+    clearValidation: function (cmp) {
+        var childCmpList = this.getChildComponents(cmp);
+        childCmpList.forEach(function (item) {
+            if (item && item.clearValidation) {
+                item.clearValidation();
+            }
+        });
+    },
+
     updateSelectableNodes: function (cmp) {
         var currentNode = cmp.get('v.currentNode');
         if (!currentNode) {

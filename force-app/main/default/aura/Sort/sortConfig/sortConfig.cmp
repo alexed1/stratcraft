@@ -8,15 +8,15 @@
 
     <aura:registerEvent name="deleteRequested" type="c:filterDeleteRequestedEvent" />
 
+    <aura:method name="validate" action="{!c.validate}" />
+    <aura:method name="clearValidation" action="{!c.clearValidation}" />
+
     <div class="slds-has-top-magnet slds-box">
         <div class="slds-grid slds-wrap">
             <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-top">
                 <div class="slds-col  slds-size_10-of-12">
-                    
                    <lightning:input aura:id="sortName"  name="sortName" label="Sort on which Proposition Field?" value="{!v.currentItem.name}" />
-
-                   
-
+                   <div aura:id="sortNameError" class="error-text slds-form-element__help slds-m-left_xx-small slds-hide">Field can't be empty or contain whitespaces</div>
                 </div>
                 <div class="slds-col  slds-size_2-of-12">
                     <div class="slds-float_right">
@@ -28,27 +28,21 @@
             <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-center">
                 <div class="slds-col  slds-size_1-of-1">
                     <div class="slds-p-vertical_xx-small">
-                       <lightning:select aura:id="sortOrder" value="{!v.currentItem.order}" name="sortOrder" label="Select a sort direction" >
-                        <option value="">choose one...</option>
-                        <option value="Asc">ascending</option>
-                        <option value="Desc">descending</option>
+                        <lightning:select aura:id="sortOrder" value="{!v.currentItem.order}" name="sortOrder" label="Select a sort direction" >
+                            <option value="">choose one...</option>
+                            <option value="Asc">ascending</option>
+                            <option value="Desc">descending</option>
                         </lightning:select>
+                        <div aura:id="sortOrderError" class="error-text slds-form-element__help slds-m-left_xx-small slds-hide">Sort order must be specified</div>
                     </div>
                 </div>
             </div>
 
             <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-top">
-                <div class="slds-col  slds-size_10-of-12">
-                    
+                <div class="slds-col  slds-size_10-of-12">                    
                  <!--  <lightning:input aura:id="sortNulls"  name="sortNulls" label="Null values sort to top?" value="{!v.currentItem.nullsFirst}" type="checkbox" checked="{!v.currentItem.nullsFirst}"/> -->
-
-                   
-
-                </div>
-                
-            </div>
-
-            
+                </div>                
+            </div>            
         </div>
     </div>
 </aura:component>	

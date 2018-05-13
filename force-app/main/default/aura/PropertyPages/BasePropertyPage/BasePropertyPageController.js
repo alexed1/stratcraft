@@ -1,5 +1,13 @@
 ({
+    validate: function (cmp, event, helper) {
+        return helper.validate(cmp);
+    },
+
     handleSaveClick: function (cmp, event, helper) {
+        var isValid = helper.validate(cmp);
+        if (!isValid) {
+            return;
+        }
         var componentEvent = cmp.getEvent('propertyPageSaveRequest');
         componentEvent.setParams({
             'newNodeState': cmp.get('v._currentNodeDirty'),
@@ -35,6 +43,7 @@
             helper.loadNodeTypes(cmp);
             cmp.set('v.availableParentNodes', []);
         }
+        helper.clearValidation(cmp);
     },
 
     handleTypeChanged: function (cmp, event, helper) {
@@ -48,6 +57,16 @@
         cmp.set('v._isExternalConnection', currentNode && currentNode.nodeType === _utils.NodeType.EXTERNAL_CONNECTION);
         cmp.set('v._isRecordJoin', currentNode && currentNode.nodeType === _utils.NodeType.RECORD_JOIN);
 
+        if (currentNode
+            && currentNode.nodeType === _utils.NodeType.SORT
+            && (!currentNode.sortKeys || currentNode.sortKeys.length == 0)) {
+            cmp.set('v._currentNodeDirty.sortKeys',
+                [{
+                    name: 'Name',
+                    order: 'Asc'
+                }]);
+        }
+        helper.clearValidation(cmp);
     },
 
     //reset the page

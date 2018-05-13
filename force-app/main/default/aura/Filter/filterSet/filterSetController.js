@@ -8,6 +8,13 @@
         helper.updateSelectableNodes(cmp);
     },
 
+    validate: function (cmp, event, helper) {
+        return helper.validate(cmp);
+    },
+
+    clearValidation: function (cmp, event, helper) {
+        helper.clearValidation(cmp);
+    },
 
     handlePriorityChange: function (cmp, event, helper) {
         var isUp = event.getParam('destination') == 'up';
@@ -55,8 +62,11 @@
                     {
                         name: '',
                         nullsFirst: false,
-                        order: 'Desc'
+                        order: 'Asc'
                     });
+                if (sortKeys.length == 1) {
+                    sortKeys[0].name = 'Name';
+                }
                 cmp.set('v.currentNode.sortKeys', sortKeys);
                 break;
 

@@ -7,21 +7,16 @@
     <aura:handler name="init" value="{!this}" action="{!c.handleInit}" />
 
     <div class="slds-form-element">
-
-        <lightning:input aura:id="removeDuplicates" type="checkbox" label="Remove Duplicates" checked="{!v.currentNode.removeDuplicates}"
-        />
+        <lightning:input aura:id="removeDuplicates" type="checkbox" label="Remove Duplicates" checked="{!v.currentNode.removeDuplicates}" />
     </div>
     <div class="slds-form-element">
-
-        <lightning:input aura:id="filterModes" label="Filter Modes" placeholder="Multiple values should be comma-separated" value="{!v.filterModes}"
-        /> </div>
+        <lightning:input aura:id="filterModes" label="Filter Modes" placeholder="Multiple values should be comma-separated" value="{!v.filterModes}" />
+    </div>
     <div class="slds-form-element">
-
         <lightning:input aura:id="maxRecommendationCount" type="number" label="Max Recommendation Count" min="0" step="1" value="{!v.currentNode.maxRecommendationCount}"
         />
     </div>
     <div class="slds-form-element">
-        <lightning:input aura:id="lookbackDuration" type="number" label="Lookback Duration" min="0" step="1" value="{!v.currentNode.lookbackDuration}"
-        /> </div>
-
+        <lightning:input aura:id="lookbackDuration" type="number" label="Lookback Duration" min="0" step="1" value="{!v.currentNode.lookbackDuration}" /> 
+    </div>
 </aura:component>
