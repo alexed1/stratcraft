@@ -38,7 +38,6 @@
         if (currentNode) {
             helper.removeEmptyNodeType(cmp);
             helper.loadParentNodes(cmp);
-            helper.reevaluateBranchesFlags(cmp, currentNode);
         } else {
             helper.loadNodeTypes(cmp);
             cmp.set('v.availableParentNodes', []);
