@@ -7,13 +7,7 @@
         var textbox = cmp.find('text');
         var errorLabel = cmp.find('textError');
         var isValid = validateCallback(cmp.get('v.input'));
-        if (isValid) {
-            $A.util.removeClass(textbox, 'slds-has-error');
-            $A.util.addClass(errorLabel, 'slds-hide');
-        } else {
-            $A.util.addClass(textbox, 'slds-has-error');
-            $A.util.removeClass(errorLabel, 'slds-hide');
-        }
+        _cmpUi.toggleError(textbox, errorLabel, isValid);
         return isValid;
     }
 })
