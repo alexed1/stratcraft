@@ -45,8 +45,7 @@
         <lightning:overlayLibrary aura:id="modalDialog" />
         <div class="tool-bar slds-m-bottom_xx-small">
             <div class="slds-grid slds-size_1-of-1">
-
-                <div class="slds-grid-col slds-grid slds-grid_vertical-align-center slds-size_9-of-12">
+                <div class="slds-grid-col slds-grid slds-grid_vertical-align-center">
                     <div class="slds-grid-col slds-m-top_x-small">
                         <lightning:buttonMenu iconName="utility:settings" alternativeText="Settings" onselect="{!c.handleMenuSelect}">
                             <lightning:menuItem label="New Strategy" value="newStrategy" />
@@ -82,13 +81,17 @@
                         <lightning:radioGroup name="viewRadioGroup" label="Display Mode" options="{!v.viewModes}" value="{!v.isTreeView}" />
                     </div>
                 </div>
-                <div class="slds-grid-col slds-grid slds-size_3-of-12 slds-grid_vertical-align-end slds-grid_align-end slds-m-bottom_x-small slds-m-end_xx-small">
-                    <c:metadataService/>
+                <div class="slds-grow v-align-center">
+                    <c:externalConnectionsList aura:id="externalConnections" currentStrategy="{!v.currentStrategy}" showNodePropertiesRequested="{!c.handleShowNodeProperties}" />
                 </div>
             </div>
         </div>
         <c:treeView aura:id="treeView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}" />
         <c:diagramView aura:id="diagramView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}"
-            childNodeCreationRequested="{!c.handleNewNodeCreationRequested}" nodeDeletionRequested="{!c.handleNodeDeletionRequested}" />
+            childNodeCreationRequested="{!c.handleNewNodeCreationRequested}" nodeDeletionRequested="{!c.handleNodeDeletionRequested}"
+            showNodePropertiesRequested="{!c.handleShowNodeProperties}" />
+        <div class="slds-is-collapsed">
+            <c:metadataService/>
+        </div>
     </div>
 </aura:component>

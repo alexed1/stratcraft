@@ -100,6 +100,23 @@
         }
     },
 
+    handleShowNodeProperties: function (cmp, event, helper) {
+        var self = this;
+        _modalDialog.show(
+            'Node Properties',
+            [_utils.getPackagePrefix() + ':basePropertyPage', function (body) {
+                body.set('v.currentStrategy', strategy);
+                body.set('v.currentNode', strategyNode);
+                body.addEventHandler('propertyPageSaveRequest', function (event) {
+                    _modalDialog.close();
+                    var currentStrategy = cmp.get('v.currentStrategy');
+                    var newNode = event.getParam('newNodeState');
+                    var oldNode = event.getParam('originalNodeState');
+                    helper.saveStrategy(cmp, oldNode, newNode);
+                });
+            }]);
+    },
+
     saveStrategy: function (cmp, event, helper) {
         var originalNodeState = event.getParam('originalNodeState');
         var actualNodeState = event.getParam('newNodeState');

@@ -124,6 +124,8 @@
     }
     var activeView = this.getActiveView(cmp);
     activeView.refresh();
+    var externalConnectionView = cmp.find('externalConnections');
+    externalConnectionView.refresh();
     console.log('Sending Strategy to Salesforce and persisting');
     //send strategy to metadataservice
     var curStrat = cmp.get('v.currentStrategy');

@@ -3,6 +3,10 @@
 	width:15%;
 }
 
+.THIS .v-align-center {
+	align-self: center;
+}
+
 .THIS .error-text {
 	color: rgb(194, 57, 52);
 }

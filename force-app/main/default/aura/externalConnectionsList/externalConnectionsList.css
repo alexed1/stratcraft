@@ -1,0 +1,51 @@
+.THIS.container {
+    display: flex;
+    align-items: center;
+}
+
+.THIS .label {
+    margin: 0.25em;
+    font-size: 0.825rem;
+}
+
+.THIS .scroll-container {
+    flex-grow: 1;
+}
+
+.THIS .list {
+    list-style-type: none;
+}
+
+.THIS .list-item {
+    display: inline;
+}
+
+.THIS .list-item-container {
+    width: 120px;
+    display: flex;
+    flex-direction: column;    
+    align-items: center;
+	cursor: pointer;
+}
+
+.THIS .list-item-body {
+    width: 48px;
+	height: 48px;
+	border-radius: 12px;
+    background-color: purple;
+	background-image: url(/resource/externalNode);
+}
+
+.THIS .list-item-name {
+    font-weight: 600;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.THIS .list-item-description {
+    font-size: 0.9em;
+    overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
