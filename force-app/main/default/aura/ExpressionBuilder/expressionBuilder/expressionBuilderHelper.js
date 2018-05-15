@@ -159,24 +159,24 @@
 
     insertMissingFieldsAndObjects: function (criteria, allObjects) {
         criteria.forEach(function (criteriaItem) {
-            var existingObject = allObjects.filter(function (item) {
+            var existingObject = allObjects.find(function (item) {
                 return item.name === criteriaItem.objectName;
             });
-            if (existingObject.length === 0) {
+            if (!existingObject) {
                 var label = criteriaItem.objectName.endsWith('__c')
                     ? criteriaItem.objectName.slice(0, criteriaItem.length - 3)
                     : criteriaItem.objectName;
-                existingObject = [{
+                existingObject = {
                     name: criteriaItem.objectName,
                     label: criteriaItem.objectName,
                     fields: []
-                }];
+                };
                 allObjects.push(existingObject);
             }
-            var existingField = existingObject[0].fields.filter(function (item) {
+            var existingField = existingObject.fields.find(function (item) {
                 return item.name === criteriaItem.fieldName;
             });
-            if (existingField.length === 0) {
+            if (!existingField) {
                 var label = criteriaItem.fieldName.endsWith('__c')
                     ? criteriaItem.fieldName.slice(0, criteriaItem.fieldName.length - 3)
                     : criteriaItem.fieldName;

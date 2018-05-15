@@ -11,7 +11,7 @@ public with sharing class RecommendationLimitNodeXmlConverter extends BaseNodeXm
             String childName = child.getName();
             if (childName == 'filterMode') {
                 String filterMode = child.getText();
-                result.filterModes.Add(filterMode == null ? '' : filterMode.unescapeXml());
+                result.filterModes.Add(filterMode == null ? '' : filterMode);
             }
             else if (childName == 'removeDuplicates') {
                 result.removeDuplicates = Boolean.valueOf(child.getText());
@@ -44,7 +44,7 @@ public with sharing class RecommendationLimitNodeXmlConverter extends BaseNodeXm
                 if (String.isBlank(filterMode)) {
                     continue;
                 }
-                result.addChildElement('filterMode', null, null).addTextNode(filterMode.escapeXml());
+                result.addChildElement('filterMode', null, null).addTextNode(filterMode);
             }
         }
         return result;

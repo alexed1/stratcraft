@@ -13,7 +13,7 @@ public with sharing class FilterNodeXmlConverter extends BaseNodeXmlConverter {
                 result.removeDuplicates = Boolean.valueOf(child.getText());
             } else if (childName == 'expression') {
                 String expression = child.getText();
-                result.expression = expression == null ? '' : expression.unescapeXml();
+                result.expression = expression == null ? '' : expression;
             }
         }
         return result;
@@ -28,7 +28,7 @@ public with sharing class FilterNodeXmlConverter extends BaseNodeXmlConverter {
         }
         FilterNode actualNode = (FilterNode)node;
         result.addChildElement('removeDuplicates', null, null).addTextNode(String.valueOf(actualNode.removeDuplicates));
-        result.addChildElement('expression', null, null).addTextNode(actualNode.expression == null ? '' : actualNode.expression.escapeXml());
+        result.addChildElement('expression', null, null).addTextNode(actualNode.expression == null ? '' : actualNode.expression);
         return result;
     }
 
