@@ -50,7 +50,8 @@ public with sharing class SortNodeXmlConverter extends BaseNodeXmlConverter{
         for (SortKey sortKey : actualNode.sortKeys) {
             Dom.XmlNode sortNode = result.addChildElement('field', null, null);
             sortNode.addChildElement('name', null, null).addTextNode(sortKey.name == null ? '' : sortKey.name.escapeXml());
-            sortNode.addChildElement('nullsFirst', null, null).addTextNode(sortKey.nullsFirst == null ? '' : sortKey.nullsFirst.escapeXml());
+            //Default 'nullFirst' to '1' or 'true' as otherwise strategy save fails
+            sortNode.addChildElement('nullsFirst', null, null).addTextNode(sortKey.nullsFirst == null ? '1' : sortKey.nullsFirst.escapeXml());
             sortNode.addChildElement('order', null, null).addTextNode(sortKey.order == null ? '' : sortkey.order.escapeXml());
         }
         return result;
