@@ -1,5 +1,5 @@
-<aura:event type="APPLICATION" description="Raised when application requires strategy JSON to be converted to XML">
-    <aura:attribute name="strategyJson" type="String" description="JSON that contains the strategy object" />
+<aura:event type="APPLICATION" description="Raised when application requires strategy to be converted to XML">
+    <aura:attribute name="strategy" type="Object" description="Strategy object" />
     <aura:attribute name="callback" type="Object" 
                     description="Callback that will be invoked with two values: boolean value indicating success or failure and string containing XML response or error message" />
 </aura:event>

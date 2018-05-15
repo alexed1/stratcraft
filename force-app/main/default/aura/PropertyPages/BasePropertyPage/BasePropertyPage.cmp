@@ -14,14 +14,17 @@
     <aura:attribute name="_isRecommendationLimit" type="Boolean" access="private" default="false" />
     <aura:attribute name="_isExternalConnection" type="Boolean" access="private" default="false" />
     <aura:attribute name="_isRecordJoin" type="Boolean" access="private" default="false" />
+
     <aura:attribute name="availableNodeTypes" type="List" />
     <aura:attribute name="availableParentNodes" type="List" />
     <aura:attribute name="showParent" type="Boolean" default="True" />
     <aura:attribute name="showNodeActions" type="Boolean" default="True" />
+    <aura:attribute name="isConnectionMode" type="Boolean" default="False" />
 
     <aura:handler name="change" value="{!v.currentStrategy}" action="{!c.handleStrategyChanged}" />
     <aura:handler name="change" value="{!v._currentNodeDirty.nodeType}" action="{!c.handleTypeChanged}" />
     <aura:handler name="change" value="{!v.currentNode}" action="{!c.handleCurrentNodeChanged}" />
+    <aura:handler name="change" value="{!v.isConnectionMode}" action="{!c.handleConnectionModeChange}" />
 
     <aura:registerEvent name="propertyPageSaveRequest" type="c:propertyPageSaveRequestEvent" />
     <aura:method name="reset" action="{!c.resetPage}" />
@@ -43,7 +46,7 @@
                         <aura:if isTrue="{!v.showNodeActions}">
                             <div class="slds-col">
                                 <lightning:buttonMenu menuAlignment="right" iconName="utility:settings" alternativeText="Node Manages" onselect="{!c.handleNodeActions}">
-                                    <lightning:menuItem label="Delete Node" value="delete" disabled="{!v.currentNode == null}" />
+                                    <lightning:menuItem label="{!v.isConnectionMode ? 'Delete Connection' : 'Delete Node'}" value="delete" disabled="{!v.currentNode == null}" />
                                 </lightning:buttonMenu>
                             </div>
                         </aura:if>
@@ -58,10 +61,11 @@
             <div aura:id="nameError" class="error-text slds-form-element__help slds-m-left_xx-small slds-hide">Name can't be empty, can't contain spaces and must be unique across current strategy</div>
         </div>
 
-        <div class="slds-form-element">
-            <ui:inputText aura:id="description" label="Description" class="field" value="{!v._currentNodeDirty.description}" disabled="{!v.currentNode == null}"
-            />
-        </div>
+        <aura:if isTrue="{!!v.isConnectionMode}">
+            <div class="slds-form-element">
+                <ui:inputText aura:id="description" label="Description" class="field" value="{!v._currentNodeDirty.description}" disabled="{!v.currentNode == null}" />
+            </div>
+        </aura:if>
         <aura:if isTrue="{!v.showParent}">
             <div class="slds-form-element">
                 <lightning:select aura:id="parentNode" label="Parent Node" value="{!v._currentNodeDirty.parentNodeName}" class="select_box"
@@ -72,15 +76,16 @@
                 </lightning:select>
             </div>
         </aura:if>
-
-        <div class="slds-form-element">
-            <lightning:select aura:id="nodeType" label="Node Type" value="{!v._currentNodeDirty.nodeType}" class="select_box" required="true"
-                messageWhenValueMissing="Please select node type" disabled="{!v.currentNode == null}">
-                <aura:iteration items="{!v.availableNodeTypes}" var="item">
-                    <option value="{!item[0]}" text="{!item[1]}" selected="{!item[0] == v._currentNodeDirty.nodeType}" />
-                </aura:iteration>
-            </lightning:select>
-        </div>
+        <aura:if isTrue="{!!v.isConnectionMode}">
+            <div class="slds-form-element">
+                <lightning:select aura:id="nodeType" label="Node Type" value="{!v._currentNodeDirty.nodeType}" class="select_box" required="true"
+                    messageWhenValueMissing="Please select node type" disabled="{!v.currentNode == null}">
+                    <aura:iteration items="{!v.availableNodeTypes}" var="item">
+                        <option value="{!item[0]}" text="{!item[1]}" selected="{!item[0] == v._currentNodeDirty.nodeType}" />
+                    </aura:iteration>
+                </lightning:select>
+            </div>
+        </aura:if>
 
         <div class="slds-form-element">
             <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isIf}">

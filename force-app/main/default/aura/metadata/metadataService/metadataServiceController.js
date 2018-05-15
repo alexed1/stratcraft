@@ -13,5 +13,5 @@
 
     copyStrategy: function (cmp, event, helper) { helper.copyStrategy(cmp, event, helper); },
 
-    convertJsonToXml: function (cmp, event, helper) { helper.convertJsonToXml(cmp, event.getParam('strategyJson'), event.getParam('callback')); }
+    convertJsonToXml: function (cmp, event, helper) { helper.convertJsonToXml(cmp, event.getParam('strategy'), event.getParam('callback')); }
 })

@@ -66,7 +66,7 @@
     },
 
     loadNodeTypes: function (cmp) {
-        var nodeValueNamePairs = _utils.NodeType.getValueNamePairs();
+        var nodeValueNamePairs = _utils.NodeType.getValueNamePairs(cmp.get('v.isConnectionMode'));
         nodeValueNamePairs.unshift(['', '']);
         cmp.set('v.availableNodeTypes', nodeValueNamePairs);
     },

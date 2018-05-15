@@ -157,7 +157,7 @@
     var self = this;
     //Node is being removed
     if (oldNode && !newNode) {
-      if (!oldNode.parentNodeName) {
+      if (!oldNode.parentNodeName && oldNode.nodeType !== _utils.NodeType.EXTERNAL_CONNECTION) {
         return 'Can\'t delete a root node';
       }
       return null;
@@ -169,6 +169,9 @@
       })
       if (sameNameNodes.length > 1) {
         return 'A node with the same name already exists';
+      }
+      if (!newNode.parentNodeName && oldNode.nodeType !== _utils.NodeType.EXTERNAL_CONNECTION) {
+        return 'Can\'t add a new root node';
       }
       return null;
     }
@@ -183,7 +186,8 @@
         return 'A node with the same name already exists';
       }
     }
-    if (oldNode.parentNodeName != newNode.parentNodeName) {
+    //The multi-root validation is only applicable for regular node (not external connections)
+    if (oldNode.parentNodeName != newNode.parentNodeName && oldNode.nodeType !== _utils.NodeType.EXTERNAL_CONNECTION) {
       var wasRoot = !oldNode.parentNodeName;
       var isRoot = !newNode.parentNodeName;
       if (!wasRoot && isRoot) {
@@ -286,6 +290,7 @@
         newStrategy.description = body.get("v.strategyDescription");
         newStrategy.masterLabel = body.get("v.strategyMasterLabel");
         newStrategy.nodes = [{ "removeDuplicates": true, "description": "The root", "name": "WinningPropositions", "nodeType": "union", "parentNodeName": "" }];
+        newStrategy.externalConnections = [];
 
         var cmpEvent = $A.get("e.c:mdCreateOrUpdateStrategyRequest");
         cmpEvent.setParams({
@@ -314,7 +319,7 @@
     var cmpEvent = $A.get('e.c:mdConvertToXmlRequest');
     var currentStrategy = cmp.get('v.currentStrategy');
     cmpEvent.setParams({
-      'strategyJson': JSON.stringify(currentStrategy),
+      'strategy': currentStrategy,
       'callback': function (isSuccess, text) {
         if (isSuccess) {
           var element = document.createElement('a');

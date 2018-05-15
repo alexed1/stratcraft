@@ -158,7 +158,10 @@ window._utils = (function () {
       SORT: 'sort',
       EXTERNAL_CONNECTION: 'actionContext',
       RECORD_JOIN: 'recordJoin',
-      getValueNamePairs: function () {
+      getValueNamePairs: function (isExternalConnectionMode) {
+        if (isExternalConnectionMode) {
+          return [[this.EXTERNAL_CONNECTION, 'External Connection']];
+        }
         return [
           [this.IF, 'Gate'],
           [this.SOQL_LOAD, 'Load Propositions'],
@@ -166,7 +169,6 @@ window._utils = (function () {
           [this.UNION, 'Combine'],
           [this.RECOMMENDATION_LIMIT, 'Prevent Re-Offers'],
           [this.SORT, 'Sort'],
-          [this.EXTERNAL_CONNECTION, 'External Connection'],
           [this.RECORD_JOIN, 'Record Join']
         ];
       }

@@ -21,31 +21,28 @@
 }
 
 .THIS .list-item-container {
+    margin: 0 0.25em;
     width: 120px;
-    display: flex;
+    display: inline-flex;
     flex-direction: column;    
     align-items: center;
-	cursor: pointer;
+    cursor: pointer;
+    overflow: hidden;
 }
 
 .THIS .list-item-body {
     width: 48px;
 	height: 48px;
 	border-radius: 12px;
-    background-color: purple;
+    background-color: dodgerblue;
 	background-image: url(/resource/externalNode);
 }
 
 .THIS .list-item-name {
+    width: 100%;
     font-weight: 600;
 	overflow: hidden;
 	white-space: nowrap;
-	text-overflow: ellipsis;
-}
-
-.THIS .list-item-description {
-    font-size: 0.9em;
-    overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    text-align: center;
 }

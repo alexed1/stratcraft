@@ -82,7 +82,10 @@
                     </div>
                 </div>
                 <div class="slds-grow v-align-center">
-                    <c:externalConnectionsList aura:id="externalConnections" currentStrategy="{!v.currentStrategy}" showNodePropertiesRequested="{!c.handleShowNodeProperties}" />
+                    <c:externalConnectionsList aura:id="externalConnections" currentStrategy="{!v.currentStrategy}" showConnectionPropertiesRequested="{!c.handleShowProperties}" />
+                </div>
+                <div class="slds-m-horizontal_x-small v-align-center">
+                    <c:metadataService/>
                 </div>
             </div>
         </div>
@@ -90,8 +93,5 @@
         <c:diagramView aura:id="diagramView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}"
             childNodeCreationRequested="{!c.handleNewNodeCreationRequested}" nodeDeletionRequested="{!c.handleNodeDeletionRequested}"
             showNodePropertiesRequested="{!c.handleShowNodeProperties}" />
-        <div class="slds-is-collapsed">
-            <c:metadataService/>
-        </div>
     </div>
 </aura:component>

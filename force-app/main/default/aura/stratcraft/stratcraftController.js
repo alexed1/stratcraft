@@ -102,11 +102,17 @@
 
     handleShowNodeProperties: function (cmp, event, helper) {
         var self = this;
+        var strategy = cmp.get('v.currentStrategy');
+        var nodeName = event.getParam('nodeName');
+        var node = strategy.nodes.find(function (item) { return item.name === nodeName; })
+            || strategy.externalConnections.find(function (item) { return item.name === nodeName; });
+        var isExternalConnection = node.nodeType === _utils.NodeType.EXTERNAL_CONNECTION;
         _modalDialog.show(
-            'Node Properties',
+            isExternalConnection ? 'External Connection Properties' : 'Node Properties',
             [_utils.getPackagePrefix() + ':basePropertyPage', function (body) {
+                body.set('v.isConnectionMode', isExternalConnection);
                 body.set('v.currentStrategy', strategy);
-                body.set('v.currentNode', strategyNode);
+                body.set('v.currentNode', node);
                 body.addEventHandler('propertyPageSaveRequest', function (event) {
                     _modalDialog.close();
                     var currentStrategy = cmp.get('v.currentStrategy');

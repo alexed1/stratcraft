@@ -2,7 +2,7 @@
     <aura:attribute name="currentStrategy" type="Object"  />
     <aura:attribute name="_externalConnections" type="List" access="private" />
 
-    <aura:registerEvent name="showNodePropertiesRequested" type="c:nodeOperationEvent" />
+    <aura:registerEvent name="showConnectionPropertiesRequested" type="c:nodeOperationEvent" />
 
     <aura:handler name="change" value="{!v.currentStrategy}" action="{!c.handleCurrentStrategyChanged}" />
 
@@ -13,11 +13,10 @@
         <div class="scroll-container">
             <ul class="list">
                 <aura:iteration items="{!v._externalConnections}" var="item">
-                    <li class="list-item" onclick="{!c.handleItemClick}" data-node="{!item.name}">
-                        <div class="list-item-container">
+                    <li class="list-item">
+                        <div class="list-item-container" onclick="{!c.handleItemClick}" data-node="{!item.name}">
                             <div class="list-item-body"></div>
                             <div class="list-item-name">{!item.name}</div>
-                            <div class="list-item-description">{!item.description}</div>
                         </div>
                     </li>
                 </aura:iteration>

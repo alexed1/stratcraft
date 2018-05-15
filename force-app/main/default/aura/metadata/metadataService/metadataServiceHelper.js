@@ -26,9 +26,9 @@
         });
     },
 
-    convertJsonToXml: function (cmp, strategyJson, callback) {
+    convertJsonToXml: function (cmp, strategy, callback) {
         var action = cmp.get('c.strategyJSONtoXML');
-        action.setParams({ strategyJSON: strategyJson });
+        action.setParams({ strategyJSON: JSON.stringify(this.beforeSave(strategy)) });
         action.setCallback(this, function (response) {
             var isSuccess = true;
             var result = '';
@@ -75,7 +75,7 @@
             var callback = event.getParam('callback');
             var isAsync = event.getParam('isAsync');
 
-            var strategy = event.getParam("strategy");
+            var strategy = helper.beforeSave(event.getParam("strategy"));
             var strategyXML = event.getParam("strategyXML");
 
             if (isAsync) {
@@ -100,7 +100,7 @@
 
         //was it a JSON object or a XML string?
         if (strategy) {
-            strategy = helper.sortNodes(strategy);
+            strategy = helper.beforeSave(helper.sortNodes(strategy));
             action = cmp.get("c.createOrUpdateStrategyRequest");
             action.setParams({ sessionId: sessionId, strategyJSON: JSON.stringify(strategy) });
         }
@@ -158,7 +158,7 @@
         self.ensureSessionIdIsLoaded(cmp, function () {
             var sessionId = cmp.get("v.sessionId");
             var callback = event.getParam('callback');
-            var strategy = event.getParam("strategy");
+            var strategy = helper.beforeSave(event.getParam("strategy"));
             var newStrategyName = event.getParam("newStrategyName");
             var action = cmp.get("c.renameStrategyRequest");
             action.setParams({ sessionId: sessionId, newStrategyName: newStrategyName, strategyJSON: JSON.stringify(strategy) });
@@ -183,7 +183,7 @@
         self.ensureSessionIdIsLoaded(cmp, function () {
             var sessionId = cmp.get("v.sessionId");
             var callback = event.getParam('callback');
-            var strategy = event.getParam("strategy");
+            var strategy = helper.beforeSave(event.getParam("strategy"));
             var newStrategyName = event.getParam("newStrategyName");
             var action = cmp.get("c.copyStrategyRequest");
             action.setParams({ sessionId: sessionId, newStrategyName: newStrategyName, strategyJSON: JSON.stringify(strategy) });
@@ -213,7 +213,7 @@
                 var retVal = response.getReturnValue();
                 if (retVal) {
                     window.clearInterval(pollingId);
-                    callback({ value: retVal });
+                    callback({ value: helper.afterLoad(retVal) });
                 }
                 else {
                     //if the return value is null then it is still deploying
@@ -250,7 +250,7 @@
         action.setParams({ sessionId: sessionId, id: id, retrieveAffectedStrategy: retrieveAffectedStrategy });
         action.setCallback(this, function (response) {
             if (response.getState() === "SUCCESS") {
-                var retVal = response.getReturnValue();
+                var retVal = helper.afterLoad(response.getReturnValue());
                 if (retVal || !retrieveAffectedStrategy) {
                     window.clearInterval(pollingId);
 
@@ -341,5 +341,39 @@
 
     setStrategyInQueueForSaving: function (cmp, strategyName, strategy) {
         cmp.set("v.strategiesForSaving." + strategyName, strategy);
+    },
+
+    /** Takes strategy that we work with locally and prepares it to be saved */
+    beforeSave: function (unprocessedStrategy) {
+        if (!unprocessedStrategy) {
+            return unprocessedStrategy;
+        }
+        var processedStrategy = _utils.clone(unprocessedStrategy, true);
+        if (processedStrategy.externalConnections !== undefined) {
+            if (processedStrategy.externalConnections) {
+                processedStrategy.nodes = processedStrategy.externalConnections.concat(processedStrategy.nodes);
+            }
+            delete processedStrategy.externalConnections;
+        }
+        return processedStrategy;
+    },
+    /** Takes strategy that we got from the service and prepares it to work with */
+    afterLoad: function (unprocessedStrategy) {
+        if (!unprocessedStrategy) {
+            return unprocessedStrategy;
+        }
+        var processedStrategy = _utils.clone(unprocessedStrategy, true);
+        var nodes = [];
+        var externalConnections = [];
+        processedStrategy.nodes.forEach(function (item) {
+            if (item.nodeType === _utils.NodeType.EXTERNAL_CONNECTION) {
+                externalConnections.push(item);
+            } else {
+                nodes.push(item);
+            }
+        });
+        processedStrategy.nodes = nodes;
+        processedStrategy.externalConnections = externalConnections;
+        return processedStrategy;
     }
 })
