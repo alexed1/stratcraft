@@ -36,7 +36,7 @@
 
         var nameIsValid = newName.length > 0 && !newName.match(/\s+/);
         if (nameIsValid) {
-            var nameIsChanged = currentNode.name.trim().toUpperCase() != newName;
+            var nameIsChanged = (currentNode.name || '').trim().toUpperCase() != newName;
             nameIsValid = !nameIsChanged || !currentStrategy.nodes.find(function (item) {
                 return item.name.toUpperCase() == newName;
             });
