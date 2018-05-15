@@ -59,6 +59,22 @@ public with sharing class StrategyXmlConverter {
                     System.debug(error);
                 }
             }
+
+            //searching for RootNode
+            BaseNode rootNode = null;
+            for (BaseNode node: result.nodes)
+            {
+                if (node.parentNodeName == '' && node.nodeType != NodeTypes.EXTERNAL_CONNECTION)
+                    rootNode = node;
+            }
+
+            //assigning Parent to External Connection nodes
+             for (BaseNode node: result.nodes)
+            {
+                if (node.nodeType == NodeTypes.EXTERNAL_CONNECTION)
+                    node.parentNodeName = rootNode.name;
+            }
+
         }
         catch (Exception e) {
             result.notification.addError(e.getMessage());
