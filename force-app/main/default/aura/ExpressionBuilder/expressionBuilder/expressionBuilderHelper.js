@@ -180,7 +180,7 @@
                 var label = criteriaItem.fieldName.endsWith('__c')
                     ? criteriaItem.fieldName.slice(0, criteriaItem.fieldName.length - 3)
                     : criteriaItem.fieldName;
-                existingObject[0].fields.push({
+                existingObject.fields.push({
                     name: criteriaItem.fieldName,
                     label: label
                 });
