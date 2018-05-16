@@ -251,7 +251,7 @@
     var self = this;
     _modalDialog.show(
       'New Node Properties',
-      [_utils.getPackagePrefix() + ':basePropertyPage', function (body) {
+      [_utils.getPackagePrefix() + ':basePropertyPageX', function (body) {
         body.set('v.currentStrategy', strategy);
         body.set('v.currentNode', strategyNode);
         body.set('v.showParent', allowParentSelection);
