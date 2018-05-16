@@ -3,6 +3,8 @@
   <types>
     <name>AuraDefinitionBundle</name>
     <members>argumentPair</members>
+    <members>BasePropertyPage</members>
+    <members>basePropertyPage</members>
     <members>basePropertyPageX</members>
     <members>criterion</members>
     <members>criterionAddRequestEvent</members>
@@ -29,6 +31,7 @@
     <members>mdRenameStrategyRequest</members>
     <members>mdStrategyRollbackRequest</members>
     <members>metadataService</members>
+    <members>modalNewNodeBody</members>
     <members>modalWindowButtonClickEvent</members>
     <members>modalWindowFooter</members>
     <members>modalWindowGenericBody</members>
