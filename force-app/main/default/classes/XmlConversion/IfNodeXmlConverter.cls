@@ -13,9 +13,9 @@ public with sharing class IfNodeXmlConverter extends BaseNodeXmlConverter {
             if (childName == 'branch') {
                 IfBranch branch = new IfBranch();
                 String childBranch = child.getChildElement('child', xmlNamespace).getText();
-                branch.child = childBranch == null ? '' : childBranch.unescapeXml();
+                branch.child = childBranch == null ? '' : childBranch;
                 String expression = child.getChildElement('expression', xmlNamespace).getText();                
-                branch.expression = expression == null ? '' : expression.unescapeXml();
+                branch.expression = expression == null ? '' : expression;
                 result.branches.Add(branch);
 
             } else if (childName == 'removeDuplicates') {
@@ -38,8 +38,8 @@ public with sharing class IfNodeXmlConverter extends BaseNodeXmlConverter {
        
         for (IfBranch branch : actualNode.branches) {
             Dom.XmlNode branchNode = result.addChildElement('branch', null, null);
-            branchNode.addChildElement('child', null, null).addTextNode(branch.child == null ? '' : branch.child.escapeXml());
-            branchNode.addChildElement('expression', null, null).addTextNode(branch.expression == null ? '' : branch.expression.escapeXml());
+            branchNode.addChildElement('child', null, null).addTextNode(branch.child == null ? '' : branch.child);
+            branchNode.addChildElement('expression', null, null).addTextNode(branch.expression == null ? '' : branch.expression);
         }
         return result;
     }

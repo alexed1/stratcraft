@@ -1,54 +1,42 @@
 public with sharing class CriterionController {
 
-@AuraEnabled
-public static ObjectDescription[] getAvailableObjects(){
-	List<ObjectDescription> result = new List<ObjectDescription>();
-	List<AggregateResult> desirableObjectTypes = [SELECT SObjectType From ObjectPermissions Group By SObjectType order by SObjectType];
-	Map<String, Schema.SObjectType> allObjectTypes = Schema.getGlobalDescribe();
-
-	for (AggregateResult aggrResult : desirableObjectTypes)
-	{
-		Object objTypeName = aggrResult.get('SObjectType');
-		string objTypeNameStr = (string)objTypeName;
-		system.debug(objTypeNameStr);
-
-
-		ObjectDescription resultingObject = ExtractObjectInfo(allObjectTypes, objTypeNameStr);
-		if (resultingObject!=null)
-			result.Add(resultingObject);
-	}
-
-	return result;
-}
-
-public static ObjectDescription ExtractObjectInfo(Map<String, Schema.SObjectType> allObjectTypes, String objTypeNameStr){
-
-	Schema.SObjectType objTyp = allObjectTypes.get(objTypeNameStr.toLowerCase());
-
-	if (objTyp == null)
-		return null;
-
-
-	DescribeSObjectResult objDescription = objTyp.getDescribe();
-	string objLabel = objDescription.getLabel();
-	string apiName = objDescription.getName();
-
-	ObjectDescription resultingObject = new ObjectDescription(apiName, objLabel);
-	Map<String, Schema.SObjectField> fields = objDescription.fields.getMap();
-
-	String properties = '';
-	for (String key : fields.keySet())
-	{
-		system.debug(key);
-		DescribeFieldResult field = fields.get(key).getDescribe();
-		string fieldLabel = field.getLabel();
-		string fieldName = field.getName();
-		properties += '{name:"'+fieldName+'", label:"'+fieldLabel+'"},';
-		resultingObject.fields.add(new ObjectFieldDescription(fieldName, fieldLabel));
-	}
-
-	system.debug(properties);
-
-	return resultingObject;
-}
+	@AuraEnabled
+	public static ObjectDescription[] getAvailableObjects(){
+		Map<String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
+		List<ObjectDescription> result = new List<ObjectDescription>();
+		List<String> entities = new List<String>(schemaMap.keySet());
+		for(String name : entities)
+		{
+			DescribeSObjectResult objectDescribeResult = schemaMap.get(name).getDescribe();
+			// System.debug('Name: ' + name.rightPad(20)
+			// 	+ '. Accessible: ' + objectDescribeResult.isAccessible()
+			// 	+ '. Createable: ' + objectDescribeResult.isCreateable()
+			// 	+ '. Custom: ' + objectDescribeResult.isCustom()
+			// 	+ '. CustomSetting: ' + objectDescribeResult.isCustomSetting()
+			// 	+ '. Deletable: ' + objectDescribeResult.isDeletable()
+			// 	+ '. DeprecatedAndHidden: ' + objectDescribeResult.isDeprecatedAndHidden()
+			// 	+ '. FeedEnabled: ' + objectDescribeResult.isFeedEnabled()
+			// 	+ '. Mergeable: ' + objectDescribeResult.isMergeable()
+			// 	+ '. MruEnabled: ' + objectDescribeResult.isMruEnabled()
+			// 	+ '. Queryable: ' + objectDescribeResult.isQueryable()
+			// 	+ '. Searchable: ' + objectDescribeResult.isSearchable()
+			// 	+ '. Undeletable: ' + objectDescribeResult.isUndeletable()
+			// 	+ '. Updateable: ' + objectDescribeResult.isUpdateable());
+			if (!objectDescribeResult.isAccessible()
+			  || !objectDescribeResult.isQueryable()
+			  || !objectDescribeResult.isSearchable()
+			  || !(objectDescribeResult.isCreateable() || objectDescribeResult.isUpdateable())) {
+				continue;
+			}
+			ObjectDescription objectDescription = new ObjectDescription(objectDescribeResult.getName(), objectDescribeResult.getLabel());
+			Map<String, Schema.SObjectField> fields = objectDescribeResult.fields.getMap();
+			for (String key : fields.keySet())
+			{
+				DescribeFieldResult field = fields.get(key).getDescribe();
+				objectDescription.fields.add(new ObjectFieldDescription(field.getName(), field.getLabel()));
+			}
+			result.add(objectDescription);
+		}
+		return result;
+	} 
 }
