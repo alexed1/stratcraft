@@ -99,11 +99,11 @@ public class StrategyXmlConverterTest {
         Dom.XmlNode root = document.getRootElement();
         String xmlNamespace = 'http://soap.sforce.com/2006/04/metadata';
         Dom.XmlNode name = root.getChildElement('recommendationStrategyName', xmlNamespace);
-        System.assertEquals('&lt;&gt;&amp;&quot;&apos;', name.getText(), 'Name of the strategy mismatches');
+        System.assertEquals('<>&"\'', name.getText(), 'Name of the strategy mismatches');
         Dom.XmlNode description = root.getChildElement('description', xmlNamespace);
-        System.assertEquals('&lt;&gt;&amp;&quot;&apos;', description.getText(), 'Description of the strategy mismatches');
+        System.assertEquals('<>&"\'', description.getText(), 'Description of the strategy mismatches');
         Dom.XmlNode masterLabel = root.getChildElement('masterLabel', xmlNamespace);
-        System.assertEquals('&lt;&gt;&amp;&quot;&apos;', masterLabel.getText(), 'Master Label of the strategy mismatches');
+        System.assertEquals('<>&"\'', masterLabel.getText(), 'Master Label of the strategy mismatches');
 
     }
 
