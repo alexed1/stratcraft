@@ -1,18 +1,21 @@
 <aura:component controller="CriterionController">
     <ltng:require scripts="{!$Resource.force}" />
 
-    <!-- either criteria or soqlexpression -->
-    <aura:attribute name="mode" type="String" default="expression" />
+    <!-- Possible values: soql, if, filter -->
+    <aura:attribute name="mode" type="String" default="filter" />
     <aura:attribute name="expression" type="String" />
     <aura:attribute name="criteria" type="List" />
     <aura:attribute name="isBuilderMode" type="Boolean" default="true" />
     <aura:attribute name="isLoading" type="Boolean" default="true" />
     <aura:attribute name="availableObjects" type="List" />
+    
+    <aura:attribute name="_schema" type="List" access="private" />
 
     <aura:handler name="deleteCriterion" event="c:criterionDeleteRequestEvent" action="{!c.handleCriterionDelete }" />
     <aura:handler name="addCriterion" event="c:criterionAddRequestEvent" action="{!c.handleCriterionAdd }" />
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler name="change" value="{!v.mode}" action="{!c.handleModeChanged}" />
 
     <aura:method name="load" action="{!c.load}" />
     <aura:method name="resolveExpression" action="{!c.resolveExpression}" />

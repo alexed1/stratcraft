@@ -18,9 +18,6 @@
 
     <div class="slds-grid slds-wrap slds-gutters">
         <div class="slds-grid slds-col slds-size_12-of-12 slds-grid_vertical-align-center">
-
-
-
             <div class="slds-col slds-size_8-of-12 slds-grow-none">
                 <aura:if isTrue='{!v.objectSelectable}'>
                     <lightning:select label="Object" value="{!v.value.objectName}" onchange="{!c.handleObjectChange}">

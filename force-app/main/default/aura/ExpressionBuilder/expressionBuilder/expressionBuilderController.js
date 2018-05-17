@@ -3,6 +3,12 @@
         //actual loading is moved to aura:method, so it can be called externally after all attributes are set
     },
 
+    handleModeChanged: function (cmp, event, helper) {
+        var mode = cmp.get('v.mode');
+        var availableObjects = helper.getAvailableObjects(mode);
+        cmp.set('v.availableObjects', availableObjects);
+    },
+
     switchModes: function (cmp, event, helper) {
         var isBuilderMode = cmp.get('v.isBuilderMode');
         if (isBuilderMode) {
@@ -29,7 +35,7 @@
     },
 
     load: function (cmp, event, helper) {
-        var action = cmp.get('c.getAvailableObjects');
+        var action = cmp.get('c.getSchema');
         action.setCallback(this, function (response) {
             var state = response.getState();
 

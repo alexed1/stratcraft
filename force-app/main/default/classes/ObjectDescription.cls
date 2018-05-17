@@ -1,6 +1,7 @@
 public with sharing class ObjectDescription {
 
      @AuraEnabled public String name;
+     
      @AuraEnabled public String label;
 
      @AuraEnabled public List<ObjectFieldDescription> fields;
