@@ -4,13 +4,13 @@ public with sharing class ObjectDescription {
      
      @AuraEnabled public String label;
 
-     @AuraEnabled public List<ObjectFieldDescription> fields;
+     @AuraEnabled public List<ObjectFieldDescription> fieldList;
 
 
     public ObjectDescription(String name, String label) {
         this.name = name;
         this.label = label;
-        this.fields = new List<ObjectFieldDescription>();
+        this.fieldList = new List<ObjectFieldDescription>();
     }
 }
 

@@ -12,12 +12,16 @@
     switchModes: function (cmp, event, helper) {
         var isBuilderMode = cmp.get('v.isBuilderMode');
         if (isBuilderMode) {
-            var expression = helper.resolveExpression(cmp);
-            cmp.set('v.expression', expression);
+            var expressionString = helper.resolveExpression(cmp);
+            cmp.set('v.expression', expressionString);
             cmp.set('v.isBuilderMode', false);
         } else {
-            var criteria = helper.initExpressionBuilder(cmp, cmp.get('v.availableObjects'));
-            if (criteria) {
+            var schema = cmp.get('v._schema');
+            var mode = cmp.get('v.mode');
+            var stringExpression = cmp.get('v.expression');
+            var expression = helper.x_parseExpression(stringExpression, mode, schema);
+            if (expression) {
+                cmp.set('v.criteria', expression);
                 cmp.set('v.isBuilderMode', true);
             } else {
                 var overlay = cmp.find('popover');
@@ -34,17 +38,32 @@
         }
     },
 
-    load: function (cmp, event, helper) {
+    loadSchema: function (cmp, event, helper) {
         var action = cmp.get('c.getSchema');
         action.setCallback(this, function (response) {
             var state = response.getState();
 
             if (cmp.isValid() && state === 'SUCCESS') {
-                var allObjects = response.getReturnValue();
-                if (cmp.get('v.mode') === 'soql') {
-                    allObjects = allObjects.filter(function (item) { return item.name.toLowerCase() === 'proposition'; });
+                var typeList = response.getReturnValue();
+                var mode = cmp.get('v.mode');
+                if (mode === 'soql') {
+                    typeList = typeList.filter(function (item) { return item.name === 'Proposition'; });
                 }
-                helper.initExpressionBuilder(cmp, allObjects);
+                var schema = {
+                    typeList: typeList,
+                    typeMap: typeList.reduce(function (result, item) {
+                        result[item.name] = item;
+                        return result;
+                    }, {})
+                };
+                schema.typeList.forEach(function (type) {
+                    type.fieldMap = type.fieldList.reduce(function (result, item) {
+                        result[item.name] = item;
+                        return result;
+                    }, {});
+                });
+                cmp.set('v._schema', schema);
+                helper.initializeBuilder(cmp);
             }
         });
         action.setStorable();

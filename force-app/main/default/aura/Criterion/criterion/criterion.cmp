@@ -4,6 +4,7 @@
     <aura:attribute name="index" type="Integer" />
     <aura:attribute name="canRemove" type="Boolean" />
     <aura:attribute name="availableObjects" type="List" />
+    <aura:attribute name="schema" type="Object" />
     <aura:attribute name="objectSelectable" type="Boolean" />
     <!--private-->
     <aura:attribute name="availableFields" type="List" />

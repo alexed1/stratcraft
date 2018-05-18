@@ -4,11 +4,14 @@ public with sharing class ObjectFieldDescription {
 
     @AuraEnabled public String label;
 
-    @AuraEnabled public String referenceTypeName;
+    @AuraEnabled public String typeName;
 
-    public ObjectFieldDescription(String name, String label, String referenceTypeName) {
+    @AuraEnabled public Boolean isReference;
+
+    public ObjectFieldDescription(String name, String label, String typeName, Boolean isReference) {
         this.name = name;
         this.label = label;
-        this.referenceTypeName = referenceTypeName;
+        this.typeName = typeName;
+        this.isReference = isReference;
     }
 }

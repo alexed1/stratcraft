@@ -30,9 +30,9 @@ public with sharing class CriterionController {
 					if (relationships.size() > 1) {
 						continue;
 					}
-					objectDescription.fields.add(new ObjectFieldDescription(relationshipName, fieldLabel, relationshipTypeName));
+					objectDescription.fieldList.add(new ObjectFieldDescription(relationshipName, fieldLabel, relationshipTypeName, true));
 				} else {
-					objectDescription.fields.add(new ObjectFieldDescription(fieldName, fieldLabel, null));
+					objectDescription.fieldList.add(new ObjectFieldDescription(fieldName, fieldLabel, fieldType.name(), false));
 				}
 			}
 			result.add(objectDescription);
