@@ -15,9 +15,6 @@
     <aura:handler name="deleteCriterion" event="c:criterionDeleteRequestEvent" action="{!c.handleCriterionDelete }" />
     <aura:handler name="addCriterion" event="c:criterionAddRequestEvent" action="{!c.handleCriterionAdd }" />
 
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-    <aura:handler name="change" value="{!v.mode}" action="{!c.handleModeChanged}" />
-
     <aura:method name="load" action="{!c.loadSchema}" />
     <aura:method name="resolveExpression" action="{!c.resolveExpression}" />
     <lightning:overlayLibrary aura:id="popover" />
@@ -26,7 +23,7 @@
         <p>Loading available objects and parsing expression...</p>
         <aura:set attribute="else">
             <div class="slds-grid slds-grid_align-end slds-m-bottom_xx-small">
-                <lightning:button onclick="{!c.switchModes}" label="{!v.isBuilderMode ? 'Formula Mode' : 'Builder Mode'}" />
+                <lightning:button onclick="{!c.toggleBuilderMode}" label="{!v.isBuilderMode ? 'Formula Mode' : 'Builder Mode'}" />
             </div>
         </aura:set>
     </aura:if>

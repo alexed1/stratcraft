@@ -1,15 +1,5 @@
 ({
-    doInit: function (cmp, event, helper) {
-        //actual loading is moved to aura:method, so it can be called externally after all attributes are set
-    },
-
-    handleModeChanged: function (cmp, event, helper) {
-        var mode = cmp.get('v.mode');
-        var availableObjects = helper.getAvailableObjects(mode);
-        cmp.set('v.availableObjects', availableObjects);
-    },
-
-    switchModes: function (cmp, event, helper) {
+    toggleBuilderMode: function (cmp, event, helper) {
         var isBuilderMode = cmp.get('v.isBuilderMode');
         if (isBuilderMode) {
             var expressionString = helper.resolveExpression(cmp);
@@ -19,7 +9,7 @@
             var schema = cmp.get('v._schema');
             var mode = cmp.get('v.mode');
             var stringExpression = cmp.get('v.expression');
-            var expression = helper.x_parseExpression(stringExpression, mode, schema);
+            var expression = helper.parseExpression(stringExpression, mode, schema);
             if (expression) {
                 cmp.set('v.criteria', expression);
                 cmp.set('v.isBuilderMode', true);
@@ -46,22 +36,7 @@
             if (cmp.isValid() && state === 'SUCCESS') {
                 var typeList = response.getReturnValue();
                 var mode = cmp.get('v.mode');
-                if (mode === 'soql') {
-                    typeList = typeList.filter(function (item) { return item.name === 'Proposition'; });
-                }
-                var schema = {
-                    typeList: typeList,
-                    typeMap: typeList.reduce(function (result, item) {
-                        result[item.name] = item;
-                        return result;
-                    }, {})
-                };
-                schema.typeList.forEach(function (type) {
-                    type.fieldMap = type.fieldList.reduce(function (result, item) {
-                        result[item.name] = item;
-                        return result;
-                    }, {});
-                });
+                var scheam = helper.buildSchema(typeList, mode);
                 cmp.set('v._schema', schema);
                 helper.initializeBuilder(cmp);
             }
