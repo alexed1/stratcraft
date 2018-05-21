@@ -1,3 +1,35 @@
-.THIS .criteria-list-container {
+.THIS .sub-exp-list-container {
 	min-height: 300px;
+}
+
+.THIS .sub-exp-container {
+	padding-left: 0.5rem;
+	position: relative;
+}
+
+.THIS .sub-exp-container:hover {
+	border-left-width: 0.25rem;
+	border-left-color: dodgerblue;
+	border-left-style: solid;
+	padding-left: 0.25rem;
+}
+
+.THIS .sub-exp-btn-container {
+	position: absolute;
+	top: 0.75rem;
+	right: 0;
+	display: none;
+}
+
+.THIS .sub-exp-container:hover .sub-exp-btn-container {
+	display: block;
+}
+
+.THIS .sub-exp-btn {
+	opacity: 0.6;
+	transition: opacity 0.3s;
+}
+
+.THIS .sub-exp-btn:hover {
+	opacity: 1;
 }

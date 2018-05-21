@@ -1,0 +1,27 @@
+<aura:component>
+    <aura:attribute name="subExpression" type="Object" />
+    <aura:attribute name="schema" type="Object" />
+
+    <aura:attribute name="_hasObject" type="Boolean" access="private" />
+    <aura:attribute name="_hasProperty" type="Boolean" access="private" />
+    <aura:attribute name="_hasOperator" type="Boolean" access="private" />
+    <aura:attribute name="_hasValue" type="Boolean" access="private" />
+    <aura:attribute name="_placeholder" type="String" access="private" />
+    <aura:attribute name="_value" type="String" access="private" />
+    <aura:attribute name="_lookup" type="List" access="private" />
+    <aura:attribute name="_filteredLookup" type="List" access="private" />    
+    <aura:attribute name="_operatorLookup" type="List" access="private" />
+    <aura:attribute name="_tokens" type="List" access="private" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.handleInit}" />
+
+    <div class="slds-grid" onkeyup="{!c.handleInputKeyUp}">
+        <lightning:input class="slds-grow" placeholder="{!v._placeholder}" value="{!v._value}" onchange="{!c.handleValueChange}" variant="label-hidden" />
+    </div>
+    <div class="slds-grid slds-m-vertical_x-small slds-p-vertical_x-small">
+        <aura:iteration items="{!v._tokens}" var="item" indexVar="index">
+            <aura:if isTrue="{!index != 0 &amp;&amp; item.type != 'operator' &amp;&amp; item.type != 'value'}">.</aura:if>
+            <a class="slds-m-left_xx-small" href="javascript:void(0)" onclick="{!c.handleTokenClick}" data-index="{!index}">{!item.value}</a>
+        </aura:iteration>
+    </div>
+</aura:component>	

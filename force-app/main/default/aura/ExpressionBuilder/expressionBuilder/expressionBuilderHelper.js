@@ -182,20 +182,12 @@
             var value = tokens.slice(valueStartIndex).join(' ');
             //Now we parses the propety path splitting it by dot
             tokens = propertyPath.split('.');
-            if (tokens.some(function (item) { return item; })) {
+            if (tokens.some(function (item) { return !item; })) {
                 //If we encounter empty item it means that property path contain sequence of dots or leading/traling dots (which is illegal in property path)
                 return null;
             }
             //Example: tokens will contain ['$Record','Vendor__r','CreatedBy','FullName']
             //Now we build our collection of properties by iteratively checking the type of previous property
-            //property is {
-            // {
-            //     name: 'Vendor',
-            //     label: 'Vendor__r',
-            //     parentType: 'typeof(Record)',
-            //     type: 'typeof(object)',
-            //     fields: []  
-            // }
             var parentType = schema.rootType.name;
             var properties = [];
             tokens.forEach(function (propertyName) {
@@ -214,16 +206,20 @@
                     if (knownProperty) {
                         property.label = knownProperty.label;
                         property.type = knownProperty.type;
-                        property.lookupFields = knownProperty.type.lookupFields;
+                        property.lookupFields = knownProperty.type ? knownProperty.type.lookupFields || schema.lookupFields : schema.lookupFields;
                     }
                     property.label = knownProperty ? knownProperty.label : propertyName;
                     property.type = knownProperty ? knownProperty.type : '';
-                    property.lookupFields = knownProperty ? knownProperty.type.lookupFields : schema.lookupFields;
+                    property.lookupFields = knownProperty && knownProperty.type ? knownProperty.type.lookupFields || schema.lookupFields : schema.lookupFields;
                 }
                 parentType = property.type;
                 properties.push(property);
-                expectedParentType = currentField.referenceTypeName;
             });
+            return {
+                properties: properties,
+                operator: operator,
+                value: value
+            };
             return properties;
         },
 
@@ -274,44 +270,36 @@
         resolveExpression: function (cmp) {
             var isBuilderMode = cmp.get('v.isBuilderMode');
             var stringExpression = cmp.get('v.expression');
-            var expression = cmp.get('v.criteria');
+            var expression = cmp.get('v.subExpressions');
             var mode = cmp.get('v.mode');
             if (isBuilderMode) {
-                return helper.x_stringifyExpression(stringExpression, mode);
+                return this._stringifyExpression(stringExpression, mode);
             }
             return stringExpression;
         },
 
         initializeBuilder: function (cmp) {
-            var stringExpression = cmp.get('v.expression');
+            var expression = cmp.get('v.expression');
             var schema = cmp.get('v._schema');
             var mode = cmp.get('v.mode');
-            var expression = [];
-            if (stringExpression) {
-                expression = this.parseExpression(stringExpression, mode, schema);
+            var subExpressions = [];
+            if (expression) {
+                subExpressions = this.parseExpression(expression, mode, schema);
             }
-            if (!expression) {
+            if (!subExpressions) {
                 cmp.set('v.isBuilderMode', false);
                 cmp.set('v.isLoading', false);
                 return;
             }
             var isSoqlMode = mode === 'soql';
-            if (expression.length == 0) {
-                expression.push({
-                    object: isSoqlMode ? '$Item' : '',
-                    objectType: isSoqlMode ? 'Proposition' : '',
-                    operator: '=',
-                    value: '',
-                    properties: [
-                        {
-                            name: '',
-                            label: '--None--',
-                            referenceTypeName: ''
-                        }
-                    ]
+            if (subExpressions.length == 0) {
+                subExpressions.push({
+                    properties: [],
+                    operator: '',
+                    value: ''
                 });
             }
-            cmp.set('v.criteria', expression);
+            cmp.set('v.subExpressions', subExpressions);
             cmp.set('v.isLoading', false);
         },
         /** Builds a schema object that contains the type that is used by the all subexpression as a root one, a collection of all types and a map of this types by their names
@@ -319,7 +307,7 @@
          * @param {string} mode allowed vlaues are: soql, if, gate
          */
         buildSchema: function (typeList, mode) {
-            var rootType = helper.getRootType(typeList, mode);
+            var rootType = this._getRootType(typeList, mode);
             var schema = {
                 rootType: rootType,
                 typeList: typeList,
@@ -341,12 +329,11 @@
             });
             //This field will contain collection of pairs (field, owningType) for all fields of all types
             schema.lookupFields = schema.typeList.reduce(function (result, type) {
-                result.concat(type.lookupFields);
-                return result;
+                return result.concat(type.lookupFields);
             }, []);
             return schema;
         },
-        /** Parses specified expression into criteria tokens using specified mode and schema
+        /** Parses specified expression into sub expressions using specified mode and schema
          * @param {string} expression expression to parse
          * @param {string} mode allowed values are: soql, if, gate
          * @param {object} schema object that contains info about all types and their respective fields
@@ -355,6 +342,6 @@
             if (mode === 'soql') {
                 return this._parseSoqlExpression(expression, schema);
             }
-            return this._parseCommonExpression(expresion, schema);
+            return this._parseCommonExpression(expression, schema);
         },
     })

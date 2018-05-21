@@ -5,21 +5,17 @@
     'filter' allows to work with both-->
     <aura:attribute name="mode" type="String" default="filter" />
     <aura:attribute name="expression" type="String" />
-    <aura:attribute name="criteria" type="List" />
+    <aura:attribute name="subExpressions" type="List" />
     <aura:attribute name="isBuilderMode" type="Boolean" default="true" />
     <aura:attribute name="isLoading" type="Boolean" default="true" />
     <aura:attribute name="availableObjects" type="List" />
     
     <aura:attribute name="_schema" type="Object" access="private" />
 
-    <aura:handler name="deleteCriterion" event="c:criterionDeleteRequestEvent" action="{!c.handleCriterionDelete }" />
-    <aura:handler name="addCriterion" event="c:criterionAddRequestEvent" action="{!c.handleCriterionAdd }" />
-
     <aura:method name="load" action="{!c.loadSchema}" />
     <aura:method name="resolveExpression" action="{!c.resolveExpression}" />
     <lightning:overlayLibrary aura:id="popover" />
     <aura:if isTrue="{!v.isLoading}">
-
         <p>Loading available objects and parsing expression...</p>
         <aura:set attribute="else">
             <div class="slds-grid slds-grid_align-end slds-m-bottom_xx-small">
@@ -28,11 +24,16 @@
         </aura:set>
     </aura:if>
     <aura:if isTrue="{!v.isBuilderMode}">
-        <div class="criteria-list-container slds-p-horizontal_small ">
-            <aura:iteration items="{!v.criteria}" var="item" indexVar="index">
-                <div class="slds-p-vertical_medium">
-                    <c:criterion objectSelectable="{!v.mode != 'soql'}" index="{!index}" availableObjects="{!v.availableObjects}" value="{!item}"
-                        canRemove="{!v.criteria.length != 1}" />
+        <div class="sub-exp-list-container slds-p-left_x-small">
+            <aura:iteration items="{!v.subExpressions}" var="item" indexVar="index">
+                <div class="sub-exp-container slds-p-vertical_small slds-m-top_x-small">
+                    <c:subExpression schema="{!v._schema}" subExpression="{!item}" />
+                    <div class="sub-exp-btn-container">
+                        <lightning:buttonIcon iconName="utility:add" class="slds-m-around-xx_small sub-exp-btn" value="{!index}"
+                                              onclick="{!c.handleSubExpressionAdd}" />
+                        <lightning:buttonIcon iconName="utility:delete" class="{!v.subExpressions.length &gt; 1 ? 'slds-m-around-xx_small sub-exp-btn' : 'slds-hide'}" value="{!index}"
+                                              onclick="{!c.handleSubExpressionDelete}"/>
+                    </div>
                 </div>
             </aura:iteration>
         </div>

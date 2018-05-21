@@ -1,4 +1,5 @@
 <aura:component>
+    <!--THIS COMPONENT IS OBSOLETE AND WILL BE REMOVED IN THE NEXT VERSION-->
     <!--public-->
     <aura:attribute name="value" type="Object" />
     <aura:attribute name="index" type="Integer" />
