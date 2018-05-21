@@ -437,25 +437,28 @@
     var newStrategyName = strategy.name + 'Copy';
     self.showCopyStrategyDialog(cmp, function (body) {
       var newName = body.get("v.input");
-      _cmpUi.spinnerOn(cmp, "spinner");
-
-      var cmpEvent = $A.get("e.c:mdCopyStrategyRequest");
-      cmpEvent.setParams({
-        "strategy": strategy,
-        "newStrategyName": newName,
-        "callback": function (result) {
-          if (!result.error) {
-            _force.displayToast('Strategy Crafter', 'Strategy copied');
-            self.loadStrategyNames(cmp);
+      self.showModalAsksIfContinueIfStrategyExists(cmp, newName, function () {
+        _cmpUi.spinnerOn(cmp, "spinner");
+        var cmpEvent = $A.get("e.c:mdCopyStrategyRequest");
+        cmpEvent.setParams({
+          "strategy": strategy,
+          "newStrategyName": newName,
+          "callback": function (result) {
+            if (!result.error) {
+              _force.displayToast('Strategy Crafter', 'Strategy created');
+              self.loadStrategyNames(cmp);
+              cmp.set("v.currentStrategy", result.value);
+              cmp.set("v.selectedStrategyName", result.value.name);
+              _cmpUi.spinnerOff(cmp, "spinner");
+            }
+            else {
+              _cmpUi.spinnerOff(cmp, "spinner");
+              _force.displayToast('Strategy Crafter', 'Strategy copying failed ' + result.error, 'Error', true);
+            }
           }
-          else {
-            _cmpUi.spinnerOff(cmp, "spinner");
-            _force.displayToast('Strategy Crafter', 'Strategy copying failed ' + result.error, 'Error', true);
-          }
-        }
+        });
+        cmpEvent.fire();
       });
-
-      cmpEvent.fire();
     }, newStrategyName);
   },
 
@@ -509,24 +512,26 @@
       }],
       function (body) {
         var newName = body.get("v.input");
-        _cmpUi.spinnerOn(cmp, "spinner");
-        var cmpEvent = $A.get("e.c:mdRenameStrategyRequest");
-        cmpEvent.setParams({
-          "strategy": strategy,
-          "newStrategyName": newName,
-          "callback": function (response) {
-            if (!response.error) {
-              _force.displayToast('Strategy Crafter', 'Strategy renamed');
-              cmp.set("v.selectedStrategyName", newName);
-              self.loadStrategyNames(cmp);
+        self.showModalAsksIfContinueIfStrategyExists(cmp, newName, function () {
+          _cmpUi.spinnerOn(cmp, "spinner");
+          var cmpEvent = $A.get("e.c:mdRenameStrategyRequest");
+          cmpEvent.setParams({
+            "strategy": strategy,
+            "newStrategyName": newName,
+            "callback": function (response) {
+              if (!response.error) {
+                _force.displayToast('Strategy Crafter', 'Strategy renamed');
+                cmp.set("v.selectedStrategyName", newName);
+                self.loadStrategyNames(cmp);
+              }
+              else {
+                _force.displayToast('Strategy Crafter', 'Strategy renaming failed ' + response.error, 'Error', true);
+                _cmpUi.spinnerOff(cmp, "spinner");
+              }
             }
-            else {
-              _force.displayToast('Strategy Crafter', 'Strategy renaming failed ' + response.error, 'Error', true);
-              _cmpUi.spinnerOff(cmp, "spinner");
-            }
-          }
+          });
+          cmpEvent.fire();
         });
-        cmpEvent.fire();
       },
       function (body) {
         return body.validate();
