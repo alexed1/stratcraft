@@ -9,11 +9,11 @@
     handleInputKeyUp: function (cmp, event, helper) {
         if (event.keyCode == 13) {
             var value = cmp.get('v._value');
-            var normalizedValue = value.trim().toUpperCase();
-            var commitStatus = helper.getValueCommitStatus(cmp, value, normalizedValue);
-            if (commitStatus) {
-                helper.commitValue(cmp, value, normalizedValue);
+            var transition = helper.getTransition(cmp, value);
+            if (transition.canTransit) {
+                helper.performTransition(cmp, transition);
             }
+            event.preventDefault();
         }
     },
 

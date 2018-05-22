@@ -4,42 +4,58 @@
             {
                 header: '=',
                 headerDetails: '- equals',
-                subHeader: 'operator'
+                subHeader: 'operator',
+                searchValue: '=',
+                stringOnly: false
             },
             {
                 header: '!=',
                 headerDetails: '- not equals',
-                subHeader: 'operator'
+                subHeader: 'operator',
+                searchValue: '!=',
+                stringOnly: false
             },
             {
                 header: '>',
                 headerDetails: '- greater than',
-                subHeader: 'operator'
+                subHeader: 'operator',
+                searchValue: '>',
+                stringOnly: false
             },
             {
                 header: '<',
                 headerDetails: '- less than',
-                subHeader: 'operator'
+                subHeader: 'operator',
+                searchValue: '<',
+                stringOnly: false
             },
             {
                 header: '>=',
                 headerDetails: '- greater than or equals',
-                subHeader: 'operator'
+                subHeader: 'operator',
+                searchValue: '>=',
+                stringOnly: false
             },
             {
                 header: '<=',
                 headerDetails: '- less than or equals',
-                subHeader: 'operator'
+                subHeader: 'operator',
+                searchValue: '<=',
+                stringOnly: false
             },
             {
                 header: 'LIKE',
                 headerDetails: '- similar (strings only)',
-                subHeader: 'operator'
+                subHeader: 'operator',
+                searchValue: 'like',
+                stringOnly: true
             },
             {
                 header: 'NOT LIKE',
                 headerDetails: '- not similar (string only)',
-                subHeader: 'operator'
+                subHeader: 'operator',
+                searchValue: 'not like',
+                stringOnly: true
             }
         ]);
     },
@@ -137,105 +153,154 @@
         cmp.set('v._filteredLookup', lookup);
     },
 
-    getValueCommitStatus: function (cmp, value, normalizedValue) {
-        var hasValue = cmp.get('v._hasValue');
-        var hasOperator = cmp.get('v._hasOperator');
-        if (hasValue || hasOperator) {
-            //TODO: add property type check
-            return 'can';
-        }
-        if (!normalizedValue) {
-            return '';
+    getTransition: function (cmp, value) {
+        var hasObject = cmp.get('v._hasObject');
+        var schema = cmp.get('v.schema');
+        value = value || '';
+        if (!hasObject) {
+            //Checks if the value starts with a valid object name (e.g. $User)
+            var objectNameMatch = value.match(/\$[a-z]+/gi)
+            //Checks if the value ends with symbols that forcefully finish object name typing (e.g. if after '$User' we typed space or dot)
+            var forceObjectTerminationMatch = value.match(/[\s\.]+$/g);
+            //Check if the object exists
+            var knownObject = objectNameMatch ? schema.rootType.fieldNameMap[objectNameMatch[0].toLowerCase()] : null;
+            var result = {
+                canTransit: !!knownObject,
+                state: 'object',
+                mustTransit: !!forceObjectTerminationMatch
+            };
+            result.value = result.canTransit ? knownObject.name : '';
+            return result;
         }
         var hasProperty = cmp.get('v._hasProperty');
-        if (hasProperty) {
-            var operatorLookup = cmp.get('v._operatorLookup');
-            var knownOperator = operatorLookup.find(function (operator) { return operator.header === normalizedValue; });
-            var similarOperator = operatorLookup.find(function (operator) {
-                return operator.header !== normalizedValue && operator.header.startsWith(normalizedValue);
-            });
-            if (knownOperator) {
-                return similarOperator ? 'can' : 'must';
+        var propertyNameMatch = value.match(/[a-z_]{1}[a-z0-9_]{0,}/i);
+        var forcePropertyTerminationMatch = value.match(/[\s\.]+$/g);
+        if (!hasProperty) {
+            //For now we allow any property name (as long as it is syntactically valid)
+            //Otherwise this is the place to add check that property belongs to a specific type
+            return {
+                canTransit: !!propertyNameMatch,
+                state: 'property',
+                value: propertyNameMatch[0],
+                mustTransit: !!forcePropertyTerminationMatch
             }
-            var nameIsValid = normalizedValue.match(/^[a-z_0-9]+$/i);
-            if (!nameIsValid) {
-                return '';
-            }
-            return value.match(/[\s\.]$/)
-                ? similarOperator ? 'can' : 'must'
-                : 'must';
         }
-        normalizedValue = normalizedValue.endsWith('.') ? normalizedValue.substr(0, normalizedValue.length - 1) : normalizedValue;
-        var hasObject = cmp.get('v._hasObject');
-        if (hasObject) {
-            var nameIsValid = normalizedValue.match(/^[a-z_0-9]+$/i);
-            if (!nameIsValid) {
-                return '';
+        var hasOperator = cmp.get('v._hasOperator');
+        var operatorLookup = cmp.get('v._operatorLookup');
+        if (!hasOperator) {
+            var operatorNameMatch = value.match(/\S+/g);
+            var operatorNameMatchValue = operatorNameMatch ? operatorNameMatch.join(' ').toLowerCase() : '';
+            var looseMatchOperators = operatorNameMatch ? operatorLookup.filter(function (item) { return item.searchValue.includes(operatorNameMatchValue); }) : [];
+            var strictMatchOperator = operatorNameMatch ? operatorLookup.find(function (item) { return item.searchValue === operatorNameMatchValue; }) : null;
+            var forceOperatorTerminationMatch = value.match(/\s$/);
+            //It means that we found the exact operator
+            if (strictMatchOperator) {
+                return {
+                    canTransit: true,
+                    state: 'operator',
+                    value: strictMatchOperator.header,
+                    //It means that we must terminate operator if there is only one choice
+                    //Otherwise (e.g. we entered '<' but it can be '<' or '<=') we are not forced to make a transition
+                    mustTransit: looseMatchOperators.length <= 1
+                };
             }
-            return value.match(/[\s\.]$/)
-                ? 'must'
-                : 'can';
+            //It means that we haven't found the exact operator, but some of operators start from the value so we'll be able to terminate later
+            //E.g. we entered 'not' which may later result in 'not like' operator but is no operator by itself
+            var mayBeOperator = looseMatchOperators.length > 0;
+            //Now we check if property can be terminated
+            return {
+                canTransit: !!propertyNameMatch,
+                state: 'property',
+                value: propertyNameMatch ? propertyNameMatch[0] : value,
+                mustTransit: mayBeOperator ? false : !!propertyNameMatch && !!forcePropertyTerminationMatch
+            }
         }
-        var schema = cmp.get('v.schema');
-        var globalObject = schema.rootType.fieldList.find(function (field) { return field.name.toUpperCase() === normalizedValue; });
-        return globalObject
-            ? value.match(/[\s\.]$/) ? 'must' : 'can'
-            : '';
+        //Any string (even an empty one) can be a valid string value
+        //Non-string values can allow only non-empty values
+        //If we don't know for sure the type, we allow empty value
+        //The only notable thing here is that we check whether we should escape the value with apstrophs        
+        var tokens = cmp.get('v._tokens');
+        var operatorName = tokens.find(function (token) { return token.type === 'operator'; }).value.trim();
+        var operator = operatorLookup.find(function (item) { return item.header === operatorName; });
+        var isString = operator.stringOnly;
+        if (!isString) {
+            var lastPropertyToken = null;
+            for (var index = tokens.length - 1; index >= 0; index--) {
+                lastPropertyToken = tokens[index];
+                if (lastPropertyToken.type === 'property') {
+                    break;
+                }
+            }
+            isString = lastPropertyToken.propertyType === 'STRING';
+        }
+        return {
+            canTransit: isString || value.trim(),
+            state: 'value',
+            value: isString ? '\'' + value + '\'' : value.trim(),
+            mustTransit: false
+        };
     },
 
-    commitValue: function (cmp, value, normalizedValue) {
-        var hasValue = cmp.get('v._hasValue');
-        var hasOperator = cmp.get('v._hasOperator');
-        var hasProperty = cmp.get('v._hasProperty');
+    performTransition: function (cmp, transition) {
+        var hasObject = false;
+        var hasProperty = false;
+        var hasOperator = false;
+        var hasValue = false;
         var tokens = cmp.get('v._tokens');
-        var hasObject = true;
-        if (hasValue || hasOperator) {
-            var valueToken = tokens.find(function (token) { return token.type === 'value'; });
-            if (!valueToken) {
-                valueToken = {
-                    type: 'value',
-                    value: value
-                };
-                tokens.push(valueToken);
-            }
-            valueToken.value = value;
-            hasValue = true;
-        } else if (hasProperty) {
-            var operatorToken = tokens.find(function (token) { return token.operator === 'operator'; });
-            if (!operatorToken) {
+        var schema = cmp.get('v.schema');
+        switch (transition.state) {
+            case 'object':
+                hasObject = true;
+                tokens.push({
+                    type: 'property',
+                    value: transition.value,
+                    propertyType: schema.rootType.fieldNameMap[transition.value.toLowerCase()].propertyType,
+                    parentPropertyType: '@global'
+                });
+                break;
+            case 'property':
+                hasObject = true;
+                hasProperty = true;
+                var lastPropertyToken = null;
+                for (var index = tokens.length - 1; index >= 0; index--) {
+                    lastPropertyToken = tokens[index];
+                    if (lastPropertyToken.type === 'property') {
+                        break;
+                    }
+                }
+                var parentType = lastPropertyToken ? lastPropertyToken.propertyType : schema.rootType.name;
+                var property = parentType ? parentType.fieldNameMap[transition.value.toLowerCase()] : null;
+                var value = property ? property.name : transition.value;
+                tokens.push({
+                    type: 'property',
+                    value: value,
+                    propertyType: property ? property.type : '',
+                    parentTPropertyType: parentType ? parentType.name : ''
+                });
+                break;
+            case 'operator':
+                hasObject = true;
+                hasProperty = true;
+                hasOperator = true;
                 tokens.push({
                     type: 'operator',
-                    value: normalizedValue
+                    value: transition.value,
                 });
-            }
-            hasOperator = true;
-        } else {
-            normalizedValue = value.trim();
-            normalizedValue = normalizedValue.endsWith('.') ? normalizedValue.substr(0, normalizedValue.length - 1) : normalizedValue;
-            var propertyToken = {
-                type: 'property',
-                value: normalizedValue
-            };
-            var lastPropertyToken = null;
-            tokens.forEach(function (token) {
-                if (token.type === 'property') {
-                    lastPropertyToken = token;
+                break;
+            case 'value':
+                hasObject = true;
+                hasProperty = true;
+                hasOperator = true;
+                hasValue = true;
+                var valueToken = tokens.find(function (token) { return token.type === 'value'; });
+                if (!valueToken) {
+                    valueToken = {
+                        type: 'value'
+                    };
+                    tokens.push(valueToken);
                 }
-            });
-            var schema = cmp.get('v.schema');
-            if (lastPropertyToken) {
-                propertyToken.parentPropertyType = lastPropertyToken.propertyType;
-            } else {
-                propertyToken.parentPropertyType = schema.rootType.name;
-            }
-            if (propertyToken.parentPropertyType) {
-                var type = schema.typeNameMap[propertyToken.parentPropertyType];
-                propertyToken.propertyType = type.fieldNameMap[propertyToken.value] || ''
-            } else {
-                propertyToken.propertyType = '';
-            }
-            tokens.push(propertyToken);
-            hasProperty = true;
+                valueToken.value = transition.value;
+                break;
         }
         var placeholder = this._getPlaceholder(hasObject, hasProperty, hasOperator, hasValue);
         cmp.set('v._hasObject', hasObject);
@@ -245,13 +310,13 @@
         cmp.set('v._tokens', tokens);
         cmp.set('v._value', '');
         cmp.set('v._placeholder', placeholder);
+
     },
 
     handleValueChanged: function (cmp, value) {
-        var normalizedValue = value.trim().toUpperCase();
-        var valueCommitStatus = this.getValueCommitStatus(cmp, value, normalizedValue);
-        if (valueCommitStatus === 'must') {
-            this.commitValue(cmp, value);
+        var transition = this.getTransition(cmp, value);
+        if (transition.mustTransit) {
+            this.performTransition(cmp, transition);
         }
     }
 })

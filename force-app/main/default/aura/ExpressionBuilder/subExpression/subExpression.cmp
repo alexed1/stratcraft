@@ -21,7 +21,7 @@
     <div class="slds-grid slds-m-vertical_x-small slds-p-vertical_x-small">
         <aura:iteration items="{!v._tokens}" var="item" indexVar="index">
             <aura:if isTrue="{!index != 0 &amp;&amp; item.type != 'operator' &amp;&amp; item.type != 'value'}">.</aura:if>
-            <a class="slds-m-left_xx-small" href="javascript:void(0)" onclick="{!c.handleTokenClick}" data-index="{!index}">{!item.value}</a>
+            <a class="{!item.type == 'operator' ? 'token operator' : 'token'}" href="javascript:void(0)" onclick="{!c.handleTokenClick}" data-index="{!index}">{!item.value}</a>
         </aura:iteration>
     </div>
 </aura:component>	

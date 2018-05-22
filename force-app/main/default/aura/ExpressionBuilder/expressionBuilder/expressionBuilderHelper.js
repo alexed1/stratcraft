@@ -237,7 +237,7 @@
             if (expression.length > 0) {
                 var self = this;
                 var subExpressions = expression.map(function (item) { return self._stringifySubExpression(item); })
-                    .filter(function (item) { return !item; });
+                    .filter(function (item) { return item; });
                 return subExpressions.join(' OR ');
             }
             return '';
@@ -253,17 +253,12 @@
         },
 
         _stringifySubExpression: function (subexpression) {
-            if (!item.object || !item.operator || !item.value || item.properties || item.properties.length === 0) {
+            if (!subexpression.operator || !subexpression.value || !subexpression.properties || subexpression.properties.length === 0) {
                 return null;
             }
-            var result = item.object === '$Item' ? '' : item.object;
-            result = result.concat(
-                '.',
-                properties.join('.'),
-                ' ',
-                item.operator,
-                ' ',
-                properties[properties.length - 1].type === 'STRING' ? '\'' + item.value + '\'' : item.value);
+            var result = subexpression.properties.map(function (item) { return item.name; }).join('.')
+                + ' ' + subexpression.operator + ' '
+                + (subexpression.properties[subexpression.properties.length - 1].type === 'STRING' ? '\'' + subexpression.value + '\'' : subexpression.value);
             return result;
         },
 
@@ -273,7 +268,7 @@
             var expression = cmp.get('v.subExpressions');
             var mode = cmp.get('v.mode');
             if (isBuilderMode) {
-                return this._stringifyExpression(stringExpression, mode);
+                return this._stringifyExpression(expression, mode);
             }
             return stringExpression;
         },
@@ -318,13 +313,9 @@
             };
             schema.typeList.forEach(function (type) {
                 type.fieldNameMap = type.fieldList.reduce(function (result, field) {
-                    result[field.name] = field;
+                    result[field.name.toLowerCase()] = field;
                     return result;
                 }, {});
-                type.fieldLabelMap = type.fieldList.reduce(function (result, field) {
-                    result[field.label] = field;
-                    return result;
-                }, {})
                 type.lookupFields = type.fieldList.map(function (field) { return { type: type, field: field } });
             });
             //This field will contain collection of pairs (field, owningType) for all fields of all types
