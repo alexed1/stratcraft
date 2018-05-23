@@ -2,11 +2,7 @@
     handleSubExpressionAdd: function (cmp, event, helper) {
         var subExpressionIndex = event.getSource().get('v.value');
         var subExpressions = cmp.get('v.subExpressions');
-        subExpressions.splice(subExpressionIndex + 1, 0, {
-            properties: [],
-            operator: '',
-            value: ''
-        });
+        subExpressions.splice(subExpressionIndex + 1, 0, _expressionParser.createNewSubExpression(cmp.get('v._schema')));
         cmp.set('v.subExpressions', subExpressions);
     },
 

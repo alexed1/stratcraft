@@ -72,53 +72,43 @@
         /** Converts different representaiton of operator to a unified form
          * @param {string} operator comparision operator (=, <, > etc.)
          */
-        _unifyOperators: function (operator) {
-            if (!operator) {
-                return null;
-            }
-            operator = operator.replace('&', '').replace(';', '').trim().toLowerCase();
-            switch (operator) {
-                case 'eq':
-                case '==':
-                case '=':
-                    return '=';
+        // _unifyOperators: function (operator) {
+        //     if (!operator) {
+        //         return null;
+        //     }
+        //     operator = operator.replace('&', '').replace(';', '').trim().toLowerCase();
+        //     switch (operator) {
+        //         case 'eq':
+        //         case '==':
+        //         case '=':
+        //             return '=';
 
-                case 'nq':
-                case '!=':
-                    return '!=';
+        //         case 'nq':
+        //         case '!=':
+        //             return '!=';
 
-                case 'lt':
-                case '<':
-                    return '<';
+        //         case 'lt':
+        //         case '<':
+        //             return '<';
 
-                case 'gt':
-                case '>':
-                    return '>';
-                case 'lte':
-                case '=<':
-                    return '=<';
-                case 'gte':
-                case '>=':
-                    return '>=';
-                case 'like':
-                    return 'like';
-                default:
-                    return null;
-            }
-        },
+        //         case 'gt':
+        //         case '>':
+        //             return '>';
+        //         case 'lte':
+        //         case '=<':
+        //             return '=<';
+        //         case 'gte':
+        //         case '>=':
+        //             return '>=';
+        //         case 'like':
+        //             return 'like';
+        //         default:
+        //             return null;
+        //     }
+        // },
 
         _parseCommonExpression: function (expression, schema) {
-            if (!expression) {
-                return null;
-            }
-            var tokens = expression.split(' OR ');
-            var self = this;
-            var parsedSubExpressions = tokens.map(function (item) { return self._parseSubExpression(item, schema); })
-            if (parsedSubExpressions.some(function (item) { return !item; })) {
-                //If some subexpressions failed to be parsed, then the whole expression is also considered failed
-                return null;
-            }
-            return parsedSubExpressions;
+            return _expressionParser.parseExpression(expression, schema);
         },
 
         _parseSoqlExpression: function (expression, schema) {
@@ -133,94 +123,18 @@
             //Otherwise first token represents (or we assume so) SELECT clause and we just discard it
             //To protect ourselves from the case where WHERE word may appear inside string value we join the remaining tokens
             var whereStatement = tokens.join('WHERE').trim();
-            if (!whereStatement) {
-                //It means that there is WHERE keyword but there is nothing aftet it which is illegal
-                return null;
-            }
+            return _expressionParser.parseExpression(expression, schema);
         },
-
-        _parseSubExpression: function (subexpression, schema) {
-            if (!subexpression) {
-                return null;
+        /** Parses specified expression into sub expressions using specified mode and schema
+         * @param {string} expression expression to parse
+         * @param {string} mode allowed values are: soql, if, gate
+         * @param {object} schema object that contains info about all types and their respective fields
+         */
+        parseExpression: function (expression, mode, schema) {
+            if (mode === 'soql') {
+                return this._parseSoqlExpression(expression, schema);
             }
-            //Example: subexpression: $Record.Vendor__r.CreatedBy.FullName = 'John Doe'
-            //Example: Tokens will contain ['$Record.Vendor__r,CreatedBy.FullName', '=', '\'John', 'Doe\'']
-            var tokens = subexpression.split(' ');
-            if (tokens.length < 3) {
-                return null;
-            }
-            //The subexpression may contain sequences of spaces, leading and trailing spaces so we need to eliminate them
-            //If this is the case, tokens will contain empty values which are legal only in the 'value' part of the expression
-            //So now we look for the first non empty token and it will be a property path
-            var propertyPathIndex = tokens.findIndex(function (item) { return item; });
-            if (propertyPathIndex === -1) {
-                return null;
-            }
-            //Now we look for the first (after property path) non empty token and it will be an operator
-            var operatorIndex = tokens.findIndex(function (item, index) {
-                return index > propertyPathIndex && item;
-            });
-            if (operatorIndex === -1) {
-                return null;
-            }
-            //Now we look for the first (after operator) non empty token and it will be the first part of the value
-            var valueStartIndex = tokens.findIndex(function (item, index) {
-                return index > operatorIndex && item;
-            });
-            if (valueStartIndex === -1) {
-                return null;
-            }
-            //Example: Property path is '$Record..Vendor__r.CreatedBy.FullName'
-            var propertyPath = tokens[propertyPathIndex];
-            //Example: Operator is '='
-            var operator = this._unifyOperators(tokens[operatorIndex]);
-            if (!operator) {
-                return null;
-            }
-            //If there are more than one, we should join them (separated with space)
-            //Example: Value tokens are ['\'John', 'Doe\'']
-            var value = tokens.slice(valueStartIndex).join(' ');
-            //Now we parses the propety path splitting it by dot
-            tokens = propertyPath.split('.');
-            if (tokens.some(function (item) { return !item; })) {
-                //If we encounter empty item it means that property path contain sequence of dots or leading/traling dots (which is illegal in property path)
-                return null;
-            }
-            //Example: tokens will contain ['$Record','Vendor__r','CreatedBy','FullName']
-            //Now we build our collection of properties by iteratively checking the type of previous property
-            var parentType = schema.rootType.name;
-            var properties = [];
-            tokens.forEach(function (propertyName) {
-                var property = {
-                    name: propertyName,
-                    parentType: parentType
-                };
-                //The parent type was not specified - it means that we can't say for sure which object does the current property belong to
-                if (!parentType) {
-                    property.label = propertyName;
-                    property.type = '';
-                    property.lookupFields = schema.lookupFields;
-                } else {
-                    var knownType = schema.typeNameMap[parentType];
-                    var knownProperty = knownType.fieldNameMap[propertyName];
-                    if (knownProperty) {
-                        property.label = knownProperty.label;
-                        property.type = knownProperty.type;
-                        property.lookupFields = knownProperty.type ? knownProperty.type.lookupFields || schema.lookupFields : schema.lookupFields;
-                    }
-                    property.label = knownProperty ? knownProperty.label : propertyName;
-                    property.type = knownProperty ? knownProperty.type : '';
-                    property.lookupFields = knownProperty && knownProperty.type ? knownProperty.type.lookupFields || schema.lookupFields : schema.lookupFields;
-                }
-                parentType = property.type;
-                properties.push(property);
-            });
-            return {
-                properties: properties,
-                operator: operator,
-                value: value
-            };
-            return properties;
+            return this._parseCommonExpression(expression, schema);
         },
 
         _stringifyExpression: function (expression, mode) {
@@ -236,7 +150,7 @@
         _stringifyCommonExpression: function (expression) {
             if (expression.length > 0) {
                 var self = this;
-                var subExpressions = expression.map(function (item) { return self._stringifySubExpression(item); })
+                var subExpressions = expression.map(function (item) { return item.toString(); })
                     .filter(function (item) { return item; });
                 return subExpressions.join(' OR ');
             }
@@ -249,16 +163,6 @@
             if (filter) {
                 return result.concat(' WHERE ', filter);
             }
-            return result;
-        },
-
-        _stringifySubExpression: function (subexpression) {
-            if (!subexpression.operator || !subexpression.value || !subexpression.properties || subexpression.properties.length === 0) {
-                return null;
-            }
-            var result = subexpression.properties.map(function (item) { return item.name; }).join('.')
-                + ' ' + subexpression.operator + ' '
-                + (subexpression.properties[subexpression.properties.length - 1].type === 'STRING' ? '\'' + subexpression.value + '\'' : subexpression.value);
             return result;
         },
 
@@ -288,11 +192,7 @@
             }
             var isSoqlMode = mode === 'soql';
             if (subExpressions.length == 0) {
-                subExpressions.push({
-                    properties: [],
-                    operator: '',
-                    value: ''
-                });
+                subExpressions.push(_expressionParser.createNewSubExpression(schema));;
             }
             cmp.set('v.subExpressions', subExpressions);
             cmp.set('v.isLoading', false);
@@ -323,16 +223,5 @@
                 return result.concat(type.lookupFields);
             }, []);
             return schema;
-        },
-        /** Parses specified expression into sub expressions using specified mode and schema
-         * @param {string} expression expression to parse
-         * @param {string} mode allowed values are: soql, if, gate
-         * @param {object} schema object that contains info about all types and their respective fields
-         */
-        parseExpression: function (expression, mode, schema) {
-            if (mode === 'soql') {
-                return this._parseSoqlExpression(expression, schema);
-            }
-            return this._parseCommonExpression(expression, schema);
-        },
+        }
     })

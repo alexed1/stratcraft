@@ -1,5 +1,6 @@
 <aura:component controller="CriterionController">
     <ltng:require scripts="{!$Resource.force}" />
+    <ltng:require scripts="{!$Resource.expressionParser}" />
 
     <!-- Possible values: soql, if, filter. Depends on the node type: 'if' works only with globals like $Record, 'soql' works only with the iterator current item,
     'filter' allows to work with both-->
@@ -26,7 +27,7 @@
     <aura:if isTrue="{!v.isBuilderMode}">
         <div class="sub-exp-list-container slds-p-left_x-small">
             <aura:iteration items="{!v.subExpressions}" var="item" indexVar="index">
-                <div class="sub-exp-container slds-p-vertical_small slds-m-top_x-small">
+                <div class="sub-exp-container slds-m-top_x-small">
                     <c:subExpression schema="{!v._schema}" subExpression="{!item}" />
                     <div class="sub-exp-btn-container">
                         <lightning:buttonIcon iconName="utility:add" class="slds-m-around-xx_small sub-exp-btn" value="{!index}"
