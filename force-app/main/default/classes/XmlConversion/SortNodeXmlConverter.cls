@@ -7,12 +7,15 @@ public with sharing class SortNodeXmlConverter extends BaseNodeXmlConverter{
             return null;
         }
      
-        
+        result.propositionsLimit = '';
+
+
         for (Dom.XMLNode child : node.getChildElements()) {
+            
             String childName = child.getName();
             if (childName == 'limit') {
                 String value = child.getText();
-                result.myLimit = String.isBlank(value) ? '' : value;
+                result.propositionsLimit = String.isBlank(value) ? '' : value;
             }
 
             if (childName == 'field') {
@@ -35,17 +38,10 @@ public with sharing class SortNodeXmlConverter extends BaseNodeXmlConverter{
             return null;
         }
 
-
         SortNode actualNode = (SortNode)node;
 
-        //defaults because the system can't handle it otherwise
-        if (actualNode.myLimit == ''){
-            actualNode.myLimit = '50';
-        }
-
-
-
-        result.addChildElement('limit', null, null).addTextNode(actualNode.myLimit);
+        if (actualNode.propositionsLimit != '')
+            result.addChildElement('limit', null, null).addTextNode(actualNode.propositionsLimit);
 
         for (SortKey sortKey : actualNode.sortKeys) {
             Dom.XmlNode sortNode = result.addChildElement('field', null, null);

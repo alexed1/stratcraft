@@ -230,11 +230,6 @@
           item.lookbackDuration = '0';
         }
       }
-      if (item.nodeType === _utils.NodeType.SORT) {
-        if (!item.limit) {
-          item.limit = '0';
-        }
-      }
     });
   },
 
