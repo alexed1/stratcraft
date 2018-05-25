@@ -1,4 +1,13 @@
 window._utils = (function () {
+
+  Array.prototype.findLast = function (predicate) {
+    for (var index = this.length - 1; index >= 0; index--) {
+      if (predicate(this[index])) {
+        return this[index];
+      }
+    }
+  };
+
   // List of HTML entities for escaping.
   var htmlEscapes = {
     '&': '&amp;',

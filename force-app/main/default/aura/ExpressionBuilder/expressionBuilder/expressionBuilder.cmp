@@ -10,6 +10,7 @@
     <aura:attribute name="isBuilderMode" type="Boolean" default="true" />
     <aura:attribute name="isLoading" type="Boolean" default="true" />
     <aura:attribute name="availableObjects" type="List" />
+    <aura:attribute name="strategy" type="Object" />
     
     <aura:attribute name="_schema" type="Object" access="private" />
 
@@ -28,7 +29,7 @@
         <div class="sub-exp-list-container slds-p-left_x-small">
             <aura:iteration items="{!v.subExpressions}" var="item" indexVar="index">
                 <div class="sub-exp-container slds-m-top_x-small">
-                    <c:subExpression schema="{!v._schema}" subExpression="{!item}" />
+                    <c:subExpression schema="{!v._schema}" subExpression="{!item}" strategy="{!v.strategy}" />
                     <div class="sub-exp-btn-container">
                         <lightning:buttonIcon iconName="utility:add" class="slds-m-around-xx_small sub-exp-btn" value="{!index}"
                                               onclick="{!c.handleSubExpressionAdd}" />

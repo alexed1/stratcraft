@@ -28,25 +28,25 @@
                     label: '@global',
                     fieldList: []
                 };
-                resultType.fieldList.push({
-                    name: '$OnBehalfOf',
-                    label: '$OnBehalfOf',
-                    type: 'User',
-                    isReference: true
-                });
+                // resultType.fieldList.push({
+                //     name: '$OnBehalfOf',
+                //     label: '$OnBehalfOf',
+                //     type: 'User',
+                //     isReference: true
+                // });
                 resultType.fieldList.push({
                     name: '$Record',
-                    label: '$Record',
+                    label: 'current record',
                     isReference: true
                 });
-                resultType.fieldList.push({
-                    name: '$Request',
-                    label: '$Request',
-                    isReference: true
-                });
+                // resultType.fieldList.push({
+                //     name: '$Request',
+                //     label: '$Request',
+                //     isReference: true
+                // });
                 resultType.fieldList.push({
                     name: '$User',
-                    label: '$User',
+                    label: 'current user',
                     type: 'User',
                     isReference: true
                 });

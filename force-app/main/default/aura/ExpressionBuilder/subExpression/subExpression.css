@@ -5,3 +5,46 @@
 .THIS .token.operator {
     margin: 0 0.25rem;
 }
+
+.THIS.popup-host {
+    position: relative;
+    height: 0;
+    z-index: 1;
+}
+
+.THIS .popup {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 1;
+    background-color: white;
+    border-width: 0 1px 1px 1px;
+    border-style: solid;
+    border-radius: 0 0 0.25rem 0.25rem;
+    border-color: rgb(21, 137, 238);
+    box-shadow: 0 0 3px #0070d2;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.THIS .lookup-item-header {
+    font-weight: 600;
+}
+
+.THIS .lookup-item-description {
+    color: dimgray;
+}
+
+.THIS .lookup-item-details {
+    color: dimgray;
+}
+
+.THIS .lookup-item:hover {
+    background-color: lightgray;
+}
+
+.THIS .lookup-item[data-is-current="1"] {
+    background-color: lightgray;
+}
+
