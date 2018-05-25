@@ -1,4 +1,11 @@
 ({
+
+    onInit: function (cmp, event, helper) {
+        var isMutuallyExclusive = cmp.get("v.isMutuallyExclusive");
+        if (isMutuallyExclusive)
+            cmp.set("v.nodeSelectLabel", "Continue only with Propositions from:");
+    },
+
     handleDeleteRequest: function (cmp, event, helper) {
         var cmpEvent = cmp.getEvent('deleteRequested');
         cmpEvent.fire();

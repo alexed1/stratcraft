@@ -167,6 +167,7 @@ window._utils = (function () {
       SORT: 'sort',
       EXTERNAL_CONNECTION: 'actionContext',
       RECORD_JOIN: 'recordJoin',
+      MUTUALLY_EXCLUSIVE: 'mutuallyExclusive',
       getValueNamePairs: function () {
         return [
           [this.IF, 'Gate'],
@@ -176,7 +177,8 @@ window._utils = (function () {
           [this.RECOMMENDATION_LIMIT, 'Prevent Re-Offers'],
           [this.SORT, 'Sort'],
           [this.EXTERNAL_CONNECTION, 'External Connection'],
-          [this.RECORD_JOIN, 'Record Join']
+          [this.RECORD_JOIN, 'Record Join'],
+          [this.MUTUALLY_EXCLUSIVE, 'Mutually Exclusive']
         ];
       }
     },
