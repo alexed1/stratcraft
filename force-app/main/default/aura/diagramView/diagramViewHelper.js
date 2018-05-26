@@ -345,6 +345,9 @@
             case _utils.NodeType.RECORD_JOIN:
                 specificNodeClass = 'record-join-node';
                 break;
+            case _utils.NodeType.MUTUALLY_EXCLUSIVE:
+                specificNodeClass = 'exclusive-node';
+                break;
         }
         visualNode.classList.add('node');
         if (specificNodeClass) {
