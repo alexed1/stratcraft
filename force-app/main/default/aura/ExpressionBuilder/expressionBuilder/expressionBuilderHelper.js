@@ -1,7 +1,7 @@
 (
     {
         /** Returns the type that will be treated as root type (all subexpression will start from this type).
-         * If specified mode supports access to the global objects (like $Record or $User) we introduce a fake type called '@global'.
+         * If specified mode supports access to the global objects (like $Record or $User) we introduce a fake type called '$global'.
          * This type will have all the global variables as its properties, thus we'll work with all levels of properties in the same manner
          * @param {Array} typeList the list of all types available to the current user
          * @param {string} mode allowed values are: soql, if, gate
@@ -24,8 +24,8 @@
             var resultType = null;
             if (addGlobalObjects) {
                 resultType = {
-                    name: '@global',
-                    label: '@global',
+                    name: '$global',
+                    label: '$global',
                     fieldList: []
                 };
                 // resultType.fieldList.push({

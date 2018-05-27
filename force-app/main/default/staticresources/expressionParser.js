@@ -89,7 +89,7 @@ window._expressionParser = (function () {
           type: 'property',
           value: transition.value,
           propertyType: schema.rootType.fieldNameMap[transition.value.toLowerCase()].propertyType,
-          parentPropertyType: '@global'
+          parentPropertyType: '$global'
         });
         break;
       case 'property':
@@ -140,7 +140,7 @@ window._expressionParser = (function () {
 
   var _createState = function (schema) {
     return {
-      hasObject: schema.rootType.name !== '@global',
+      hasObject: schema.rootType.name !== '$global',
       hasProperty: false,
       hasOperator: false,
       hasValue: false,

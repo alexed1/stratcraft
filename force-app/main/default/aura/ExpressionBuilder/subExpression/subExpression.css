@@ -13,7 +13,7 @@
 }
 
 .THIS .popup {
-    position: absolute;
+    position: fixed;
     left: 0;
     right: 0;
     top: 0;
@@ -46,5 +46,15 @@
 
 .THIS .lookup-item[data-is-current="1"] {
     background-color: lightgray;
+}
+
+.THIS .no-exp-label {
+    color: dimgray;
+}
+
+.THIS.token-container {
+    height: 35px;
+    display: flex;
+    align-items: center;
 }
 

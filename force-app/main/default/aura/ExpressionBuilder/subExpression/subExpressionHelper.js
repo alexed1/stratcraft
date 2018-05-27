@@ -1,43 +1,108 @@
 ({
-    _getPlaceholder: function (currentState) {
-        if (!currentState.hasObject) {
-            return 'Enter name of the global object';
+    _getPlaceholder: function (subExpression, schema) {
+        if (!subExpression.currentState.hasObject) {
+            return 'Select global object. Start typing to filter the list';
         }
-        if (!currentState.hasProperty) {
-            return 'Enter name of the propery';
+        if (!subExpression.currentState.hasProperty) {
+            var objectToken = subExpression.tokens.findLast(function (token) { return token.type === 'property'; });
+            if (!schema.rootType.fieldNameMap[objectToken.value.toLowerCase()].type) {
+                return 'Select global object type. Start typing to filter the list';
+            }
+            return 'Select property. Start typing to filter the list';
         }
-        if (!currentState.hasOperator) {
-            return 'Enter name of the property or operation';
+        if (!subExpression.currentState.hasOperator) {
+            return 'Select operator. Start typing to filter the list';
         }
-        if (!currentState.hasValue) {
+        if (!subExpression.currentState.hasValue) {
             return 'Enter value';
         }
-        return 'Expression is complete';
+        return 'Expression is complete. Type and press ENTER to update value';
+    },
+
+    updatePopupLocation: function (cmp) {
+        var popupHost = cmp.find('popup-host').getElement();
+        var popup = popupHost.getElementsByClassName('popup')[0];
+        var coordinates = popupHost.getBoundingClientRect();
+        //var left = popupHost.offsetLeft + popupHost.closest('.sub-exp-list-container').offsetLeft;
+        popup.style.left = 32 + 'px';
+        popup.style.top = coordinates.top + 'px';
+        popup.style.width = coordinates.width + 'px';
     },
 
     init: function (cmp) {
         var subExpression = cmp.get('v.subExpression');
         var schema = cmp.get('v.schema');
         var strategy = cmp.get('v.strategy');
-        var placeholder = this._getPlaceholder(subExpression.currentState);
-        var lookup = this._generateLookup(expression, schema, strategy);
+        var placeholder = this._getPlaceholder(subExpression, schema);
+        var lookup = this._generateLookup(subExpression, schema, strategy);
         cmp.set('v._placeholder', placeholder);
         cmp.set('v._lookup', lookup);
-        cmp.set('v._filteredLookup', lookup);
+        cmp.set('v._filteredItems', lookup.items);
     },
 
-    handleValueChanged: function (cmp, value, forceTransition) {
+    processLookupItem: function (cmp, lookupItem) {
+        var lookup = cmp.get('v._lookup');
+        var targetState = lookup.targetState;
+        var strategy = cmp.get('v.strategy');
         var subExpression = cmp.get('v.subExpression');
         var schema = cmp.get('v.schema');
-        var searchValue = value.toLowerCase().trim();
-        var lookup = cmp.get('v._lookup');
-        cmp.set('v._filteredLookup', lookup.filter(function (item) { return item.searchValue.includes().trim(); }));
-        //var valueIsProcessed = _expressionParser.processValue(value, subExpression.currentState, schema, subExpression.tokens, forceTransition);
-        if (valueIsProcessed) {
-            cmp.set('v.subExpression', subExpression);
-            cmp.set('v._value', '');
-            cmp.set('v._placeholder', this._getPlaceholder(subExpression.currentState));
+        var currentState = subExpression.currentState;
+        var tokens = subExpression.tokens;
+        switch (targetState) {
+            case 'object':
+                tokens.push({
+                    type: 'property',
+                    value: lookupItem,
+                    propertyType: schema.rootType.fieldNameMap[lookupItem.toLowerCase()].type,
+                    parentPropertyType: '$global'
+                });
+                currentState.hasObject = true;
+                break;
+            case 'objectType':
+                var propertyToken = tokens[0];
+                var property = schema.rootType.fieldNameMap[propertyToken.value.toLowerCase()];
+                property.type = lookupItem;
+                propertyToken.propertyType = lookupItem;
+                break;
+            case 'property':
+                var propertyToken = tokens.findLast(function (token) { return token.type === 'property'; });
+                var parentPropertyType = schema.typeNameMap[propertyToken.propertyType];
+                tokens.push({
+                    type: 'property',
+                    value: lookupItem,
+                    propertyType: parentPropertyType.fieldNameMap[lookupItem.toLowerCase()].type,
+                    parentPropertyType: parentPropertyType.name
+                });
+                currentState.hasProperty = true;
+                break;
+            case 'operator':
+                tokens.push({
+                    type: 'operator',
+                    value: lookupItem
+                });
+                currentState.hasOperator = true;
+                break;
+            case 'value':
+                var propertyToken = tokens.findLast(function (token) { return token.type === 'property'; });
+                var valueToken = tokens.findLast(function (token) { return token.type === 'value'; });
+                if (!valueToken) {
+                    valueToken = {
+                        type: 'value',
+                    };
+                    tokens.push(valueToken);
+                }
+                valueToken.value = propertyToken.propertyType === 'STRING' ? '\'' + lookupItem + '\'' : lookupItem;
+                currentState.hasValue = true;
+                break;
         }
+        cmp.set('v.subExpression', subExpression);
+        cmp.set('v._value', '');
+        var placeholder = this._getPlaceholder(subExpression, schema);
+        var lookup = this._generateLookup(subExpression, schema, strategy);
+        cmp.set('v._placeholder', placeholder);
+        cmp.set('v._lookup', lookup);
+        cmp.set('v._filteredItems', lookup.items);
+        cmp.set('v._index', lookup.items.length === 0 ? -1 : 0);
     },
 
     _generateLookup: function (expression, schema, strategy) {
@@ -50,29 +115,42 @@
                     searchValue: field.name.toLowerCase()
                 };
             });
+            result.sort(function (x, y) { return x.header.localeCompare(y.header); });
             //TODO: get external connections differently
-            return result;
+            return {
+                items: result,
+                targetState: 'object',
+                mode: 'select'
+            };
         }
         if (!expression.currentState.hasProperty) {
             var currentType = null;
-            if (schema.rootType.name === '@global') {
-                currentType = schema.rootType.fieldNameMap[expression.tokens[0].value].type;
+            if (schema.rootType.name === '$global') {
+                currentType = schema.typeNameMap[schema.rootType.fieldNameMap[expression.tokens[0].value.toLowerCase()].type];
                 //It means that the type of current global is unknown. We'll ask user to select a type
                 if (!currentType) {
-                    return schema.typeList.map(function (type) {
-                        return {
-                            header: type.name,
-                            description: '- ' + type.label,
-                            value: type.name,
-                            searchValue: type.name.toLowerCase()
-                        };
-                    })
+                    //We don't allow user to pick global and external connection types
+                    var typeList = schema.typeList.filter(function (type) { return !type.name.startsWith('$'); })
+                        .map(function (type) {
+                            return {
+                                header: type.name,
+                                description: '- ' + type.label,
+                                value: type.name,
+                                searchValue: type.name.toLowerCase()
+                            };
+                        });
+                    typeList.sort(function (x, y) { return x.header.localeCompare(y.header); });
+                    return {
+                        items: typeList,
+                        targetState: 'objectType',
+                        mode: 'select'
+                    };
                 }
             } else {
                 //It means that we use implicit object ($Item, in our case it will always be of type Proposition)
                 currentType = schema.rootType;
             }
-            return currentType.fieldList.map(function (field) {
+            var fieldList = currentType.fieldList.map(function (field) {
                 return {
                     header: field.name,
                     description: '- ' + field.label,
@@ -81,6 +159,12 @@
                     searchValue: field.name.toLowerCase() + '|' + field.type.toLowerCase()
                 };
             });
+            fieldList.sort(function (x, y) { return x.header.localeCompare(y.header); });
+            return {
+                items: fieldList,
+                targetState: 'property',
+                mode: 'select'
+            };
         }
         if (!expression.currentState.hasOperator) {
             //We check the type of last entered property. If it is a reference type we allow user to pick a subproperty
@@ -88,12 +172,12 @@
             var lastPropertyParentType = schema.typeNameMap[lastPropertyToken.parentPropertyType];
             var allowSubProperties = false;
             if (lastPropertyParentType) {
-                var lastPropertyType = lastPropertyParentType.fieldNameMap[lastPropertyToken.name]
+                var lastPropertyType = lastPropertyParentType.fieldNameMap[lastPropertyToken.value.toLowerCase()]
                 allowSubProperties = lastPropertyType.isReference;
             }
             var lastPropertyType = schema.typeNameMap[lastPropertyToken.propertyType];
             if (allowSubProperties && lastPropertyType) {
-                return lastPropertyType.fieldList.map(function (field) {
+                var fieldList = lastPropertyType.fieldList.map(function (field) {
                     return {
                         header: field.name,
                         description: '- ' + field.label,
@@ -102,19 +186,34 @@
                         searchValue: field.name.toLowerCase() + '|' + field.type.toLowerCase()
                     };
                 });
+                fieldList.sort(function (x, y) { return x.header.localeCompare(y.header); });
+                return {
+                    items: fieldList,
+                    targetState: 'property',
+                    mode: 'select'
+                };
             }
-            return _expressionParser.operators
-                .filter(function (operator) { return operator.supportedTypes === 'ALL' || operator.supportedTypes.includes(lastPropertyTokens.propertyType); })
+            var operators = _expressionParser.operators
+                .filter(function (operator) { return operator.supportedTypes === 'ALL' || operator.supportedTypes.includes(lastPropertyToken.propertyType); })
                 .map(function (operator) {
                     return {
                         header: operator.value,
                         description: '- ' + operator.description,
                         value: operator.value,
-                        searchValue: operator.value + '|' + operator.description
+                        searchValue: operator.value.toLowerCase() + '|' + operator.description.toLowerCase()
                     }
                 });
+            return {
+                items: operators,
+                targetState: 'operator',
+                mode: 'select'
+            };
         }
         //TODO: add available functions depending on the property type
-        return [];
+        return {
+            items: [],
+            targetState: 'value',
+            mode: 'suggest'
+        };
     }
 })
