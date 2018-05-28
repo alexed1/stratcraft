@@ -62,7 +62,7 @@ window._expressionParser = (function () {
     //The only notable thing here is that we check whether we should escape the value with apstrophs      
     var operatorName = tokens.find(function (token) { return token.type === 'operator'; }).value.trim();
     var operator = operators.find(function (item) { return item.value === operatorName; });
-    var isString = operator.supportedTypes === 'STRING';
+    var isString = operator.supportedTypes === 'STRING,TEXTAREA';
     if (!isString) {
       var lastPropertyToken = null;
       for (var index = tokens.length - 1; index >= 0; index--) {
@@ -71,12 +71,12 @@ window._expressionParser = (function () {
           break;
         }
       }
-      isString = lastPropertyToken.propertyType === 'STRING';
+      isString = lastPropertyToken.propertyType === 'STRING' || lastPropertyToken.propertyType === 'TEXTAREA';
     }
     return {
       canTransit: isString || value.trim(),
       state: 'value',
-      value: isString ? '\'' + value + '\'' : value.trim(),
+      value: isString && value.match(/^'.*'&/) ? '\'' + value + '\'' : value.trim(),
       mustTransit: false
     };
   };
@@ -95,14 +95,8 @@ window._expressionParser = (function () {
       case 'property':
         currentState.hasObject = true;
         currentState.hasProperty = true;
-        var lastPropertyToken = null;
-        for (var index = tokens.length - 1; index >= 0; index--) {
-          lastPropertyToken = tokens[index];
-          if (lastPropertyToken.type === 'property') {
-            break;
-          }
-        }
-        var parentType = lastPropertyToken ? lastPropertyToken.propertyType : schema.rootType.name;
+        var lastPropertyToken = tokens.findLast(function (token) { return token.type === 'property'; });
+        var parentType = lastPropertyToken ? schema.typeNameMap[lastPropertyToken.propertyType] : schema.rootType;
         var property = parentType ? parentType.fieldNameMap[transition.value.toLowerCase()] : null;
         var value = property ? property.name : transition.value;
         tokens.push({
@@ -150,6 +144,63 @@ window._expressionParser = (function () {
     };
   };
 
+  var _tracebackPropertyTypes = function (subExpression, schema) {
+    //If we know the type of the very first property - we don't need to identify all other property types
+    if (subExpression.tokens[0].propertyType) {
+      return;
+    }
+    var valueToken = subExpression.tokens.findLast(function (token) { return token.type === 'value'; });
+    var value = valueToken.value || '';
+    var currentPropertyTypes = [];
+    if (value.match(/^'.*'$/)) {
+      value = value.substring(1, value.length - 2) || '';
+      currentPropertyTypes.push('STRING', 'TEXTAREA');
+    }
+    var allPropertyTypes = [];
+    var propertyTokens = subExpression.tokens.filter(function (token) { return token.type === 'property'; });
+    for (var index = propertyTokens.length - 1; index >= 0; index--) {
+      allPropertyTypes.unshift(currentPropertyTypes.slice());
+      //This is for the case, where property name matches the type name. We assume that this type is the one to pick
+      //E.g. we have property path '$Record.Account.AccountNumber'. We found out that 'AccountNumber' property may belong to 'Type1','Type2' or 'Account'
+      //Since 'Account' type matches the parent 'Account' property, than we take just this type
+      if (currentPropertyTypes.includes(propertyTokens[index].value)) {
+        currentPropertyTypes = [propertyTokens[index].value];
+        continue;
+      }
+      var propertyName = propertyTokens[index].value.toLowerCase();
+      currentPropertyTypes = schema.typeList.filter(function (type) {
+        //We are looking for the types, that have property with specific name (and optionally of specific types)
+        return type.fieldNameMap.hasOwnProperty(propertyName)
+          && (!type.fieldNameMap[propertyName].type || currentPropertyTypes.length > 0 ? currentPropertyTypes.includes(type.fieldNameMap[propertyName].type) : true);
+      }).map(function (type) { return type.name; });
+    }
+    //After we are done with this, our allPropertyTypes will contain possible types for each property
+    //E.g. for a path $Record.Account.AccountNumber == 'Some Value' it could look like this (not necessary)
+    //AccountNumber - [STRING] (because values is surrounded by aposrophes)
+    //Account - [Account, Case, Contract, Lead] (Account will be taken actually because its name matches the name of the property)
+    //$Record - [Case, Contract, Lead]
+    //Now we loop through the tokens and trying to associate specific type to it
+    //Since we don't care about the real type, we can just take the first one
+    for (var index = 0; index < propertyTokens.length; index++) {
+      var currentPropertyToken = propertyTokens[index];
+      var parentPropertyTypeName = currentPropertyToken.parentPropertyType;
+      var parentPropertyType = schema.typeNameMap[parentPropertyTypeName];
+      var possiblePropertyTypes = allPropertyTypes[index];
+      //First we check, if our parent type has a property with the specific name
+      var currentProperty = parentPropertyType.fieldNameMap[currentPropertyToken.value.toLowerCase()];
+      if (currentProperty && currentProperty.type) {
+        currentPropertyToken.propertyType = currentProperty.type;
+        //It means that don't know the type of current property for sure and should guess it
+      } else if (possiblePropertyTypes.length > 0) {
+        currentPropertyToken.propertyType = possiblePropertyTypes[0];
+      }
+      if (index != propertyTokens.length - 1) {
+        var nextPropertyToken = propertyTokens[index + 1];
+        nextPropertyToken.parentPropertyType = currentPropertyToken.propertyType;
+      }
+    }
+  };
+
   return {
     operators: [
       {
@@ -192,13 +243,13 @@ window._expressionParser = (function () {
         value: 'LIKE',
         description: 'similar to',
         searchValue: 'like',
-        supportedTypes: 'STRING'
+        supportedTypes: 'STRING,TEXTAREA'
       },
       {
         value: 'NOT LIKE',
         description: 'not similar to',
         searchValue: 'not like',
-        supportedTypes: 'STRING'
+        supportedTypes: 'STRING,TEXTAREA'
       }
     ],
 
@@ -237,25 +288,34 @@ window._expressionParser = (function () {
       var subExpressions = expression.split(' OR ');
       var self = this;
       subExpressions.forEach(function (subExpressionString) {
-        var subExpression = self.createNewSubExpression(schema);
-        var currentState = subExpression.currentState;
-        var tokens = subExpression.tokens;
-        var currentValue = '';
-        for (var index = 0; index < subExpressionString.length; index++) {
-          currentValue = currentValue + subExpressionString.charAt(index);
-          if (self.processValue(currentValue, currentState, schema, tokens)) {
-            currentValue = '';
+        try {
+          var subExpression = self.createNewSubExpression(schema);
+          var currentState = subExpression.currentState;
+          var tokens = subExpression.tokens;
+          var currentValue = '';
+          for (var index = 0; index < subExpressionString.length; index++) {
+            currentValue = currentValue + subExpressionString.charAt(index);
+            if (self.processValue(currentValue, currentState, schema, tokens)) {
+              currentValue = '';
+            }
           }
-        }
-        if (currentValue) {
-          var finalTransition = _getTransition(currentState, schema, operators, currentValue, tokens);
-          if (finalTransition.canTransit) {
-            _performTransition(currentState, finalTransition, schema, tokens);
+          if (currentValue) {
+            var finalTransition = _getTransition(currentState, schema, operators, currentValue, tokens);
+            if (finalTransition.canTransit) {
+              _performTransition(currentState, finalTransition, schema, tokens);
+            }
           }
+          if (currentState.isValid()) {
+            _tracebackPropertyTypes(subExpression, schema);
+          }
+          result.push(currentState.isValid() ? subExpression : null);
         }
-        result.push(currentState.isValid() ? subExpression : null);
+        catch {
+          result.push(null);
+        }
       });
-      return result.some(function (item) { return !item; }) ? null : result;
+      result = result.some(function (item) { return !item; }) ? null : result;
+      return result;
     }
   }
 })()

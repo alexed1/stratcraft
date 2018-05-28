@@ -9,7 +9,7 @@
     openExpressionBuilder: function (cmp, event, helper) {
         _modalDialog.show(
             'Expression Builder',
-            ['c:expressionBuilder', function (body) {
+            [_utils.getComponentName('expressionBuilder'), function (body) {
                 body.set('v.mode', 'soql');
                 body.set('v.expression', cmp.get('v.currentNode.soql'));
                 body.load();

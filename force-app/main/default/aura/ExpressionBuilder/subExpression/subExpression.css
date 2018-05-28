@@ -40,11 +40,11 @@
     color: dimgray;
 }
 
-.THIS .lookup-item:hover {
-    background-color: lightgray;
+.THIS .lookup-item[data-is-current="1"] {
+    background-color: gainsboro;
 }
 
-.THIS .lookup-item[data-is-current="1"] {
+.THIS .lookup-item:hover {
     background-color: lightgray;
 }
 

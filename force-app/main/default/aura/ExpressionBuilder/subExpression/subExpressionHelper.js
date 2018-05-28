@@ -4,13 +4,18 @@
             return 'Select global object. Start typing to filter the list';
         }
         if (!subExpression.currentState.hasProperty) {
-            var objectToken = subExpression.tokens.findLast(function (token) { return token.type === 'property'; });
-            if (!schema.rootType.fieldNameMap[objectToken.value.toLowerCase()].type) {
+            var propertyToken = subExpression.tokens.findLast(function (token) { return token.type === 'property'; });
+            if (propertyToken && !schema.rootType.fieldNameMap[propertyToken.value.toLowerCase()].type) {
                 return 'Select global object type. Start typing to filter the list';
             }
             return 'Select property. Start typing to filter the list';
         }
         if (!subExpression.currentState.hasOperator) {
+            //This if for the case where last selected property is a reference type
+            var propertyToken = subExpression.tokens.findLast(function (token) { return token.type === 'property'; });
+            if (propertyToken && schema.typeNameMap.hasOwnProperty(propertyToken.propertyType)) {
+                return 'Select  property. Start typing to filter the list';
+            }
             return 'Select operator. Start typing to filter the list';
         }
         if (!subExpression.currentState.hasValue) {
@@ -60,13 +65,15 @@
                 break;
             case 'objectType':
                 var propertyToken = tokens[0];
-                var property = schema.rootType.fieldNameMap[propertyToken.value.toLowerCase()];
-                property.type = lookupItem;
+                //Uncomment, if you want a pick of type to work for all subexpressions
+                // var property = schema.rootType.fieldNameMap[propertyToken.value.toLowerCase()];
+                // property.type = lookupItem;
                 propertyToken.propertyType = lookupItem;
                 break;
             case 'property':
                 var propertyToken = tokens.findLast(function (token) { return token.type === 'property'; });
-                var parentPropertyType = schema.typeNameMap[propertyToken.propertyType];
+                var parentPropertyTypeName = propertyToken ? propertyToken.propertyType : schema.rootType.name;
+                var parentPropertyType = schema.typeNameMap[parentPropertyTypeName];
                 tokens.push({
                     type: 'property',
                     value: lookupItem,
@@ -91,7 +98,7 @@
                     };
                     tokens.push(valueToken);
                 }
-                valueToken.value = propertyToken.propertyType === 'STRING' ? '\'' + lookupItem + '\'' : lookupItem;
+                valueToken.value = propertyToken.propertyType === 'STRING' || propertyToken.propertyType === 'TEXTAREA' ? '\'' + lookupItem + '\'' : lookupItem;
                 currentState.hasValue = true;
                 break;
         }
@@ -126,7 +133,8 @@
         if (!expression.currentState.hasProperty) {
             var currentType = null;
             if (schema.rootType.name === '$global') {
-                currentType = schema.typeNameMap[schema.rootType.fieldNameMap[expression.tokens[0].value.toLowerCase()].type];
+                var currentTypeName = expression.tokens[0].propertyType;
+                currentType = currentTypeName ? schema.typeNameMap[currentTypeName] : null;
                 //It means that the type of current global is unknown. We'll ask user to select a type
                 if (!currentType) {
                     //We don't allow user to pick global and external connection types
@@ -152,14 +160,23 @@
             }
             var fieldList = currentType.fieldList.map(function (field) {
                 return {
-                    header: field.name,
+                    header: field.name + (field.isReference ? ' >' : ''),
                     description: '- ' + field.label,
                     value: field.name,
                     details: 'of type ' + field.type,
-                    searchValue: field.name.toLowerCase() + '|' + field.type.toLowerCase()
+                    searchValue: field.name.toLowerCase() + '|' + field.type.toLowerCase(),
+                    isReference: field.isReference
                 };
             });
-            fieldList.sort(function (x, y) { return x.header.localeCompare(y.header); });
+            fieldList.sort(function (x, y) {
+                if (x.isReference && !y.isReference) {
+                    return -1;
+                }
+                if (!x.isReference && y.isReference) {
+                    return 1;
+                }
+                return x.header.localeCompare(y.header);
+            });
             return {
                 items: fieldList,
                 targetState: 'property',

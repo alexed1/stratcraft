@@ -208,6 +208,11 @@ window._utils = (function () {
       return packagePart[0];
     },
 
+    getComponentName: function (componentName) {
+      var packageName = this.getPackagePrefix();
+      return packageName + ':' + componentName;
+    },
+
     NodeRequestType: {
       ALL: 'ALL',
       ALL_EXCEPT_CURRENT: 'ALL_EXCEPT_CURRENT',
