@@ -2,7 +2,24 @@
 	<aura:attribute name="currentNode" type="Object" />
 
 	<div class="slds-form-element">
-		<lightning:input aura:id="type" label="type" required="false" value="{!v.currentNode.type}" />
+		<lightning:select aura:id="type" value="{!v.currentNode.type}" name="Type" label="Select an action type">
+			<option value="">choose one...</option>
+			<option value="activateSessionPermSet">activateSessionPermSet</option>
+			<option value="apex">apex</option>
+			<option value="chatterPost">chatterPost</option>
+			<option value="choosePricebook">choosePricebook</option>
+			<option value="component">component</option>
+			<option value="contentWorkspaceEnableFolders">contentWorkspaceEnableFolders</option>
+			<option value="deactivateSessionPermSet">deactivateSessionPermSet</option>
+			<option value="emailAlert">emailAlert</option>
+			<option value="emailSimple">emailSimple</option>
+			<option value="flow">flow</option>
+			<option value="generateWorkOrders">generateWorkOrders</option>
+			<option value="metricRefresh">metricRefresh</option>
+			<option value="quickAction">quickAction</option>
+			<option value="submit">submit</option>
+			<option value="thanks">thanks</option>
+		</lightning:select>
 	</div>
 
 	<div class="slds-form-element">

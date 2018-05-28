@@ -42,6 +42,7 @@
             });
         }
         _cmpUi.toggleError(nameCmp, errorLabelCmp, nameIsValid);
+
         return nameIsValid;
     },
 
@@ -54,7 +55,16 @@
     },
 
     validateExternalConnectionNode: function (cmp) {
-        return true;
+        //external connection has to have a description
+        var externalConnectionNode = cmp.find('externalConnectionNode');
+        if (!externalConnectionNode)
+            return true;
+
+        var newDescription = (cmp.get('v._currentNodeDirty.description') || '').trim().toUpperCase();
+        var descriptionIsValid = newDescription.length > 0 && !newDescription.match(/\s+/);
+
+        _cmpUi.toggleError(cmp.find('description'), cmp.find('descriptionError'), descriptionIsValid);
+        return descriptionIsValid;
     },
 
     validateRecordJoin: function (cmp) {

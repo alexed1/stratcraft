@@ -133,7 +133,7 @@ window._strategy = (function () {
                 throw new Error('Strategy can\'t be empty');
             }
             console.log("strategy.nodes is: " + strategy.nodes);
-            var rootNode = strategy.nodes.filter(function (item) { return !item.parentNodeName; });
+            var rootNode = strategy.nodes.filter(function (item) { return !item.parentNodeName && item.nodeType != _utils.NodeType.EXTERNAL_CONNECTION; });
             if (rootNode.length == 0) {
                 throw new Error('Strategy doesn\'t contain a root node');
             }
