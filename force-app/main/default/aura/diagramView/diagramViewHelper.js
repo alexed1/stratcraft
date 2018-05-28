@@ -367,7 +367,7 @@
         var self = this;
         _modalDialog.show(
             'Node Properties',
-            [_utils.getPackagePrefix() + ':basePropertyPageX', function (body) {
+            [_utils.getComponentName('basePropertyPageX'), function (body) {
                 body.set('v.currentStrategy', strategy);
                 body.set('v.currentNode', strategyNode);
                 body.addEventHandler('propertyPageSaveRequest', function (event) {

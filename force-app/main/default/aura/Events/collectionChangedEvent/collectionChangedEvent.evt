@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="Raised when collection is changed">
+    <aura:attribute name="index" type="Integer" />
+    <aura:attribute name="item" type="Object" />
+</aura:event>

@@ -1,0 +1,47 @@
+<aura:component>
+    <aura:attribute name="subExpression" type="Object" />
+    <aura:attribute name="schema" type="Object" />
+    <aura:attribute name="strategy" type="Object" />
+    <aura:attribute name="subExpressionIndex" type="Integer" />
+
+    <aura:attribute name="_placeholder" type="String" access="private" />
+    <aura:attribute name="_lookup" type="Object" access="private" />
+
+    <aura:attribute name="_value" type="String" />
+    <aura:attribute name="_filteredItems" type="List" />
+    <aura:attribute name="_index" type="Integer" default="0" />
+    <aura:attribute name="_isPopupOpen" type="Boolean" default="False" />
+
+    <aura:handler name="change" value="{!v._isPopupOpen}" action="{!c.handleIsPopupOpenChanged}" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.handleInit}" />  
+
+    <div class="token-container">
+        <aura:if isTrue="{!v.subExpression.tokens.length > 0}">
+            <aura:iteration items="{!v.subExpression.tokens}" var="item" indexVar="index">
+                <aura:if isTrue="{!index != 0 &amp;&amp; item.type != 'operator' &amp;&amp; item.type != 'value'}">.</aura:if>
+                <a class="{!item.type == 'operator' ? 'token operator' : 'token'}" href="javascript:void(0)" onclick="{!c.handleTokenClick}" data-index="{!index}">{!item.value}</a>
+            </aura:iteration>    
+            <aura:set attribute="else">
+                <span class="no-exp-label slds-m-left_xx-small">Subexpression is not yet built</span>
+            </aura:set>        
+        </aura:if>
+    </div>
+    
+    <div class="slds-grid popup-input" onkeyup="{!c.handleInputKeyUp}" data-index="{!v.subExpressionIndex}">
+        <lightning:input aura:id="input" class="slds-grow" placeholder="{!v._placeholder}" value="{!v._value}" onchange="{!c.handleValueChanged}" variant="label-hidden"
+                         onfocus="{!c.handleInputFocus}" />
+    </div>    
+    <div class="popup-host" aura:id="popup-host">
+        <div class="{!v._isPopupOpen ? 'popup' : 'popup slds-hide'}">
+            <aura:iteration items="{!v._filteredItems}" var="item" indexVar="index">
+                <div class="lookup-item slds-p-left_xx-small slds-p-vertical_x-small" data-index="{!index}" data-is-current="{!index == v._index ? '1' : '0'}"
+                    onclick="{!c.handleLookupItemClick}">
+                    <span class="slds-m-right_x-small slds-m-vertical_x-small lookup-item-header">{!item.header}</span>
+                    <span class="slds-m-right_x-small slds-m-vertical_x-small lookup-item-description">{!item.description}</span>
+                    <div class="slds-m-right_x-small slds-m-vertical_x-small lookup-item-details">{!item.details}</div>
+                </div>
+            </aura:iteration>
+        </div>
+    </div>
+</aura:component>	
