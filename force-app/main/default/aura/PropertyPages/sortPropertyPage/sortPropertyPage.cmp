@@ -5,10 +5,12 @@
     <aura:method name="clearValidation" action="{!c.clearValidation}" />
 
     <div class="slds-form-element">
-        <lightning:input aura:id="limit" type="number" label="Limit" step="1" min="0" value="{!v.currentNode.limit}" />
+        <lightning:input aura:id="limit" type="number" label="Limit" step="1" min="0" value="{!v.currentNode.propositionsLimit}"
+        />
     </div>
     <div class="slds-form-element">
-        <c:filterSet aura:id="filterSet" currentNode="{!v.currentNode}" title="Sort Keys" emptySetMessage="No sort keys added yet" memberType="sort" />
+        <c:filterSet aura:id="filterSet" currentNode="{!v.currentNode}" title="Sort Keys" emptySetMessage="No sort keys added yet"
+            memberType="sort" />
     </div>
     <div aura:id="filterSetError" class="error-text slds-form-element__help slds-m-left_xx-small slds-hide">At least one sort key must be added</div>
 </aura:component>

@@ -157,6 +157,14 @@ window._utils = (function () {
     },
 
     validateXML: function (xml) {
+
+      var recommendationStrategyName = '';
+      try {
+        //very stupid but robust way to find a strategy name
+        recommendationStrategyName = xml.split('recommendationStrategyName')[1].replace('>', '').replace('</', '').trim();
+      }
+      catch{ }
+
       const startsWith = 'This page contains the following errors:';
       const endsWith = 'Below is a rendering of the page up to the first error.';
       try {
@@ -172,20 +180,21 @@ window._utils = (function () {
             if (result.endsWith(endsWith)) {
               result = result.substr(0, result.length - endsWith.length);
             }
-            return result;
+            if (result)
+              return { errors: result, name: recommendationStrategyName };
           }
         } else if (window.ActiveXObject) {
           var myDocument = new ActiveXObject("Microsoft.XMLDOM")
           myDocument.async = false
           var nret = myDocument.loadXML(xml);
           if (!nret) {
-            return 'XML is invalid';
+            return { name: recommendationStrategyName, errors: 'XML is invalid' };
           }
         }
       } catch (e) {
-        return '';    //maybe the user-agent does not support both, then it should be submitted and let server-side validation does the job
+        return { name: recommendationStrategyName };    //maybe the user-agent does not support both, then it should be submitted and let server-side validation do the job
       }
-      return '';
+      return { name: recommendationStrategyName };
     },
 
     escapeHtml: function (str) {
@@ -241,6 +250,7 @@ window._utils = (function () {
       SORT: 'sort',
       EXTERNAL_CONNECTION: 'actionContext',
       RECORD_JOIN: 'recordJoin',
+      MUTUALLY_EXCLUSIVE: 'mutuallyExclusive',
       getValueNamePairs: function () {
         return [
           [this.IF, 'Gate'],
@@ -250,7 +260,8 @@ window._utils = (function () {
           [this.RECOMMENDATION_LIMIT, 'Prevent Re-Offers'],
           [this.SORT, 'Sort'],
           [this.EXTERNAL_CONNECTION, 'External Connection'],
-          [this.RECORD_JOIN, 'Record Join']
+          [this.RECORD_JOIN, 'Record Join'],
+          [this.MUTUALLY_EXCLUSIVE, 'Mutually Exclusive']
         ];
       }
     },

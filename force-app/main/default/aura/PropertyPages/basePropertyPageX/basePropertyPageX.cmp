@@ -14,6 +14,7 @@
     <aura:attribute name="_isRecommendationLimit" type="Boolean" access="private" default="false" />
     <aura:attribute name="_isExternalConnection" type="Boolean" access="private" default="false" />
     <aura:attribute name="_isRecordJoin" type="Boolean" access="private" default="false" />
+    <aura:attribute name="_isMutuallyExclusive" type="Boolean" access="private" default="false" />
     <aura:attribute name="availableNodeTypes" type="List" />
     <aura:attribute name="availableParentNodes" type="List" />
     <aura:attribute name="showParent" type="Boolean" default="True" />
@@ -54,7 +55,8 @@
 
         <!-- body -->
         <div class="slds-form-element">
-            <ui:inputText aura:id="name" label="Unique Name" class="field" value="{!v._currentNodeDirty.name}" disabled="{!v.currentNode == null}" />
+            <ui:inputText aura:id="name" label="Unique Name" class="field" value="{!v._currentNodeDirty.name}" disabled="{!v.currentNode == null}"
+            />
             <div aura:id="nameError" class="error-text slds-form-element__help slds-m-left_xx-small slds-hide">Name can't be empty, can't contain spaces and must be unique across current strategy</div>
         </div>
 
@@ -85,6 +87,15 @@
         <div class="slds-form-element">
             <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isIf}">
                 <c:ifNodePropertyPage aura:id="ifNode" currentNode="{!v._currentNodeDirty}" />
+                <aura:set attribute="else">
+                    <div class="hidden" />
+                </aura:set>
+            </aura:if>
+        </div>
+
+        <div class="slds-form-element">
+            <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isMutuallyExclusive}">
+                <c:mutuallyExclusivePropertyPage aura:id="mutuallyExclusive" currentNode="{!v._currentNodeDirty}" />
                 <aura:set attribute="else">
                     <div class="hidden" />
                 </aura:set>

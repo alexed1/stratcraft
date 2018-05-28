@@ -70,10 +70,13 @@
     createOrUpdateStrategy: function (cmp, event, helper) {
         var self = this;
         self.ensureSessionIdIsLoaded(cmp, function () {
-            cmp.set("v.savingStatus", "saving changes...");
+
             var sessionId = cmp.get("v.sessionId");
             var callback = event.getParam('callback');
             var isAsync = event.getParam('isAsync');
+
+            if (isAsync)
+                cmp.set("v.savingStatus", "saving changes...");
 
             var strategy = event.getParam("strategy");
             var strategyXML = event.getParam("strategyXML");
@@ -280,6 +283,7 @@
                 }
             }
             else {
+                cmp.set("v.savingStatus", '');
                 window.clearInterval(pollingId);
                 _cmpUi.spinnerOff(cmp, "spinner");
                 if (!isAsync)

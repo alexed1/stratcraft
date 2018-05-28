@@ -29,7 +29,6 @@
                     {!v.emptySetMessage}
                 </div>
             </aura:if>
-
             <aura:iteration items="{!v.currentNode.branches}" var="item" indexVar="index">
                 <div class="slds-m-top_x-small">
                     <c:filter aura:id="filter" index="{!index}" currentItem="{!item}" selectableNodes="{!v.selectableNodes}" deleteRequested="{!c.handleMemberDelete}"
@@ -37,6 +36,21 @@
                 </div>
             </aura:iteration>
         </aura:if>
+
+        <aura:if isTrue="{!v.memberType == 'mutuallyExclusive'}">
+            <aura:if isTrue="{!v.currentNode.branches.length == 0}">
+                <div>
+                    {!v.emptySetMessage}
+                </div>
+            </aura:if>
+            <aura:iteration items="{!v.currentNode.branches}" var="item" indexVar="index">
+                <div class="slds-m-top_x-small">
+                    <c:filter aura:id="filter" index="{!index}" currentItem="{!item}" selectableNodes="{!v.selectableNodes}" deleteRequested="{!c.handleMemberDelete}"
+                        priorityChangeRequested="{!c.handlePriorityChange}" isMutuallyExclusive="True" />
+                </div>
+            </aura:iteration>
+        </aura:if>
+
 
         <aura:if isTrue="{!v.memberType == 'externalConnection'}">
             <aura:if isTrue="{!v.currentNode.argPairs.length == 0}">

@@ -124,6 +124,11 @@
 	background-image: url(/resource/ifNode);
 }
 
+.THIS .exclusive-node {
+	background-color: #a200ff;
+	background-image: url(/resource/mutuallyExclusive);
+}
+
 .THIS .union-node {
 	background-color: #FF6A00;
 	background-image: url(/resource/unionNode);
