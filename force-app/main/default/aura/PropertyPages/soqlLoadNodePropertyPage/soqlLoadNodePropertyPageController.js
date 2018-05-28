@@ -1,8 +1,8 @@
 ({
     onInit: function (cmp, event, helper) {
-        var expr = cmp.get("v.currentNode.soql");
-        if (expr) {
-            cmp.set("v.shortenedSoql", expr.split('WHERE')[1].trim());
+        var expression = cmp.get('v.currentNode.soql');
+        if (expression) {
+            cmp.set('v.shortenedSoql', expression.split('WHERE').slice(1).join('WHERE').trim() || 'Configure');
         }
     },
 
@@ -18,10 +18,11 @@
                 var expression = body.resolveExpression();
                 cmp.set('v.currentNode.soql', expression);
                 if (expression) {
-                    cmp.set("v.shortenedSoql", expression.split('WHERE')[1].trim());
+                    var shortenedSoql = expression.split('WHERE').slice(1).join('WHERE').trim();
+                    cmp.set('v.shortenedSoql', shortenedSoql || 'Configure');
                 }
                 else
-                    cmp.set("v.shortenedSoql", 'Configure');
+                    cmp.set('v.shortenedSoql', 'Configure');
             });
     }
 })
