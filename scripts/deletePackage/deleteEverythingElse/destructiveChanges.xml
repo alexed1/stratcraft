@@ -6,6 +6,7 @@
     <members>BasePropertyPage</members>
     <members>basePropertyPage</members>
     <members>basePropertyPageX</members>
+    <members>collectionChangedEvent</members>
     <members>criterion</members>
     <members>criterionAddRequestEvent</members>
     <members>criterionDeleteRequestEvent</members>
@@ -53,6 +54,7 @@
     <members>stratcraftApp</members>
     <members>stratcraftTokens</members>
     <members>strategyChangedEvent</members>
+    <members>subExpression</members>
     <members>treeNode</members>
     <members>treeNodeSelectedEvent</members>
     <members>treeView</members>
@@ -133,6 +135,7 @@
     <members>cmpUi</members>
     <members>dragula</members>
     <members>dragulacss</members>
+    <members>expressionParser</members>
     <members>externalNode</members>
     <members>filterNode</members>
     <members>force</members>
