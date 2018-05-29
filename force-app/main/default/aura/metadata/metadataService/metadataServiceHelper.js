@@ -306,7 +306,6 @@
     },
 
     ensureSessionIdIsLoaded: function (cmp, onRetrieved) {
-        console.log("ensureSessionIdIsLoaded running at " + (new Date()).toLocaleTimeString());
         self = this;
         var sessionId = cmp.get("v.sessionId");
         if (sessionId) {
