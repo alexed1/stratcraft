@@ -66,6 +66,12 @@
                     order: 'Asc'
                 }]);
         }
+
+        if (currentNode && currentNode.nodeType === _utils.NodeType.EXTERNAL_CONNECTION) {
+            cmp.set("v.allowNodeTypeSelection", false);
+            cmp.set("v.showParent", false);
+        }
+
         helper.clearValidation(cmp);
     },
 

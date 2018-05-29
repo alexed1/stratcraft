@@ -1,22 +1,18 @@
 ({
     validate: function (cmp, event, helper) {
-        var filterSetCmp = cmp.find('filterSet');
-        var errorLabelCmp = cmp.find('filterSetError');
-        var currentNode = cmp.get('v.currentNode');
-        if (currentNode.nodeType !== _utils.NodeType.SORT) {
-            _cmpUi.toggleError(filterSetCmp, errorLabelCmp, true);
-            return true;
-        }
-        var hasSortKeys = currentNode.sortKeys && currentNode.sortKeys.length > 0;
-        _cmpUi.toggleError(null, errorLabelCmp, hasSortKeys);
-        var sortKeysAreValid = filterSetCmp.validate();
-        return hasSortKeys && sortKeysAreValid;
+        var currentNode = cmp.get("v.currentNode");
+
+        var typeCmp = cmp.find("type");
+        var typeErrorCmp = cmp.find("typeError");
+
+        var hasTypeSelected = currentNode.type && !currentNode.type.match(/\s+/);
+
+        _cmpUi.toggleError(null, typeErrorCmp, hasTypeSelected);
+        return hasTypeSelected;
     },
 
     clearValidation: function (cmp, event, helper) {
-        var filterSetCmp = cmp.find('filterSet');
-        filterSetCmp.clearValidation();
-        var errorLabelCmp = cmp.find('filterSetError');
-        _cmpUi.toggleError(null, errorLabelCmp, true);
+        var typeErrorCmp = cmp.find("typeError");
+        _cmpUi.toggleError(null, typeErrorCmp, true);
     }
 })

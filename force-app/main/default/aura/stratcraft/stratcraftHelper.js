@@ -243,17 +243,14 @@
     });
   },
 
-  showNewNodeDialog: function (cmp, strategy, strategyNode, allowParentSelection, forbidNodeTypeSelection) {
+  showNewNodeDialog: function (cmp, strategy, strategyNode, allowParentSelection) {
     var self = this;
     _modalDialog.show(
-      forbidNodeTypeSelection ?
-        'New External Connection Properties' :
-        'New Node Properties',
+      'New Node Properties',
       [_utils.getComponentName('basePropertyPageX'), function (body) {
         body.set('v.currentStrategy', strategy);
         body.set('v.currentNode', strategyNode);
         body.set('v.showParent', allowParentSelection);
-        body.set('v.allowNodeTypeSelection', forbidNodeTypeSelection ? false : true)
         body.set('v.showNodeActions', strategyNode.nodeName ? true : false);
         body.addEventHandler('propertyPageSaveRequest', function (event) {
           _modalDialog.close();

@@ -1,5 +1,7 @@
 <aura:component>
 	<aura:attribute name="currentNode" type="Object" />
+	<aura:method name="validate" action="{!c.validate}" />
+	<aura:method name="clearValidation" action="{!c.clearValidation}" />
 
 	<div class="slds-form-element">
 		<lightning:select aura:id="type" value="{!v.currentNode.type}" name="Type" label="Select an action type">
@@ -20,6 +22,7 @@
 			<option value="submit">submit</option>
 			<option value="thanks">thanks</option>
 		</lightning:select>
+		<div aura:id="typeError" class="error-text slds-form-element__help slds-m-left_xx-small slds-hide">Type has to be selected</div>
 	</div>
 
 	<div class="slds-form-element">

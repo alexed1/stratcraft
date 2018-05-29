@@ -64,7 +64,7 @@
         var descriptionIsValid = newDescription.length > 0 && !newDescription.match(/\s+/);
 
         _cmpUi.toggleError(cmp.find('description'), cmp.find('descriptionError'), descriptionIsValid);
-        return descriptionIsValid;
+        return descriptionIsValid && externalConnectionNode.validate();
     },
 
     validateRecordJoin: function (cmp) {

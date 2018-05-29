@@ -77,12 +77,14 @@
             </div>
         </aura:if>
 
-        <aura:if isTrue="{!v.allowNodeTypeSelection}">
+        <aura:if isTrue="{!v.allowNodeTypeSelection &amp;&amp; v.allowNodeTypeSelection}">
             <div class="slds-form-element">
                 <lightning:select aura:id="nodeType" label="Node Type" value="{!v._currentNodeDirty.nodeType}" class="select_box" required="true"
                     messageWhenValueMissing="Please select node type" disabled="{!v.currentNode == null}">
                     <aura:iteration items="{!v.availableNodeTypes}" var="item">
-                        <option value="{!item[0]}" text="{!item[1]}" selected="{!item[0] == v._currentNodeDirty.nodeType}" />
+                        <aura:if isTrue="{!item[0] != 'actionContext'}">
+                            <option value="{!item[0]}" text="{!item[1]}" selected="{!item[0] == v._currentNodeDirty.nodeType}" />
+                        </aura:if>
                     </aura:iteration>
                 </lightning:select>
             </div>
