@@ -6,7 +6,7 @@
     <aura:attribute name="selectableNodes" type="List" />
     <aura:attribute name="index" type="Integer" />
     <aura:attribute name="isMutuallyExclusive" type="Boolean" default="False" />
-    <aura:attribute name="nodeSelectLabel" type="String" default="Block Propositions from:" />
+    <aura:attribute name="nodeSelectLabel" type="String" default="The gate controlling this branch:" />
     <aura:registerEvent name="deleteRequested" type="c:filterDeleteRequestedEvent" />
     <aura:registerEvent name="priorityChangeRequested" type="c:filterPriorityChangeRequestEvent" />
 
@@ -51,7 +51,7 @@
                     <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-center">
                         <div class="slds-col  slds-size_1-of-1">
                             <div class="slds-p-vertical_xx-small">
-                                unless this is True
+                                is open when this is true:
                             </div>
                         </div>
                     </div>
