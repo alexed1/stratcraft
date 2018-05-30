@@ -13,8 +13,9 @@
     <aura:attribute name="_isPopupOpen" type="Boolean" default="False" />
 
     <aura:handler name="change" value="{!v._isPopupOpen}" action="{!c.handleIsPopupOpenChanged}" />
-
     <aura:handler name="init" value="{!this}" action="{!c.handleInit}" />  
+
+    <aura:method name="focus" action="{!c.handleFocus}" />
 
     <div class="token-container">
         <aura:if isTrue="{!v.subExpression.tokens.length > 0}">

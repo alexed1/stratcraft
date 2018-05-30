@@ -69,43 +69,22 @@
             }
             return resultType;
         },
-        /** Converts different representaiton of operator to a unified form
-         * @param {string} operator comparision operator (=, <, > etc.)
-         */
-        // _unifyOperators: function (operator) {
-        //     if (!operator) {
-        //         return null;
-        //     }
-        //     operator = operator.replace('&', '').replace(';', '').trim().toLowerCase();
-        //     switch (operator) {
-        //         case 'eq':
-        //         case '==':
-        //         case '=':
-        //             return '=';
 
-        //         case 'nq':
-        //         case '!=':
-        //             return '!=';
-
-        //         case 'lt':
-        //         case '<':
-        //             return '<';
-
-        //         case 'gt':
-        //         case '>':
-        //             return '>';
-        //         case 'lte':
-        //         case '=<':
-        //             return '=<';
-        //         case 'gte':
-        //         case '>=':
-        //             return '>=';
-        //         case 'like':
-        //             return 'like';
-        //         default:
-        //             return null;
-        //     }
-        // },
+        focusSubExpression: function (cmp, index) {
+            window.setTimeout($A.getCallback(function () {
+                var subExpressions = cmp.find('subExpression');
+                if (!subExpressions) {
+                    return;
+                }
+                var subExpression = Array.isArray(subExpressions)
+                    ? subExpressions.find(function (subExpressionCmp) { return subExpressionCmp.get('v.subExpressionIndex') == index; })
+                    : subExpressions;
+                if (!subExpression) {
+                    return;
+                }
+                subExpression.focus();
+            }), 100);
+        },
 
         _parseCommonExpression: function (expression, schema) {
             return _expressionParser.parseExpression(expression, schema);

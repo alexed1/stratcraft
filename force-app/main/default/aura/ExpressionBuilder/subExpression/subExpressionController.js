@@ -44,6 +44,11 @@
         }
     },
 
+    handleFocus: function (cmp, event, helper) {
+        var input = cmp.find('input');
+        input.focus();
+    },
+
     handleInputFocus: function (cmp, event, helper) {
         var lookup = cmp.get('v._lookup');
         if (!lookup || !lookup.items || lookup.items.length === 0) {
