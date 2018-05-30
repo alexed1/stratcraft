@@ -54,6 +54,7 @@
                             <aura:if isTrue="{!v.selectedStrategyName != ''}">
                                 <hr class="slds-m-vertical_xx-small" />
                                 <lightning:menuItem label="New Node" value="addElement" />
+                                <lightning:menuItem label="New External Connection" value="addExternalConnection" />
                                 <lightning:menuItem label="Save Strategy" value="saveStrategy" />
                                 <hr class="slds-m-vertical_xx-small" />
                                 <lightning:menuItem label="Rename Strategy" value="renameStrategy" />
@@ -89,6 +90,7 @@
         </div>
         <c:treeView aura:id="treeView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}" />
         <c:diagramView aura:id="diagramView" currentStrategy="{!v.currentStrategy}" strategyChanged="{!c.handleStrategyChanged}"
-            childNodeCreationRequested="{!c.handleNewNodeCreationRequested}" nodeDeletionRequested="{!c.handleNodeDeletionRequested}" />
+            childNodeCreationRequested="{!c.handleNewNodeCreationRequested}" nodeDeletionRequested="{!c.handleNodeDeletionRequested}"
+        />
     </div>
 </aura:component>

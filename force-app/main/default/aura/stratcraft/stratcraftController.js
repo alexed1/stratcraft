@@ -49,6 +49,9 @@
                 var actualNodeState = propertyPage.get('v._currentNodeDirty');
                 helper.saveStrategy(cmp, originalNodeState, actualNodeState);
                 break;
+            case 'addExternalConnection':
+                helper.showNewNodeDialog(cmp, cmp.get('v.currentStrategy'), { nodeType: _utils.NodeType.EXTERNAL_CONNECTION, description: '' });
+                break;
             case 'addElement':
                 helper.showNewNodeDialog(cmp, cmp.get('v.currentStrategy'), { nodeType: _utils.NodeType.IF, description: '' }, true);
                 break;

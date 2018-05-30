@@ -39,6 +39,7 @@
     <members>modalWindowImportStrategyXMLBody</members>
     <members>modalWindowInputBody</members>
     <members>modalWindowNewStrategy</members>
+    <members>mutuallyExclusivePropertyPage</members>
     <members>newNodeCreationRequestedEvent</members>
     <members>nodeDataRequestEvent</members>
     <members>nodeDeletionRequestedEvent</members>
@@ -71,6 +72,8 @@
     <members>CompositeNodeXmlConverter</members>
     <members>CriterionController</members>
     <members>CriterionControllerTest</members>
+    <members>ExclusiveNodeJsonConverter</members>
+    <members>ExclusiveNodeXmlConverter</members>
     <members>ExternalConnectionNode</members>
     <members>ExternalConnectionNodeJsonConverter</members>
     <members>ExternalConnectionNodeXmlConverter</members>
@@ -147,6 +150,7 @@
     <members>loadSoqlNode</members>
     <members>modalDialog</members>
     <members>modalStyles</members>
+    <members>mutuallyExclusive</members>
     <members>recommendationLimitNode</members>
     <members>recordJoinNode</members>
     <members>sortNode</members>
