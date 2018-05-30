@@ -4,12 +4,17 @@
         var subExpressions = cmp.get('v.subExpressions');
         subExpressions.splice(subExpressionIndex + 1, 0, _expressionParser.createNewSubExpression(cmp.get('v._schema')));
         cmp.set('v.subExpressions', subExpressions);
+        helper.focusSubExpression(cmp, subExpressionIndex + 1);
     },
 
     handleSubExpressionDelete: function (cmp, event, helper) {
         var subExpressionIndex = event.getSource().get('v.value');
         var subExpressions = cmp.get('v.subExpressions');
         subExpressions.splice(subExpressionIndex, 1);
+        if (subExpressions.length === 0) {
+            subExpressions.push(_expressionParser.createNewSubExpression(cmp.get('v._schema')));
+            helper.focusSubExpression(cmp, 0);
+        }
         cmp.set('v.subExpressions', subExpressions);
     },
 

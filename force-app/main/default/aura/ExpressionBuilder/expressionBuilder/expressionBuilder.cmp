@@ -30,11 +30,11 @@
         <div class="sub-exp-list-container slds-p-left_x-small">
             <aura:iteration items="{!v.subExpressions}" var="item" indexVar="index">
                 <div class="sub-exp-container slds-m-top_x-small">
-                    <c:subExpression schema="{!v._schema}" subExpression="{!item}" strategy="{!v.strategy}" subExpressionIndex="{!index}" />
+                    <c:subExpression aura:id="subExpression" schema="{!v._schema}" subExpression="{!item}" strategy="{!v.strategy}" subExpressionIndex="{!index}" />
                     <div class="sub-exp-btn-container">
                         <lightning:buttonIcon iconName="utility:add" class="slds-m-around-xx_small sub-exp-btn" value="{!index}"
                                               onclick="{!c.handleSubExpressionAdd}" />
-                        <lightning:buttonIcon iconName="utility:delete" class="{!v.subExpressions.length &gt; 1 ? 'slds-m-around-xx_small sub-exp-btn' : 'slds-hide'}" value="{!index}"
+                        <lightning:buttonIcon iconName="utility:delete" class="slds-m-around-xx_small sub-exp-btn" value="{!index}"
                                               onclick="{!c.handleSubExpressionDelete}"/>
                     </div>
                 </div>

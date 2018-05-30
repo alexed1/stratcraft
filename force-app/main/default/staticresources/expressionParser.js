@@ -31,7 +31,7 @@ window._expressionParser = (function () {
     if (!currentState.hasOperator) {
       var operatorNameMatch = value.match(/\S+/g);
       var operatorNameMatchValue = operatorNameMatch ? operatorNameMatch.join(' ').toLowerCase() : '';
-      var looseMatchOperators = operatorNameMatch ? operators.filter(function (item) { return item.searchValue.startsWith(operatorNameMatchValue); }) : [];
+      var looseMatchOperators = operatorNameMatch ? operators.filter(function (item) { return item.searchValue.startsWith(value); }) : [];
       var strictMatchOperator = operatorNameMatch ? operators.find(function (item) { return item.searchValue === operatorNameMatchValue; }) : null;
       var forceOperatorTerminationMatch = value.match(/\s$/);
       //It means that we found the exact operator
@@ -236,7 +236,7 @@ window._expressionParser = (function () {
       {
         value: '>=',
         description: 'greater than or equals',
-        searchValue: '>',
+        searchValue: '>=',
         supportedTypes: 'ALL'
       },
       {
