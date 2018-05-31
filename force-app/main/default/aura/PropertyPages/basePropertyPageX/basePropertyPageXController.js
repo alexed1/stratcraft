@@ -55,6 +55,7 @@
         cmp.set('v._isSort', currentNode && currentNode.nodeType === _utils.NodeType.SORT);
         cmp.set('v._isExternalConnection', currentNode && currentNode.nodeType === _utils.NodeType.EXTERNAL_CONNECTION);
         cmp.set('v._isRecordJoin', currentNode && currentNode.nodeType === _utils.NodeType.RECORD_JOIN);
+        cmp.set('v._isMutuallyExclusive', currentNode && currentNode.nodeType === _utils.NodeType.MUTUALLY_EXCLUSIVE);
 
         if (currentNode
             && currentNode.nodeType === _utils.NodeType.SORT
@@ -65,6 +66,12 @@
                     order: 'Asc'
                 }]);
         }
+
+        if (currentNode && currentNode.nodeType === _utils.NodeType.EXTERNAL_CONNECTION) {
+            cmp.set("v.allowNodeTypeSelection", false);
+            cmp.set("v.showParent", false);
+        }
+
         helper.clearValidation(cmp);
     },
 

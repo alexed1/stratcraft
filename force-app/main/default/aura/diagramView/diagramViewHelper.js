@@ -71,8 +71,13 @@
                 self.showHideContextMenu();
             }
         });
-        window.addEventListener('click', function (event) {
+        var windowClick = function (event) {
             var contextMenu = self.getContextMenu();
+            //This is done for the cases where strategy crafter no longer exists at the moment of click (ST-155)
+            if (!contextMenu) {
+                window.removeEventListener('click', windowClick);
+                return;
+            }
             if (contextMenu._isDisplayed) {
                 var elements = Array.from(document.elementsFromPoint(event.clientX, event.clientY));
                 var menuItem = elements.find(function (item) { return item.classList.contains('context-menu-item'); });
@@ -106,7 +111,8 @@
                 }
                 self.showHideContextMenu();
             }
-        });
+        };
+        window.addEventListener('click', windowClick);
     },
 
     initializeJsPlumb: function (cmp) {
@@ -344,6 +350,9 @@
                 break;
             case _utils.NodeType.RECORD_JOIN:
                 specificNodeClass = 'record-join-node';
+                break;
+            case _utils.NodeType.MUTUALLY_EXCLUSIVE:
+                specificNodeClass = 'exclusive-node';
                 break;
         }
         visualNode.classList.add('node');

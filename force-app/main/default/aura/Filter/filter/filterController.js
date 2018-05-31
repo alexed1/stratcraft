@@ -1,4 +1,11 @@
 ({
+
+    onInit: function (cmp, event, helper) {
+        var isMutuallyExclusive = cmp.get("v.isMutuallyExclusive");
+        if (isMutuallyExclusive)
+            cmp.set("v.nodeSelectLabel", "Continue only with Propositions from:");
+    },
+
     handleDeleteRequest: function (cmp, event, helper) {
         var cmpEvent = cmp.getEvent('deleteRequested');
         cmpEvent.fire();
@@ -7,7 +14,8 @@
     openExpressionBuilder: function (cmp, event, helper) {
         _modalDialog.show(
             'Expression Builder',
-            ['c:expressionBuilder', function (body) {
+            [_utils.getComponentName('expressionBuilder'), function (body) {
+                body.set('v.mode', 'if');
                 body.set('v.expression', cmp.get('v.currentItem.expression'));
                 body.load();
             }],

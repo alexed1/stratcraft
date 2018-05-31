@@ -1,4 +1,82 @@
 window._utils = (function () {
+
+  Array.prototype.findLast = function (predicate) {
+    for (var index = this.length - 1; index >= 0; index--) {
+      if (predicate(this[index])) {
+        return this[index];
+      }
+    }
+  };
+
+  if (!Element.prototype.scrollIntoViewIfNeeded) {
+    Element.prototype.scrollIntoViewIfNeeded = function (centerIfNeeded) {
+      function withinBounds(value, min, max, extent) {
+        if (false === centerIfNeeded || max <= value + extent && value <= min + extent) {
+          return Math.min(max, Math.max(min, value));
+        } else {
+          return (min + max) / 2;
+        }
+      }
+
+      function makeArea(left, top, width, height) {
+        return {
+          "left": left, "top": top, "width": width, "height": height
+          , "right": left + width, "bottom": top + height
+          , "translate":
+            function (x, y) {
+              return makeArea(x + left, y + top, width, height);
+            }
+          , "relativeFromTo":
+            function (lhs, rhs) {
+              var newLeft = left, newTop = top;
+              lhs = lhs.offsetParent;
+              rhs = rhs.offsetParent;
+              if (lhs === rhs) {
+                return area;
+              }
+              for (; lhs; lhs = lhs.offsetParent) {
+                newLeft += lhs.offsetLeft + lhs.clientLeft;
+                newTop += lhs.offsetTop + lhs.clientTop;
+              }
+              for (; rhs; rhs = rhs.offsetParent) {
+                newLeft -= rhs.offsetLeft + rhs.clientLeft;
+                newTop -= rhs.offsetTop + rhs.clientTop;
+              }
+              return makeArea(newLeft, newTop, width, height);
+            }
+        };
+      }
+
+      var parent, elem = this, area = makeArea(
+        this.offsetLeft, this.offsetTop,
+        this.offsetWidth, this.offsetHeight);
+      while ((parent = elem.parentNode) instanceof HTMLElement) {
+        var clientLeft = parent.offsetLeft + parent.clientLeft;
+        var clientTop = parent.offsetTop + parent.clientTop;
+
+        // Make area relative to parent's client area.
+        area = area.
+          relativeFromTo(elem, parent).
+          translate(-clientLeft, -clientTop);
+
+        parent.scrollLeft = withinBounds(
+          parent.scrollLeft,
+          area.right - parent.clientWidth, area.left,
+          parent.clientWidth);
+
+        parent.scrollTop = withinBounds(
+          parent.scrollTop,
+          area.bottom - parent.clientHeight, area.top,
+          parent.clientHeight);
+
+        // Determine actual scroll amount by reading back scroll properties.
+        area = area.translate(clientLeft - parent.scrollLeft,
+          clientTop - parent.scrollTop);
+        elem = parent;
+      }
+    };
+  };
+
   // List of HTML entities for escaping.
   var htmlEscapes = {
     '&': '&amp;',
@@ -79,6 +157,14 @@ window._utils = (function () {
     },
 
     validateXML: function (xml) {
+
+      var recommendationStrategyName = '';
+      try {
+        //very stupid but robust way to find a strategy name
+        recommendationStrategyName = xml.split('recommendationStrategyName')[1].replace('>', '').replace('</', '').trim();
+      }
+      catch{ }
+
       const startsWith = 'This page contains the following errors:';
       const endsWith = 'Below is a rendering of the page up to the first error.';
       try {
@@ -94,20 +180,21 @@ window._utils = (function () {
             if (result.endsWith(endsWith)) {
               result = result.substr(0, result.length - endsWith.length);
             }
-            return result;
+            if (result)
+              return { errors: result, name: recommendationStrategyName };
           }
         } else if (window.ActiveXObject) {
           var myDocument = new ActiveXObject("Microsoft.XMLDOM")
           myDocument.async = false
           var nret = myDocument.loadXML(xml);
           if (!nret) {
-            return 'XML is invalid';
+            return { name: recommendationStrategyName, errors: 'XML is invalid' };
           }
         }
       } catch (e) {
-        return '';    //maybe the user-agent does not support both, then it should be submitted and let server-side validation does the job
+        return { name: recommendationStrategyName };    //maybe the user-agent does not support both, then it should be submitted and let server-side validation do the job
       }
-      return '';
+      return { name: recommendationStrategyName };
     },
 
     escapeHtml: function (str) {
@@ -128,6 +215,11 @@ window._utils = (function () {
         return 'c';
       }
       return packagePart[0];
+    },
+
+    getComponentName: function (componentName) {
+      var packageName = this.getPackagePrefix();
+      return packageName + ':' + componentName;
     },
 
     NodeRequestType: {
@@ -158,6 +250,7 @@ window._utils = (function () {
       SORT: 'sort',
       EXTERNAL_CONNECTION: 'actionContext',
       RECORD_JOIN: 'recordJoin',
+      MUTUALLY_EXCLUSIVE: 'mutuallyExclusive',
       getValueNamePairs: function (isExternalConnectionMode) {
         if (isExternalConnectionMode) {
           return [[this.EXTERNAL_CONNECTION, 'External Connection']];
@@ -169,7 +262,8 @@ window._utils = (function () {
           [this.UNION, 'Combine'],
           [this.RECOMMENDATION_LIMIT, 'Prevent Re-Offers'],
           [this.SORT, 'Sort'],
-          [this.RECORD_JOIN, 'Record Join']
+          [this.RECORD_JOIN, 'Record Join'],
+          [this.MUTUALLY_EXCLUSIVE, 'Mutually Exclusive']
         ];
       }
     },

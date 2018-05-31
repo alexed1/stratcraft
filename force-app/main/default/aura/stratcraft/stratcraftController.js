@@ -49,6 +49,9 @@
                 var actualNodeState = propertyPage.get('v._currentNodeDirty');
                 helper.saveStrategy(cmp, originalNodeState, actualNodeState);
                 break;
+            case 'addExternalConnection':
+                helper.showNewNodeDialog(cmp, cmp.get('v.currentStrategy'), { nodeType: _utils.NodeType.EXTERNAL_CONNECTION, description: '' });
+                break;
             case 'addElement':
                 helper.showNewNodeDialog(cmp, cmp.get('v.currentStrategy'), { nodeType: _utils.NodeType.IF, description: '' }, true);
                 break;
@@ -152,7 +155,7 @@
         var errorMessage = event.getParam("error");
         _modalDialog.show(
             'Failed to save changes',
-            [_utils.getPackagePrefix() + ':modalWindowGenericBody', function (body) {
+            [_utils.getComponentName('modalWindowGenericBody'), function (body) {
                 body.set('v.text', 'Failed to save changes to ' + strategyName + ' strategy: ' + errorMessage
                     + '\r\nReload ' + strategyName + ' strategy?');
             }],

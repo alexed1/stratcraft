@@ -11,7 +11,8 @@ public with sharing class SortNodeJsonConverter extends BaseNodeJsonConverter{
         if (result == null) {
             return null;
         }
-        result.myLimit = jsonNode.containsKey('limit') ? (String)jsonNode.get('limit') : '';
+
+        result.propositionsLimit =  jsonNode.containsKey('propositionsLimit') ? (String)jsonNode.get('propositionsLimit') : '';
     
 
         if (jsonNode.containsKey('sortKeys')) {

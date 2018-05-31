@@ -24,7 +24,7 @@ public with sharing class MetadataServiceController {
 	private static String createOrUpdateStrategyImpl(String sessionId, String strategyXML) {
 		try{
 			XPath xp = new XPath(strategyXML);
-			String strategyName = xp.find('/RecommendationStrategy/recommendationStrategyName')[0].getText().unescapeXml();
+			String strategyName = xp.find('/RecommendationStrategy/recommendationStrategyName')[0].getText();
 			Zippex archive = new Zippex();
 			Blob packageXMLBlob = Blob.valueOf(formXML(strategyName));
 			archive.addFile('package.xml', packageXMLBlob, null);
@@ -87,10 +87,10 @@ public with sharing class MetadataServiceController {
 			String strategyXML = strategyJSONtoXML(strategyJSON);
 			XPath xp = new XPath(strategyXML);
 			Dom.XmlNode[] nameNode = xp.find('/RecommendationStrategy/recommendationStrategyName');
-			String oldStrategyName = nameNode[0].getText().unescapeXml();
+			String oldStrategyName = nameNode[0].getText();
 			Dom.XmlNode[] children = nameNode[0].getChildren();
 			nameNode[0].removeChild(children[0]);
-			nameNode[0].addTextNode(newStrategyName.escapeXml());
+			nameNode[0].addTextNode(newStrategyName);
 			String renamedStrategyXML = xp.doc.toXmlString();
 
 			Zippex archive = new Zippex();
@@ -118,7 +118,7 @@ public with sharing class MetadataServiceController {
 			Dom.XmlNode[] nameNode = xp.find('/RecommendationStrategy/recommendationStrategyName');
 			Dom.XmlNode[] children = nameNode[0].getChildren();
 			nameNode[0].removeChild(children[0]);
-			nameNode[0].addTextNode(newStrategyName.escapeXml());
+			nameNode[0].addTextNode(newStrategyName);
 			String renamedStrategyXML = xp.doc.toXmlString();
 
 			Zippex archive = new Zippex();

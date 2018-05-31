@@ -8,11 +8,11 @@ public with sharing class StrategyXmlConverter {
         String xmlNamespace = 'http://soap.sforce.com/2006/04/metadata';
         Dom.XmlNode rootNode = document.createRootElement('recommendationStrategy',xmlNamespace,'');
         Dom.XmlNode name = rootNode.addChildElement('recommendationStrategyName', null,null)
-            .addTextNode((strategy.name == null ? '' : strategy.name).escapeXml());
+            .addTextNode((strategy.name == null ? '' : strategy.name));
         Dom.XmlNode description = rootNode.addChildElement('description', null, null)
-            .addTextNode((strategy.description == null ? '' : strategy.description).escapeXml());
+            .addTextNode((strategy.description == null ? '' : strategy.description));
         Dom.XmlNode masterLabel = rootNode.addChildElement('masterLabel', null, null)
-            .addTextNode((strategy.masterLabel == null ? '' : strategy.masterLabel).escapeXml());
+            .addTextNode((strategy.masterLabel == null ? '' : strategy.masterLabel));
         for (BaseNode childNode : strategy.nodes) {
             Dom.XmlNode xmlChildNode = nodeXmlConverter.convertNodeToXml(childNode);
             if (xmlChildNode == null) {
@@ -37,13 +37,13 @@ public with sharing class StrategyXmlConverter {
             for(Dom.XMLNode child : strategyNode.getChildElements()) {
                 String childName = child.getName();
                 if (childName == 'recommendationStrategyName') {
-                    result.name = child.getText().unescapeXml();
+                    result.name = child.getText();
                 }
                 else if (childName == 'description') {
-                    result.description = child.getText().unescapeXml();
+                    result.description = child.getText();
                 }
                 else if (childName == 'masterLabel') {
-                    result.masterLabel = child.getText().unescapeXml();
+                    result.masterLabel = child.getText();
                 }
                 else if (nodeXmlConverter.canConvertXmlToNode(child, xmlNamespace)) {
                     result.nodes.add(nodeXmlConverter.convertXmlToNode(child, xmlNamespace));
@@ -59,6 +59,22 @@ public with sharing class StrategyXmlConverter {
                     System.debug(error);
                 }
             }
+
+            //searching for RootNode
+            BaseNode rootNode = null;
+            for (BaseNode node: result.nodes)
+            {
+                if (node.parentNodeName == '' && node.nodeType != NodeTypes.EXTERNAL_CONNECTION)
+                    rootNode = node;
+            }
+
+            //assigning Parent to External Connection nodes
+             for (BaseNode node: result.nodes)
+            {
+                if (node.nodeType == NodeTypes.EXTERNAL_CONNECTION)
+                    node.parentNodeName = rootNode.name;
+            }
+
         }
         catch (Exception e) {
             result.notification.addError(e.getMessage());

@@ -27,7 +27,7 @@
             <c:treeNode aura:id="tree" header="Strategy Elements" treeItems="{!v.tree}" nodeSelected="{!c.handleTreeNodeSelect}" />
         </div>
         <div class="slds-col slds-box slds-m-left_x-small slds-scrollable_y">           
-            <c:basePropertyPage aura:id="propertyPage" currentStrategy="{!v.currentStrategy}" propertyPageSaveRequest="{!c.handlePropertyPageSaveRequest}" />
+            <c:basePropertyPageX aura:id="propertyPage" currentStrategy="{!v.currentStrategy}" propertyPageSaveRequest="{!c.handlePropertyPageSaveRequest}" />
         </div>
     </div>
 </aura:component>	
