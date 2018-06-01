@@ -363,27 +363,17 @@
         visualNode.style.top = treeLayoutNode.y + 'px';
         container.appendChild(visualNode);
         visualNode.clickHandler = $A.getCallback(function () {
-            self.showNodePropertiesDialog(cmp, strategy, treeLayoutNode.strategyNode);
+            self.showNodeProperties(cmp, treeLayoutNode.strategyNode.name);
         });
         visualNode.addEventListener('click', visualNode.clickHandler);
         return visualNode;
     },
 
-    showNodePropertiesDialog: function (cmp, strategy, strategyNode) {
-        var self = this;
-        _modalDialog.show(
-            'Node Properties',
-            [_utils.getComponentName('basePropertyPageX'), function (body) {
-                body.set('v.currentStrategy', strategy);
-                body.set('v.currentNode', strategyNode);
-                body.addEventHandler('propertyPageSaveRequest', function (event) {
-                    _modalDialog.close();
-                    var currentStrategy = cmp.get('v.currentStrategy');
-                    var newNode = event.getParam('newNodeState');
-                    var oldNode = event.getParam('originalNodeState');
-                    self.raiseStrategyChangedEvent(cmp, currentStrategy, oldNode, newNode);
-                });
-
-            }]);
+    showNodeProperties: function (cmp, nodeName) {
+        var showNodePropertiesRequested = cmp.getEvent('showNodePropertiesRequested');
+        showNodePropertiesRequested.setParams({
+            'nodeName': nodeName
+        });
+        showNodePropertiesRequested.fire();
     },
 })

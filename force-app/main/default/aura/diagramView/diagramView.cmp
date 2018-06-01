@@ -14,6 +14,7 @@
     <aura:registerEvent name="strategyChanged" type="c:strategyChangedEvent" />
     <aura:registerEvent name="childNodeCreationRequested" type="c:newNodeCreationRequestedEvent" />
     <aura:registerEvent name="nodeDeletionRequested" type="c:nodeDeletionRequestedEvent" />
+    <aura:registerEvent name="showNodePropertiesRequested" type="c:nodeOperationEvent" />
 
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
     <aura:handler name="change" value="{!v.currentStrategy}" action="{!c.handleCurrentStrategyChanged}" />

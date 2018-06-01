@@ -109,57 +109,69 @@ window._undoManager = (function () {
     return {
         /** Adds new node to the strategy and enables undo/redo for this operation */
         addNode: function (strategy, node) {
-            _addItem(strategy.nodes, node);
+            if (node.nodeType === _utils.NodeType.EXTERNAL_CONNECTION) {
+                _addItem(strategy.externalConnections, node);
+            } else {
+                _addItem(strategy.nodes, node);
+            }
         },
         /** Removes existing node from the strategy and enables undo/redo for this operation */
         removeNode: function (strategy, node) {
-            _beginBatchOperations();
-            var allChildren = _strategy.getAllChildrenNodes(strategy, node).reverse();
-            allChildren.forEach(function (item) {
-                _removeItem(strategy.nodes, item);
-            });
-            _removeItem(strategy.nodes, node);
-            _endBatchOperations();
+            if (node.nodeType === _utils.NodeType.EXTERNAL_CONNECTION) {
+                _removeItem(strategy.externalConnections, node);
+            } else {
+                _beginBatchOperations();
+                var allChildren = _strategy.getAllChildrenNodes(strategy, node).reverse();
+                allChildren.forEach(function (item) {
+                    _removeItem(strategy.nodes, item);
+                });
+                _removeItem(strategy.nodes, node);
+                _endBatchOperations();
+            }
         },
         /** Updates properties of the strategy node and enables undo/redo for this operation */
         changeNode: function (strategy, oldNode, newNode) {
             _beginBatchOperations();
-            var isNameChanged = oldNode.name != newNode.name;
-            var isParentChanged = oldNode.parentNodeName != newNode.parentNodeName;
-            var originalParent = _strategy.getParentNode(strategy, oldNode);
-            var originalChildren = _strategy.getDirectChildrenNodes(strategy, oldNode);
-            //Update parent of original children
-            if (isNameChanged) {
-                originalChildren.forEach(function (item) {
-                    _changePropertyValue(item, 'parentNodeName', newNode.name);
-                });
-                //If parent node refers the current one in one of its branches, we should update this branch
-                //If original parent is empty then we are renaming the root node
-                if (originalParent && originalParent.nodeType == _utils.NodeType.IF) {
-                    if (originalParent.branches) {
-                        originalParent.branches.forEach(function (item) {
-                            if (item.child == oldNode.name) {
-                                _changePropertyValue(item, 'child', newNode.name);
-                            }
-                        });
+            if (oldNode.nodeType === _utils.NodeType.EXTERNAL_CONNECTION) {
+                _replaceItem(strategy.externalConnections, oldNode, newNode);
+            } else {
+                var isNameChanged = oldNode.name != newNode.name;
+                var isParentChanged = oldNode.parentNodeName != newNode.parentNodeName;
+                var originalParent = _strategy.getParentNode(strategy, oldNode);
+                var originalChildren = _strategy.getDirectChildrenNodes(strategy, oldNode);
+                //Update parent of original children
+                if (isNameChanged) {
+                    originalChildren.forEach(function (item) {
+                        _changePropertyValue(item, 'parentNodeName', newNode.name);
+                    });
+                    //If parent node refers the current one in one of its branches, we should update this branch
+                    //If original parent is empty then we are renaming the root node
+                    if (originalParent && originalParent.nodeType == _utils.NodeType.IF) {
+                        if (originalParent.branches) {
+                            originalParent.branches.forEach(function (item) {
+                                if (item.child == oldNode.name) {
+                                    _changePropertyValue(item, 'child', newNode.name);
+                                }
+                            });
+                        }
                     }
                 }
-            }
-            //Update children
-            if (isParentChanged) {
-                //TODO: process the case where empty node is selected as a new parent
-                var isMovingToOwnChild = _strategy.isParentOf(strategy, oldNode.name, newNode.parentNodeName);
-                if (isMovingToOwnChild) {
-                    originalChildren.forEach(function (item) {
-                        var newParentName = originalParent ? originalParent.name : '';
-                        _changePropertyValue(item, 'parentNodeName', newParentName);
-                    });
+                //Update children
+                if (isParentChanged) {
+                    //TODO: process the case where empty node is selected as a new parent
+                    var isMovingToOwnChild = _strategy.isParentOf(strategy, oldNode.name, newNode.parentNodeName);
+                    if (isMovingToOwnChild) {
+                        originalChildren.forEach(function (item) {
+                            var newParentName = originalParent ? originalParent.name : '';
+                            _changePropertyValue(item, 'parentNodeName', newParentName);
+                        });
+                    }
+                    //There is no 'else' as in this case changedNode will already have changes and will be injected into strategy
                 }
-                //There is no 'else' as in this case changedNode will already have changes and will be injected into strategy
+                var index = strategy.nodes.findIndex(function (item) { return item.name == oldNode.name; });
+                _replaceItem(strategy.nodes, strategy.nodes[index], newNode);
+                _endBatchOperations();
             }
-            var index = strategy.nodes.findIndex(function (item) { return item.name == oldNode.name; });
-            _replaceItem(strategy.nodes, strategy.nodes[index], newNode);
-            _endBatchOperations();
         },
         /** Returns true if there is at least one operation in the current queue that can be undone */
         canUndo: _utils.createNoSetterProperty(_canUndoProperty),

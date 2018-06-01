@@ -1,0 +1,48 @@
+.THIS.container {
+    display: flex;
+    align-items: center;
+}
+
+.THIS .label {
+    margin: 0.25em;
+    font-size: 0.825rem;
+}
+
+.THIS .scroll-container {
+    flex-grow: 1;
+}
+
+.THIS .list {
+    list-style-type: none;
+}
+
+.THIS .list-item {
+    display: inline;
+}
+
+.THIS .list-item-container {
+    margin: 0 0.25em;
+    width: 120px;
+    display: inline-flex;
+    flex-direction: column;    
+    align-items: center;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.THIS .list-item-body {
+    width: 48px;
+	height: 48px;
+	border-radius: 12px;
+    background-color: dodgerblue;
+	background-image: url(/resource/externalNode);
+}
+
+.THIS .list-item-name {
+    width: 100%;
+    font-weight: 600;
+	overflow: hidden;
+	white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+}

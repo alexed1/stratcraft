@@ -50,10 +50,10 @@
                 helper.saveStrategy(cmp, originalNodeState, actualNodeState);
                 break;
             case 'addExternalConnection':
-                helper.showNewNodeDialog(cmp, cmp.get('v.currentStrategy'), { nodeType: _utils.NodeType.EXTERNAL_CONNECTION, description: '' });
+                helper.showNodePropertiesDialog(cmp, cmp.get('v.currentStrategy'), { nodeType: _utils.NodeType.EXTERNAL_CONNECTION, description: '' });
                 break;
             case 'addElement':
-                helper.showNewNodeDialog(cmp, cmp.get('v.currentStrategy'), { nodeType: _utils.NodeType.IF, description: '' }, true);
+                helper.showNodePropertiesDialog(cmp, cmp.get('v.currentStrategy'), { nodeType: _utils.NodeType.IF, description: '' }, true);
                 break;
             case 'renameStrategy':
                 helper.showRenameStrategyDialog(cmp);
@@ -71,7 +71,7 @@
         _modalDialog.close();
         var node = event.getParam('node');
         var strategy = cmp.get('v.currentStrategy');
-        if (!node.parentNodeName) {
+        if (!node.parentNodeName && node.nodeType != _utils.NodeType.EXTERNAL_CONNECTION) {
             _force.displayToast('Error', 'Can\'t delete a root node', 'Error');
             return;
         }
@@ -81,7 +81,7 @@
     },
     /** Handles request for creation of a new node */
     handleNewNodeCreationRequested: function (cmp, event, helper) {
-        helper.showNewNodeDialog(cmp, cmp.get('v.currentStrategy'), {
+        helper.showNodePropertiesDialog(cmp, cmp.get('v.currentStrategy'), {
             parentNodeName: event.getParam('parentNodeName'),
             nodeType: event.getParam('nodeType') || _utils.NodeType.IF,
             description: ''
@@ -101,6 +101,15 @@
         else {
             callback(nodes);
         }
+    },
+
+    handleShowNodeProperties: function (cmp, event, helper) {
+        var strategy = cmp.get('v.currentStrategy');
+        var nodeName = event.getParam('nodeName');
+        var node = strategy.nodes.find(function (item) { return item.name === nodeName; })
+            || strategy.externalConnections.find(function (item) { return item.name === nodeName; });
+        var isExternalConnection = node.nodeType === _utils.NodeType.EXTERNAL_CONNECTION;
+        helper.showNodePropertiesDialog(cmp, strategy, node, !isExternalConnection);
     },
 
     saveStrategy: function (cmp, event, helper) {

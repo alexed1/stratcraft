@@ -3,6 +3,10 @@
 	width:15%;
 }
 
+.THIS .v-align-center {
+	align-self: center;
+}
+
 .THIS .error-text {
 	color: rgb(194, 57, 52);
 }
@@ -26,23 +30,14 @@
 
 .THIS.root {
 	height: 75vh;
-	display: -webkit-box;
-	display: -ms-flexbox;
 	display: flex;
-	-webkit-box-orient: vertical;
-	-webkit-box-direction: normal;
-	    -ms-flex-direction: column;
-	        flex-direction: column;
+	flex-direction: column;
 }
 
 .THIS .tool-bar {
-	display: -webkit-box;
-	display: -ms-flexbox;
 	display: flex;
-	-webkit-box-align: center;
-	    -ms-flex-align: center;
-	        align-items: center;
-	min-height: 63px;
+	align-items: center;
+	min-height: 70px;
 }
 
 .THIS .undo-redo-button {

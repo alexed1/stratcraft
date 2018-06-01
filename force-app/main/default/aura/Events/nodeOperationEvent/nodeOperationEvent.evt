@@ -1,0 +1,3 @@
+<aura:event type="COMPONENT" description="Event type for all events that operate with strategy node">
+    <aura:attribute name="nodeName" type="String" />
+</aura:event>

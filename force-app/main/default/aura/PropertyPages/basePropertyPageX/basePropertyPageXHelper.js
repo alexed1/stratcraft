@@ -61,8 +61,7 @@
             return true;
 
         var newDescription = (cmp.get('v._currentNodeDirty.description') || '').trim().toUpperCase();
-        var descriptionIsValid = newDescription.length > 0 && !newDescription.match(/\s+/);
-
+        var descriptionIsValid = !newDescription.match(/^\s*$/);
         _cmpUi.toggleError(cmp.find('description'), cmp.find('descriptionError'), descriptionIsValid);
         return descriptionIsValid && externalConnectionNode.validate();
     },
@@ -76,7 +75,7 @@
     },
 
     loadNodeTypes: function (cmp) {
-        var nodeValueNamePairs = _utils.NodeType.getValueNamePairs();
+        var nodeValueNamePairs = _utils.NodeType.getValueNamePairs(cmp.get('v.isConnectionMode'));
         nodeValueNamePairs.unshift(['', '']);
         cmp.set('v.availableNodeTypes', nodeValueNamePairs);
     },

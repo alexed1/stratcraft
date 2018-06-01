@@ -98,14 +98,9 @@ window._strategy = (function () {
             if (!nodeName) {
                 throw new Error('Node name can\'t be empty');
             }
-            var nodeFound = strategy.nodes.filter(function (item) { return item.name == nodeName; });
-            if (nodeFound.length == 0) {
-                return null;
-            }
-            if (nodeFound.length > 1) {
-                throw new Error('Strategy contains more than one node with name \'' + nodeName + '\'');
-            }
-            return nodeFound[0];
+            var nodeFound = strategy.nodes.find(function (item) { return item.name == nodeName; })
+                || strategy.externalConnections.find(function (item) { return item.name == nodeName; });
+            return nodeFound;
         },
         /**Returns a parent node for the specified node. Returns null if specified node is a root node 
          * @param {object} strategy - Strategy object

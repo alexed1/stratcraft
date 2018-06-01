@@ -97,5 +97,11 @@
         //because strateyg nodes all are created at the same place, thus the order of the fields of same type nodes will be the same
         var result = JSON.stringify(originalState) !== JSON.stringify(actualState);
         return result;
+    },
+
+    handleConnectionModeChange: function (cmp, event, helper) {
+        var isConnectionMode = cmp.get('v.isConnectionMode');
+        cmp.set('v.showParent', !isConnectionMode);
+        helper.loadNodeTypes(cmp);
     }
 })
