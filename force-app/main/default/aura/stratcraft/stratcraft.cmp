@@ -83,7 +83,7 @@
                     </div>
                 </div>
                 <div class="slds-grow v-align-center">
-                    <c:externalConnectionsList aura:id="externalConnections" currentStrategy="{!v.currentStrategy}" showConnectionPropertiesRequested="{!c.handleShowProperties}" />
+                    <c:externalConnectionsList aura:id="externalConnections" currentStrategy="{!v.currentStrategy}" showConnectionPropertiesRequested="{!c.handleShowNodeProperties}" />
                 </div>
                 <div class="slds-m-horizontal_x-small v-align-center">
                     <c:metadataService/>
