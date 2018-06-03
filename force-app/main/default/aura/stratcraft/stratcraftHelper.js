@@ -176,7 +176,7 @@
                 return 'A node with the same name already exists';
             }
         }
-        if (oldNode.parentNodeName != newNode.parentNodeName && !isConnectionMode) {
+        if (oldNode.parentNodeName != newNode.parentNodeName) {
             var wasRoot = !oldNode.parentNodeName;
             var isRoot = !newNode.parentNodeName;
             if (!wasRoot && isRoot) {
