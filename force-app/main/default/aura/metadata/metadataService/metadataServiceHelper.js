@@ -358,6 +358,19 @@
             }
             delete processedStrategy.externalConnections;
         }
+        processedStrategy.nodes.forEach(function (node) {
+            //Dropping the limit field for sort node if it is set to zero
+            if (node.nodeType === _utils.NodeType.SORT) {
+                if (node.propositionsLimit == '0') {
+                    node.propositionsLimit = '';
+                }
+            }
+            if (node.nodeType === _utils.NodeType.SOQL_LOAD) {
+                if (!node.soql) {
+                    node.soql = 'SELECT Name, Description, ActionReference FROM Proposition';
+                }
+            }
+        });
         return processedStrategy;
     },
     /** Takes strategy that we got from the service and prepares it to work with */
