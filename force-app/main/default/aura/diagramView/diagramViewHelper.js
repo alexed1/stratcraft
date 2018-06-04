@@ -41,8 +41,6 @@
     initializeContextMenu: function (cmp) {
         var self = this;
         var host = document.getElementsByClassName('diagram-scroll-view')[0];
-        var deleteChildEvent = cmp.getEvent('nodeDeletionRequested');
-        var addChildEvent = cmp.getEvent('childNodeCreationRequested');
         host.addEventListener('contextmenu', function (event) {
             var elements = Array.from(document.elementsFromPoint(event.clientX, event.clientY));
             var diagramRect = host.getBoundingClientRect();
@@ -94,12 +92,14 @@
                     switch (action) {
                         case 'add-child':
                             $A.getCallback(function () {
+                                var addChildEvent = cmp.getEvent('childNodeCreationRequested');
                                 addChildEvent.setParams({ 'parentNodeName': nodeName });
                                 addChildEvent.fire();
                             })();
                             break;
                         case 'delete':
                             $A.getCallback(function () {
+                                var deleteChildEvent = cmp.getEvent('nodeDeletionRequested');
                                 deleteChildEvent.setParams({ 'node': _strategy.convertToNode(cmp.get('v.currentStrategy'), nodeName) });
                                 deleteChildEvent.fire();
                             })();
