@@ -98,7 +98,9 @@
                     };
                     tokens.push(valueToken);
                 }
-                valueToken.value = propertyToken.propertyType === 'STRING' || propertyToken.propertyType === 'TEXTAREA' ? '\'' + lookupItem + '\'' : lookupItem;
+                valueToken.value = propertyToken.propertyType === 'STRING'
+                    || propertyToken.propertyType === 'TEXTAREA'
+                    || propertyToken.propertyType === 'EMAIL' ? '\'' + lookupItem + '\'' : lookupItem;
                 currentState.hasValue = true;
                 break;
         }
