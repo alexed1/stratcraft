@@ -62,7 +62,7 @@ window._expressionParser = (function () {
     //The only notable thing here is that we check whether we should escape the value with apstrophs      
     var operatorName = tokens.find(function (token) { return token.type === 'operator'; }).value.trim();
     var operator = operators.find(function (item) { return item.value === operatorName; });
-    var isString = operator.supportedTypes === 'STRING,TEXTAREA';
+    var isString = operator.supportedTypes === 'STRING,TEXTAREA,EMAIL';
     if (!isString) {
       var lastPropertyToken = null;
       for (var index = tokens.length - 1; index >= 0; index--) {
@@ -71,7 +71,7 @@ window._expressionParser = (function () {
           break;
         }
       }
-      isString = lastPropertyToken.propertyType === 'STRING' || lastPropertyToken.propertyType === 'TEXTAREA';
+      isString = lastPropertyToken.propertyType === 'STRING' || lastPropertyToken.propertyType === 'TEXTAREA' || lastPropertyToken.propertyType === 'EMAIL';
     }
     return {
       canTransit: isString || value.trim(),
@@ -154,7 +154,7 @@ window._expressionParser = (function () {
     var currentPropertyTypes = [];
     if (value.match(/^'.*'$/)) {
       value = value.substring(1, value.length - 2) || '';
-      currentPropertyTypes.push('STRING', 'TEXTAREA');
+      currentPropertyTypes.push('STRING', 'TEXTAREA', 'EMAIL');
     }
     var allPropertyTypes = [];
     var propertyTokens = subExpression.tokens.filter(function (token) { return token.type === 'property'; });
@@ -243,13 +243,13 @@ window._expressionParser = (function () {
         value: 'LIKE',
         description: 'similar to',
         searchValue: 'like',
-        supportedTypes: 'STRING,TEXTAREA'
+        supportedTypes: 'STRING,TEXTAREA,EMAIL'
       },
       {
         value: 'NOT LIKE',
         description: 'not similar to',
         searchValue: 'not like',
-        supportedTypes: 'STRING,TEXTAREA'
+        supportedTypes: 'STRING,TEXTAREA,EMAIL'
       }
     ],
 

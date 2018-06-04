@@ -8,8 +8,8 @@
 
     <aura:method name="refresh" action="{!c.handleCurrentStrategyChanged}" />    
 
-    <div class="container slds-hide" aura:id="container">
-        <div class="label slds-form-element__label">External Connections</div>
+    <div class="container slds-hide slds-p-around_x-small" aura:id="container">
+        <div class="label slds-form-element__label">External Connections:</div>
         <div class="scroll-container">
             <ul class="list">
                 <aura:iteration items="{!v._externalConnections}" var="item">

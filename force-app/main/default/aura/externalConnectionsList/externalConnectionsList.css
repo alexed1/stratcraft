@@ -1,6 +1,8 @@
 .THIS.container {
     display: flex;
     align-items: center;
+    border: 1px solid lightgray;
+    min-height: 85px;
 }
 
 .THIS .label {
@@ -21,8 +23,8 @@
 }
 
 .THIS .list-item-container {
-    margin: 0 0.25em;
-    width: 120px;
+    margin: 0 0.1rem;
+    width: 80px;
     display: inline-flex;
     flex-direction: column;    
     align-items: center;

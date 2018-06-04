@@ -13,7 +13,9 @@ public with sharing class StrategyXmlConverter {
             .addTextNode((strategy.description == null ? '' : strategy.description));
         Dom.XmlNode masterLabel = rootNode.addChildElement('masterLabel', null, null)
             .addTextNode((strategy.masterLabel == null ? '' : strategy.masterLabel));
-        for (BaseNode childNode : strategy.nodes) {
+        List<BaseNode> sortedNodes = strategy.nodes;
+        sortedNodes.sort();
+        for (BaseNode childNode : sortedNodes) {
             Dom.XmlNode xmlChildNode = nodeXmlConverter.convertNodeToXml(childNode);
             if (xmlChildNode == null) {
                 System.debug(System.LoggingLevel.ERROR, 'Failed to serialize \'' + childNode.name + '\' node to XML');

@@ -37,7 +37,7 @@
 .THIS .tool-bar {
 	display: flex;
 	align-items: center;
-	min-height: 70px;
+	min-height: 85px;
 }
 
 .THIS .undo-redo-button {
