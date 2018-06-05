@@ -159,6 +159,8 @@ window._expressionParser = (function () {
     if (value.match(/^'.*'$/)) {
       value = value.substring(1, value.length - 1) || '';
       currentPropertyTypes.push('STRING', 'TEXTAREA', 'EMAIL');
+    } else if (['true', 'false'].includes(value.toLowerCase())) {
+      currentPropertyTypes.push('BOOLEAN');
     }
     var allPropertyTypes = [];
     var propertyTokens = subExpression.tokens.filter(function (token) { return token.type === 'property'; });
@@ -168,8 +170,9 @@ window._expressionParser = (function () {
       //E.g. we have property path '$Record.Account.AccountNumber'. We found out that 'AccountNumber' property may belong to 'Type1','Type2' or 'Account'
       //Since 'Account' type matches the parent 'Account' property, than we take just this type
       if (currentPropertyTypes.includes(propertyTokens[index].value)) {
+        allPropertyTypes[0] = [propertyTokens[index].value];
         currentPropertyTypes = [propertyTokens[index].value];
-        continue;
+        //continue;
       }
       var propertyName = propertyTokens[index].value.toLowerCase();
       currentPropertyTypes = schema.typeList.filter(function (type) {
