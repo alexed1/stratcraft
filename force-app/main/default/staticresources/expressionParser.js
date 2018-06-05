@@ -1,4 +1,8 @@
 window._expressionParser = (function () {
+  var _typeHasStringValue = function (type) {
+    return type === 'STRING' || type === 'TEXTAREA' || type === 'EMAIL';
+  };
+
   var _getTransition = function (currentState, schema, operators, value, tokens) {
     value = value || '';
     if (!currentState.hasObject) {
@@ -71,7 +75,7 @@ window._expressionParser = (function () {
           break;
         }
       }
-      isString = lastPropertyToken.propertyType === 'STRING' || lastPropertyToken.propertyType === 'TEXTAREA' || lastPropertyToken.propertyType === 'EMAIL';
+      isString = _typeHasStringValue(lastPropertyToken.propertyType);
     }
     return {
       canTransit: isString || value.trim(),
@@ -153,7 +157,7 @@ window._expressionParser = (function () {
     var value = valueToken.value || '';
     var currentPropertyTypes = [];
     if (value.match(/^'.*'$/)) {
-      value = value.substring(1, value.length - 2) || '';
+      value = value.substring(1, value.length - 1) || '';
       currentPropertyTypes.push('STRING', 'TEXTAREA', 'EMAIL');
     }
     var allPropertyTypes = [];
@@ -253,6 +257,8 @@ window._expressionParser = (function () {
       }
     ],
 
+    typeHasStringValue: _typeHasStringValue,
+
     createNewSubExpression: function (schema) {
       var result = { tokens: [] };
       result.currentState = _createState(schema);
@@ -282,6 +288,9 @@ window._expressionParser = (function () {
     parseExpression: function (expression, schema) {
       var result = [];
       if (!expression) {
+        return result;
+      }
+      if (expression.toLowerCase().trim() === 'true') {
         return result;
       }
       var operators = this.operators;

@@ -45,9 +45,7 @@
         cmp.set('v._filteredItems', lookup.items);
     },
 
-    processLookupItem: function (cmp, lookupItem) {
-        var lookup = cmp.get('v._lookup');
-        var targetState = lookup.targetState;
+    processLookupItem: function (cmp, lookupItem, targetState) {
         var strategy = cmp.get('v.strategy');
         var subExpression = cmp.get('v.subExpression');
         var schema = cmp.get('v.schema');
@@ -98,9 +96,7 @@
                     };
                     tokens.push(valueToken);
                 }
-                valueToken.value = propertyToken.propertyType === 'STRING'
-                    || propertyToken.propertyType === 'TEXTAREA'
-                    || propertyToken.propertyType === 'EMAIL' ? '\'' + lookupItem + '\'' : lookupItem;
+                valueToken.value = _expressionParser.typeHasStringValue(propertyToken.propertyType) ? '\'' + lookupItem + '\'' : lookupItem;
                 currentState.hasValue = true;
                 break;
         }
@@ -198,14 +194,23 @@
             if (allowSubProperties && lastPropertyType) {
                 var fieldList = lastPropertyType.fieldList.map(function (field) {
                     return {
-                        header: field.name,
+                        header: field.name + (field.isReference ? ' >' : ''),
                         description: '- ' + field.label,
                         value: field.name,
                         details: 'of type ' + field.type,
-                        searchValue: field.name.toLowerCase() + '|' + field.type.toLowerCase()
+                        searchValue: field.name.toLowerCase() + '|' + field.type.toLowerCase(),
+                        isReference: field.isReference
                     };
                 });
-                fieldList.sort(function (x, y) { return x.header.localeCompare(y.header); });
+                fieldList.sort(function (x, y) {
+                    if (x.isReference && !y.isReference) {
+                        return -1;
+                    }
+                    if (!x.isReference && y.isReference) {
+                        return 1;
+                    }
+                    return x.header.localeCompare(y.header);
+                });
                 return {
                     items: fieldList,
                     targetState: 'property',

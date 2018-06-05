@@ -1,12 +1,18 @@
 window._utils = (function () {
 
-	Array.prototype.findLast = function (predicate) {
-		for (var index = this.length - 1; index >= 0; index--) {
-			if (predicate(this[index])) {
-				return this[index];
+	if (!String.prototype.contains) {
+		String.prototype.contains = function (it) { return this.indexOf(it) != -1; };
+	}
+
+	if (!Array.prototype.findLast) {
+		Array.prototype.findLast = function (predicate) {
+			for (var index = this.length - 1; index >= 0; index--) {
+				if (predicate(this[index])) {
+					return this[index];
+				}
 			}
-		}
-	};
+		};
+	}
 
 	if (!Element.prototype.scrollIntoViewIfNeeded) {
 		Element.prototype.scrollIntoViewIfNeeded = function (centerIfNeeded) {
