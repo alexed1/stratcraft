@@ -92,6 +92,28 @@
         window.addEventListener('click', windowClick);
     },
 
+    handleTryFinalize: function (cmp, event, helper) {
+        var subExpression = cmp.get('v.subExpression');
+        var value = cmp.get('v._value');
+        if (subExpression.currentState.hasOperator && value) {
+            helper.processLookupItem(cmp, value, 'value');
+        }
+        var result = subExpression.currentState.hasValue;
+        if (!result) {
+            var overlay = cmp.find('popover');
+            overlay.showCustomPopover({
+                body: 'The expression is not yet completed. Please complete it and try again or click \'Cancel\' to exit without saving',
+                referenceSelector: '#token-container' + cmp.get('v.subExpressionIndex'),
+                cssClass: "slds-popover,slds-p-around_x-small"
+            }).then(function (overlay) {
+                setTimeout(function () {
+                    overlay.close();
+                }, 1500);
+            });
+        }
+        return result;
+    },
+
     handleTokenClick: function (cmp, event, helper) {
         var tokenIndex = parseInt(event.target.dataset.index);
         var subExpression = cmp.get('v.subExpression');

@@ -17,8 +17,10 @@
     <aura:handler name="init" value="{!this}" action="{!c.handleInit}" />  
 
     <aura:method name="focus" action="{!c.handleFocus}" />
+    <aura:method name="tryFinalize" action="{!c.handleTryFinalize}" />
 
-    <div class="token-container">
+    <lightning:overlayLibrary aura:id="popover" />
+    <div class="token-container" id="{!'token-container' + v.subExpressionIndex}" >
         <aura:if isTrue="{!v.subExpression.tokens.length > 0}">
             <aura:iteration items="{!v.subExpression.tokens}" var="item" indexVar="index">
                 <aura:if isTrue="{!index != 0 &amp;&amp; item.type != 'operator' &amp;&amp; item.type != 'value'}">.</aura:if>

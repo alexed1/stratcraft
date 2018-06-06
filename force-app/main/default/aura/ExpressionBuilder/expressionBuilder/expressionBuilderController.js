@@ -66,5 +66,9 @@
 
     resolveExpression: function (cmp, event, helper) {
         return helper.resolveExpression(cmp);
+    },
+
+    handleValidate: function (cmp, event, helper) {
+        return helper.validate(cmp);
     }
 })

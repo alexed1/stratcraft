@@ -22,6 +22,9 @@
             function (body) {
                 var expression = body.resolveExpression();
                 cmp.set('v.currentItem.expression', expression);
+            },
+            function (body) {
+                return body.validate();
             });
     },
 

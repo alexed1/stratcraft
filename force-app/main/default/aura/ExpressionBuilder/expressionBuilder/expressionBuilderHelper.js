@@ -151,12 +151,31 @@
             return result;
         },
 
+        validate: function (cmp) {
+            var isBuilderMode = cmp.get('v.isBuilderMode');
+            if (!isBuilderMode) {
+                return true;
+            }
+            var subExpressonsCmp = cmp.find('subExpression');
+            if (!Array.isArray(subExpressonsCmp)) {
+                subExpressonsCmp = [subExpressonsCmp];
+            }
+            //First lets try to use whatever is entered in the textboxes as the expression value
+            var result = subExpressonsCmp.reduce(function (result, subExpressionCmp) {
+                return result & subExpressionCmp.tryFinalize();
+            }, true);
+            return result;
+        },
+
         resolveExpression: function (cmp) {
+            if (!this.validate(cmp)) {
+                return '';
+            }
             var isBuilderMode = cmp.get('v.isBuilderMode');
             var stringExpression = cmp.get('v.expression');
-            var expression = cmp.get('v.subExpressions');
             var mode = cmp.get('v.mode');
             if (isBuilderMode) {
+                var expression = cmp.get('v.subExpressions');
                 return this._stringifyExpression(expression, mode);
             }
             return stringExpression;

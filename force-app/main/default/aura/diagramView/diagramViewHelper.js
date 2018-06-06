@@ -146,10 +146,12 @@
             'Custom', {
                 create: function (component) {
                     var nodeLabel = document.createElement('div');
-                    nodeLabel.innerHTML =
-                        '<div class="node-label-part node-label-tooltip"><p class="node-label-header">' + _utils.escapeHtml(name) + '</p></div>'
-                        + '<div class="node-label-part node-label-tooltip"><p class="node-label-body">' + _utils.escapeHtml(description) + '</p>'
-                        + '<span class="node-label-tooltiptext">' + _utils.escapeHtml(description) + '</span></div>';
+                    var innerHtml = '<div class="node-label-part node-label-tooltip"><p class="node-label-header">' + _utils.escapeHtml(name) + '</p></div>';
+                    if (description) {
+                        innerHtml = innerHtml + '<div class="node-label-part node-label-tooltip"><p class="node-label-body">' + _utils.escapeHtml(description) + '</p>'
+                            + '<span class="node-label-tooltiptext">' + _utils.escapeHtml(description) + '</span></div>';
+                    }
+                    nodeLabel.innerHTML = innerHtml;
                     return nodeLabel;
                 },
                 location: [isSource ? -1.5 : -0.5, 1],
