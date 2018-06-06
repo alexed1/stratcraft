@@ -21,7 +21,7 @@ window._expressionParser = (function () {
       return result;
     }
     var propertyNameMatch = value.match(/[a-z_]{1}[a-z0-9_]{0,}/i);
-    var forcePropertyTerminationMatch = value.match(/[\s\.]+$/g);
+    var forcePropertyTerminationMatch = value.match(/[^a-z0-9_]+$/i);
     if (!currentState.hasProperty) {
       //For now we allow any property name (as long as it is syntactically valid)
       //Otherwise this is the place to add check that property belongs to a specific type
@@ -281,6 +281,9 @@ window._expressionParser = (function () {
 
     processValue: function (value, currentState, schema, tokens, forceTransition) {
       var transition = _getTransition(currentState, schema, this.operators, value, tokens);
+      if (transition.ignoreTransit) {
+        return true;
+      }
       if (transition.mustTransit || (transition.canTransit && forceTransition)) {
         _performTransition(currentState, transition, schema, tokens);
         return true;
@@ -305,11 +308,13 @@ window._expressionParser = (function () {
           var currentState = subExpression.currentState;
           var tokens = subExpression.tokens;
           var currentValue = '';
+          var previousValue = '';
           for (var index = 0; index < subExpressionString.length; index++) {
             currentValue = currentValue + subExpressionString.charAt(index);
             if (self.processValue(currentValue, currentState, schema, tokens)) {
               currentValue = '';
             }
+            previousValue = currentValue;
           }
           if (currentValue) {
             var finalTransition = _getTransition(currentState, schema, operators, currentValue, tokens);
