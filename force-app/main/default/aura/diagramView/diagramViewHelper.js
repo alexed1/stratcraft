@@ -41,7 +41,11 @@
     initializeContextMenu: function (cmp) {
         var self = this;
         var host = document.getElementsByClassName('diagram-scroll-view')[0];
-        host.addEventListener('contextmenu', function (event) {
+        if (host['diagramViewContextMenuHandler']) {
+            host.removeEventListener(host['diagramViewContextMenuHandler']);
+            delete host['diagramViewContextMenuHandler'];
+        }
+        var contextMenuHandler = function (event) {
             var elements = Array.from(document.elementsFromPoint(event.clientX, event.clientY));
             var diagramRect = host.getBoundingClientRect();
             var currentNode = elements.find(function (item) { return item.classList.contains('node'); });
@@ -70,12 +74,21 @@
             else {
                 self.showHideContextMenu();
             }
-        });
+        };
+        host.addEventListener('contextmenu', contextMenuHandler);
+        host['diagramViewContextMenuHandler'] = contextMenuHandler;
+
+        if (window['diagramViewContextMenuItemClickHandler']) {
+            window.removeEventListener(window['diagramViewContextMenuItemClickHandler']);
+            delete window['diagramViewContextMenuItemClickHandler'];
+        }
+
         var windowClick = function (event) {
             var contextMenu = self.getContextMenu();
             //This is done for the cases where strategy crafter no longer exists at the moment of click (ST-155)
             if (!contextMenu) {
-                window.removeEventListener('click', windowClick);
+                window.removeEventListener('click', window['diagramViewContextMenuItemClickHandler']);
+                delete window['diagramViewContextMenuItemClickHandler'];
                 return;
             }
             if (contextMenu._isDisplayed) {
@@ -112,9 +125,8 @@
                 self.showHideContextMenu();
             }
         };
-        //Just in case, to avoid double listener
-        window.removeEventListener('click', windowClick);
         window.addEventListener('click', windowClick);
+        window['diagramViewContextMenuItemClickHandler'] = windowClick;
     },
 
     initializeJsPlumb: function (cmp) {
