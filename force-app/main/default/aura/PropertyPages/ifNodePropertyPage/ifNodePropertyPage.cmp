@@ -2,17 +2,14 @@
     <aura:attribute name="currentNode" type="Object" />
 
     <div class="slds-form-element">
-        <lightning:input aura:id="removeDuplicates" type="checkbox" label="Remove Duplicates" checked="{!v.currentNode.removeDuplicates}"
-        />
+        <lightning:input aura:id="removeDuplicates" type="checkbox" label="Remove Duplicates" checked="{!v.currentNode.removeDuplicates}" />
     </div>
 
     <div class="slds-form-element">
-        <lightning:input aura:id="onlyFirstMatch" type="checkbox" label="Only First Match" checked="{!v.currentNode.onlyFirstMatch}"
-        />
+        <lightning:input aura:id="onlyFirstMatch" type="checkbox" label="Only First Match" checked="{!v.currentNode.onlyFirstMatch}" />
     </div>
 
     <div class="slds-form-element">
-        <c:filterSet aura:id="filterSet" currentNode="{!v.currentNode}" title="Filters" emptySetMessage="No filters added yet" memberType="filter"
-        />
+        <c:ifFilters currentNode="{!v.currentNode}" />
     </div>
 </aura:component>
