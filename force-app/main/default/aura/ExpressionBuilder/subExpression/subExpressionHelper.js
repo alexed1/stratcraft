@@ -1,12 +1,12 @@
 ({
     _getPlaceholder: function (subExpression, schema) {
         if (!subExpression.currentState.hasObject) {
-            return 'Select global object. Start typing to filter the list';
+            return 'Select the object, this expression will be based on. Start typing to filter the list';
         }
         if (!subExpression.currentState.hasProperty) {
             var propertyToken = subExpression.tokens.findLast(function (token) { return token.type === 'property'; });
-            if (propertyToken && !schema.rootType.fieldNameMap[propertyToken.value.toLowerCase()].type) {
-                return 'Select global object type. Start typing to filter the list';
+            if (propertyToken && !propertyToken.propertyType) {
+                return 'What object do you expect this to be? Start typing to filter the list';
             }
             return 'Select property. Start typing to filter the list';
         }
@@ -114,8 +114,8 @@
         if (!expression.currentState.hasObject) {
             var result = schema.rootType.fieldList.map(function (field) {
                 return {
-                    header: field.name,
-                    description: '- ' + field.label,
+                    header: field.label,
+                    details: field.name,
                     value: field.name,
                     searchValue: field.name.toLowerCase()
                 };

@@ -98,7 +98,7 @@
         if (subExpression.currentState.hasOperator && value) {
             helper.processLookupItem(cmp, value, 'value');
         }
-        var result = subExpression.currentState.hasValue;
+        var result = subExpression.currentState.hasValue || subExpression.tokens.length === 0;
         if (!result) {
             var overlay = cmp.find('popover');
             overlay.showCustomPopover({

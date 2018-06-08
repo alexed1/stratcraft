@@ -20,7 +20,7 @@
                 body.load();
             }],
             function (body) {
-                var expression = body.resolveExpression();
+                var expression = body.resolveExpression() || 'true';
                 cmp.set('v.currentItem.expression', expression);
             },
             function (body) {

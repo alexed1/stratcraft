@@ -36,7 +36,7 @@
                 // });
                 resultType.fieldList.push({
                     name: '$Record',
-                    label: 'current record',
+                    label: 'The record passed in when the strategy runs',
                     isReference: true
                 });
                 // resultType.fieldList.push({
@@ -46,7 +46,7 @@
                 // });
                 resultType.fieldList.push({
                     name: '$User',
-                    label: 'current user',
+                    label: 'The user currently logged in the organization',
                     type: 'User',
                     isReference: true
                 });

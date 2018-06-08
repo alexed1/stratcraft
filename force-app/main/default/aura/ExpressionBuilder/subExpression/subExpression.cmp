@@ -27,7 +27,7 @@
                 <a class="{!item.type == 'operator' ? 'token operator' : 'token'}" href="javascript:void(0)" onclick="{!c.handleTokenClick}" data-index="{!index}">{!item.value}</a>
             </aura:iteration>    
             <aura:set attribute="else">
-                <span class="no-exp-label slds-m-left_xx-small">Subexpression is not yet built</span>
+                <span class="no-exp-label slds-m-left_xx-small">{!v.schema.rootType.name == '$global' ? 'Select the object this expression will be based on' : 'Select property of the proposition'}</span>
             </aura:set>        
         </aura:if>
     </div>
