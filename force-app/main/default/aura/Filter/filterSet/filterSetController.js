@@ -37,7 +37,6 @@
         switch (memberType) {
 
             case 'mutuallyExclusive':
-            case 'filter':
                 var branches = cmp.get('v.currentNode.branches');
 
                 if (!branches) {
@@ -95,7 +94,6 @@
 
         switch (memberType) {
             case 'mutuallyExclusive':
-            case 'filter':
                 var branches = cmp.get('v.currentNode.branches');
                 var currentItem = event.getSource().get('v.currentItem');
                 var index = branches.indexOf(currentItem);

@@ -112,7 +112,21 @@ window._undoManager = (function () {
             if (node.nodeType === _utils.NodeType.EXTERNAL_CONNECTION) {
                 _addItem(strategy.externalConnections, node);
             } else {
+                _beginBatchOperations();
                 _addItem(strategy.nodes, node);
+                //If we add new child to the Gate node, we need to add new filter to this Gate
+                var parentNode = _strategy.getParentNode(strategy, node);
+                if (parentNode.nodeType === _utils.NodeType.IF) {
+                    if (!parentNode.branches) {
+                        parentNode.branches = [];
+                        _changePropertyValue(parentNode, 'branches', []);
+                    }
+                    _addItem(parentNode.branches, {
+                        child: node.name,
+                        expression: 'true'
+                    });
+                }
+                _endBatchOperations();
             }
         },
         /** Removes existing node from the strategy and enables undo/redo for this operation */
@@ -125,6 +139,14 @@ window._undoManager = (function () {
                 allChildren.forEach(function (item) {
                     _removeItem(strategy.nodes, item);
                 });
+                //If we remove node which is a child of the Gate, this Gate need to lose a related filter
+                var parentNode = _strategy.getParentNode(strategy, node);
+                if (parentNode.nodeType === _utils.NodeType.IF) {
+                    var childBranch = parentNode.branches.find(function (branch) { return branch.child === node.name; });
+                    if (childBranch) {
+                        _removeItem(parentNode.branches, childBranch);
+                    }
+                }
                 _removeItem(strategy.nodes, node);
                 _endBatchOperations();
             }
@@ -138,6 +160,7 @@ window._undoManager = (function () {
                 var isNameChanged = oldNode.name != newNode.name;
                 var isParentChanged = oldNode.parentNodeName != newNode.parentNodeName;
                 var originalParent = _strategy.getParentNode(strategy, oldNode);
+                var newParent = _strategy.getParentNode(strategy, newNode);
                 var originalChildren = _strategy.getDirectChildrenNodes(strategy, oldNode);
                 //Update parent of original children
                 if (isNameChanged) {
@@ -158,6 +181,24 @@ window._undoManager = (function () {
                 }
                 //Update children
                 if (isParentChanged) {
+                    //If we move node and either its original parent was Gate or its new parent is Gate we need to remove/add new filter
+                    if (originalParent && originalParent.nodeType === _utils.NodeType.IF) {
+                        //We use new name here because if name was changed, then the branch is already updated
+                        var childBranch = originalParent.branches.find(function (branch) { return branch.child === newNode.name; });
+                        if (childBranch) {
+                            _removeItem(originalParent.branches, childBranch);
+                        }
+                    }
+                    if (newParent && newParent.nodeType === _utils.NodeType.IF) {
+                        if (!newParent.branches) {
+                            newParent.branches = [];
+                            _changePropertyValue(newParent, 'branches', []);
+                        }
+                        _addItem(newParent.branches, {
+                            child: newNode.name,
+                            expression: 'true'
+                        });
+                    }
                     //TODO: process the case where empty node is selected as a new parent
                     var isMovingToOwnChild = _strategy.isParentOf(strategy, oldNode.name, newNode.parentNodeName);
                     if (isMovingToOwnChild) {

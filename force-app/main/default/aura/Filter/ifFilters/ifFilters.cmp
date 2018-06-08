@@ -5,9 +5,8 @@
 
     <aura:if isTrue="{!v.currentNode.branches &amp;&amp; v.currentNode.branches.length > 0}">
         <aura:iteration items="{!v.currentNode.branches}" var="branch" indexVar="index">
-            <div class="slds-box">
-                <div>The gate controlling the branch <strong>{!branch.child}</strong></div>
-                <div class="slds-p-vertical_xx-small">is open when this is true:</div>
+            <div class="slds-box slds-m-bottom_x-small">
+                <div class="slds-p-vertical_xx-small slds-p-left_xx-small">The gate controlling the branch <strong>{!branch.child}</strong> is open when this is true:</div>
                 <div class="slds-grid">
                     <div class="sdls-col slds-size_1-of-1">
                         <lightning:button onclick="{!c.openExpressionBuilder}" value="{!index}">
@@ -23,7 +22,7 @@
             </div>
         </aura:iteration>
         <aura:set attribute="else">
-            <div>Filters will become configurable once this node gets children nodes</div>
+            <div class="italic">Filters will become configurable once this node gets children nodes</div>
         </aura:set>
     </aura:if>
 </aura:component>	
