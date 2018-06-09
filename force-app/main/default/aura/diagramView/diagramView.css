@@ -1,7 +1,5 @@
 .THIS.full-height {
-	-webkit-box-flex: 1;
-	    -ms-flex-positive: 1;
-	        flex-grow: 1;
+	flex-grow: 1;
 }
 
 .THIS.diagram-scroll-view {
@@ -56,6 +54,7 @@
 }
 
 .THIS .node-label-tooltip .node-label-tooltiptext {
+	visibility: hidden;
 	opacity: 0;
 	background-color: black;
 	color: white;
@@ -70,6 +69,7 @@
 }
 
 .THIS .node-label-tooltip:hover .node-label-tooltiptext {
+	visibility: visible;
 	opacity: 1;
 }
 
