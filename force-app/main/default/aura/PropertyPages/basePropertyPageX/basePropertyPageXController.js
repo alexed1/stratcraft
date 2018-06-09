@@ -46,6 +46,8 @@
     },
 
     handleTypeChanged: function (cmp, event, helper) {
+        var originalNodeName = cmp.get('v.currentNode.name');
+        var strategy = cmp.get('v.currentStrategy');
         var currentNode = cmp.get('v._currentNodeDirty');
         cmp.set('v._isIf', currentNode && currentNode.nodeType === _utils.NodeType.IF);
         cmp.set('v._isSoqlLoad', currentNode && currentNode.nodeType === _utils.NodeType.SOQL_LOAD);
@@ -70,6 +72,17 @@
         if (currentNode && currentNode.nodeType === _utils.NodeType.EXTERNAL_CONNECTION) {
             cmp.set("v.allowNodeTypeSelection", false);
             cmp.set("v.showParent", false);
+        }
+
+        if (currentNode && currentNode.nodeType === _utils.NodeType.IF) {
+            var branches = _strategy.getDirectChildrenNodes(strategy, originalNodeName)
+                .map(function (childNode) {
+                    return {
+                        child: childNode.name,
+                        expression: 'true'
+                    }
+                });
+            cmp.set('v._currentNodeDirty.branches', branches);
         }
 
         helper.clearValidation(cmp);
