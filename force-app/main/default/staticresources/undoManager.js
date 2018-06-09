@@ -47,6 +47,13 @@ window._undoManager = (function () {
             function () { array.splice(array.length - 1, 1); });
     };
 
+    var _insertItem = function (array, item, index) {
+        _addAndRunOperation(
+            function () { array.splice(index, 0, item); },
+            function () { array.splice(index, 1); }
+        );
+    }
+
     var _removeItem = function (array, item) {
         var index = array.indexOf(item);
         _addAndRunOperation(
@@ -113,7 +120,17 @@ window._undoManager = (function () {
                 _addItem(strategy.externalConnections, node);
             } else {
                 _beginBatchOperations();
-                _addItem(strategy.nodes, node);
+                //This is done to keep sort order of the node (by type then by name)
+                var index = strategy.nodes.findIndex(function (item) {
+                    var typeComparison = item.nodeType.localeCompare(node.nodeType);
+                    var nameComparison = item.name.localeCompare(node.name);
+                    return typeComparison > 0 || (typeComparison === 0 && nameComparison > 0);
+                });
+                if (index !== -1) {
+                    _insertItem(strategy.nodes, node, index);
+                } else {
+                    _addItem(strategy.nodes, node);
+                }
                 //If we add new child to the Gate node, we need to add new filter to this Gate
                 var parentNode = _strategy.getParentNode(strategy, node);
                 if (parentNode.nodeType === _utils.NodeType.IF) {
@@ -194,6 +211,18 @@ window._undoManager = (function () {
                             newParent.branches = [];
                             _changePropertyValue(newParent, 'branches', []);
                         }
+
+                        // var index = newParent.branches.findIndex(function (item) {
+                        //     var typeComparison = item.nodeType.localeCompare(newNode.nodeType);
+                        //     var nameComparison = item.name.localeCompare(newNode.name);
+                        //     return typeComparison > 0 || (typeComparison === 0 && nameComparison > 0);
+                        // });
+                        // if (index !== -1) {
+                        //     _insertItem(strategy.nodes, newNode, index);
+                        // } else {
+                        //     _addItem(strategy.nodes, newNode);
+                        // }
+
                         _addItem(newParent.branches, {
                             child: newNode.name,
                             expression: 'true'
@@ -210,7 +239,22 @@ window._undoManager = (function () {
                     //There is no 'else' as in this case changedNode will already have changes and will be injected into strategy
                 }
                 var index = strategy.nodes.findIndex(function (item) { return item.name == oldNode.name; });
-                _replaceItem(strategy.nodes, strategy.nodes[index], newNode);
+                if (isNameChanged) {
+                    _removeItem(strategy.nodes, strategy.nodes[index]);
+                    //This is done to keep sort order of the node (by type then by name)
+                    var index = strategy.nodes.findIndex(function (item) {
+                        var typeComparison = item.nodeType.localeCompare(newNode.nodeType);
+                        var nameComparison = item.name.localeCompare(newNode.name);
+                        return typeComparison > 0 || (typeComparison === 0 && nameComparison > 0);
+                    });
+                    if (index !== -1) {
+                        _insertItem(strategy.nodes, newNode, index);
+                    } else {
+                        _addItem(strategy.nodes, newNode);
+                    }
+                } else {
+                    _replaceItem(strategy.nodes, strategy.nodes[index], newNode);
+                }
                 _endBatchOperations();
             }
         },

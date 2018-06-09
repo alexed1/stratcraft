@@ -61,6 +61,8 @@ public with sharing class StrategyXmlConverter {
                     System.debug(error);
                 }
             }
+            //Now lets sort node by type asc, then by name asc so this order will be kept throughout whole strategy lifetime
+            result.nodes.sort();
 
             //searching for RootNode
             BaseNode rootNode = null;
@@ -76,7 +78,6 @@ public with sharing class StrategyXmlConverter {
                 if (node.nodeType == NodeTypes.EXTERNAL_CONNECTION)
                     node.parentNodeName = rootNode.name;
             }
-
         }
         catch (Exception e) {
             result.notification.addError(e.getMessage());
