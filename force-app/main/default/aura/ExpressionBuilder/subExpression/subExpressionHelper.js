@@ -46,6 +46,7 @@
     },
 
     processLookupItem: function (cmp, lookupItem, targetState) {
+        var self = this;
         var strategy = cmp.get('v.strategy');
         var subExpression = cmp.get('v.subExpression');
         var schema = cmp.get('v.schema');
@@ -106,8 +107,17 @@
         var lookup = this._generateLookup(subExpression, schema, strategy);
         cmp.set('v._placeholder', placeholder);
         cmp.set('v._lookup', lookup);
+        this._scrollPopupTop(cmp);
         cmp.set('v._filteredItems', lookup.items);
         cmp.set('v._index', lookup.items.length === 0 ? -1 : 0);
+        // window.setTimeout($A.getCallback(function () {
+        //     self._scrollPopupTop(cmp);
+        // }), 100);
+    },
+
+    _scrollPopupTop: function (cmp) {
+        var popup = cmp.find('popup').getElement();
+        popup.scrollTop = 0;
     },
 
     _generateLookup: function (expression, schema, strategy) {
