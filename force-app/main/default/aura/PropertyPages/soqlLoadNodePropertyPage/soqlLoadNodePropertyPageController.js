@@ -23,6 +23,9 @@
                 }
                 else
                     cmp.set('v.shortenedSoql', 'Configure');
+            },
+            function (body) {
+                return body.validate();
             });
     }
 })

@@ -13,7 +13,7 @@ public with sharing class FilterNodeXmlConverter extends BaseNodeXmlConverter {
                 result.removeDuplicates = Boolean.valueOf(child.getText());
             } else if (childName == 'expression') {
                 String expression = child.getText();
-                result.expression = expression == null ? '' : expression;
+                result.expression = expression == null ? '' : this.expressionize(expression);
             }
         }
         return result;

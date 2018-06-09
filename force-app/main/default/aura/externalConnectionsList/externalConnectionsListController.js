@@ -2,7 +2,7 @@
     handleCurrentStrategyChanged: function (cmp, event, helper) {
         var strategy = cmp.get('v.currentStrategy');
         var container = cmp.find('container');
-        if (strategy && strategy.externalConnections) {
+        if (strategy && strategy.externalConnections && strategy.externalConnections.length > 0) {
             $A.util.removeClass(container, 'slds-hide');
             cmp.set('v._externalConnections', strategy.externalConnections);
         } else {

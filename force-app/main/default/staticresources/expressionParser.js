@@ -21,7 +21,7 @@ window._expressionParser = (function () {
       return result;
     }
     var propertyNameMatch = value.match(/[a-z_]{1}[a-z0-9_]{0,}/i);
-    var forcePropertyTerminationMatch = value.match(/[\s\.]+$/g);
+    var forcePropertyTerminationMatch = value.match(/[^a-z0-9_]+$/i);
     if (!currentState.hasProperty) {
       //For now we allow any property name (as long as it is syntactically valid)
       //Otherwise this is the place to add check that property belongs to a specific type
@@ -159,6 +159,8 @@ window._expressionParser = (function () {
     if (value.match(/^'.*'$/)) {
       value = value.substring(1, value.length - 1) || '';
       currentPropertyTypes.push('STRING', 'TEXTAREA', 'EMAIL');
+    } else if (['true', 'false'].includes(value.toLowerCase())) {
+      currentPropertyTypes.push('BOOLEAN');
     }
     var allPropertyTypes = [];
     var propertyTokens = subExpression.tokens.filter(function (token) { return token.type === 'property'; });
@@ -168,8 +170,9 @@ window._expressionParser = (function () {
       //E.g. we have property path '$Record.Account.AccountNumber'. We found out that 'AccountNumber' property may belong to 'Type1','Type2' or 'Account'
       //Since 'Account' type matches the parent 'Account' property, than we take just this type
       if (currentPropertyTypes.includes(propertyTokens[index].value)) {
+        allPropertyTypes[0] = [propertyTokens[index].value];
         currentPropertyTypes = [propertyTokens[index].value];
-        continue;
+        //continue;
       }
       var propertyName = propertyTokens[index].value.toLowerCase();
       currentPropertyTypes = schema.typeList.filter(function (type) {
@@ -278,6 +281,9 @@ window._expressionParser = (function () {
 
     processValue: function (value, currentState, schema, tokens, forceTransition) {
       var transition = _getTransition(currentState, schema, this.operators, value, tokens);
+      if (transition.ignoreTransit) {
+        return true;
+      }
       if (transition.mustTransit || (transition.canTransit && forceTransition)) {
         _performTransition(currentState, transition, schema, tokens);
         return true;
@@ -302,11 +308,13 @@ window._expressionParser = (function () {
           var currentState = subExpression.currentState;
           var tokens = subExpression.tokens;
           var currentValue = '';
+          var previousValue = '';
           for (var index = 0; index < subExpressionString.length; index++) {
             currentValue = currentValue + subExpressionString.charAt(index);
             if (self.processValue(currentValue, currentState, schema, tokens)) {
               currentValue = '';
             }
+            previousValue = currentValue;
           }
           if (currentValue) {
             var finalTransition = _getTransition(currentState, schema, operators, currentValue, tokens);

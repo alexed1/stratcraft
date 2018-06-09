@@ -12,7 +12,7 @@ public with sharing class SoqlLoadNodeXmlConverter extends BaseNodeXmlConverter 
             String value = child.getText();
             value = String.isBlank(value) ? '' : value;
             if (childName == 'soql') {
-                result.soql = value;
+                result.soql = this.expressionize(value);
             } else if (childName == 'fieldNameRemapping') {
                 result.fieldNameRemapping = value;
             }

@@ -17,15 +17,17 @@
     <aura:handler name="init" value="{!this}" action="{!c.handleInit}" />  
 
     <aura:method name="focus" action="{!c.handleFocus}" />
+    <aura:method name="tryFinalize" action="{!c.handleTryFinalize}" />
 
-    <div class="token-container">
+    <lightning:overlayLibrary aura:id="popover" />
+    <div class="token-container" id="{!'token-container' + v.subExpressionIndex}" >
         <aura:if isTrue="{!v.subExpression.tokens.length > 0}">
             <aura:iteration items="{!v.subExpression.tokens}" var="item" indexVar="index">
                 <aura:if isTrue="{!index != 0 &amp;&amp; item.type != 'operator' &amp;&amp; item.type != 'value'}">.</aura:if>
                 <a class="{!item.type == 'operator' ? 'token operator' : 'token'}" href="javascript:void(0)" onclick="{!c.handleTokenClick}" data-index="{!index}">{!item.value}</a>
             </aura:iteration>    
             <aura:set attribute="else">
-                <span class="no-exp-label slds-m-left_xx-small">Subexpression is not yet built</span>
+                <span class="no-exp-label slds-m-left_xx-small">{!v.schema.rootType.name == '$global' ? 'Select the object this expression will be based on' : 'Select property of the proposition'}</span>
             </aura:set>        
         </aura:if>
     </div>

@@ -15,7 +15,7 @@ public with sharing class IfNodeXmlConverter extends BaseNodeXmlConverter {
                 String childBranch = child.getChildElement('child', xmlNamespace).getText();
                 branch.child = childBranch == null ? '' : childBranch;
                 String expression = child.getChildElement('expression', xmlNamespace).getText();                
-                branch.expression = expression == null ? '' : expression;
+                branch.expression = expression == null ? '' : this.expressionize(expression);
                 result.branches.Add(branch);
 
             } else if (childName == 'removeDuplicates') {

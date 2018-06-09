@@ -16,6 +16,7 @@
 
     <aura:method name="load" action="{!c.loadSchema}" />
     <aura:method name="resolveExpression" action="{!c.resolveExpression}" />
+    <aura:method name="validate" action="{!c.handleValidate}" />
     
     <lightning:overlayLibrary aura:id="popover" />
     <aura:if isTrue="{!v.isLoading}">

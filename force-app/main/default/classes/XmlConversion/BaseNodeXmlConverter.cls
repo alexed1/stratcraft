@@ -1,5 +1,9 @@
 public with sharing abstract class BaseNodeXmlConverter implements INodeXmlConverter {
 
+    protected String expressionize(String expression) {
+        return expression.unescapeXml().replace('==', '=').replace('=<', '<=');
+    }
+
     public virtual BaseNode convertXmlToNode(Dom.XmlNode node, String xmlNamespace) {
         if (!canConvertXmlToNode(node, xmlNamespace)) {
             return null;
