@@ -7,7 +7,7 @@
 
     <aura:attribute name="title" type="String" />
     <aura:attribute name="emptySetMessage" type="String" />
-    <aura:attribute name="memberType" type="String" default="filter" />
+    <aura:attribute name="memberType" type="String" default="mutuallyExclusive" />
 
     <aura:method name="validate" action="{!c.validate}" />
     <aura:method name="clearValidation" action="{!c.clearValidation}" />
@@ -16,26 +16,6 @@
         <aura:set attribute="title">
             {!v.title}
         </aura:set>
-        <aura:set attribute="actions">
-            <lightning:buttonIcon iconName="utility:add" variant="border" alternativeText="Add" iconClass="dark" onclick="{!c.handleMemberAdd}"
-            />
-        </aura:set>
-
-
-
-        <aura:if isTrue="{!v.memberType == 'filter'}">
-            <aura:if isTrue="{!v.currentNode.branches.length == 0}">
-                <div>
-                    {!v.emptySetMessage}
-                </div>
-            </aura:if>
-            <aura:iteration items="{!v.currentNode.branches}" var="item" indexVar="index">
-                <div class="slds-m-top_x-small">
-                    <c:filter aura:id="filter" index="{!index}" currentItem="{!item}" selectableNodes="{!v.selectableNodes}" deleteRequested="{!c.handleMemberDelete}"
-                        priorityChangeRequested="{!c.handlePriorityChange}" />
-                </div>
-            </aura:iteration>
-        </aura:if>
 
         <aura:if isTrue="{!v.memberType == 'mutuallyExclusive'}">
             <aura:if isTrue="{!v.currentNode.branches.length == 0}">

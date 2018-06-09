@@ -223,7 +223,7 @@ window._jsplumbWalker = (function () {
         while (!queue.isEmpty()) {
             var node = queue.dequeue();
             var strategyChildNodes = _strategy.getDirectChildrenNodes(strategy, node.strategyNode);
-            for (var i = 0; i < strategyChildNodes.length; i++) {
+            for (var i = strategyChildNodes.length - 1; i >= 0; i--) {
                 var child = new Node(strategyChildNodes[i]).setParent(node);
                 node.addChild(child);
                 queue.enqueue(child);

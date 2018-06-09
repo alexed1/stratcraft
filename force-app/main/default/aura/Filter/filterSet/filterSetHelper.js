@@ -47,7 +47,7 @@
 
     handlePriorityButtons: function (cmp, event, helper) {
 
-        if (!(cmp.get('v.memberType') == 'filter' || cmp.get("v.memberType") == 'mutuallyExclusive'))
+        if (cmp.get("v.memberType") != 'mutuallyExclusive')
             return false;
         var curNode = cmp.get('v.currentNode');
         if (!curNode)

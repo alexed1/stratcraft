@@ -47,6 +47,13 @@ window._undoManager = (function () {
             function () { array.splice(array.length - 1, 1); });
     };
 
+    var _insertItem = function (array, item, index) {
+        _addAndRunOperation(
+            function () { array.splice(index, 0, item); },
+            function () { array.splice(index, 1); }
+        );
+    }
+
     var _removeItem = function (array, item) {
         var index = array.indexOf(item);
         _addAndRunOperation(
@@ -112,7 +119,31 @@ window._undoManager = (function () {
             if (node.nodeType === _utils.NodeType.EXTERNAL_CONNECTION) {
                 _addItem(strategy.externalConnections, node);
             } else {
-                _addItem(strategy.nodes, node);
+                _beginBatchOperations();
+                //This is done to keep sort order of the node (by type then by name)
+                var index = strategy.nodes.findIndex(function (item) {
+                    var typeComparison = item.nodeType.localeCompare(node.nodeType);
+                    var nameComparison = item.name.localeCompare(node.name);
+                    return typeComparison > 0 || (typeComparison === 0 && nameComparison > 0);
+                });
+                if (index !== -1) {
+                    _insertItem(strategy.nodes, node, index);
+                } else {
+                    _addItem(strategy.nodes, node);
+                }
+                //If we add new child to the Gate node, we need to add new filter to this Gate
+                var parentNode = _strategy.getParentNode(strategy, node);
+                if (parentNode.nodeType === _utils.NodeType.IF) {
+                    if (!parentNode.branches) {
+                        parentNode.branches = [];
+                        _changePropertyValue(parentNode, 'branches', []);
+                    }
+                    _addItem(parentNode.branches, {
+                        child: node.name,
+                        expression: 'true'
+                    });
+                }
+                _endBatchOperations();
             }
         },
         /** Removes existing node from the strategy and enables undo/redo for this operation */
@@ -125,6 +156,14 @@ window._undoManager = (function () {
                 allChildren.forEach(function (item) {
                     _removeItem(strategy.nodes, item);
                 });
+                //If we remove node which is a child of the Gate, this Gate need to lose a related filter
+                var parentNode = _strategy.getParentNode(strategy, node);
+                if (parentNode.nodeType === _utils.NodeType.IF) {
+                    var childBranch = parentNode.branches.find(function (branch) { return branch.child === node.name; });
+                    if (childBranch) {
+                        _removeItem(parentNode.branches, childBranch);
+                    }
+                }
                 _removeItem(strategy.nodes, node);
                 _endBatchOperations();
             }
@@ -138,6 +177,7 @@ window._undoManager = (function () {
                 var isNameChanged = oldNode.name != newNode.name;
                 var isParentChanged = oldNode.parentNodeName != newNode.parentNodeName;
                 var originalParent = _strategy.getParentNode(strategy, oldNode);
+                var newParent = _strategy.getParentNode(strategy, newNode);
                 var originalChildren = _strategy.getDirectChildrenNodes(strategy, oldNode);
                 //Update parent of original children
                 if (isNameChanged) {
@@ -158,6 +198,36 @@ window._undoManager = (function () {
                 }
                 //Update children
                 if (isParentChanged) {
+                    //If we move node and either its original parent was Gate or its new parent is Gate we need to remove/add new filter
+                    if (originalParent && originalParent.nodeType === _utils.NodeType.IF) {
+                        //We use new name here because if name was changed, then the branch is already updated
+                        var childBranch = originalParent.branches.find(function (branch) { return branch.child === newNode.name; });
+                        if (childBranch) {
+                            _removeItem(originalParent.branches, childBranch);
+                        }
+                    }
+                    if (newParent && newParent.nodeType === _utils.NodeType.IF) {
+                        if (!newParent.branches) {
+                            newParent.branches = [];
+                            _changePropertyValue(newParent, 'branches', []);
+                        }
+
+                        // var index = newParent.branches.findIndex(function (item) {
+                        //     var typeComparison = item.nodeType.localeCompare(newNode.nodeType);
+                        //     var nameComparison = item.name.localeCompare(newNode.name);
+                        //     return typeComparison > 0 || (typeComparison === 0 && nameComparison > 0);
+                        // });
+                        // if (index !== -1) {
+                        //     _insertItem(strategy.nodes, newNode, index);
+                        // } else {
+                        //     _addItem(strategy.nodes, newNode);
+                        // }
+
+                        _addItem(newParent.branches, {
+                            child: newNode.name,
+                            expression: 'true'
+                        });
+                    }
                     //TODO: process the case where empty node is selected as a new parent
                     var isMovingToOwnChild = _strategy.isParentOf(strategy, oldNode.name, newNode.parentNodeName);
                     if (isMovingToOwnChild) {
@@ -169,7 +239,22 @@ window._undoManager = (function () {
                     //There is no 'else' as in this case changedNode will already have changes and will be injected into strategy
                 }
                 var index = strategy.nodes.findIndex(function (item) { return item.name == oldNode.name; });
-                _replaceItem(strategy.nodes, strategy.nodes[index], newNode);
+                if (isNameChanged) {
+                    _removeItem(strategy.nodes, strategy.nodes[index]);
+                    //This is done to keep sort order of the node (by type then by name)
+                    var index = strategy.nodes.findIndex(function (item) {
+                        var typeComparison = item.nodeType.localeCompare(newNode.nodeType);
+                        var nameComparison = item.name.localeCompare(newNode.name);
+                        return typeComparison > 0 || (typeComparison === 0 && nameComparison > 0);
+                    });
+                    if (index !== -1) {
+                        _insertItem(strategy.nodes, newNode, index);
+                    } else {
+                        _addItem(strategy.nodes, newNode);
+                    }
+                } else {
+                    _replaceItem(strategy.nodes, strategy.nodes[index], newNode);
+                }
                 _endBatchOperations();
             }
         },

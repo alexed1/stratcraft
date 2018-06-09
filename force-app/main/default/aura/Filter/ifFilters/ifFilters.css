@@ -1,0 +1,8 @@
+.THIS strong {
+    font-weight: 600;
+    font-size: 1.2em;
+}
+
+.THIS.italic {
+    font-style: italic;
+}
