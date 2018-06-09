@@ -37,7 +37,7 @@
                          onfocus="{!c.handleInputFocus}" />
     </div>    
     <div class="popup-host" aura:id="popup-host">
-        <div class="{!v._isPopupOpen ? 'popup' : 'popup slds-hide'}">
+        <div class="{!v._isPopupOpen ? 'popup' : 'popup slds-hide'}" aura:id="popup">
             <aura:iteration items="{!v._filteredItems}" var="item" indexVar="index">
                 <div class="lookup-item slds-p-left_xx-small slds-p-vertical_x-small" data-index="{!index}" data-is-current="{!index == v._index ? '1' : '0'}"
                     onclick="{!c.handleLookupItemClick}">
