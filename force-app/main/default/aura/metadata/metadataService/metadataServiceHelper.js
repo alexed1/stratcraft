@@ -28,7 +28,7 @@
 
     convertJsonToXml: function (cmp, strategy, callback) {
         var action = cmp.get('c.strategyJSONtoXML');
-        action.setParams({ strategyJSON: JSON.stringify(this.beforeSave(strategy)) });
+        action.setParams({ strategyJSON: JSON.stringify(this.beforeSave(cmp, strategy)) });
         action.setCallback(this, function (response) {
             var isSuccess = true;
             var result = '';
@@ -75,7 +75,7 @@
             var callback = event.getParam('callback');
             var isAsync = event.getParam('isAsync');
 
-            var strategy = helper.beforeSave(event.getParam("strategy"));
+            var strategy = helper.beforeSave(cmp, event.getParam("strategy"));
             if (isAsync)
                 cmp.set("v.savingStatus", "saving changes...");
 
@@ -103,7 +103,7 @@
 
         //was it a JSON object or a XML string?
         if (strategy) {
-            strategy = helper.beforeSave(helper.sortNodes(strategy));
+            strategy = helper.beforeSave(cmp, helper.sortNodes(strategy));
             action = cmp.get("c.createOrUpdateStrategyRequest");
             action.setParams({ sessionId: sessionId, strategyJSON: JSON.stringify(strategy) });
         }
@@ -161,7 +161,7 @@
         self.ensureSessionIdIsLoaded(cmp, function () {
             var sessionId = cmp.get("v.sessionId");
             var callback = event.getParam('callback');
-            var strategy = helper.beforeSave(event.getParam("strategy"));
+            var strategy = helper.beforeSave(cmp, event.getParam("strategy"));
             var newStrategyName = event.getParam("newStrategyName");
             var action = cmp.get("c.renameStrategyRequest");
             action.setParams({ sessionId: sessionId, newStrategyName: newStrategyName, strategyJSON: JSON.stringify(strategy) });
@@ -186,7 +186,7 @@
         self.ensureSessionIdIsLoaded(cmp, function () {
             var sessionId = cmp.get("v.sessionId");
             var callback = event.getParam('callback');
-            var strategy = helper.beforeSave(event.getParam("strategy"));
+            var strategy = helper.beforeSave(cmp, event.getParam("strategy"));
             var newStrategyName = event.getParam("newStrategyName");
             var action = cmp.get("c.copyStrategyRequest");
             action.setParams({ sessionId: sessionId, newStrategyName: newStrategyName, strategyJSON: JSON.stringify(strategy) });
@@ -347,7 +347,8 @@
     },
 
     /** Takes strategy that we work with locally and prepares it to be saved */
-    beforeSave: function (unprocessedStrategy) {
+    beforeSave: function (cmp, unprocessedStrategy) {
+        var self = this;
         if (!unprocessedStrategy) {
             return unprocessedStrategy;
         }
@@ -366,13 +367,24 @@
                 }
             }
             if (node.nodeType === _utils.NodeType.SOQL_LOAD) {
-                if (!node.soql) {
-                    node.soql = 'SELECT Name, Description, ActionReference FROM Proposition';
-                }
+                node.soql = self._uniformSoql(cmp, node.soql);
             }
         });
         return processedStrategy;
     },
+
+    _uniformSoql: function (cmp, soql) {
+        var propositionFields = cmp.get('v.propositionFields');
+        soql = soql || '';
+        var whereClause = soql;
+        if (soql.match(/^SELECT.+FROM/)) {
+            var tokens = soql.split(' WHERE ');
+            whereClause = tokens.length === 1 ? '' : tokens.slice(1).join(' WHERE ');
+        }
+        var selectClause = 'SELECT ' + propositionFields.join(', ') + ' FROM Proposition';
+        return whereClause ? selectClause + ' WHERE ' + whereClause : selectClause;
+    },
+
     /** Takes strategy that we got from the service and prepares it to work with */
     afterLoad: function (unprocessedStrategy) {
         if (!unprocessedStrategy) {

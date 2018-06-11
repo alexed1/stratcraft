@@ -10,6 +10,7 @@
     <aura:attribute type="Boolean" name="isSaveRunning" />
     <!-- stores dictionary of strategies to save -->
     <aura:attribute type="Object" name="strategiesForSaving" />
+    <aura:attribute type="List" name="propositionFields" />
 
     <aura:handler event="c:mdLoadStrategyNamesRequest" action="{!c.loadStrategyNames}" />
     <aura:handler event="c:mdGetStrategyRequest" action="{!c.getStrategy}" />

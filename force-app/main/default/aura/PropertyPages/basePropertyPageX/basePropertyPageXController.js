@@ -74,7 +74,7 @@
             cmp.set("v.showParent", false);
         }
 
-        if (currentNode && currentNode.nodeType === _utils.NodeType.IF) {
+        if (currentNode && currentNode.nodeType === _utils.NodeType.IF && originalNodeName && (!currentNode.branches || currentNode.branches.length === 0)) {
             var branches = _strategy.getDirectChildrenNodes(strategy, originalNodeName)
                 .map(function (childNode) {
                     return {

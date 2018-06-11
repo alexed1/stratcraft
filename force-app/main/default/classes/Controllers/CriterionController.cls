@@ -9,16 +9,28 @@ public with sharing class CriterionController {
 		{
 			DescribeSObjectResult objectDescribeResult = schemaMap.get(name).getDescribe();
 			if (!objectDescribeResult.isAccessible()
-			  || !objectDescribeResult.isQueryable()
-			  || !objectDescribeResult.isSearchable()
-			  || !(objectDescribeResult.isCreateable() || objectDescribeResult.isUpdateable())) {
-				continue;
+				|| !objectDescribeResult.isQueryable()
+				|| !objectDescribeResult.isSearchable()
+				|| !(objectDescribeResult.isCreateable() || objectDescribeResult.isUpdateable())) {
+					continue;
 			}
 			ObjectDescription objectDescription = new ObjectDescription(objectDescribeResult.getName(), objectDescribeResult.getLabel());
 			Map<String, Schema.SObjectField> fields = objectDescribeResult.fields.getMap();
 			for (String key : fields.keySet())
 			{
 				DescribeFieldResult field = fields.get(key).getDescribe();
+				if (!field.isAccessible()
+				|| !(field.isCreateable() || field.isUpdateable())) {
+						continue;
+				}
+				if (name == 'Proposition') {
+					System.debug('Proposition field       ' + field.getName());
+					System.debug('Is createable           ' + field.isCreateable());
+					System.debug('Is deprecate and hidden ' + field.isDeprecatedAndHidden());
+					System.debug('Is filterable           ' + field.isFilterable());
+					System.debug('Is permissionable       ' + field.isPermissionable());
+					System.debug('Is updateable           ' + field.isUpdateable());
+				}
 				Schema.DisplayType fieldType = field.getType();
 				String fieldName = field.getName();
 				String fieldLabel = field.getLabel();
@@ -30,7 +42,7 @@ public with sharing class CriterionController {
 					if (relationships.size() > 1) {
 						continue;
 					}
-					objectDescription.fieldList.add(new ObjectFieldDescription(relationshipName == null ? fieldName : relationshipName, fieldLabel, relationshipTypeName, true));
+					objectDescription.fieldList.add(new ObjectFieldDescription(fieldName, fieldLabel, relationshipTypeName, true));
 				} else {
 					objectDescription.fieldList.add(new ObjectFieldDescription(fieldName, fieldLabel, fieldType.name(), false));
 				}

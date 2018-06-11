@@ -8,6 +8,22 @@ public with sharing class MetadataServiceController {
 	}
 
 	@AuraEnabled
+	public static List<String> getPropositionFields() {
+		List<ObjectDescription> schema = CriterionController.getSchema();
+		List<String> fields = new List<String>();
+		for (ObjectDescription obj : schema) {
+			if (obj.name != 'Proposition') {
+				continue;
+			}
+			for (ObjectFieldDescription field: obj.fieldList) {
+				fields.add(field.name);
+			}
+		}
+		fields.sort();
+		return fields;
+	}
+
+	@AuraEnabled
 	public static String strategyJSONtoXML(String strategyJSON){
 		Strategy strategy = strategyJSONConverter.convertJsonToStrategy(strategyJSON);
 		try {
