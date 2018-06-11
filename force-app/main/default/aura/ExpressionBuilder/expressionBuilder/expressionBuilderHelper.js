@@ -85,70 +85,28 @@
                 subExpression.focus();
             }), 100);
         },
-
-        _parseCommonExpression: function (expression, schema) {
-            return _expressionParser.parseExpression(expression, schema);
-        },
-
-        _parseSoqlExpression: function (expression, schema) {
-            if (!expression) {
-                return []
-            }
-            var tokens = expression.split('WHERE');
-            if (tokens.length === 1) {
-                //It means that there is no filter condition, thus our effective expression is true for all
-                return [];
-            }
-            //Otherwise first token represents (or we assume so) SELECT clause and we just discard it
-            //To protect ourselves from the case where WHERE word may appear inside string value we join the remaining tokens
-            var whereStatement = tokens.slice(1).join('WHERE').trim();
-            return _expressionParser.parseExpression(whereStatement, schema);
-        },
         /** Parses specified expression into sub expressions using specified mode and schema
          * @param {string} expression expression to parse
-         * @param {string} mode allowed values are: soql, if, gate
          * @param {object} schema object that contains info about all types and their respective fields
          */
-        parseExpression: function (expression, mode, schema) {
-            var result = [];
-            if (mode === 'soql') {
-                result = this._parseSoqlExpression(expression, schema);
-            } else {
-                result = this._parseCommonExpression(expression, schema);
-            }
+        parseExpression: function (expression, schema) {
+            var result = _expressionParser.parseExpression(expression, schema);
             if (result && result.length === 0) {
                 result.push(_expressionParser.createNewSubExpression(schema));
             }
             return result;
         },
 
-        _stringifyExpression: function (expression, mode) {
+        _stringifyExpression: function (expression) {
             if (!expression) {
                 return '';
             }
-            if (mode === 'soql') {
-                return this._stringifySoqlExpression(expression);
-            }
-            return this._stringifyCommonExpression(expression);
-        },
-
-        _stringifyCommonExpression: function (expression) {
             if (expression.length > 0) {
-                var self = this;
                 var subExpressions = expression.map(function (item) { return item.toString(); })
                     .filter(function (item) { return item; });
                 return subExpressions.join(' OR ');
             }
             return '';
-        },
-
-        _stringifySoqlExpression: function (expression) {
-            var result = 'SELECT Name, Description, ActionReference FROM Proposition';
-            var filter = this._stringifyCommonExpression(expression);
-            if (filter) {
-                return result.concat(' WHERE ', filter);
-            }
-            return result;
         },
 
         validate: function (cmp) {
@@ -173,10 +131,9 @@
             }
             var isBuilderMode = cmp.get('v.isBuilderMode');
             var stringExpression = cmp.get('v.expression');
-            var mode = cmp.get('v.mode');
             if (isBuilderMode) {
                 var expression = cmp.get('v.subExpressions');
-                return this._stringifyExpression(expression, mode);
+                return this._stringifyExpression(expression);
             }
             return stringExpression;
         },
@@ -184,8 +141,7 @@
         initializeBuilder: function (cmp) {
             var expression = cmp.get('v.expression');
             var schema = cmp.get('v._schema');
-            var mode = cmp.get('v.mode');
-            var subExpressions = this.parseExpression(expression, mode, schema);
+            var subExpressions = this.parseExpression(expression, schema);
             if (!subExpressions) {
                 cmp.set('v.isBuilderMode', false);
                 cmp.set('v.isLoading', false);

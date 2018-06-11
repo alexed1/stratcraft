@@ -26,9 +26,8 @@
             cmp.set('v.isBuilderMode', false);
         } else {
             var schema = cmp.get('v._schema');
-            var mode = cmp.get('v.mode');
             var stringExpression = cmp.get('v.expression');
-            var expression = helper.parseExpression(stringExpression, mode, schema);
+            var expression = helper.parseExpression(stringExpression, schema);
             if (expression) {
                 cmp.set('v.subExpressions', expression);
                 cmp.set('v.isBuilderMode', true);

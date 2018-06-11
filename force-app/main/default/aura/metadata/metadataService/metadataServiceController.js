@@ -1,5 +1,16 @@
 ({
-    doInit: function (cmp, event, helper) { cmp.set("v.strategiesForSaving", {}) },
+    doInit: function (cmp, event, helper) {
+        cmp.set('v.strategiesForSaving', {});
+        var action = cmp.get('c.getPropositionFields');
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (cmp.isValid() && state === 'SUCCESS') {
+                var fieldList = response.getReturnValue();
+                cmp.set('v.propositionFields', fieldList);
+            }
+        });
+        $A.enqueueAction(action);
+    },
 
     loadStrategyNames: function (cmp, event, helper) { helper.loadStrategyNames(cmp, event, helper); },
 
