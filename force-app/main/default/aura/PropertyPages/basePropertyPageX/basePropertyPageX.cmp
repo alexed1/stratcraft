@@ -87,7 +87,7 @@
 
         <div class="slds-form-element">
             <aura:if isTrue="{!v._currentNodeDirty &amp;&amp; v._isIf}">
-                <c:ifNodePropertyPage aura:id="ifNode" currentNode="{!v._currentNodeDirty}" />
+                <c:ifNodePropertyPage aura:id="ifNode" currentNode="{!v._currentNodeDirty}" strategy="{!v.currentStrategy}" />
                 <aura:set attribute="else">
                     <div class="hidden" />
                 </aura:set>

@@ -4,6 +4,7 @@
         _modalDialog.show(
             'Expression Builder',
             [_utils.getComponentName('expressionBuilder'), function (body) {
+                body.set('v.strategy', cmp.get('v.strategy'));
                 body.set('v.mode', 'if');
                 body.set('v.expression', cmp.get('v.currentNode.branches[' + index + '].expression'));
                 body.load();

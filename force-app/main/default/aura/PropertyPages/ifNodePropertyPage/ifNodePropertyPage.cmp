@@ -1,5 +1,6 @@
 <aura:component>
     <aura:attribute name="currentNode" type="Object" />
+    <aura:attribute name="strategy" type="Object" />
 
     <div class="slds-form-element">
         <lightning:input aura:id="removeDuplicates" type="checkbox" label="Remove Duplicates" checked="{!v.currentNode.removeDuplicates}" />
@@ -10,6 +11,6 @@
     </div>
 
     <div class="slds-form-element">
-        <c:ifFilters currentNode="{!v.currentNode}" />
+        <c:ifFilters currentNode="{!v.currentNode}" strategy="{!v.strategy}" />
     </div>
 </aura:component>

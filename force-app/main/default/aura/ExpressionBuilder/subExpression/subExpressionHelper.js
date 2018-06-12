@@ -73,10 +73,11 @@
                 var propertyToken = tokens.findLast(function (token) { return token.type === 'property'; });
                 var parentPropertyTypeName = propertyToken ? propertyToken.propertyType : schema.rootType.name;
                 var parentPropertyType = schema.typeNameMap[parentPropertyTypeName];
+                var propertyType = parentPropertyType.fieldNameMap[lookupItem.toLowerCase()];
                 tokens.push({
                     type: 'property',
                     value: lookupItem,
-                    propertyType: parentPropertyType.fieldNameMap[lookupItem.toLowerCase()].type,
+                    propertyType: propertyType ? propertyType.type : null,
                     parentPropertyType: parentPropertyType.name
                 });
                 currentState.hasProperty = true;
@@ -105,14 +106,14 @@
         cmp.set('v._value', '');
         var placeholder = this._getPlaceholder(subExpression, schema);
         var lookup = this._generateLookup(subExpression, schema, strategy);
+        if (lookup.items.length > 0) {
+            cmp.set('v._isPopupOpen', true);
+        }
         cmp.set('v._placeholder', placeholder);
         cmp.set('v._lookup', lookup);
         this._scrollPopupTop(cmp);
         cmp.set('v._filteredItems', lookup.items);
         cmp.set('v._index', lookup.items.length === 0 ? -1 : 0);
-        // window.setTimeout($A.getCallback(function () {
-        //     self._scrollPopupTop(cmp);
-        // }), 100);
     },
 
     _scrollPopupTop: function (cmp) {
@@ -194,41 +195,47 @@
         if (!expression.currentState.hasOperator) {
             //We check the type of last entered property. If it is a reference type we allow user to pick a subproperty
             var lastPropertyToken = expression.tokens.findLast(function (token) { return token.type === 'property'; });
-            var lastPropertyParentType = schema.typeNameMap[lastPropertyToken.parentPropertyType];
-            var allowSubProperties = false;
-            if (lastPropertyParentType) {
-                var lastPropertyType = lastPropertyParentType.fieldNameMap[lastPropertyToken.value.toLowerCase()]
-                allowSubProperties = lastPropertyType.isReference;
-            }
-            var lastPropertyType = schema.typeNameMap[lastPropertyToken.propertyType];
-            if (allowSubProperties && lastPropertyType) {
-                var fieldList = lastPropertyType.fieldList.map(function (field) {
+            if (lastPropertyToken.propertyType) {
+                var lastPropertyParentType = schema.typeNameMap[lastPropertyToken.parentPropertyType];
+                var allowSubProperties = false;
+                if (lastPropertyParentType) {
+                    var lastPropertyType = lastPropertyParentType.fieldNameMap[lastPropertyToken.value.toLowerCase()]
+                    allowSubProperties = lastPropertyType.isReference;
+                }
+                var lastPropertyType = schema.typeNameMap[lastPropertyToken.propertyType];
+                if (allowSubProperties && lastPropertyType) {
+                    var fieldList = lastPropertyType.fieldList.map(function (field) {
+                        return {
+                            header: field.name + (field.isReference ? ' >' : ''),
+                            description: '- ' + field.label,
+                            value: field.name,
+                            details: 'of type ' + field.type,
+                            searchValue: field.name.toLowerCase() + '|' + field.type.toLowerCase(),
+                            isReference: field.isReference
+                        };
+                    });
+                    fieldList.sort(function (x, y) {
+                        if (x.isReference && !y.isReference) {
+                            return -1;
+                        }
+                        if (!x.isReference && y.isReference) {
+                            return 1;
+                        }
+                        return x.header.localeCompare(y.header);
+                    });
                     return {
-                        header: field.name + (field.isReference ? ' >' : ''),
-                        description: '- ' + field.label,
-                        value: field.name,
-                        details: 'of type ' + field.type,
-                        searchValue: field.name.toLowerCase() + '|' + field.type.toLowerCase(),
-                        isReference: field.isReference
+                        items: fieldList,
+                        targetState: 'property',
+                        mode: 'select'
                     };
-                });
-                fieldList.sort(function (x, y) {
-                    if (x.isReference && !y.isReference) {
-                        return -1;
-                    }
-                    if (!x.isReference && y.isReference) {
-                        return 1;
-                    }
-                    return x.header.localeCompare(y.header);
-                });
-                return {
-                    items: fieldList,
-                    targetState: 'property',
-                    mode: 'select'
-                };
+                }
             }
             var operators = _expressionParser.operators
-                .filter(function (operator) { return operator.supportedTypes === 'ALL' || operator.supportedTypes.includes(lastPropertyToken.propertyType); })
+                .filter(function (operator) {
+                    return operator.supportedTypes === 'ALL'
+                        || !lastPropertyToken.propertyType
+                        || operator.supportedTypes.includes(lastPropertyToken.propertyType);
+                })
                 .map(function (operator) {
                     return {
                         header: operator.value,

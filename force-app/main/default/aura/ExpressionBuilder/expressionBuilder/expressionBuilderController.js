@@ -56,6 +56,30 @@
                 var mode = cmp.get('v.mode');
                 var schema = helper.buildSchema(typeList, mode);
                 cmp.set('v._schema', schema);
+                var strategy = cmp.get('v.strategy');
+                if (schema.rootType.name === '$global' && strategy && strategy.externalConnections) {
+                    strategy.externalConnections.forEach(function (externalConnection) {
+                        var type = {
+                            name: '$' + externalConnection.name,
+                            label: externalConnection.description,
+                            fieldList: [],
+                            fieldNameMap: {},
+                            lookupFields: [],
+                            isExternalConnection: true,
+                            isInitialized: false
+                        };
+                        schema.typeList.push(type);
+                        schema.typeNameMap[type.name] = type;
+                        var field = {
+                            name: type.name,
+                            label: 'External connection "' + type.name + '"',
+                            isReference: true,
+                            type: type.name
+                        };
+                        schema.rootType.fieldList.push(field);
+                        schema.rootType.fieldNameMap[field.name.toLowerCase()] = field;
+                    });
+                }
                 helper.initializeBuilder(cmp);
             }
         });

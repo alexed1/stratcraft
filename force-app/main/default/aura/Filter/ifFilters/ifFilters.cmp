@@ -2,6 +2,7 @@
     <ltng:require scripts="{!$Resource.modalDialog}" />
 
     <aura:attribute name="currentNode" type="Object" />
+    <aura:attribute name="strategy" type="Object" />
 
     <aura:if isTrue="{!v.currentNode.branches &amp;&amp; v.currentNode.branches.length > 0}">
         <aura:iteration items="{!v.currentNode.branches}" var="branch" indexVar="index">
