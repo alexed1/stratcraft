@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="Event is reaised when component requires current session Id to make REST API calls">
+    <aura:attribute name="callback" type="Object" description="A function that accepts session Id (string)" />
+</aura:event>

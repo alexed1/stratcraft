@@ -28,22 +28,11 @@
                     label: '$global',
                     fieldList: []
                 };
-                // resultType.fieldList.push({
-                //     name: '$OnBehalfOf',
-                //     label: '$OnBehalfOf',
-                //     type: 'User',
-                //     isReference: true
-                // });
                 resultType.fieldList.push({
                     name: '$Record',
                     label: 'The record passed in when the strategy runs',
                     isReference: true
                 });
-                // resultType.fieldList.push({
-                //     name: '$Request',
-                //     label: '$Request',
-                //     isReference: true
-                // });
                 resultType.fieldList.push({
                     name: '$User',
                     label: 'The user currently logged in the organization',

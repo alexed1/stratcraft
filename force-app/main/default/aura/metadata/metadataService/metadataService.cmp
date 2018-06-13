@@ -19,6 +19,7 @@
     <aura:handler event="c:mdRenameStrategyRequest" action="{!c.renameStrategy}" />
     <aura:handler event="c:mdCopyStrategyRequest" action="{!c.copyStrategy}" />
     <aura:handler event="c:mdConvertToXmlRequest" action="{!c.convertJsonToXml}" />
+    <aura:handler event="c:sessionIdRequestedEvent" action="{!c.provideSessionId}" />
 
     <aura:registerEvent name="mdStrategyRollbackRequest" type="c:mdStrategyRollbackRequest" />
 

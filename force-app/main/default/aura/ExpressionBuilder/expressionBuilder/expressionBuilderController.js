@@ -48,6 +48,7 @@
 
     loadSchema: function (cmp, event, helper) {
         var action = cmp.get('c.getSchema');
+        var self = this;
         action.setCallback(this, function (response) {
             var state = response.getState();
 
@@ -57,6 +58,8 @@
                 var schema = helper.buildSchema(typeList, mode);
                 cmp.set('v._schema', schema);
                 var strategy = cmp.get('v.strategy');
+                var apexNames = [];
+                var extConnectionTypes = {};
                 if (schema.rootType.name === '$global' && strategy && strategy.externalConnections) {
                     strategy.externalConnections.forEach(function (externalConnection) {
                         var type = {
@@ -64,23 +67,64 @@
                             label: externalConnection.description,
                             fieldList: [],
                             fieldNameMap: {},
-                            lookupFields: [],
-                            isExternalConnection: true,
-                            isInitialized: false
+                            lookupFields: []
                         };
                         schema.typeList.push(type);
                         schema.typeNameMap[type.name] = type;
                         var field = {
                             name: type.name,
-                            label: 'External connection "' + type.name + '"',
+                            label: 'External connection "' + externalConnection.name + '"',
                             isReference: true,
                             type: type.name
                         };
                         schema.rootType.fieldList.push(field);
                         schema.rootType.fieldNameMap[field.name.toLowerCase()] = field;
+                        if (externalConnection.type === 'apex') {
+                            apexNames.push(externalConnection.action);
+                            extConnectionTypes[externalConnection.action] = type;
+                        }
                     });
                 }
-                helper.initializeBuilder(cmp);
+                if (apexNames.length == 0) {
+                    helper.initializeBuilder(cmp);
+                    return;
+                }
+                //If we have apex connections in the current strategy then first we request session Id to make HTTP calls
+                var sessionIdRequestedEvent = $A.get('e.c:sessionIdRequestedEvent');
+                sessionIdRequestedEvent.setParams({
+                    'callback': function (sessionId) {
+                        //Then we request details on these apex actions
+                        var getApexDetailsAction = cmp.get('c.getApexActions');
+                        getApexDetailsAction.setParams({
+                            actionNames: apexNames,
+                            sessionId: sessionId
+                        });
+                        getApexDetailsAction.setCallback(self, function (response) {
+                            if (response.getState() === 'SUCCESS') {
+                                var typeList = response.getReturnValue();
+                                typeList.forEach(function (type) {
+                                    var extConnectionType = extConnectionTypes[type.name];
+                                    extConnectionType.fieldList = type.fieldList.map(function (field) {
+                                        return {
+                                            name: field.name,
+                                            label: field.label,
+                                            type: field.type,
+                                            isReference: field.isReference
+                                        };
+                                    });
+                                    extConnectionType.fieldNameMap = extConnectionType.fieldList.reduce(function (result, field) {
+                                        result[field.name.toLowerCase()] = field;
+                                        return result;
+                                    }, {});
+                                    extConnectionType.lookupFields = extConnectionType.fieldList.map(function (field) { return { type: extConnectionType, field: field } });
+                                });
+                            }
+                            helper.initializeBuilder(cmp);
+                        });
+                        $A.enqueueAction(getApexDetailsAction);
+                    }
+                });
+                sessionIdRequestedEvent.fire();
             }
         });
         action.setStorable();

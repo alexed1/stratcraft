@@ -54,10 +54,11 @@
         var tokens = subExpression.tokens;
         switch (targetState) {
             case 'object':
+                var objectType = schema.rootType.fieldNameMap[lookupItem.toLowerCase()];
                 tokens.push({
                     type: 'property',
                     value: lookupItem,
-                    propertyType: schema.rootType.fieldNameMap[lookupItem.toLowerCase()].type,
+                    propertyType: objectType.type,
                     parentPropertyType: '$global'
                 });
                 currentState.hasObject = true;

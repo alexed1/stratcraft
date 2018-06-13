@@ -51,4 +51,38 @@ public with sharing class CriterionController {
 		}
 		return result;
 	} 
+
+	@AuraEnabled
+	public static ObjectDescription[] getApexActions(List<String> actionNames, String sessionId) {
+		List<ObjectDescription> result = new List<ObjectDescription>();
+		for (String actionName: actionNames) {
+			HTTP http = new HTTP();
+			HTTPRequest hres = new HTTPRequest();
+			String endpoint = URL.getSalesforceBaseUrl().toExternalForm() + '/services/data/v43.0/actions/custom/apex/' + actionName;
+			System.debug(endpoint);
+			hres.setEndpoint(endpoint);
+			hres.setMethod('GET');
+			hres.setHeader('Authorization','Bearer ' + sessionId);
+			HttpResponse response = http.send(hres);
+			String stringResponse = response.getBody();
+			//If response is array, then the action doesn't exist
+			if (stringResponse.startsWith('[')) {
+				continue;
+			}
+			Map<String, Object> parsedJson = (Map<String,Object>)JSON.deserializeUntyped(response.getBody());
+			ObjectDescription action = new ObjectDescription(actionName, (String)parsedJson.get('label'));
+			List<Object> outputs = (List<Object>)parsedJson.get('outputs');
+			for (Object outputObj: outputs) {
+				Map<String, Object> output = (Map<String, Object>)outputObj;
+				ObjectFieldDescription field = new ObjectFieldDescription(
+					(String)output.get('name'),
+					(String)output.get('label'),
+					(String)output.get('type'),
+					false);
+				action.fieldList.add(field);
+			}
+            result.add(action);
+		}
+		return result;		
+	}
 }
