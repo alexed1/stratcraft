@@ -21,6 +21,7 @@
     <members>filterSet</members>
     <members>filterValueUpdatedEvent</members>
     <members>ifNodePropertyPage</members>
+    <members>ifFilters</members>
     <members>jasmineTests</members>
     <members>lts_jasmineRunner</members>
     <members>mdConvertToXmlRequest</members>
@@ -47,6 +48,7 @@
     <members>recommendationLimitNodePropertyPage</members>
     <members>recordJoinPropertyPage</members>
     <members>saveCompletedEvent</members>
+    <members>sessionIdRequestedEvent</members>
     <members>sessionIdRetrievalComponent</members>
     <members>soqlLoadNodePropertyPage</members>
     <members>sortConfig</members>

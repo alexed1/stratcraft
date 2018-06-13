@@ -24,5 +24,13 @@
 
     copyStrategy: function (cmp, event, helper) { helper.copyStrategy(cmp, event, helper); },
 
-    convertJsonToXml: function (cmp, event, helper) { helper.convertJsonToXml(cmp, event.getParam('strategy'), event.getParam('callback')); }
+    convertJsonToXml: function (cmp, event, helper) { helper.convertJsonToXml(cmp, event.getParam('strategy'), event.getParam('callback')); },
+
+    provideSessionId: function (cmp, event, helper) {
+        var sessionId = cmp.get('v.sessionId');
+        var callback = event.getParam('callback');
+        if (callback) {
+            callback(sessionId);
+        }
+    }
 })

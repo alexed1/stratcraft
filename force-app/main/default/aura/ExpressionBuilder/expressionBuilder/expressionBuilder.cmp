@@ -12,7 +12,7 @@
     <aura:attribute name="availableObjects" type="List" />
     <aura:attribute name="strategy" type="Object" />
     
-    <aura:attribute name="_schema" type="Object" access="private" />
+    <aura:attribute name="_schema" type="Object" />
 
     <aura:method name="load" action="{!c.loadSchema}" />
     <aura:method name="resolveExpression" action="{!c.resolveExpression}" />
