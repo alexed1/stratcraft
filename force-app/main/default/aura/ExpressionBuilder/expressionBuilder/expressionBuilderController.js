@@ -48,6 +48,7 @@
 
     loadSchema: function (cmp, event, helper) {
         var action = cmp.get('c.getSchema');
+        action.setParams({ ifMode: cmp.get('v.mode') === 'if' });
         var self = this;
         action.setCallback(this, function (response) {
             var state = response.getState();

@@ -1,7 +1,7 @@
 public with sharing class CriterionController {
 
 	@AuraEnabled
-	public static ObjectDescription[] getSchema(){
+	public static ObjectDescription[] getSchema(Boolean ifMode){
 		Map<String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
 		List<ObjectDescription> result = new List<ObjectDescription>();
 		List<String> entities = new List<String>(schemaMap.keySet());
@@ -23,14 +23,6 @@ public with sharing class CriterionController {
 				|| !(field.isCreateable() || field.isUpdateable())) {
 						continue;
 				}
-				if (name == 'Proposition') {
-					System.debug('Proposition field       ' + field.getName());
-					System.debug('Is createable           ' + field.isCreateable());
-					System.debug('Is deprecate and hidden ' + field.isDeprecatedAndHidden());
-					System.debug('Is filterable           ' + field.isFilterable());
-					System.debug('Is permissionable       ' + field.isPermissionable());
-					System.debug('Is updateable           ' + field.isUpdateable());
-				}
 				Schema.DisplayType fieldType = field.getType();
 				String fieldName = field.getName();
 				String fieldLabel = field.getLabel();
@@ -40,6 +32,10 @@ public with sharing class CriterionController {
 				//For now we skip references that potentailly have multiple targets (e.g. OwnerId may be a reference to either User or Group)
 				if (fieldType == Schema.DisplayType.REFERENCE) {
 					if (relationships.size() > 1) {
+						continue;
+					}
+					fieldName = ifMode ? relationshipName : fieldName;
+					if (fieldName == null) {
 						continue;
 					}
 					objectDescription.fieldList.add(new ObjectFieldDescription(fieldName, fieldLabel, relationshipTypeName, true));

@@ -6,7 +6,7 @@
 
     <aura:if isTrue="{!v.currentNode.branches &amp;&amp; v.currentNode.branches.length > 0}">
         <aura:iteration items="{!v.currentNode.branches}" var="branch" indexVar="index">
-            <div class="slds-box slds-m-bottom_x-small">
+            <div class="slds-box slds-m-bottom_x-small branch-box">
                 <div class="slds-p-vertical_xx-small slds-p-left_xx-small">The gate controlling the branch <strong>{!branch.child}</strong> is open when this is true:</div>
                 <div class="slds-grid">
                     <div class="sdls-col slds-size_1-of-1">
@@ -19,6 +19,18 @@
                             </aura:if>
                         </lightning:button>
                     </div>
+                </div>
+                <div class="branch-box-btn-container slds-grid">
+                    <aura:if isTrue="{!v.currentNode.branches.length > 1}">
+                        <div class="slds-col">
+                            <lightning:buttonIcon alternativeText="Branch priority down" title="Branch priority down" iconName="utility:arrowdown" name="down"
+                                disabled="{!index == v.currentNode.branches.length - 1}" onclick="{!c.moveBranch}" value="{!index}" />
+                        </div>
+                        <div class="slds-col slds-m-left_x-small">
+                            <lightning:buttonIcon alternativeText="Branch priority up" title="Branch priority up" iconName="utility:arrowup" name="up"
+                                disabled="{!index == 0}" onclick="{!c.moveBranch}" value="{!index}" />
+                        </div>
+                    </aura:if>
                 </div>
             </div>
         </aura:iteration>
