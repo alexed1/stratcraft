@@ -9,7 +9,7 @@ public with sharing class MetadataServiceController {
 
 	@AuraEnabled
 	public static List<String> getPropositionFields() {
-		List<ObjectDescription> schema = CriterionController.getSchema();
+		List<ObjectDescription> schema = CriterionController.getSchema(false);
 		List<String> fields = new List<String>();
 		for (ObjectDescription obj : schema) {
 			if (obj.name != 'Proposition') {

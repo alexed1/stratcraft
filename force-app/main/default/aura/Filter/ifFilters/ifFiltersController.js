@@ -16,5 +16,19 @@
             function (body) {
                 return body.validate();
             });
+    },
+
+    moveBranch: function (cmp, event, helper) {
+        var sourceButton = event.getSource();
+        var name = sourceButton.get('v.name');
+        var index = sourceButton.get('v.value');
+        var branches = cmp.get('v.currentNode.branches');
+        var currentBranch = branches.splice(index, 1)[0];
+        if (name === 'up') {
+            branches.splice(index - 1, 0, currentBranch);
+        } else {
+            branches.splice(index + 1, 0, currentBranch);
+        }
+        cmp.set('v.currentNode.branches', branches);
     }
 })

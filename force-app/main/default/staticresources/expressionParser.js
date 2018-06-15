@@ -191,10 +191,10 @@ window._expressionParser = (function () {
     for (var index = 0; index < propertyTokens.length; index++) {
       var currentPropertyToken = propertyTokens[index];
       var parentPropertyTypeName = currentPropertyToken.parentPropertyType;
-      var parentPropertyType = schema.typeNameMap[parentPropertyTypeName];
+      var parentPropertyType = parentPropertyTypeName ? schema.typeNameMap[parentPropertyTypeName] : null;
       var possiblePropertyTypes = allPropertyTypes[index];
       //First we check, if our parent type has a property with the specific name
-      var currentProperty = parentPropertyType.fieldNameMap[currentPropertyToken.value.toLowerCase()];
+      var currentProperty = parentPropertyType ? parentPropertyType.fieldNameMap[currentPropertyToken.value.toLowerCase()] : null;
       if (currentProperty && currentProperty.type) {
         currentPropertyToken.propertyType = currentProperty.type;
         //It means that don't know the type of current property for sure and should guess it

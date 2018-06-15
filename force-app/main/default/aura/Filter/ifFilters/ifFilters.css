@@ -3,6 +3,26 @@
     font-size: 1.2em;
 }
 
+.THIS.branch-box {
+    position: relative;
+}
+
+.THIS .branch-box-btn-container {
+    position: absolute;
+    visibility: hidden;
+    opacity: 0.35;
+    top: 0.75rem;
+    right: 0.75rem;
+}
+
+.THIS .branch-box-btn-container:hover {
+    opacity: 1;
+}
+
+.THIS.branch-box:hover .branch-box-btn-container {
+    visibility: visible;
+}
+
 .THIS.italic {
     font-style: italic;
 }
