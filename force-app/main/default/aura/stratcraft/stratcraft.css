@@ -62,6 +62,7 @@
 	position: absolute;
 	border: solid 1px gray;
 	box-shadow: 0 0 3px #0070d2;
+	visibility: hidden;
 	opacity: 0;
 	transition-delay: 0.5s;
 	transition: opacity 0.5s;
@@ -70,6 +71,7 @@
 }
 
 .THIS .icon-host:hover .tooltip {
+	visibility: visible;
 	opacity: 1;
 }
 
