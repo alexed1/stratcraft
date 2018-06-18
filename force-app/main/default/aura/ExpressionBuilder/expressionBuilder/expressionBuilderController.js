@@ -56,7 +56,7 @@
             if (cmp.isValid() && state === 'SUCCESS') {
                 var typeList = response.getReturnValue();
                 var mode = cmp.get('v.mode');
-                var schema = helper.buildSchema(typeList, mode);
+                var schema = helper.buildSchema(typeList, mode, cmp.get('v.strategy.contextType'));
                 cmp.set('v._schema', schema);
                 var strategy = cmp.get('v.strategy');
                 var apexNames = [];

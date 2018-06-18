@@ -7,6 +7,7 @@
     <members>basePropertyPage</members>
     <members>basePropertyPageX</members>
     <members>collectionChangedEvent</members>
+    <members>contextTypeAquiredEvent</members>
     <members>criterion</members>
     <members>criterionAddRequestEvent</members>
     <members>criterionDeleteRequestEvent</members>

@@ -1,4 +1,16 @@
 ({
+    loadTypes: function (cmp) {
+        var action = cmp.get('c.getTypeList');
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (cmp.isValid() && state === 'SUCCESS') {
+                var typeList = response.getReturnValue();
+                typeList.sort(function (x, y) { return x.label.localeCompare(y.label); })
+                cmp.set('v.contextTypes', typeList);
+            }
+        });
+        $A.enqueueAction(action);
+    },
 	/**Returns the list of current strategy nodes that relate in a specific way to a specified node
 	 * @param {object} strategy - Strategy
 	 * @param {string} nodeRelationship - Relationship type. For possible values see _utils.NodeRelationshipType
