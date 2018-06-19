@@ -65,7 +65,8 @@
             cmp.set('v._currentNodeDirty.sortKeys',
                 [{
                     name: 'Name',
-                    order: 'Asc'
+                    order: 'Asc',
+                    nullsFirst: 'false'
                 }]);
         }
 
