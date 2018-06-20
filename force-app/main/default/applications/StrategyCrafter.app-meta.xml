@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <brand>
+        <headerColor>#0070D2</headerColor>
+        <logo>StratcraftIcon1</logo>
+        <logoVersion>1</logoVersion>
+        <shouldOverrideOrgTheme>true</shouldOverrideOrgTheme>
+    </brand>
+    <description>Create and manage strategies used by Einstein Recommendations tool</description>
+    <formFactors>Large</formFactors>
+    <!-- <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled> -->
+    <!-- <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled> -->
+    <label>Strategy Crafter</label>
+    <navType>Standard</navType>
+    <tabs>Strategy_Crafter</tabs>
+    <tabs>standard-Case</tabs>
+    <tabs>standard-Proposition</tabs>
+    <uiType>Lightning</uiType>
+    <utilityBar>Strategy_Crafter_UtilityBar</utilityBar>
+</CustomApplication>
