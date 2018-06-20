@@ -3,11 +3,13 @@ if [[ $# -eq 0 ]] ; then
     exit 1
 fi
 
-echo 'Removing tabs'
-sfdx force:mdapi:deploy --deploydir ./scripts/deletePackage/deleteTabs/ -u $1 -w 5 -g
 echo 'Removing permission set assignments'
 sfdx force:apex:execute -f ./scripts/deletePackage/removePermissionset.apex -u $1
-echo 'Removing permission set, Lightning, Apex and static resources'
+
+echo 'Removing top-level stuff (Application, Tabs etc)'
+sfdx force:mdapi:deploy --deploydir ./scripts/deletePackage/deleteTabs/ -u $1 -w 5 -g
+
+echo 'Removing other stuff (components, resources etc)'
 sfdx force:mdapi:deploy --deploydir ./scripts/deletePackage/deleteEverythingElse -u $1 -w 5 -g
 
 $SHELL
