@@ -1,7 +1,5 @@
 ({
     handleValueChanged: function (cmp, event, helper) {
-        var subExpression = cmp.get('v.subExpression');
-        var schema = cmp.get('v.schema');
         var value = cmp.get('v._value');
         var searchValue = value.toLowerCase().trim();
         var lookup = cmp.get('v._lookup');

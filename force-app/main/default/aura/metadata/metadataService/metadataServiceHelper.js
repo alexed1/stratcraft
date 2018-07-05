@@ -359,6 +359,10 @@
             }
             delete processedStrategy.externalConnections;
         }
+        if (processedStrategy.contextType !== undefined) {
+            processedStrategy.description = processedStrategy.description + '::context::' + processedStrategy.contextType + '::';
+            delete processedStrategy.contextType;
+        }
         processedStrategy.nodes.forEach(function (node) {
             //Dropping the limit field for sort node if it is set to zero
             if (node.nodeType === _utils.NodeType.SORT) {
@@ -402,6 +406,13 @@
         });
         processedStrategy.nodes = nodes;
         processedStrategy.externalConnections = externalConnections;
+        var contextTypeMatch = processedStrategy.description.match(/::context::.*::/);
+        if (contextTypeMatch) {
+            var contextType = contextTypeMatch[0].split('::').slice(-2, -1)[0];
+            var description = processedStrategy.description.replace(contextTypeMatch[0], '');
+            processedStrategy.description = description;
+            processedStrategy.contextType = contextType;
+        }
         return processedStrategy;
     }
 })

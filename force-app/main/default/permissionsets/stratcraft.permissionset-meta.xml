@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<PermissionSet 
-    xmlns="http://soap.sforce.com/2006/04/metadata">
-    <description>makes the StrategyBuilder tab visible in App Launcher</description>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Makes the Strategy Crafter app and tab visible in App Launcher</description>
     <hasActivationRequired>false</hasActivationRequired>
     <label>stratcraft</label>
+    <applicationVisibilities>
+        <application>StrategyCrafter</application>
+        <visible>true</visible>
+    </applicationVisibilities>
     <tabSettings>
         <tab>Strategy_Crafter</tab>
         <visibility>Visible</visibility>

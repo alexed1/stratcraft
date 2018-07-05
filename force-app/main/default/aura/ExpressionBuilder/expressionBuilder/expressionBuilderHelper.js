@@ -6,7 +6,7 @@
          * @param {Array} typeList the list of all types available to the current user
          * @param {string} mode allowed values are: soql, if, gate
          */
-        _getRootType: function (typeList, mode) {
+        _getRootType: function (typeList, mode, contextType) {
             var addLocalObjects = false;
             var addGlobalObjects = false;
             switch (mode) {
@@ -30,8 +30,9 @@
                 };
                 resultType.fieldList.push({
                     name: '$Record',
-                    label: 'The record passed in when the strategy runs',
-                    isReference: true
+                    label: 'The ' + (contextType ? contextType : 'record') + ' passed in when the strategy runs',
+                    isReference: true,
+                    type: contextType
                 });
                 resultType.fieldList.push({
                     name: '$User',
@@ -143,8 +144,8 @@
          * @param {Array} typeList the list of all the types available to the current user
          * @param {string} mode allowed vlaues are: soql, if, gate
          */
-        buildSchema: function (typeList, mode) {
-            var rootType = this._getRootType(typeList, mode);
+        buildSchema: function (typeList, mode, contextType) {
+            var rootType = this._getRootType(typeList, mode, contextType);
             var schema = {
                 rootType: rootType,
                 typeList: typeList,

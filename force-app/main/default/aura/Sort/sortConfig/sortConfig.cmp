@@ -40,7 +40,7 @@
 
             <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-top">
                 <div class="slds-col  slds-size_10-of-12">                    
-                 <!--  <lightning:input aura:id="sortNulls"  name="sortNulls" label="Null values sort to top?" value="{!v.currentItem.nullsFirst}" type="checkbox" checked="{!v.currentItem.nullsFirst}"/> -->
+                  <lightning:input aura:id="sortNulls"  name="sortNulls" label="Propositions without a value sort to the top" type="checkbox" checked="{!v.currentItem.nullsFirst == 'true'}"/>
                 </div>                
             </div>            
         </div>

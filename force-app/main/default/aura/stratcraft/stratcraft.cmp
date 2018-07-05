@@ -27,6 +27,7 @@
     <aura:attribute name="selectedStrategyName" type="String" default="" />
     <aura:attribute name="canUndo" type="Boolean" default="False" />
     <aura:attribute name="canRedo" type="Boolean" default="False" />
+    <aura:attribute name="contextTypes" type="List" />
 
     <aura:handler name="change" value="{!v.selectedStrategyName}" action="{!c.handleStrategySelection}" />
     <aura:handler name="change" value="{!v.isTreeView}" action="{!c.handleViewChanged}" />
@@ -36,6 +37,7 @@
     <aura:handler event="c:nodeDeletionRequestedEvent" action="{!c.handleNodeDeletionRequested}" />
     <aura:handler event="c:nodeDataRequestEvent" action="{!c.handleNodeDataRequest}" />
     <aura:handler event="c:newNodeCreationRequestedEvent" action="{!c.handleNewNodeCreationRequested}" />
+    <aura:handler event="c:contextTypeAquiredEvent" action="{!c.handleContextTypeAquiredEvent}" />
 
     <aura:handler name="mdStrategyRollbackRequest" event="c:mdStrategyRollbackRequest" action="{!c.handleStrategyRollbackRequest}"
     />
@@ -82,7 +84,26 @@
                         <lightning:radioGroup name="viewRadioGroup" label="Display Mode" options="{!v.viewModes}" value="{!v.isTreeView}" />
                     </div>
                 </div>
-                <div class="slds-grow v-align-center">
+                <div class="{!v.selectedStrategyName != '' ? 'slds-grid' : 'slds-grid slds-hide'}">
+                    <div class="v-align-center two-lines">Strategy target</div>
+                    <lightning:select class="slds-m-horizontal_x-small v-align-center context-bot-align" variant="label-hidden" value="{!v.currentStrategy.contextType}">
+                        <option text="--None--" value="" />
+                        <aura:iteration items="{!v.contextTypes}" var="item">
+                            <option text="{!item.label}" value="{!item.name}" />
+                        </aura:iteration>
+                    </lightning:select>
+                    <div class="v-align-center icon-host">
+                        <lightning:icon iconName="utility:info" alternativeText="The target type defines which page this strategy should be ran from. Specyfing this type gives you the ability to reference it and its fields
+                        in the node expressions alowing you to change the strategy flow based on the object this strategy runs for"
+                            size="x-small" />
+                        <div class="tooltip slds-p-around_small">
+                            The target type defines which page this strategy should be ran from. Specyfing this type gives you the ability to reference
+                            it and its fields in the node expressions alowing you to change the strategy flow based on the
+                            object this strategy runs for
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-grow v-align-center slds-m-left_x-small">
                     <c:externalConnectionsList aura:id="externalConnections" currentStrategy="{!v.currentStrategy}" showConnectionPropertiesRequested="{!c.handleShowNodeProperties}"
                     />
                 </div>

@@ -10,6 +10,13 @@
             _undoManager.canUndo.addChangeHandler(function (newValue) { cmp.set('v.canUndo', newValue); });
             _undoManager.canRedo.addChangeHandler(function (newValue) { cmp.set('v.canRedo', newValue); })
         }
+        //This part doesn't depend on scripts loaded
+        helper.loadTypes(cmp);
+    },
+
+    handleContextTypeAquiredEvent: function (cmp, event, helper) {
+        var contextType = event.getParam('contextType');
+        cmp.set('v.currentStrategy.contextType', contextType);
     },
 
     handleViewChanged: function (cmp, event, helper) {
@@ -17,8 +24,6 @@
     },
 
     handleCurrentStrategyChanged: function (cmp, event, helper) {
-        var currentStrategy = cmp.get('v.currentStrategy');
-
         var inactiveView = helper.getInactiveView(cmp);
         inactiveView.refresh();
     },

@@ -65,10 +65,13 @@
                 break;
             case 'objectType':
                 var propertyToken = tokens[0];
-                //Uncomment, if you want a pick of type to work for all subexpressions
-                // var property = schema.rootType.fieldNameMap[propertyToken.value.toLowerCase()];
-                // property.type = lookupItem;
+                //This will make selected type to work for all subexpressions
+                var property = schema.rootType.fieldNameMap[propertyToken.value.toLowerCase()];
+                property.type = lookupItem;
                 propertyToken.propertyType = lookupItem;
+                var contextAquiredEvent = $A.get('e.c:contextTypeAquiredEvent');
+                contextAquiredEvent.setParams({ contextType: lookupItem });
+                contextAquiredEvent.fire();
                 break;
             case 'property':
                 var propertyToken = tokens.findLast(function (token) { return token.type === 'property'; });
@@ -133,7 +136,6 @@
                 };
             });
             result.sort(function (x, y) { return x.header.localeCompare(y.header); });
-            //TODO: get external connections differently
             return {
                 items: result,
                 targetState: 'object',
@@ -251,7 +253,6 @@
                 mode: 'select'
             };
         }
-        //TODO: add available functions depending on the property type
         return {
             items: [],
             targetState: 'value',
