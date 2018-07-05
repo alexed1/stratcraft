@@ -43,7 +43,7 @@
             case 'newStrategy':
                 helper.showNewStrategyDialog(cmp);
                 break;
-            case 'saveStrategy':
+            case 'saveStrategy': //this is broken, but we don't need it anyways
                 var propertyPage = cmp.find('propertyPage');
                 var originalNodeState = propertyPage.get('v.currentNode');
                 var actualNodeState = propertyPage.get('v._currentNodeDirty');
