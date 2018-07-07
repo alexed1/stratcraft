@@ -77,22 +77,20 @@
                             onclick="{!c.handleUndo}" disabled="{!not(v.canUndo)}" />
                     </div>
                     <div class="slds-grid-col">
-                        <lightning:button class="slds-m-left_x-small undo-redo-button slds-m-top_x-small" iconName="utility:redo" onclick="{!c.handleRedo}"
+                        <lightning:button class="slds-m-left_xx-small undo-redo-button slds-m-top_x-small" iconName="utility:redo" onclick="{!c.handleRedo}"
                             disabled="{!not(v.canRedo)}" />
                     </div>
-                    <div class="slds-grid-col slds-m-left_x-small m-top-align">
-                        <lightning:radioGroup name="viewRadioGroup" label="Display Mode" options="{!v.viewModes}" value="{!v.isTreeView}" />
-                    </div>
+
                 </div>
                 <div class="{!v.selectedStrategyName != '' ? 'slds-grid' : 'slds-grid slds-hide'}">
-                    <div class="v-align-center two-lines">Strategy target</div>
-                    <lightning:select class="slds-m-horizontal_x-small v-align-center context-bot-align" variant="label-hidden" value="{!v.currentStrategy.contextType}">
+                    <lightning:select class="slds-m-horizontal_x-small v-align-center context-bot-align slds-m-top_x-small" value="{!v.currentStrategy.contextType}"
+                        label="Autocomplete assumes incoming record will be:">
                         <option text="--None--" value="" />
                         <aura:iteration items="{!v.contextTypes}" var="item">
                             <option text="{!item.label}" value="{!item.name}" />
                         </aura:iteration>
                     </lightning:select>
-                    <div class="v-align-center icon-host">
+                    <div class="v-align-center icon-host slds-m-top_x-small">
                         <lightning:icon iconName="utility:info" alternativeText="The target type defines which page this strategy should be ran from. Specyfing this type gives you the ability to reference it and its fields
                         in the node expressions alowing you to change the strategy flow based on the object this strategy runs for"
                             size="x-small" />

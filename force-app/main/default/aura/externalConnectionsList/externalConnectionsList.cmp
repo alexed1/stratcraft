@@ -1,14 +1,14 @@
 <aura:component>
-    <aura:attribute name="currentStrategy" type="Object"  />
+    <aura:attribute name="currentStrategy" type="Object" />
     <aura:attribute name="_externalConnections" type="List" access="private" />
 
     <aura:registerEvent name="showConnectionPropertiesRequested" type="c:nodeOperationEvent" />
 
     <aura:handler name="change" value="{!v.currentStrategy}" action="{!c.handleCurrentStrategyChanged}" />
 
-    <aura:method name="refresh" action="{!c.handleCurrentStrategyChanged}" />    
+    <aura:method name="refresh" action="{!c.handleCurrentStrategyChanged}" />
 
-    <div class="container slds-hide slds-p-around_x-small" aura:id="container">
+    <div class="container slds-hide slds-p-around_x-small slds-p-top_small" aura:id="container">
         <div class="label slds-form-element__label">External Connections:</div>
         <div class="scroll-container">
             <ul class="list">
@@ -23,4 +23,4 @@
             </ul>
         </div>
     </div>
-</aura:component>	
+</aura:component>

@@ -17,6 +17,13 @@
             {!v.title}
         </aura:set>
 
+        <aura:set attribute="actions">
+            <aura:if isTrue="{!or(or(v.memberType == 'externalConnection', v.memberType=='sort'), v.memberType=='mutuallyExclusive') }">
+                <lightning:buttonIcon iconName="utility:add" variant="border" alternativeText="Add" iconClass="dark" onclick="{!c.handleMemberAdd}"
+                />
+            </aura:if>
+        </aura:set>
+
         <aura:if isTrue="{!v.memberType == 'mutuallyExclusive'}">
             <aura:if isTrue="{!v.currentNode.branches.length == 0}">
                 <div>
