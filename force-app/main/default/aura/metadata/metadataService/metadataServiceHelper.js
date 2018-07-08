@@ -414,5 +414,10 @@
             processedStrategy.contextType = contextType;
         }
         return processedStrategy;
+    },
+
+
+    createSampleStrategy: function (cmp) {
+        alert('hi!');
     }
 })

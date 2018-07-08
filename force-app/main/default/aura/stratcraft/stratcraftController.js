@@ -158,5 +158,10 @@
                 cmp.set("v.selectedStrategyName", strategyName);
                 helper.handleStrategySelection(cmp);
             });
+    },
+
+    createSampleStrategyRequest: function (cmp, event, helper) {
+        var cmpEvent = $A.get('e.c:mdCreateSampleStrategy');
+        cmpEvent.fire();
     }
 })

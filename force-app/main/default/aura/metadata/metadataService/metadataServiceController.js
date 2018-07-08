@@ -32,5 +32,7 @@
         if (callback) {
             callback(sessionId);
         }
-    }
+    },
+
+    createSampleStrategy: function (cmp, event, helper) { helper.createSampleStrategy(cmp); }
 })
