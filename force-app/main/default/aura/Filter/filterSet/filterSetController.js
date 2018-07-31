@@ -116,6 +116,13 @@
                 argPairs.splice(index, 1);
                 cmp.set('v.currentNode.argPairs', argPairs);
                 break;
+            case 'externalConnection':
+                var argPairs = cmp.get('v.currentNode.argPairs');
+                var currentItem = event.getSource().get('v.currentItem');
+                var index = argPairs.indexOf(currentItem);
+                argPairs.splice(index, 1);
+                cmp.set('v.currentNode.argPairs', argPairs);
+                break;
 
         }
 

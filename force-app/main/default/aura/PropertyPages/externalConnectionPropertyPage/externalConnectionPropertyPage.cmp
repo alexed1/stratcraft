@@ -7,7 +7,6 @@
 		<lightning:select aura:id="type" value="{!v.currentNode.type}" name="Type" label="Select an action type">
 			<option value="">choose one...</option>
 			<option value="apex">apex</option>
-			<option value="flow">flow</option>
 		</lightning:select>
 		<div aura:id="typeError" class="error-text slds-form-element__help slds-m-left_xx-small slds-hide">Type has to be selected</div>
 	</div>
