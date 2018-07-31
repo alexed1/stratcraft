@@ -342,33 +342,35 @@
         visualNode.dataset.nodeType = treeLayoutNode.strategyNode.nodeType;
         visualNode.dataset.isRoot = treeLayoutNode.strategyNode.parentNodeName ? '' : 'true';
         var specificNodeClass = '';
+        var packagePrefix = _utils.getPackagePrefix();
+        var packageIsManaged = packagePrefix != 'c';
         switch (treeLayoutNode.strategyNode.nodeType) {
             case _utils.NodeType.IF:
-                specificNodeClass = 'if-node';
+                specificNodeClass = packageIsManaged ? 'if-node' : 'unmanaged-if-node';
                 break;
             case _utils.NodeType.UNION:
-                specificNodeClass = 'union-node';
+                specificNodeClass = packageIsManaged ? 'union-node' : 'unmanaged-union-node';
                 break;
             case _utils.NodeType.SOQL_LOAD:
-                specificNodeClass = 'soql-load-node';
+                specificNodeClass = packageIsManaged ? 'soql-load-node' : 'unmanaged-soql-load-node';
                 break;
             case _utils.NodeType.RECOMMENDATION_LIMIT:
-                specificNodeClass = 'recommendation-limit-node';
+                specificNodeClass = packageIsManaged ? 'recommendation-limit-node' : 'unmanaged-recommendation-limit-node';
                 break;
             case _utils.NodeType.FILTER:
-                specificNodeClass = 'filter-node';
+                specificNodeClass = packageIsManaged ? 'filter-node' : 'unmanaged-filter-node';
                 break;
             case _utils.NodeType.SORT:
-                specificNodeClass = 'sort-node';
+                specificNodeClass = packageIsManaged ? 'sort-node' : 'unmanaged-sort-node';
                 break;
             case _utils.NodeType.EXTERNAL_CONNECTION:
-                specificNodeClass = 'external-node';
+                specificNodeClass = packageIsManaged ? 'external-node' : 'unmanaged-external-node';
                 break;
             case _utils.NodeType.RECORD_JOIN:
-                specificNodeClass = 'record-join-node';
+                specificNodeClass = packageIsManaged ? 'record-join-node' : 'unmanaged-record-join-node';
                 break;
             case _utils.NodeType.MUTUALLY_EXCLUSIVE:
-                specificNodeClass = 'exclusive-node';
+                specificNodeClass = packageIsManaged ? 'exclusive-node' : 'unmanaged-exclusive-node';
                 break;
         }
         visualNode.classList.add('node');

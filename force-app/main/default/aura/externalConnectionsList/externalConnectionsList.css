@@ -40,6 +40,14 @@
 	background-image: url(/resource/stratcraft__externalNode);
 }
 
+.THIS .unmanaged-list-item-body {
+    width: 48px;
+	height: 48px;
+	border-radius: 12px;
+    background-color: dodgerblue;
+	background-image: url(/resource/externalNode);
+}
+
 .THIS .list-item-name {
     width: 100%;
     font-weight: 600;

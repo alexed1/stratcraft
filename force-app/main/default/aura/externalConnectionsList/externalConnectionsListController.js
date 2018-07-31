@@ -16,6 +16,20 @@
             $A.util.addClass(container, 'slds-hide')
             cmp.set('v._externalConnections', []);
         }
+
+        //fix for icons missing in unmanaged package
+        var packagePrefix = _utils.getPackagePrefix();
+        var packageIsManaged = packagePrefix != 'c';
+        if (!packageIsManaged) {
+            var connections = document.getElementsByClassName('list-item-body');
+            if (connections) {
+                for (var i = 0; i++; i > connections.length) {
+                    var connection = connections[i];
+                    connection.classList.remove('list-item-body');
+                    connections.classList.addClass('unmanaged-list-item-body');
+                }
+            }
+        }
     },
 
     handleItemClick: function (cmp, cmpEvent, helper) {
