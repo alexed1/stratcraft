@@ -1,7 +1,10 @@
 <aura:component>
     <ltng:require scripts="{!$Resource.modalDialog}" />
 
-     <aura:attribute name="currentItem" type="Object" />  
+    <aura:method name="validate" action="{!c.validate}" />
+    <aura:method name="clearValidation" action="{!c.clearValidation}" />
+
+    <aura:attribute name="currentItem" type="Object" />
 
     <aura:registerEvent name="deleteRequested" type="c:filterDeleteRequestedEvent" />
 
@@ -9,27 +12,28 @@
         <div class="slds-grid slds-wrap">
             <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-top">
                 <div class="slds-col  slds-size_10-of-12">
-                    
-                   <lightning:input aura:id="argName"  name="argName" label="Argument Name:" value="{!v.currentItem.name}" />
 
-                   
+                    <lightning:input aura:id="argName" name="argName" label="Argument Name:" value="{!v.currentItem.name}" required="true" messageWhenValueMissing="Argument needs a name"
+                    />
+                    <div aura:id="argNameError" class="error-text slds-form-element__help slds-m-left_xx-small slds-hide">Field can't be empty or contain whitespaces</div>
 
                 </div>
                 <div class="slds-col  slds-size_2-of-12">
                     <div class="slds-float_right">
-                        <lightning:buttonIcon iconName="utility:delete" variant="border" onclick="{!c.handleDeleteRequest}" alternativeText="Delete filter" />
+                        <lightning:buttonIcon iconName="utility:delete" variant="border" onclick="{!c.handleDeleteRequest}" alternativeText="Delete filter"
+                        />
                     </div>
                 </div>
             </div>
             <div class="slds-grid slds-col slds-size_1-of-1 slds-grid_vertical-align-center">
                 <div class="slds-col  slds-size_1-of-1">
                     <div class="slds-p-vertical_xx-small">
-                      <lightning:input aura:id="argValue"  name="argValue" label="Argument Value:" value="{!v.currentItem.value}" />
+                        <lightning:input aura:id="argValue" name="argValue" label="Argument Value:" value="{!v.currentItem.value}" />
 
                     </div>
                 </div>
             </div>
-            
+
         </div>
     </div>
-</aura:component>	
+</aura:component>
