@@ -85,8 +85,9 @@
                     </div>
                 </div>
                 <div class="{!v.selectedStrategyName != '' ? 'slds-grid' : 'slds-grid slds-hide'}">
-                    <div class="v-align-center two-lines">Strategy target</div>
-                    <lightning:select class="slds-m-horizontal_x-small v-align-center context-bot-align" variant="label-hidden" value="{!v.currentStrategy.contextType}">
+                    <!-- <div class="v-align-center two-lines">Autocomplete assumes:</div> -->
+                    <lightning:select label="Autocomplete assumes:" class="slds-m-horizontal_x-small v-align-center context-bot-align" variant="label-hidden"
+                        value="{!v.currentStrategy.contextType}">
                         <option text="--None--" value="" />
                         <aura:iteration items="{!v.contextTypes}" var="item">
                             <option text="{!item.label}" value="{!item.name}" />

@@ -6,12 +6,12 @@ public with sharing class StrategyXmlConverter {
         System.debug('Started serializing strategy ' + strategy.name);
         Dom.Document document = new Dom.Document();
         String xmlNamespace = 'http://soap.sforce.com/2006/04/metadata';
-        Dom.XmlNode rootNode = document.createRootElement('recommendationStrategy',xmlNamespace,'');
-        Dom.XmlNode name = rootNode.addChildElement('recommendationStrategyName', null,null)
+        Dom.XmlNode rootNode = document.createRootElement('RecommendationStrategy',xmlNamespace,'');
+        Dom.XmlNode name = rootNode.addChildElement('name', null,null)
             .addTextNode((strategy.name == null ? '' : strategy.name));
         Dom.XmlNode description = rootNode.addChildElement('description', null, null)
             .addTextNode((strategy.description == null ? '' : strategy.description));
-        Dom.XmlNode masterLabel = rootNode.addChildElement('masterLabel', null, null)
+        Dom.XmlNode masterLabel = rootNode.addChildElement('label', null, null)
             .addTextNode((strategy.masterLabel == null ? '' : strategy.masterLabel));
         List<BaseNode> sortedNodes = strategy.nodes;
         sortedNodes.sort();
@@ -38,13 +38,13 @@ public with sharing class StrategyXmlConverter {
             Dom.XMLNode strategyNode = document.getRootElement();
             for(Dom.XMLNode child : strategyNode.getChildElements()) {
                 String childName = child.getName();
-                if (childName == 'recommendationStrategyName') {
+                if (childName == 'name') {
                     result.name = child.getText();
                 }
                 else if (childName == 'description') {
                     result.description = child.getText();
                 }
-                else if (childName == 'masterLabel') {
+                else if (childName == 'label') {
                     result.masterLabel = child.getText();
                 }
                 else if (nodeXmlConverter.canConvertXmlToNode(child, xmlNamespace)) {
