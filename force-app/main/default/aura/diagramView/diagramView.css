@@ -164,6 +164,51 @@
 	background-image: url(/resource/stratcraft__filterNode);
 }
 
+.THIS .unmanaged-if-node {
+	background-color: #6d9de3;
+	background-image: url(/resource/ifNode);
+}
+
+.THIS .unmanaged-exclusive-node {
+	background-color: #a200ff;
+	background-image: url(/resource/mutuallyExclusive);
+}
+
+.THIS .unmanaged-union-node {
+	background-color: #FF6A00;
+	background-image: url(/resource/unionNode);
+}
+
+.THIS .unmanaged-soql-load-node {
+	background-color: #ffd800;
+	background-image: url(/resource/loadSoqlNode);
+}
+
+.THIS .unmanaged-recommendation-limit-node {
+	background-color: #267F00;
+	background-image: url(/resource/recommendationLimitNode);
+}
+
+.THIS .unmanaged-sort-node {
+	background-color: #fab9a5;
+	background-image: url(/resource/sortNode);
+}
+
+.THIS .unmanaged-external-node {
+	background-color: purple;
+	background-image: url(/resource/externalNode);
+}
+
+.THIS .unmanaged-record-join-node {
+	background-color: lightblue;
+	background-image: url(/resource/recordJoinNode);
+}
+
+.THIS .unmanaged-filter-node {
+	background-color: #Fd90b5;
+	background-image: url(/resource/filterNode);
+}
+
 .THIS .context-menu {
 	display: none;
 	position: absolute;
