@@ -16,7 +16,7 @@ public static void convertXmlToStrategy_WhenXmlDoesntContainChildNodes_StrategyP
 	Strategy strategy = StrategyXmlConverter.convertXmlToStrategy(FixturesXml.EmptyStrategyXml);
 	System.assertEquals('Name', strategy.name, 'Name mismatches');
 	System.assertEquals('Description', strategy.description, 'Description mismatches');
-	System.assertEquals('MasterLabel', strategy.masterLabel, 'Master label mismatches');
+	System.assertEquals('label', strategy.masterLabel, 'Master label mismatches');
 	System.assertEquals(0, strategy.nodes.size(), 'Empty strategy must not contain any node');
 }
 
@@ -109,11 +109,11 @@ public static void convertStrategyToXml_Always_EscapesXmlSymbols() {
 	document.load(xml);
 	Dom.XmlNode root = document.getRootElement();
 	String xmlNamespace = 'http://soap.sforce.com/2006/04/metadata';
-	Dom.XmlNode name = root.getChildElement('recommendationStrategyName', xmlNamespace);
+	Dom.XmlNode name = root.getChildElement('name', xmlNamespace);
 	System.assertEquals('<>&"\'', name.getText(), 'Name of the strategy mismatches');
 	Dom.XmlNode description = root.getChildElement('description', xmlNamespace);
 	System.assertEquals('<>&"\'', description.getText(), 'Description of the strategy mismatches');
-	Dom.XmlNode masterLabel = root.getChildElement('masterLabel', xmlNamespace);
+	Dom.XmlNode masterLabel = root.getChildElement('label', xmlNamespace);
 	System.assertEquals('<>&"\'', masterLabel.getText(), 'Master Label of the strategy mismatches');
 
 }
@@ -125,14 +125,14 @@ public static void convertStrategyToXml_Always_SerializesStrategyProperties() {
 	document.load(xml);
 	Dom.XmlNode root = document.getRootElement();
 	String xmlNamespace = 'http://soap.sforce.com/2006/04/metadata';
-	System.assertEquals('recommendationStrategy', root.getName(), 'Root element name mismatches');
-	Dom.XmlNode name = root.getChildElement('recommendationStrategyName', xmlNamespace);
+	System.assertEquals('RecommendationStrategy', root.getName(), 'Root element name mismatches');
+	Dom.XmlNode name = root.getChildElement('name', xmlNamespace);
 	System.assert (name != null, '"Name" node is not found');
 	System.assertEquals('Name', name.getText(), 'Name of the strategy mismatches');
 	Dom.XmlNode description = root.getChildElement('description', xmlNamespace);
 	System.assert (description != null, '"Description" node is not found');
 	System.assertEquals('Description', description.getText(), 'Description of the strategy mismatches');
-	Dom.XmlNode masterLabel = root.getChildElement('masterLabel', xmlNamespace);
+	Dom.XmlNode masterLabel = root.getChildElement('label', xmlNamespace);
 	System.assert (masterLabel != null, '"Master Label" node is not found');
 	System.assertEquals('Master Label', masterLabel.getText(), 'Master Label of the strategy mismatches');
 }

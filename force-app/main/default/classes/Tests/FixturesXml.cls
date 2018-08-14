@@ -5,15 +5,15 @@ public static String InvalidStrategyXml = '<RecommendationStrategy /';
 public static String EmptyStrategyXml =
 	'<RecommendationStrategy xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'
 	+ '<description>Description</description>'
-	+ '<masterLabel>MasterLabel</masterLabel>'
-	+ '<recommendationStrategyName>Name</recommendationStrategyName>'
+	+ '<label>label</label>'
+	+ '<name>Name</name>'
 	+ '</RecommendationStrategy>';
 
 public static String SpecialSymbolsStrategyXml =
 	'<RecommendationStrategy xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'
 	+ '<description>&lt;&gt;&amp;&quot;&apos;</description>'
-	+ '<masterLabel>&lt;&gt;&amp;&quot;&apos;</masterLabel>'
-	+ '<recommendationStrategyName>&lt;&gt;&amp;&quot;&apos;</recommendationStrategyName>'
+	+ '<label>&lt;&gt;&amp;&quot;&apos;</label>'
+	+ '<name>&lt;&gt;&amp;&quot;&apos;</name>'
 	+ '</RecommendationStrategy>';
 
 public static String UnionNodeStrategyXml =
@@ -80,8 +80,8 @@ public static String MutuallyExclusiveStrategyXml =
 	'<?xml version="1.0" encoding="UTF-8"?>'+
 	'<RecommendationStrategy xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'+
 	'   <description>Mutually exclusive node example</description>'+
-	'   <masterLabel>MutuallyExclusiveNode</masterLabel>'+
-	'   <recommendationStrategyName>MutuallyExclusiveNode</recommendationStrategyName>'+
+	'   <label>MutuallyExclusiveNode</label>'+
+	'   <name>MutuallyExclusiveNode</name>'+
 	'   <mutuallyExclusive>'+
 	'       <description>Mutually Exclusive Node</description>'+
 	'       <name>RootNode</name>'+
