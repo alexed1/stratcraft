@@ -145,6 +145,19 @@
          * @param {string} mode allowed vlaues are: soql, if, gate
          */
         buildSchema: function (typeList, mode, contextType) {
+
+            //hardcoding Proposition object
+            if (!typeList.find(function (item) { if (item.name == "Proposition") return true; })) {
+                var ifMode = mode == 'if';
+                var propositionsObj = '';
+                if (!ifMode)
+                    propositionsObj = JSON.parse('{"fieldList":[{"isReference":false,"label":"Name","name":"Name","type":"STRING"},{"isReference":false,"label":"Action","name":"ActionReference","type":"STRING"},{"isReference":false,"label":"Description","name":"Description","type":"STRING"},{"isReference":true,"label":"Asset File ID","name":"ImageId","type":"ContentAsset"},{"isReference":false,"label":"Acceptance Label","name":"AcceptanceLabel","type":"STRING"},{"isReference":false,"label":"Rejection Label","name":"RejectionLabel","type":"STRING"}],"label":"Proposition","name":"Proposition"}');
+                else
+                    propositionsObj = JSON.parse('{"fieldList":[{"isReference":false,"label":"Name","name":"Name","type":"STRING"},{"isReference":false,"label":"Action","name":"ActionReference","type":"STRING"},{"isReference":false,"label":"Description","name":"Description","type":"STRING"},{"isReference":true,"label":"Asset File ID","name":"Image","type":"ContentAsset"},{"isReference":false,"label":"Acceptance Label","name":"AcceptanceLabel","type":"STRING"},{"isReference":false,"label":"Rejection Label","name":"RejectionLabel","type":"STRING"}],"label":"Proposition","name":"Proposition"}');
+                typeList.push(propositionsObj);
+            }
+
+
             var rootType = this._getRootType(typeList, mode, contextType);
             var schema = {
                 rootType: rootType,
