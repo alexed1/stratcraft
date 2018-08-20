@@ -2,6 +2,7 @@
     <aura:attribute name="currentStrategy" type="Object" />
     <aura:attribute name="_externalConnections" type="List" access="private" />
     <aura:attribute name="_contextMenuInited" type="Boolean" default="false" />
+    <aura:attribute name="_isManagedPackage" type="Boolean" default="true" />
     <aura:registerEvent name="showConnectionPropertiesRequested" type="c:nodeOperationEvent" />
 
     <aura:handler name="change" value="{!v.currentStrategy}" action="{!c.handleCurrentStrategyChanged}" />
@@ -16,7 +17,7 @@
                 <aura:iteration items="{!v._externalConnections}" var="item">
                     <li class="list-item">
                         <div class="node list-item-container" onclick="{!c.handleItemClick}" data-node="{!item.name}">
-                            <div class="list-item-body"></div>
+                            <div class="{!v._isManagedPackage ? 'list-item-body' : 'unmanaged-list-item-body'}"></div>
                             <div class="list-item-name">{!item.name}</div>
                         </div>
                     </li>

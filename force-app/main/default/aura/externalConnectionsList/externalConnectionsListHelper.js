@@ -1,9 +1,11 @@
 ({
     delayedContextMenuInitialisation: function (cmp, pollingId) {
+
+        window.clearInterval(pollingId);
+
         var self = this;
         cmp.set("v._contextMenuInited", true);
         self.initContextMenu(cmp);
-        window.clearInterval(pollingId);
     },
 
     initContextMenu: function (cmp) {

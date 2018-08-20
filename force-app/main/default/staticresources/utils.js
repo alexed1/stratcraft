@@ -210,6 +210,12 @@ window._utils = (function () {
 			});
 		},
 
+		isManagedPackage: function () {
+			var self = this;
+			var packagePrefix = self.getPackagePrefix();
+			return packagePrefix != 'c';
+		},
+
 		getPackagePrefix: function () {
 			//Url will be like https://myorg.lightning.force.com/lightning/n/prefix__Strategy_Crafter
 			//              or https://myorg.lightning.force.com/lightning/n/Strategy_Crafter

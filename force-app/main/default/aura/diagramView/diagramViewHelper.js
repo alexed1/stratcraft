@@ -342,8 +342,7 @@
         visualNode.dataset.nodeType = treeLayoutNode.strategyNode.nodeType;
         visualNode.dataset.isRoot = treeLayoutNode.strategyNode.parentNodeName ? '' : 'true';
         var specificNodeClass = '';
-        var packagePrefix = _utils.getPackagePrefix();
-        var packageIsManaged = packagePrefix != 'c';
+        var packageIsManaged = _utils.isManagedPackage();
         switch (treeLayoutNode.strategyNode.nodeType) {
             case _utils.NodeType.IF:
                 specificNodeClass = packageIsManaged ? 'if-node' : 'unmanaged-if-node';

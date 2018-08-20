@@ -38,7 +38,7 @@ window._strategy = (function () {
             var parentNode = this.getParentNode(strategy, node);
             if (parentNode && parentNode.nodeType == _utils.NodeType.IF) {
                 if (parentNode.branches) {
-                    var branchIndex = parentNode.branches.findIndex(x => x.child == node.name);
+                    var branchIndex = parentNode.branches.findIndex(function (x) { return x.child == node.name; });
                     if (branchIndex >= 0)
                         parentNode.branches.splice(branchIndex, 1);
                 }
