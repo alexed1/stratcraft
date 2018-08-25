@@ -55,14 +55,14 @@ window._undoManager = (function () {
     }
 
     var _removeItem = function (array, item) {
-        var index = array.findIndex(function (x) { return x.name === item.name });
+        var index = array.findIndex(function (x) { return JSON.stringify(x) === JSON.stringify(item) });
         _addAndRunOperation(
             function () { array.splice(index, 1); },
             function () { array.splice(index, 0, item); });
     };
 
     var _replaceItem = function (array, oldItem, newItem) {
-        var index = array.findIndex(function (x) { return x.name === oldItem.name });
+        var index = array.findIndex(function (x) { return JSON.stringify(x) === JSON.stringify(oldItem) });
         _addAndRunOperation(
             function () { array.splice(index, 1, newItem); },
             function () { array.splice(index, 1, oldItem); }
