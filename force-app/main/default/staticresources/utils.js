@@ -165,11 +165,6 @@ window._utils = (function () {
 		validateXML: function (xml) {
 
 			var recommendationStrategyName = '';
-			try {
-				//very stupid but robust way to find a strategy name
-				recommendationStrategyName = xml.split('recommendationStrategyName')[1].replace('>', '').replace('</', '').trim();
-			}
-			catch{ }
 
 			const startsWith = 'This page contains the following errors:';
 			const endsWith = 'Below is a rendering of the page up to the first error.';
@@ -188,6 +183,13 @@ window._utils = (function () {
 						}
 						if (result)
 							return { errors: result, name: recommendationStrategyName };
+					}
+					else {
+						var nameNodes = myDocument.getElementsByTagName("name");
+						for (var i = 0; i < nameNodes.length; i++) {
+							if (nameNodes[i].parentNode.tagName == "RecommendationStrategy")
+								recommendationStrategyName = nameNodes[i].innerHTML;
+						}
 					}
 				} else if (window.ActiveXObject) {
 					var myDocument = new ActiveXObject("Microsoft.XMLDOM")

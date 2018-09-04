@@ -7,7 +7,7 @@ window._expressionParser = (function () {
     value = value || '';
     if (!currentState.hasObject) {
       //Checks if the value starts with a valid object name (e.g. $User)
-      var objectNameMatch = value.match(/\$[a-z]+/gi)
+      var objectNameMatch = value.match(/^\$[a-z]+/gi)
       //Checks if the value ends with symbols that forcefully finish object name typing (e.g. if after '$User' we typed space or dot)
       var forceObjectTerminationMatch = value.match(/[\s\.]+$/g);
       //Check if the object exists

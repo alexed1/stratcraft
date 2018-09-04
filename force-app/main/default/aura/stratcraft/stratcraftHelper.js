@@ -610,6 +610,9 @@
                     function okCallback() {
                         _cmpUi.spinnerOn(cmp, "spinner");
                         continuationCallback();
+                    },
+                    function cancelCallback() {
+                        _cmpUi.spinnerOn(cmp, "spinner");
                     });
             }
             else
