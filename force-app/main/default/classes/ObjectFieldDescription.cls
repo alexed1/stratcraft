@@ -1,17 +1,20 @@
 public with sharing class ObjectFieldDescription {
 
-    @AuraEnabled public String name;
+@AuraEnabled public String name;
 
-    @AuraEnabled public String label;
+@AuraEnabled public String ifModeName;
 
-    @AuraEnabled public String type;
+@AuraEnabled public String label;
 
-    @AuraEnabled public Boolean isReference;
+@AuraEnabled public String type;
 
-    public ObjectFieldDescription(String name, String label, String type, Boolean isReference) {
-        this.name = name;
-        this.label = label;
-        this.type = type;
-        this.isReference = isReference;
-    }
+@AuraEnabled public Boolean isReference;
+
+public ObjectFieldDescription(String name, String label, String type, Boolean isReference, String ifModeName) {
+	this.name = name;
+	this.ifModeName = ifModeName;
+	this.label = label;
+	this.type = type;
+	this.isReference = isReference;
+}
 }

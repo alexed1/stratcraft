@@ -9,9 +9,8 @@
             helper.loadStrategyNames(cmp);
             _undoManager.canUndo.addChangeHandler(function (newValue) { cmp.set('v.canUndo', newValue); });
             _undoManager.canRedo.addChangeHandler(function (newValue) { cmp.set('v.canRedo', newValue); })
+            helper.loadTypes(cmp);
         }
-        //This part doesn't depend on scripts loaded
-        helper.loadTypes(cmp);
     },
 
     handleContextTypeAquiredEvent: function (cmp, event, helper) {
