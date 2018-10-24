@@ -31,6 +31,9 @@
                     allTypes.sort(function (x, y) { return x.label.localeCompare(y.label); })
                     cmp.set('v.contextTypes', allTypes);
                     cmp.set('v.contextTypesLoaded', true);
+                    var awaitingLoadingCallback = cmp.get('v.contextTypesLoadedCallback');
+                    if (awaitingLoadingCallback)
+                        awaitingLoadingCallback();
                 }));
             }
         });

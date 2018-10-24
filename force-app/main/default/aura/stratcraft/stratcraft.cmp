@@ -29,7 +29,7 @@
     <aura:attribute name="canRedo" type="Boolean" default="False" />
     <aura:attribute name="contextTypes" type="List" />
     <aura:attribute name="contextTypesLoaded" type="Boolean" default="false" />
-
+    <aura:attribute name="contextTypesLoadedCallback" type="Object" />
 
     <aura:handler name="change" value="{!v.selectedStrategyName}" action="{!c.handleStrategySelection}" />
     <aura:handler name="change" value="{!v.isTreeView}" action="{!c.handleViewChanged}" />
@@ -40,6 +40,8 @@
     <aura:handler event="c:nodeDataRequestEvent" action="{!c.handleNodeDataRequest}" />
     <aura:handler event="c:newNodeCreationRequestedEvent" action="{!c.handleNewNodeCreationRequested}" />
     <aura:handler event="c:contextTypeAquiredEvent" action="{!c.handleContextTypeAquiredEvent}" />
+    <aura:handler event="c:contextTypesDataRequestEvent" action="{!c.handleContextTypesDataRequested}" />
+    <aura:handler event="c:contextTypesDataLoadedEvent" action="{!c.handleContextTypesDataLoaded}" />
 
     <aura:handler name="mdStrategyRollbackRequest" event="c:mdStrategyRollbackRequest" action="{!c.handleStrategyRollbackRequest}"
     />
@@ -98,7 +100,7 @@
                             <aura:if isTrue="{!v.contextTypesLoaded}">
                                 <aura:set attribute="else">
                                     <div class="slds-spinner_container" aura:id="contextTypesLoadingSpinner">
-                                        <div class="slds-spinner slds-spinner_medium" aria-hidden="false" role="alert">
+                                        <div class="slds-spinner slds-spinner_small" aria-hidden="false" role="alert">
                                             <div class="slds-spinner__dot-a"></div>
                                             <div class="slds-spinner__dot-b"></div>
                                         </div>

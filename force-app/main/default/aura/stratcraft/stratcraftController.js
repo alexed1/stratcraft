@@ -18,6 +18,26 @@
         cmp.set('v.currentStrategy.contextType', contextType);
     },
 
+
+    handleContextTypesDataLoaded: function (cmp, event, helper) {
+        var callback = event.getParam('callback');
+        var areTypesLoaded = cmp.get('v.contextTypesLoaded');
+        if (!callback)
+            return;
+        if (areTypesLoaded)
+            callback();
+        else
+            cmp.set('v.contextTypesLoadedCallback', callback);
+    },
+
+    handleContextTypesDataRequested: function (cmp, event, helper) {
+        var contextTypes = cmp.get("v.contextTypes");
+        var callback = event.getParam('callback');
+        if (callback) {
+            callback(contextTypes);
+        }
+    },
+
     handleViewChanged: function (cmp, event, helper) {
         helper.toggleView(cmp);
     },

@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="Raised when expression builder requests context types from stratcraft root component">
+    <aura:attribute name="callback" type="Object" description="A function that accepts context types list" />
+</aura:event>

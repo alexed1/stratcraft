@@ -1,7 +1,7 @@
 <aura:component controller="CriterionController">
-    <ltng:require scripts="{!$Resource.force}" />
-    <ltng:require scripts="{!$Resource.expressionParser}" />
 
+    <ltng:require scripts="{!join(',', $Resource.force,
+    $Resource.expressionParser)}" afterScriptsLoaded="{!c.scriptsAreLoaded}" />
     <!-- Possible values: soql, if, filter. Depends on the node type: 'if' works only with globals like $Record, 'soql' works only with the iterator current item,
     'filter' allows to work with both-->
     <aura:attribute name="mode" type="String" default="filter" />
@@ -12,12 +12,16 @@
     <aura:attribute name="isLoading" type="Boolean" default="true" />
     <aura:attribute name="availableObjects" type="List" />
     <aura:attribute name="strategy" type="Object" />
-
+    <aura:attribute name="contextTypesList" type="List" />
+    <aura:attribute name="scriptsAreLoaded" type="Boolean" default="false" />
     <aura:attribute name="_schema" type="Object" />
+    <aura:attribute name="_delayedInitialisationCallback" type="Object" />
 
     <aura:method name="load" action="{!c.loadSchema}" />
     <aura:method name="resolveExpression" action="{!c.resolveExpression}" />
     <aura:method name="validate" action="{!c.handleValidate}" />
+
+
 
     <lightning:overlayLibrary aura:id="popover" />
     <aura:if isTrue="{!v.isLoading}">

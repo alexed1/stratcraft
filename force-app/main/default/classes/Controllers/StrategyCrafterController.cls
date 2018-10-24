@@ -2,7 +2,7 @@
 
 public class StrategyCrafterController {
 
-@AuraEnabled
+@AuraEnabled(cacheable=true)
 public static List<string> getSchemaNames(Boolean ifMode){
 	Map<String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
 	List<String> entities = new List<String>(schemaMap.keySet());
@@ -17,7 +17,7 @@ public static List<string> getSchemaNames(Boolean ifMode){
 }
 
 
-@AuraEnabled
+@AuraEnabled(cacheable=true)
 public static ObjectDescription[] getTypesPage(List<string> types){
 	Map<String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
 	List<ObjectDescription> result = new List<ObjectDescription>();
