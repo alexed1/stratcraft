@@ -138,6 +138,8 @@
         <members>treeNodeSelectedEvent</members>
         <members>treeView</members>
         <members>unionNodePropertyPage</members>
+        <members>contextTypesDataRequestEvent</members>
+        <members>contextTypesDataLoadedEvent</members>
         <name>AuraDefinitionBundle</name>
     </types>
     <types>

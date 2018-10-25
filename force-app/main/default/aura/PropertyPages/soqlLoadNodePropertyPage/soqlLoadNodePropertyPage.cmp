@@ -2,9 +2,23 @@
     <aura:handler name="init" value="{!this}" action="{!c.onInit}" />
     <aura:attribute name="currentNode" type="Object" />
     <aura:attribute name="shortenedSoql" type="String" default="Configure" />
-    <div class="slds-form-element">
+    <!-- it is set to false in oninit, otherwise oninit handler is not called for some reason -->
+    <aura:attribute name="contextTypesLoaded" type="Boolean" default="true" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <div class="slds-form-element  slds-is-relative">
         <lightning:button onclick="{!c.openExpressionBuilder}">
             {!v.shortenedSoql}
         </lightning:button>
+        <aura:if isTrue="{!v.contextTypesLoaded}">
+            <aura:set attribute="else">
+                <div class="slds-spinner_container" aura:id="contextTypesLoadingSpinner">
+                    <div class="slds-spinner slds-spinner_small" aria-hidden="false" role="alert">
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+                </div>
+            </aura:set>
+        </aura:if>
     </div>
 </aura:component>

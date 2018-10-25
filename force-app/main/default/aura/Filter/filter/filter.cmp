@@ -9,7 +9,8 @@
     <aura:attribute name="nodeSelectLabel" type="String" default="The gate controlling this branch:" />
     <aura:registerEvent name="deleteRequested" type="c:filterDeleteRequestedEvent" />
     <aura:registerEvent name="priorityChangeRequested" type="c:filterPriorityChangeRequestEvent" />
-
+    <!-- it is set to false in oninit, otherwise oninit handler is not called for some reason -->
+    <aura:attribute name="contextTypesLoaded" type="Boolean" default="true" />
     <aura:handler name="init" value="{!this}" action="{!c.onInit}" />
 
     <div class="slds-has-top-magnet slds-box">
@@ -56,7 +57,7 @@
                         </div>
                     </div>
                     <div class="slds-grid slds-col slds-size_1-of-1">
-                        <div class="slds-col  slds-size_1-of-1">
+                        <div class="slds-col  slds-size_1-of-1  slds-is-relative">
                             <lightning:button onclick="{!c.openExpressionBuilder}">
                                 <aura:if isTrue="{!v.currentItem.expression}">
                                     {!v.currentItem.expression}
@@ -65,6 +66,16 @@
                                     </aura:set>
                                 </aura:if>
                             </lightning:button>
+                            <aura:if isTrue="{!v.contextTypesLoaded}">
+                                <aura:set attribute="else">
+                                    <div class="slds-spinner_container" aura:id="contextTypesLoadingSpinner">
+                                        <div class="slds-spinner slds-spinner_small" aria-hidden="false" role="alert">
+                                            <div class="slds-spinner__dot-a"></div>
+                                            <div class="slds-spinner__dot-b"></div>
+                                        </div>
+                                    </div>
+                                </aura:set>
+                            </aura:if>
                         </div>
                     </div>
                 </aura:set>
