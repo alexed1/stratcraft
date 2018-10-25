@@ -28,6 +28,8 @@
     <aura:attribute name="canUndo" type="Boolean" default="False" />
     <aura:attribute name="canRedo" type="Boolean" default="False" />
     <aura:attribute name="contextTypes" type="List" />
+    <aura:attribute name="contextTypesLoaded" type="Boolean" default="false" />
+    <aura:attribute name="contextTypesLoadedCallback" type="Object" />
 
     <aura:handler name="change" value="{!v.selectedStrategyName}" action="{!c.handleStrategySelection}" />
     <aura:handler name="change" value="{!v.isTreeView}" action="{!c.handleViewChanged}" />
@@ -38,6 +40,8 @@
     <aura:handler event="c:nodeDataRequestEvent" action="{!c.handleNodeDataRequest}" />
     <aura:handler event="c:newNodeCreationRequestedEvent" action="{!c.handleNewNodeCreationRequested}" />
     <aura:handler event="c:contextTypeAquiredEvent" action="{!c.handleContextTypeAquiredEvent}" />
+    <aura:handler event="c:contextTypesDataRequestEvent" action="{!c.handleContextTypesDataRequested}" />
+    <aura:handler event="c:contextTypesDataLoadedEvent" action="{!c.handleContextTypesDataLoaded}" />
 
     <aura:handler name="mdStrategyRollbackRequest" event="c:mdStrategyRollbackRequest" action="{!c.handleStrategyRollbackRequest}"
     />
@@ -83,13 +87,28 @@
 
                 </div>
                 <div class="{!v.selectedStrategyName != '' ? 'slds-grid' : 'slds-grid slds-hide'}">
-                    <lightning:select class="slds-m-horizontal_x-small v-align-center context-bot-align slds-m-top_x-small" value="{!v.currentStrategy.contextType}"
-                        label="Autocomplete assumes incoming record will be:">
-                        <option text="--None--" value="" />
-                        <aura:iteration items="{!v.contextTypes}" var="item">
-                            <option text="{!item.label}" value="{!item.name}" />
-                        </aura:iteration>
-                    </lightning:select>
+                    <div>
+                        <div class="slds-is-relative">
+                            <lightning:select class="slds-m-horizontal_x-small v-align-center context-bot-align slds-m-top_x-small" value="{!v.currentStrategy.contextType}"
+                                label="Autocomplete assumes incoming record will be:">
+                                <option text="--None--" value="" />
+                                <aura:iteration items="{!v.contextTypes}" var="item">
+                                    <option text="{!item.label}" value="{!item.name}" />
+                                </aura:iteration>
+                            </lightning:select>
+
+                            <aura:if isTrue="{!v.contextTypesLoaded}">
+                                <aura:set attribute="else">
+                                    <div class="slds-spinner_container" aura:id="contextTypesLoadingSpinner">
+                                        <div class="slds-spinner slds-spinner_small" aria-hidden="false" role="alert">
+                                            <div class="slds-spinner__dot-a"></div>
+                                            <div class="slds-spinner__dot-b"></div>
+                                        </div>
+                                    </div>
+                                </aura:set>
+                            </aura:if>
+                        </div>
+                    </div>
                     <div class="v-align-center icon-host slds-m-top_x-small">
                         <lightning:icon iconName="utility:info" alternativeText="The target type defines which page this strategy should be ran from. Specyfing this type gives you the ability to reference it and its fields
                         in the node expressions alowing you to change the strategy flow based on the object this strategy runs for"

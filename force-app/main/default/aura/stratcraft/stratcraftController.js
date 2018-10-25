@@ -9,14 +9,33 @@
             helper.loadStrategyNames(cmp);
             _undoManager.canUndo.addChangeHandler(function (newValue) { cmp.set('v.canUndo', newValue); });
             _undoManager.canRedo.addChangeHandler(function (newValue) { cmp.set('v.canRedo', newValue); })
+            helper.loadTypes(cmp);
         }
-        //This part doesn't depend on scripts loaded
-        helper.loadTypes(cmp);
     },
 
     handleContextTypeAquiredEvent: function (cmp, event, helper) {
         var contextType = event.getParam('contextType');
         cmp.set('v.currentStrategy.contextType', contextType);
+    },
+
+
+    handleContextTypesDataLoaded: function (cmp, event, helper) {
+        var callback = event.getParam('callback');
+        var areTypesLoaded = cmp.get('v.contextTypesLoaded');
+        if (!callback)
+            return;
+        if (areTypesLoaded)
+            callback();
+        else
+            cmp.set('v.contextTypesLoadedCallback', callback);
+    },
+
+    handleContextTypesDataRequested: function (cmp, event, helper) {
+        var contextTypes = cmp.get("v.contextTypes");
+        var callback = event.getParam('callback');
+        if (callback) {
+            callback(contextTypes);
+        }
     },
 
     handleViewChanged: function (cmp, event, helper) {

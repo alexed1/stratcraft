@@ -1,16 +1,65 @@
 ({
     loadTypes: function (cmp) {
-        var action = cmp.get('c.getTypeList');
-        action.setCallback(this, function (response) {
+        var self = this;
+        var getTypesCount = cmp.get('c.getSchemaNames');
+        getTypesCount.setCallback(this, function (response) {
             var state = response.getState();
             if (cmp.isValid() && state === 'SUCCESS') {
                 var typeList = response.getReturnValue();
-                typeList.sort(function (x, y) { return x.label.localeCompare(y.label); })
-                cmp.set('v.contextTypes', typeList);
+                console.log('Loaded ' + typeList.length + ' sobjects types candidates');
+
+                var pageSize = 250;
+                var promises = [];
+
+                var paginate = function (array, page_size, page_number) {
+                    return array.slice(page_number * page_size, (page_number + 1) * page_size);
+                };
+
+                var numberOfPages = Math.ceil(typeList.length / pageSize)
+                for (var i = 0; i < numberOfPages; i++) {
+                    var pageIndex = i;
+                    promises.push(self.requestTypesPagePromise(cmp, pageIndex, paginate(typeList, pageSize, pageIndex)));
+                }
+
+                console.log('Promises count = ' + promises.length);
+                Promise.all(promises).then($A.getCallback(function (results) {
+                    var allTypes = [];
+                    for (var j = 0; j < results.length; j++) {
+                        var page = results[j];
+                        allTypes = allTypes.concat(page);
+                    }
+                    allTypes.sort(function (x, y) { return x.label.localeCompare(y.label); })
+                    cmp.set('v.contextTypes', allTypes);
+                    cmp.set('v.contextTypesLoaded', true);
+                    var awaitingLoadingCallback = cmp.get('v.contextTypesLoadedCallback');
+                    if (awaitingLoadingCallback)
+                        awaitingLoadingCallback();
+                }));
             }
         });
-        $A.enqueueAction(action);
+        $A.enqueueAction(getTypesCount);
     },
+
+    requestTypesPagePromise: function (cmp, pageIndex, pageValues) {
+        var self = this;
+        return new Promise(function (resolve, reject) {
+            var action = cmp.get('c.getTypesPage');
+            action.setParams({ 'types': pageValues });
+            action.setCallback(self, function (response) {
+                var state = response.getState();
+                if (state == 'SUCCESS') {
+                    var res = response.getReturnValue();
+                    console.log('Loaded page #' + pageIndex + ' with ' + res.length + ' types');
+                    resolve.call(this, res);
+                }
+                else if (state == 'ERROR')
+                    reject.call(this, response.getError());
+            });
+
+            $A.enqueueAction(action);
+        });
+    },
+
 	/**Returns the list of current strategy nodes that relate in a specific way to a specified node
 	 * @param {object} strategy - Strategy
 	 * @param {string} nodeRelationship - Relationship type. For possible values see _utils.NodeRelationshipType

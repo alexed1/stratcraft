@@ -1,19 +1,19 @@
 public with sharing class CriterionController {
 
+
+
 @AuraEnabled
-public static ObjectDescription[] getSchema(Boolean ifMode){
+public static ObjectDescription[] getPropositionFields(){
 	Map<String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
 	List<ObjectDescription> result = new List<ObjectDescription>();
 	List<String> entities = new List<String>(schemaMap.keySet());
+	System.debug('CriterionController entities:'+entities.size());
 	for(String name : entities)
 	{
-		DescribeSObjectResult objectDescribeResult = schemaMap.get(name).getDescribe();
-		if (!objectDescribeResult.isAccessible()
-		    || !objectDescribeResult.isQueryable()
-		    || !objectDescribeResult.isSearchable()
-		    || !(objectDescribeResult.isCreateable() || objectDescribeResult.isUpdateable())) {
+		if (name != 'Proposition')
 			continue;
-		}
+
+		DescribeSObjectResult objectDescribeResult = schemaMap.get(name).getDescribe();
 		ObjectDescription objectDescription = new ObjectDescription(objectDescribeResult.getName(), objectDescribeResult.getLabel());
 		Map<String, Schema.SObjectField> fields = objectDescribeResult.fields.getMap();
 		for (String key : fields.keySet())
@@ -34,24 +34,27 @@ public static ObjectDescription[] getSchema(Boolean ifMode){
 				if (relationships.size() > 1) {
 					continue;
 				}
-				fieldName = ifMode ? relationshipName : fieldName;
 				if (fieldName == null) {
 					continue;
 				}
-				objectDescription.fieldList.add(new ObjectFieldDescription(fieldName, fieldLabel, relationshipTypeName, true));
+				objectDescription.fieldList.add(new ObjectFieldDescription(fieldName, fieldLabel, relationshipTypeName, true, null));
 			} else {
-				objectDescription.fieldList.add(new ObjectFieldDescription(fieldName, fieldLabel, fieldType.name(), false));
+				objectDescription.fieldList.add(new ObjectFieldDescription(fieldName, fieldLabel, fieldType.name(), false, null));
 			}
 		}
 		result.add(objectDescription);
+		break;
 	}
 	return result;
 }
 
+
 @AuraEnabled
 public static ObjectDescription[] getApexActions(List<String> actionNames, String sessionId) {
 	List<ObjectDescription> result = new List<ObjectDescription>();
+	System.debug('CriterionController getApexActions actionNames.size'+actionNames.size());
 	for (String actionName: actionNames) {
+		System.debug('CriterionController getApexActions actionName:'+actionName);
 		HTTP http = new HTTP();
 		HTTPRequest hres = new HTTPRequest();
 		String endpoint = URL.getSalesforceBaseUrl().toExternalForm() + '/services/data/v44.0/actions/custom/apex/' + actionName;
@@ -74,7 +77,8 @@ public static ObjectDescription[] getApexActions(List<String> actionNames, Strin
 				(String)output.get('name'),
 				(String)output.get('label'),
 				(String)output.get('type'),
-				false);
+				false,
+				null);
 			action.fieldList.add(field);
 		}
 		result.add(action);
