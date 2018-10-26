@@ -12,7 +12,7 @@
 	display: flex;
 	position: relative;
 	border-radius: 4px;
-	/*background-image: url(/resource/stratcraft__graphBackground);
+	/*background-image: url(/resource/stratcraft2__graphBackground);
 	background-attachment: local;*/
 }
 
@@ -121,47 +121,47 @@
 
 .THIS .if-node {
 	background-color: #6d9de3;
-	background-image: url(/resource/stratcraft__ifNode);
+	background-image: url(/resource/stratcraft2__ifNode);
 }
 
 .THIS .exclusive-node {
 	background-color: #a200ff;
-	background-image: url(/resource/stratcraft__mutuallyExclusive);
+	background-image: url(/resource/stratcraft2__mutuallyExclusive);
 }
 
 .THIS .union-node {
 	background-color: #FF6A00;
-	background-image: url(/resource/stratcraft__unionNode);
+	background-image: url(/resource/stratcraft2__unionNode);
 }
 
 .THIS .soql-load-node {
 	background-color: #ffd800;
-	background-image: url(/resource/stratcraft__loadSoqlNode);
+	background-image: url(/resource/stratcraft2__loadSoqlNode);
 }
 
 .THIS .recommendation-limit-node {
 	background-color: #267F00;
-	background-image: url(/resource/stratcraft__recommendationLimitNode);
+	background-image: url(/resource/stratcraft2__recommendationLimitNode);
 }
 
 .THIS .sort-node {
 	background-color: #fab9a5;
-	background-image: url(/resource/stratcraft__sortNode);
+	background-image: url(/resource/stratcraft2__sortNode);
 }
 
 .THIS .external-node {
 	background-color: purple;
-	background-image: url(/resource/stratcraft__externalNode);
+	background-image: url(/resource/stratcraft2__externalNode);
 }
 
 .THIS .record-join-node {
 	background-color: lightblue;
-	background-image: url(/resource/stratcraft__recordJoinNode);
+	background-image: url(/resource/stratcraft2__recordJoinNode);
 }
 
 .THIS .filter-node {
 	background-color: #Fd90b5;
-	background-image: url(/resource/stratcraft__filterNode);
+	background-image: url(/resource/stratcraft2__filterNode);
 }
 
 .THIS .unmanaged-if-node {
